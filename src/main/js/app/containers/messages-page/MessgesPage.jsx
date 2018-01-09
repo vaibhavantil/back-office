@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import actions from 'app/store/actions';
 import Chat from 'components/messages/Chat';
@@ -24,6 +25,7 @@ class MessagesPage extends React.Component {
                 <Chat
                     messages={this.props.messages}
                     addMessage={this.props.addMessage}
+                    getMessages={this.props.getMessages}
                     userId={this.props.match.params.id}
                 />
             </ChatContainer>
@@ -31,12 +33,14 @@ class MessagesPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ client, messages }) => ({
-    client,
-    messages
-});
+const mapStateToProps = ({ client, messages }) => {
+    return {
+        client,
+        messages
+    }
+};
 
-export default connect(mapStateToProps, {
+export default withRouter(connect(mapStateToProps, {
     ...actions.messagesActions,
     ...actions.clientActions
-})(MessagesPage);
+})(MessagesPage));

@@ -11,7 +11,6 @@ export default {
             url: 'assets'
         }
     },
-    // TODO fix login url
     login: {
         login: {
             method: 'post',
@@ -21,5 +20,11 @@ export default {
             method: 'post',
             url: 'logout'
         }
+    },
+    chats: {
+        get: {
+            method: 'get',
+            url: 'chat_users'
+        },
     }
 };
