@@ -1,4 +1,4 @@
-# Hedvig's asset-tracker management application
+# Hedvig's asset-tracker and bot-service management application
 
 ## Development
 
