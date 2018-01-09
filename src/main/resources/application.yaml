@@ -1,0 +1,36 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    com:
+      hedvig: DEBUG
+
+spring:
+  datasource:
+    url: jdbc:h2:file:~/memorydb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  profiles:
+    active: development
+
+job:
+  interval: 1000
+
+tracker:
+  baseUrl: http://localhost:4082/frontend
+  urls:
+    assets: /assets
+  stub: false
+
+jwt:
+  enabled: true
+  expiration: 864000000
+  secret: fGWPyfB8wBGoXB5B07xoa6KKfXobo79p
+  header: Authorization
+
+amqp:
+  hostname: localhost
+  exchange: hedvig-assets-state
