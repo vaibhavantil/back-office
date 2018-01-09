@@ -1,0 +1,62 @@
+html {
+    font-size: 13px;
+}
+
+#react {
+    height: 100%;
+}
+
+.assets-list {
+    min-height: 300px;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form {
+    display: inline-block;
+    min-width: 600px;
+}
+
+.ui.selection.dropdown.dropdown--short-text {
+    min-width: 100%;
+    margin-bottom: 10px;
+}
+
+.dropdown--short-text>.text {
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.filter {
+    margin-bottom: 30px;
+}
+
+.filter__label {
+    margin-right: 10px;
+}
+
+.filter__message {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+messages__input.messages__input {
+    margin: 0;
+    min-width: 300px;
+}
