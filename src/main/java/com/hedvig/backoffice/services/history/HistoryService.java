@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.services.history;
 
-import com.hedvig.backoffice.web.dto.MessageDTO;
+import com.hedvig.backoffice.chat.dto.MessageDTO;
 
 import java.util.List;
 

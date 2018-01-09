@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.web.dto;
+package com.hedvig.backoffice.chat.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

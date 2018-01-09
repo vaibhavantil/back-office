@@ -1,7 +1,7 @@
 package com.hedvig.backoffice.web;
 
 import com.hedvig.backoffice.services.history.HistoryService;
-import com.hedvig.backoffice.web.dto.MessageDTO;
+import com.hedvig.backoffice.chat.dto.MessageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
