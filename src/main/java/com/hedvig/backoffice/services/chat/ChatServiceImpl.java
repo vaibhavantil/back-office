@@ -2,7 +2,7 @@ package com.hedvig.backoffice.services.chat;
 
 import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.repository.ChatContextRepository;
-import com.hedvig.backoffice.services.messages.MessageService;
+import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.data.ErrorMessage;
 import com.hedvig.backoffice.services.messages.data.Message;
 import com.hedvig.backoffice.services.users.UserNotFoundException;
@@ -17,14 +17,14 @@ import java.util.List;
 public class ChatServiceImpl implements ChatService {
 
     private final SimpMessagingTemplate template;
-    private final MessageService messageService;
+    private final BotService botService;
     private final UserService userService;
     private final ChatContextRepository chatContextRepository;
 
-    public ChatServiceImpl(SimpMessagingTemplate template, MessageService messageService, UserService userService,
+    public ChatServiceImpl(SimpMessagingTemplate template, BotService botService, UserService userService,
                            ChatContextRepository chatContextRepository) {
         this.template = template;
-        this.messageService = messageService;
+        this.botService = botService;
         this.userService = userService;
         this.chatContextRepository = chatContextRepository;
     }
@@ -44,7 +44,7 @@ public class ChatServiceImpl implements ChatService {
             return;
         }
 
-        messageService.response(user.getHid(), message);
+        botService.response(user.getHid(), message);
         retranslate(hid, message);
     }
 

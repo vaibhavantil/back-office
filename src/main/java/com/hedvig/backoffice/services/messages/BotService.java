@@ -4,7 +4,7 @@ import com.hedvig.backoffice.services.messages.data.Message;
 
 import java.util.List;
 
-public interface MessageService {
+public interface BotService {
 
     List<Message> messages(String hid);
     List<Message> messages(String hid, int count);

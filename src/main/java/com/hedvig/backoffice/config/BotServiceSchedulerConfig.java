@@ -3,7 +3,7 @@ package com.hedvig.backoffice.config;
 import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.services.chat.ChatService;
 import com.hedvig.backoffice.services.chat.ChatServiceJob;
-import com.hedvig.backoffice.services.messages.MessageService;
+import com.hedvig.backoffice.services.messages.BotService;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
@@ -18,25 +18,25 @@ import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 @Configuration
-public class ChatServiceSchedulerConfig {
+public class BotServiceSchedulerConfig {
 
     public static final String CHAT_SERVICE_VAR = "chatService";
     public static final String REPOSITORY_VAR = "chatContextRepository";
-    public static final String MESSAGE_SERVICE_VER = "messageService";
+    public static final String MESSAGE_SERVICE_VER = "botService";
 
     @Value("${chat.interval}")
     private int interval;
 
     private final ChatService chatService;
     private final ChatContextRepository chatContextRepository;
-    private final MessageService messageService;
+    private final BotService botService;
 
     @Autowired
-    public ChatServiceSchedulerConfig(ChatService chatService, ChatContextRepository chatContextRepository,
-                                      MessageService messageService) {
+    public BotServiceSchedulerConfig(ChatService chatService, ChatContextRepository chatContextRepository,
+                                     BotService botService) {
         this.chatService = chatService;
         this.chatContextRepository = chatContextRepository;
-        this.messageService = messageService;
+        this.botService = botService;
     }
 
     @Bean
@@ -48,7 +48,7 @@ public class ChatServiceSchedulerConfig {
         JobDataMap data = new JobDataMap();
         data.put(CHAT_SERVICE_VAR, chatService);
         data.put(REPOSITORY_VAR, chatContextRepository);
-        data.put(MESSAGE_SERVICE_VER, messageService);
+        data.put(MESSAGE_SERVICE_VER, botService);
 
         jobDetailFactory.setJobDataMap(data);
 

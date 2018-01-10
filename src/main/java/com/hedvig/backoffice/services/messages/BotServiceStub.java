@@ -5,7 +5,6 @@ import com.hedvig.backoffice.services.messages.data.PayloadMessage;
 import lombok.Value;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -14,8 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service
-public class MessageServiceStub implements MessageService {
+public class BotServiceStub implements BotService {
 
     private static final String STUB_MESSAGE_TEMPLATE = "{" +
             "'globalId': %s, " +
@@ -51,7 +49,7 @@ public class MessageServiceStub implements MessageService {
     private ConcurrentHashMap<String, MessagePositionStub> positions;
 
     @Autowired
-    public MessageServiceStub() {
+    public BotServiceStub() {
         this.messages = new ConcurrentHashMap<>();
         this.positions = new ConcurrentHashMap<>();
     }
