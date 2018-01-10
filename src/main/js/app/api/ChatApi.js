@@ -21,22 +21,22 @@ const get = async token => {
         },
         {
             id: 1,
-            name: 'Test User 1',
+            name: 'First User',
             newMessage: false
         },
         {
             id: 2,
-            name: 'Test User 2',
+            name: 'Second User',
             newMessage: false
         },
         {
             id: 3,
-            name: 'Test User 3',
+            name: 'Thrid User',
             newMessage: false
         },
         {
             id: 4,
-            name: 'Test User 4',
+            name: 'Tester User 4',
             newMessage: false
         },
         {
@@ -46,7 +46,7 @@ const get = async token => {
         },
         {
             id: 6,
-            name: 'Test User 6',
+            name: 'Tester User 6',
             newMessage: false
         },
         {

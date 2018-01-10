@@ -6,10 +6,11 @@ import { Link } from 'react-router-dom';
 import { List, Input } from 'semantic-ui-react';
 
 const ListContainer = styled.div`
-    max-width: 500px;
+    width: 500px;
     border: solid 1px #dfe0e0;
     border-radius: 5px;
     padding: 20px 10px;
+    margin-top: 30px;
 `;
 
 const Chats = ({ chats }) => (
@@ -60,7 +61,7 @@ export default class ChatsList extends React.Component {
                 isLoading: false,
                 results: filter(this.props.chats, isMatch)
             });
-        }, 500);
+        }, 250);
     }
 
     componentWillReceiveProps(newProps) {
