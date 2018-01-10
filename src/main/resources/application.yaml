@@ -33,7 +33,7 @@ botservice:
   urls:
     messages: /messages
     response: /response
-  stub: false
+  stub: true
 
 jwt:
   enabled: true
