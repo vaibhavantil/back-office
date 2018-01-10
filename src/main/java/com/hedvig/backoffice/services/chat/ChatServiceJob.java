@@ -20,7 +20,7 @@ public class ChatServiceJob extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         Iterable<ChatContext> chats = chatContextRepository.findAll();
         for (ChatContext chat : chats) {
-            List<Message> messages = messageService.messages(chat.getHid(), 1);
+            List<Message> messages = messageService.updates(chat.getHid());
             for (Message m : messages) {
                 chatService.retranslate(chat.getHid(), m);
             }

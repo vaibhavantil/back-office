@@ -8,6 +8,7 @@ public interface MessageService {
 
     List<Message> messages(String hid);
     List<Message> messages(String hid, int count);
+    List<Message> updates(String hid);
     void response(String hid, Message message);
 
 }
