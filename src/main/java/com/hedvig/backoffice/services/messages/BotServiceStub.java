@@ -55,12 +55,12 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<Message> messages(String hid) {
+    public List<Message> messages(String hid) throws BotServiceException {
         return messages.computeIfAbsent(hid, k -> new ArrayList<>());
     }
 
     @Override
-    public List<Message> messages(String hid, int count) {
+    public List<Message> messages(String hid, int count) throws BotServiceException {
         List<Message> all = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         if (all.size() <= count) {
             return all;
@@ -70,7 +70,7 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<Message> updates(String hid) {
+    public List<Message> updates(String hid) throws BotServiceException {
         MessagePositionStub pos = positions.computeIfAbsent(hid,
                 k -> new MessagePositionStub(Instant.ofEpochMilli(new Date().getTime()), 0));
 
@@ -87,7 +87,7 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public void response(String hid, Message message) {
+    public void response(String hid, Message message) throws BotServiceException {
         List<Message> userMessages = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         userMessages.add(message);
     }

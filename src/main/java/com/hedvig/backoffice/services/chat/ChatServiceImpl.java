@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.chat;
 import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.services.messages.BotService;
+import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.data.ErrorMessage;
 import com.hedvig.backoffice.services.messages.data.Message;
 import com.hedvig.backoffice.services.users.UserNotFoundException;
@@ -44,7 +45,12 @@ public class ChatServiceImpl implements ChatService {
             return;
         }
 
-        botService.response(user.getHid(), message);
+        try {
+            botService.response(user.getHid(), message);
+        } catch (BotServiceException e) {
+            retranslate(hid, new ErrorMessage(500, e.getMessage()));
+            return;
+        }
         retranslate(hid, message);
     }
 
