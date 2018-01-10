@@ -22,7 +22,7 @@ public class ChatController {
 
     @SubscribeMapping("/send/{hid}")
     public void send(@DestinationVariable String hid, Message message) throws UserNotFoundException {
-        chatService.retranslate(hid, message);
+        chatService.append(hid, message);
     }
 
 }

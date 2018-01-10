@@ -17,7 +17,7 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 
 @Configuration
-public class SchedulerConfig {
+public class AssetTrackerSchedulerConfig {
 
     public static final String ASSET_TRACKER_SERVICE_VAR = "service";
 
@@ -27,7 +27,7 @@ public class SchedulerConfig {
     private AssetTrackerService service;
 
     @Autowired
-    public SchedulerConfig(AssetTrackerService service) {
+    public AssetTrackerSchedulerConfig(AssetTrackerService service) {
         this.service = service;
     }
 

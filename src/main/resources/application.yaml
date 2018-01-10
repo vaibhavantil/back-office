@@ -19,6 +19,9 @@ spring:
 job:
   interval: 1000
 
+chat:
+  interval: 1000
+
 tracker:
   baseUrl: http://localhost:4082/frontend
   urls:
