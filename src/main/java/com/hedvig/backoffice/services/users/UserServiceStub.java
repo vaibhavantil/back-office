@@ -1,10 +1,10 @@
 package com.hedvig.backoffice.services.users;
 
 import com.hedvig.backoffice.web.dto.UserDTO;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -15,7 +15,7 @@ public class UserServiceStub implements UserService {
 
     public UserServiceStub() {
         users = IntStream.range(0, 10).mapToObj(i -> {
-            String id = UUID.randomUUID().toString();
+            String id = Long.toString(RandomUtils.nextLong());
             String name = "Test user " + i;
 
             return new UserDTO(id, name);
@@ -23,17 +23,21 @@ public class UserServiceStub implements UserService {
     }
 
     @Override
-    public List<UserDTO> loadUserList() {
+    public List<UserDTO> list() {
         return users;
     }
 
     @Override
-    public UserDTO findUser(String query) throws UserNotFoundException {
+    public UserDTO find(String query) throws UserNotFoundException {
         return users.stream()
-                .filter(u -> u.getId().contains(query) || u.getName().contains(query)).
+                .filter(u -> u.getHid().contains(query) || u.getName().contains(query)).
                 findAny()
                 .orElseThrow(() -> new UserNotFoundException(query));
     }
 
+    @Override
+    public UserDTO findByHid(String hid) throws UserNotFoundException {
+        return find(hid);
+    }
 
 }

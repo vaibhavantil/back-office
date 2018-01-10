@@ -24,12 +24,12 @@ public class UserController {
 
     @GetMapping
     public List<UserDTO> users() {
-        return userService.loadUserList();
+        return userService.list();
     }
 
     @GetMapping("/search/{search}")
     public UserDTO find(@PathVariable String search) throws UserNotFoundException {
-        return userService.findUser(search);
+        return userService.find(search);
     }
 
 }

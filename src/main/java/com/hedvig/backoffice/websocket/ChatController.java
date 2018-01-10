@@ -1,6 +1,6 @@
-package com.hedvig.backoffice.chat;
+package com.hedvig.backoffice.websocket;
 
-import com.hedvig.backoffice.chat.dto.MessageDTO;
+import com.hedvig.backoffice.services.messages.data.Message;
 import com.hedvig.backoffice.services.chat.ChatService;
 import com.hedvig.backoffice.services.users.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,9 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @SubscribeMapping("/send/{id}")
-    public void send(@DestinationVariable String id, MessageDTO message) throws UserNotFoundException {
-        chatService.retranslate(id, message);
+    @SubscribeMapping("/send/{hid}")
+    public void send(@DestinationVariable String hid, Message message) throws UserNotFoundException {
+        chatService.retranslate(hid, message);
     }
 
 }

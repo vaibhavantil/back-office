@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends CrudRepository<Personnel, Long> {
+public interface PersonnelRepository extends CrudRepository<Personnel, Long> {
 
     @Query("select u from Personnel u where u.email = :email")
     Optional<Personnel> findByEmail(@Param("email") String email);
