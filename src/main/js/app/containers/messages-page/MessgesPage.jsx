@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import actions from 'app/store/actions';
 import Chat from 'components/messages/Chat';
-import { setupSocket } from 'app/lib/sockets';
+// import { setupSocket } from 'app/lib/sockets';
 
 const ChatContainer = styled.div`
     display: flex;
@@ -20,10 +20,8 @@ class MessagesPage extends React.Component {
     }
 
     componentDidMount() {
-        setupSocket({
-            messageReceived: this.props.messageReceived,
-
-        }, this.props.match.params.id);
+        // const { messageReceived } = this.props;
+        // setupSocket({ messageReceived }, this.props.match.params.id);
     }
 
     render() {

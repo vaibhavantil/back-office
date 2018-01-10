@@ -15,13 +15,43 @@ const axiosInstance = axios.create({
 const get = async token => {
     return [
         {
-            id: 12,
-            name: 'Test User',
+            id: 0,
+            name: 'Test User 0',
+            newMessage: false
+        },
+        {
+            id: 1,
+            name: 'Test User 1',
             newMessage: false
         },
         {
             id: 2,
             name: 'Test User 2',
+            newMessage: false
+        },
+        {
+            id: 3,
+            name: 'Test User 3',
+            newMessage: false
+        },
+        {
+            id: 4,
+            name: 'Test User 4',
+            newMessage: false
+        },
+        {
+            id: 5,
+            name: 'Test User 5',
+            newMessage: false
+        },
+        {
+            id: 6,
+            name: 'Test User 6',
+            newMessage: false
+        },
+        {
+            id: 7,
+            name: 'Test User 7',
             newMessage: false
         }
     ];

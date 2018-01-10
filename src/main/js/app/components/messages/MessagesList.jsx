@@ -3,11 +3,15 @@ import styled from 'styled-components';
 import Message from './Message';
 
 const MessagesListContainer = styled.div`
-    max-height: 800px;
+    height: 800px;
     box-sizing: border-box;
     overflow-y: auto;
     padding: 20px;
 `;
+
+const EmptyList = styled.h3`
+    text-align: center;
+`
 
 export default class MessagesList extends React.Component {
     constructor(props) {
@@ -24,14 +28,17 @@ export default class MessagesList extends React.Component {
         const { messages, userId } = this.props;
         return (
             <MessagesListContainer innerRef={el => (this.messagesList = el)}>
-                {messages &&
+                {messages.length ? (
                     messages.map(message => (
                         <Message
                             key={message.id}
                             content={message.content}
                             left={message.author === parseInt(userId, 10)}
                         />
-                    ))}
+                    ))
+                ) : (
+                    <EmptyList>No messages with this User</EmptyList>
+                )}
             </MessagesListContainer>
         );
     }
