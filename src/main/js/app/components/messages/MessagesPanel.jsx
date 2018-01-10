@@ -13,7 +13,6 @@ const MessagesPanelContariner = styled.div`
     border-top: solid 2px #e8e5e5;
 `;
 
-/* eslint-disable react/prop-types */
 export default class MessgesPanel extends React.Component {
     constructor(props) {
         super(props);

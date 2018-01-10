@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { loginRequest } from 'app/store/actions/loginActions';
 import LoginForm from 'components/login-form/LoginForm';
 
-/* eslint-disable react/prop-types */
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);

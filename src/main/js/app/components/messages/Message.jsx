@@ -40,7 +40,6 @@ const MessageBox = styled.div`
     }
 `;
 
-/* eslint-disable react/prop-types */
 const Message = ({ left, content }) => (
     <MessageRow left={left}>
         <MessageBox left={left}>{content}</MessageBox>

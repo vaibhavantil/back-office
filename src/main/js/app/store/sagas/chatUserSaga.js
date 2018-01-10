@@ -2,16 +2,16 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import api from 'app/api/ChatApi';
 import { CHATS_REQUESTING } from 'constants';
 import {
-    chatRequestSuccess,
-    chatRequestError,
+    chatsRequestSuccess,
+    chatsRequestError,
 } from '../actions/chatUserActions';
 
 function* chatRequestFlow() {
     try {
-        const users = yield call(api.get);
-        yield put(chatRequestSuccess(users));
+        const chats = yield call(api.get);
+        yield put(chatsRequestSuccess(chats));
     } catch (error) {
-        yield put(chatRequestError(error));
+        yield put(chatsRequestError(error));
     }
 }
 

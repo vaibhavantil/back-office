@@ -9,39 +9,31 @@ const ChatContainer = styled.div`
     border: solid 2px #e8e5e5;
     border-radius: 5px;
 `;
-/* 
+
 const Header = styled.h2`
     color: #4c4b4b;
 `;
- */
+
 export default class Chat extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            userName: ''
-        };
     }
 
     componentDidMount() {
-        const { messages, userId, getMessages } = this.props;
-        const user = messages.users.filter(user => user.id === parseInt(userId, 10));
-
-        this.setState({
-            userName: user.length && user[0].name
-        });
-
-        getMessages(userId);
+        // this.props.getMessages(this.props.userId);
     }
 
     render() {
-        const { messages, addMessage, userId } = this.props;
+        const { messages, addMessage, userId, user } = this.props;
         return (
             <div>
-                <h1>Chat with {this.state.userName}</h1>
+                {
+                    user && <Header>Chat with {user.name}</Header>
+                }
                 <Link to="/messages">Back</Link>
                 <ChatContainer>
                     <MessagesList
-                        messages={messages.messages}
+                        messages={messages.list}
                         userId={userId}
                     />
                     <MessagesPanel addMessage={addMessage} />

@@ -15,6 +15,7 @@
   "homepage": "https://github.com/HedvigInsurance/asset-tracker",
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.35",
+    "@stomp/stompjs": "^4.0.0",
     "axios": "^0.17.1",
     "history": "^4.7.2",
     "moment": "^2.20.1",
@@ -31,8 +32,10 @@
     "redux-form": "^7.2.0",
     "redux-saga": "^0.16.0",
     "semantic-ui-react": "^0.77.1",
+    "sockjs-client": "^1.1.4",
     "styled-components": "^2.4.0",
     "webpack": "^3.10.0",
+    "websocket": "^1.0.25",
     "ws": "^3.3.3"
   },
   "devDependencies": {

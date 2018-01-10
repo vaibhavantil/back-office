@@ -9,7 +9,6 @@ const MessagesListContainer = styled.div`
     padding: 20px;
 `;
 
-/* eslint-disable react/prop-types*/
 export default class MessagesList extends React.Component {
     constructor(props) {
         super(props);

@@ -6,7 +6,6 @@ import Pagination from '../pagination/Pagination';
 import Fliter from '../list-filter/AssetsListFilter';
 import { filterList } from 'app/lib/filters';
 
-/* eslint-disable react/prop-types*/
 class AssetList extends React.Component {
     constructor(props) {
         super(props);

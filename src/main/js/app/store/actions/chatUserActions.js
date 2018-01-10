@@ -10,7 +10,7 @@ export const chatsRequest = () => ({
 
 export const chatsRequestSuccess = chats => ({
     type: CHATS_REQUEST_SUCCESS,
-    users: chats
+    chats
 });
 
 export const chatsRequestError = error => ({

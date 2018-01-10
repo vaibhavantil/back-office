@@ -39,7 +39,6 @@ const DatePickerContainer = styled.div`
     }
 `;
 
-/* eslint-disable react/prop-types */
 class DateInput extends React.Component {
     constructor() {
         super();
