@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.chat;
 import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.services.messages.MessageService;
+import com.hedvig.backoffice.services.messages.data.ErrorMessage;
 import com.hedvig.backoffice.services.messages.data.Message;
 import com.hedvig.backoffice.services.users.UserNotFoundException;
 import com.hedvig.backoffice.services.users.UserService;
@@ -30,12 +31,19 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void retranslate(String hid, Message message) {
-        template.convertAndSend(getTopicPrefix() + hid, message);
+        template.convertAndSend(getTopicPrefix() + hid, message.getPayload());
     }
 
     @Override
-    public void append(String hid, Message message) throws UserNotFoundException {
-        UserDTO user = userService.findByHid(hid);
+    public void append(String hid, Message message) {
+        UserDTO user;
+        try {
+            user = userService.findByHid(hid);
+        } catch (UserNotFoundException e) {
+            retranslate(hid, new ErrorMessage(404, "User with hid " + hid + " not found"));
+            return;
+        }
+
         messageService.response(user.getHid(), message);
         retranslate(hid, message);
     }
@@ -48,8 +56,16 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void subscribe(String hid, String subId, String sessionId) {
+        UserDTO user;
+        try {
+            user = userService.findByHid(hid);
+        } catch (UserNotFoundException e) {
+            retranslate(hid, new ErrorMessage(404, "User with hid " + hid + " not found"));
+            return;
+        }
+
         ChatContext chat = new ChatContext();
-        chat.setHid(hid);
+        chat.setHid(user.getHid());
         chat.setSubId(subId);
         chat.setSessionId(sessionId);
         chatContextRepository.save(chat);

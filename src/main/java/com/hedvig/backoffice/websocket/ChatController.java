@@ -1,13 +1,13 @@
 package com.hedvig.backoffice.websocket;
 
-import com.hedvig.backoffice.services.messages.data.Message;
 import com.hedvig.backoffice.services.chat.ChatService;
-import com.hedvig.backoffice.services.users.UserNotFoundException;
+import com.hedvig.backoffice.services.messages.data.PayloadMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @MessageMapping("/messages")
@@ -21,8 +21,8 @@ public class ChatController {
     }
 
     @SubscribeMapping("/send/{hid}")
-    public void send(@DestinationVariable String hid, Message message) throws UserNotFoundException {
-        chatService.append(hid, message);
+    public void send(@DestinationVariable String hid, @RequestBody String body) {
+        chatService.append(hid, new PayloadMessage(body));
     }
 
 }

@@ -1,12 +1,7 @@
 package com.hedvig.backoffice.services.messages.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+public interface Message {
 
-@Data
-@AllArgsConstructor
-public class Message {
-
-    private String body;
+    String getPayload();
 
 }

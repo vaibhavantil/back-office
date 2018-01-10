@@ -35,11 +35,11 @@ function chat() {
     userNameSpan.innerText = userName;
 
     stompClient.subscribe('/topic/messages/' + userName, function(response) {
-        var message = JSON.parse(response.body);
-
         var div = document.createElement('div');
-        div.innerHTML = message.body;
+        var code = document.createElement('code');
+        code.innerHTML = response.body;
 
+        div.appendChild(code);
         messages.appendChild(div);
     });
 }

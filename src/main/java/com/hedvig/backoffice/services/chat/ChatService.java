@@ -6,7 +6,7 @@ import com.hedvig.backoffice.services.users.UserNotFoundException;
 public interface ChatService {
 
     void retranslate(String hid, Message message);
-    void append(String hid, Message message) throws UserNotFoundException;
+    void append(String hid, Message message);
     void close(String sessionId);
     void subscribe(String hid, String subId, String sessionId);
     void unsubscribe(String subId, String sessionId);

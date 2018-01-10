@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.messages;
 
 import com.hedvig.backoffice.services.messages.data.Message;
+import com.hedvig.backoffice.services.messages.data.PayloadMessage;
 import lombok.Value;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,30 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class MessageServiceStub implements MessageService {
+
+    private static final String STUB_MESSAGE_TEMPLATE = "{" +
+            "'globalId': %s, " +
+            "'id': 'message.onboardingstart'," +
+            "'header': { " +
+            "   'messageId': 1," +
+            "   'fromId': 1," +
+            "   'responsePath': '/response', " +
+            "   'timeStamp': 1515499154030," +
+            "   'loadingIndicator': 'loader'," +
+            "   'avatarName': null, " +
+            "   'pollingInterval': 625," +
+            "   'editAllowed': false" +
+            "}," +
+            "'body': {" +
+            "   'type': 'paragraph'," +
+            "   'id': 1," +
+            "   'text': 'Test message %s', " +
+            "   'imageURL': null," +
+            "   'imageWidth': null," +
+            "   'imageHeight': null" +
+            "}," +
+            "'timestamp':'2018-01-09T11:59:14.030Z'" +
+            "}";
 
     @Value
     private static class MessagePositionStub {
@@ -56,7 +81,7 @@ public class MessageServiceStub implements MessageService {
             MessagePositionStub newPos = new MessagePositionStub(Instant.ofEpochMilli(new Date().getTime()), pos.position + 1);
             positions.put(hid, newPos);
 
-            Message msg = new Message(String.format("Test message %s", pos.position));
+            Message msg = new PayloadMessage(String.format(STUB_MESSAGE_TEMPLATE, pos.position, pos.position));
             return Arrays.asList(msg);
         }
 
