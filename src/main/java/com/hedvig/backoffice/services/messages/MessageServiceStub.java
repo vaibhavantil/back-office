@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.messages;
 
 import com.hedvig.backoffice.services.messages.data.Message;
 import lombok.Value;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +24,6 @@ public class MessageServiceStub implements MessageService {
 
     private ConcurrentHashMap<String, List<Message>> messages;
     private ConcurrentHashMap<String, MessagePositionStub> positions;
-
-    private static List<String> TEST_MESSAGES = Arrays.asList(
-            "Test Message 1",
-            "Test Message 2",
-            "Test Message 3",
-            "Test Message 4",
-            "Test Message 5"
-    );
 
     @Autowired
     public MessageServiceStub() {
@@ -59,14 +52,12 @@ public class MessageServiceStub implements MessageService {
                 k -> new MessagePositionStub(Instant.ofEpochMilli(new Date().getTime()), 0));
 
         Instant current = Instant.ofEpochMilli(new Date().getTime());
-        if (current.minusSeconds(5).isAfter(pos.time)) {
-            if (pos.position < TEST_MESSAGES.size()) {
-                MessagePositionStub newPos = new MessagePositionStub(Instant.ofEpochMilli(new Date().getTime()), pos.position + 1);
-                positions.put(hid, newPos);
+        if (current.minusSeconds(RandomUtils.nextInt(3, 7)).isAfter(pos.time)) {
+            MessagePositionStub newPos = new MessagePositionStub(Instant.ofEpochMilli(new Date().getTime()), pos.position + 1);
+            positions.put(hid, newPos);
 
-                Message msg = new Message(TEST_MESSAGES.get(pos.position));
-                return Arrays.asList(msg);
-            }
+            Message msg = new Message(String.format("Test message %s", pos.position));
+            return Arrays.asList(msg);
         }
 
         return new ArrayList<>();
