@@ -4,6 +4,7 @@ import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
+import com.hedvig.backoffice.services.messages.data.ErrorMessage;
 import com.hedvig.backoffice.services.messages.data.Message;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -25,6 +26,7 @@ public class ChatServiceJob extends QuartzJobBean {
             try {
                 messages = botService.updates(chat.getHid());
             } catch (BotServiceException e) {
+                chatService.retranslate(chat.getHid(), new ErrorMessage(500, e.getMessage()));
                 throw new JobExecutionException(e);
             }
             for (Message m : messages) {
