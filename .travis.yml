@@ -7,3 +7,4 @@ after_success:
 cache:
   directories:
   - $HOME/.m2
+group: deprecated-2017Q4
