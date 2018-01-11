@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Hedvig Back Office</title>
+        <script src="http://cdn.jsdelivr.net/sockjs/1.0.3/sockjs.min.js" type="application/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js" type="application/javascript"></script>
+    </head>
+    <body>
+        <div class="select">
+            <input type="text" class="input-user"><button onclick="chat()">chat!</button>
+        </div>
+        <div class="chat" style="display: none">
+            <div>
+                <span>Chat: </span><span class="user-name"></span>
+            </div>
+            <div class="messages">
+            </div>
+            <div>
+                <input type="text" class="input-text" size="30">
+                <button onclick="send()">send</button>
+            </div>
+        </div>
+        <script type="text/javascript" src="app.js" ></script>
+    </body>
+</html>

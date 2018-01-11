@@ -19,11 +19,21 @@ spring:
 job:
   interval: 1000
 
+chat:
+  interval: 1000
+
 tracker:
   baseUrl: http://localhost:4082/frontend
   urls:
     assets: /assets
   stub: false
+
+botservice:
+  baseUrl: http://localhost:4081
+  urls:
+    messages: /messages
+    response: /addmessage
+  stub: true
 
 jwt:
   enabled: true
