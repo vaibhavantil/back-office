@@ -30,9 +30,9 @@ public class UserServiceStub implements UserService {
     @Override
     public UserDTO find(String query) throws UserNotFoundException {
         return users.stream()
-                .filter(u -> u.getHid().contains(query) || u.getName().contains(query)).
-                findAny()
-                .orElseThrow(() -> new UserNotFoundException(query));
+                .filter(u -> u.getHid().contains(query) || u.getName().contains(query))
+                .findAny()
+                .orElse(new UserDTO(query, query));
     }
 
     @Override

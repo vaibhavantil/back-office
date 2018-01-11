@@ -32,7 +32,7 @@ botservice:
   baseUrl: http://localhost:4081
   urls:
     messages: /messages
-    response: /response
+    response: /addmessage
   stub: true
 
 jwt:

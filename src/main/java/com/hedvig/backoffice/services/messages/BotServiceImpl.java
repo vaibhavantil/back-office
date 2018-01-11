@@ -2,8 +2,10 @@ package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hedvig.backoffice.services.messages.data.Message;
-import com.hedvig.backoffice.services.messages.data.PayloadMessage;
+import com.hedvig.backoffice.domain.ChatContext;
+import com.hedvig.backoffice.repository.ChatContextRepository;
+import com.hedvig.backoffice.services.chat.data.ChatMessage;
+import com.hedvig.backoffice.services.chat.data.PayloadChatMessage;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -31,33 +33,47 @@ public class BotServiceImpl implements BotService {
     private String messagesUrl;
     private String responseUrl;
 
+    private ChatContextRepository chatContextRepository;
+
     @Autowired
     private BotServiceImpl(@Value("${botservice.baseUrl}") String baseUrl,
                            @Value("${botservice.urls.messages}") String messagesUrl,
-                           @Value("${botservice.urls.response}") String responseUrl) {
+                           @Value("${botservice.urls.response}") String responseUrl,
+                           ChatContextRepository chatContextRepository) {
 
         this.baseUrl = baseUrl;
         this.messagesUrl = messagesUrl;
         this.responseUrl = responseUrl;
+        this.chatContextRepository = chatContextRepository;
     }
 
     @Override
-    public List<Message> messages(String hid) throws BotServiceException {
+    public List<ChatMessage> messages(String hid) throws BotServiceException {
         return messages(baseUrl + messagesUrl, hid);
     }
 
     @Override
-    public List<Message> messages(String hid, int count) throws BotServiceException {
+    public List<ChatMessage> messages(String hid, int count) throws BotServiceException {
         return messages(baseUrl + messagesUrl + "/" + count, hid);
     }
 
     @Override
-    public List<Message> updates(String hid) throws BotServiceException {
-        return messages(baseUrl + messagesUrl, hid);
+    public List<ChatMessage> updates(ChatContext chat) throws BotServiceException {
+        List<ChatMessage> msgs = messages(baseUrl + messagesUrl + "/5", chat.getHid())
+                .stream()
+                .filter(msg -> chat.getTimestamp().isBefore(msg.getTimestamp()))
+                .collect(Collectors.toList());
+
+        if (msgs.size() > 0) {
+            chat.setTimestamp(msgs.get(msgs.size() - 1).getTimestamp());
+            chatContextRepository.save(chat);
+        }
+
+        return msgs;
     }
 
     @Override
-    public void response(String hid, Message message) throws BotServiceException {
+    public void response(String hid, ChatMessage message) throws BotServiceException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(baseUrl + responseUrl);
 
@@ -77,7 +93,7 @@ public class BotServiceImpl implements BotService {
         closeRequest(client);
     }
 
-    private List<Message> messages(String url, String hid) throws BotServiceException {
+    private List<ChatMessage> messages(String url, String hid) throws BotServiceException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpGet get = new HttpGet(url);
         get.setHeader("hedvig.token", hid);
@@ -85,7 +101,7 @@ public class BotServiceImpl implements BotService {
         HttpEntity entity = doRequest(client, get);
 
         ObjectMapper mapper = new ObjectMapper();
-        List<Message> messages;
+        List<ChatMessage> messages;
 
         try {
             String result = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
@@ -94,7 +110,7 @@ public class BotServiceImpl implements BotService {
 
             messages = StreamSupport
                     .stream(iterable.spliterator(), false)
-                    .map(e -> new PayloadMessage(e.getValue().toString()))
+                    .map(e -> new PayloadChatMessage(e.getValue().toString()))
                     .collect(Collectors.toList());
 
         } catch (IOException e) {

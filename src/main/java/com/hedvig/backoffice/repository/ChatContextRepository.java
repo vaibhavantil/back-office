@@ -18,4 +18,7 @@ public interface ChatContextRepository extends CrudRepository<ChatContext, Strin
     @Query("select c from ChatContext c where c.sessionId = :sessionId")
     List<ChatContext> findBySessionId(@Param("sessionId") String sessionId);
 
+    @Query("select c from ChatContext c where c.hid = :hid")
+    Optional<ChatContext> finByHid(@Param("hid") String hid);
+
 }

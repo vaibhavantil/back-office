@@ -4,15 +4,17 @@ import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
-import com.hedvig.backoffice.services.messages.data.ErrorMessage;
-import com.hedvig.backoffice.services.messages.data.Message;
+import com.hedvig.backoffice.services.chat.data.ErrorChatMessage;
+import com.hedvig.backoffice.services.chat.data.ChatMessage;
 import com.hedvig.backoffice.services.users.UserNotFoundException;
 import com.hedvig.backoffice.services.users.UserService;
 import com.hedvig.backoffice.web.dto.UserDTO;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChatServiceImpl implements ChatService {
@@ -31,27 +33,36 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void retranslate(String hid, Message message) {
+    public void retranslate(String hid, ChatMessage message) {
         template.convertAndSend(getTopicPrefix() + hid, message.getPayload());
     }
 
     @Override
-    public void append(String hid, Message message) {
+    public void append(String hid, ChatMessage message) {
         UserDTO user;
         try {
             user = userService.findByHid(hid);
         } catch (UserNotFoundException e) {
-            retranslate(hid, new ErrorMessage(404, "User with hid " + hid + " not found"));
+            retranslate(hid, new ErrorChatMessage(404, "User with hid " + hid + " not found"));
             return;
         }
+
+        Optional<ChatContext> chatOptional = chatContextRepository.finByHid(hid);
+        if (!chatOptional.isPresent()) {
+            retranslate(hid, new ErrorChatMessage(404, "Chat for user with hid " + hid + " not found"));
+            return;
+        }
+
+        ChatContext chat = chatOptional.get();
+        chat.setTimestamp(new Date().toInstant());
+        chatContextRepository.save(chat);
 
         try {
             botService.response(user.getHid(), message);
         } catch (BotServiceException e) {
-            retranslate(hid, new ErrorMessage(500, e.getMessage()));
+            retranslate(hid, new ErrorChatMessage(500, e.getMessage()));
             return;
         }
-        retranslate(hid, message);
     }
 
     @Override
@@ -66,7 +77,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             user = userService.findByHid(hid);
         } catch (UserNotFoundException e) {
-            retranslate(hid, new ErrorMessage(404, "User with hid " + hid + " not found"));
+            retranslate(hid, new ErrorChatMessage(404, "User with hid " + hid + " not found"));
             return;
         }
 
@@ -74,6 +85,8 @@ public class ChatServiceImpl implements ChatService {
         chat.setHid(user.getHid());
         chat.setSubId(subId);
         chat.setSessionId(sessionId);
+        chat.setTimestamp(new Date().toInstant());
+
         chatContextRepository.save(chat);
     }
 

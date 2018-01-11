@@ -1,7 +1,8 @@
 package com.hedvig.backoffice.services.messages;
 
-import com.hedvig.backoffice.services.messages.data.Message;
-import com.hedvig.backoffice.services.messages.data.PayloadMessage;
+import com.hedvig.backoffice.domain.ChatContext;
+import com.hedvig.backoffice.services.chat.data.ChatMessage;
+import com.hedvig.backoffice.services.chat.data.PayloadChatMessage;
 import lombok.Value;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,23 +46,25 @@ public class BotServiceStub implements BotService {
         private int position;
     }
 
-    private ConcurrentHashMap<String, List<Message>> messages;
+    private ConcurrentHashMap<String, List<ChatMessage>> messages;
     private ConcurrentHashMap<String, MessagePositionStub> positions;
+    private ConcurrentHashMap<String, List<ChatMessage>> updateMessages;
 
     @Autowired
     public BotServiceStub() {
         this.messages = new ConcurrentHashMap<>();
         this.positions = new ConcurrentHashMap<>();
+        this.updateMessages = new ConcurrentHashMap<>();
     }
 
     @Override
-    public List<Message> messages(String hid) throws BotServiceException {
+    public List<ChatMessage> messages(String hid) throws BotServiceException {
         return messages.computeIfAbsent(hid, k -> new ArrayList<>());
     }
 
     @Override
-    public List<Message> messages(String hid, int count) throws BotServiceException {
-        List<Message> all = messages.computeIfAbsent(hid, k -> new ArrayList<>());
+    public List<ChatMessage> messages(String hid, int count) throws BotServiceException {
+        List<ChatMessage> all = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         if (all.size() <= count) {
             return all;
         }
@@ -70,25 +73,38 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<Message> updates(String hid) throws BotServiceException {
-        MessagePositionStub pos = positions.computeIfAbsent(hid,
+    public List<ChatMessage> updates(ChatContext chat) throws BotServiceException {
+        MessagePositionStub pos = positions.computeIfAbsent(chat.getHid(),
                 k -> new MessagePositionStub(Instant.ofEpochMilli(new Date().getTime()), 0));
+
+        List<ChatMessage> result = new ArrayList<>();
 
         Instant current = Instant.ofEpochMilli(new Date().getTime());
         if (current.minusSeconds(RandomUtils.nextInt(3, 7)).isAfter(pos.time)) {
             MessagePositionStub newPos = new MessagePositionStub(Instant.ofEpochMilli(new Date().getTime()), pos.position + 1);
-            positions.put(hid, newPos);
+            positions.put(chat.getHid(), newPos);
 
-            Message msg = new PayloadMessage(String.format(STUB_MESSAGE_TEMPLATE, pos.position, pos.position));
-            return Arrays.asList(msg);
+            ChatMessage msg = new PayloadChatMessage(String.format(STUB_MESSAGE_TEMPLATE, pos.position, pos.position));
+            result.add(msg);
         }
 
-        return new ArrayList<>();
+        List<ChatMessage> updates = updateMessages.computeIfAbsent(chat.getHid(), k -> new ArrayList<>());
+        if (updates.size() > 0) {
+            result.addAll(updates);
+            updateMessages.put(chat.getHid(), new ArrayList<>());
+        }
+
+        if (result.size() > 0) {
+            List<ChatMessage> userMessages = messages.computeIfAbsent(chat.getHid(), k -> new ArrayList<>());
+            userMessages.addAll(result);
+        }
+
+        return result;
     }
 
     @Override
-    public void response(String hid, Message message) throws BotServiceException {
-        List<Message> userMessages = messages.computeIfAbsent(hid, k -> new ArrayList<>());
-        userMessages.add(message);
+    public void response(String hid, ChatMessage message) throws BotServiceException {
+        List<ChatMessage> msg = updateMessages.computeIfAbsent(hid, k -> new ArrayList<>());
+        msg.add(message);
     }
 }

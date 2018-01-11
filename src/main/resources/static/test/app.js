@@ -23,8 +23,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function send() {
     var text = input.value;
+    var date = Date.now();
+
     input.value = "";
-    stompClient.send("/app/messages/send/" + userName, {}, JSON.stringify({ 'body': text }));
+    stompClient.send("/app/messages/send/" + userName, {}, JSON.stringify({
+        "id": "message.getname",
+        "header": {
+            "messageId": 4,
+            "fromId": 1,
+            "responsePath": "/response",
+            "timeStamp": date
+        },
+        "body": {
+            "type": "text",
+            "id": 4,
+            "text": text
+        },
+        "timestamp": date
+    }));
 }
 
 function chat() {

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 
 @Data
 @Entity
@@ -23,5 +24,10 @@ public class ChatContext {
 
     @NotNull
     private String sessionId;
+
+    @NotNull
+    private Instant timestamp;
+
+
 
 }
