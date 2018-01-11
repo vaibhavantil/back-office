@@ -49,7 +49,18 @@ class DateInput extends React.Component {
     }
 
     dateChangeHandler(date) {
+        this.setState({
+            date: moment(date)
+        });
         this.props.onChangeHandler(moment(date));
+    }
+
+    componentDidMount() {
+        if (!this.state.date && !this.props.date) {
+            this.setState({
+                date: moment()
+            });
+        }
     }
 
     render() {
@@ -57,6 +68,7 @@ class DateInput extends React.Component {
             <WidgetContainer>
                 <DatePickerContainer>
                     <SingleDatePicker
+                        date={this.state.date}
                         onDateChange={this.dateChangeHandler}
                         focused={this.state.focused}
                         onFocusChange={({ focused }) =>

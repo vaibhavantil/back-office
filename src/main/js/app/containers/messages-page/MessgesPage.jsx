@@ -35,7 +35,6 @@ class MessagesPage extends React.Component {
                 <Chat
                     messages={messages}
                     addMessage={addMessage}
-                    getMessages={null}
                     userId={userId}
                     user={user}
                 />
@@ -55,6 +54,7 @@ const mapStateToProps = ({ client, messages, chats }) => {
 export default withRouter(
     connect(mapStateToProps, {
         ...actions.messagesActions,
+        ...actions.chatUserActions,
         ...actions.clientActions
     })(MessagesPage)
 );

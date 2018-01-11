@@ -11,7 +11,7 @@ const MessagesListContainer = styled.div`
 
 const EmptyList = styled.h3`
     text-align: center;
-`
+`;
 
 export default class MessagesList extends React.Component {
     constructor(props) {
@@ -29,11 +29,11 @@ export default class MessagesList extends React.Component {
         return (
             <MessagesListContainer innerRef={el => (this.messagesList = el)}>
                 {messages.length ? (
-                    messages.map(message => (
+                    messages.map(item => (
                         <Message
-                            key={message.id}
-                            content={message.content}
-                            left={message.author === parseInt(userId, 10)}
+                            key={item.id}
+                            content={item.message}
+                            left={item.author === parseInt(userId, 10)}
                         />
                     ))
                 ) : (

@@ -74,7 +74,7 @@ export default class ChatsList extends React.Component {
 
     render() {
         return (
-            <div>
+            <React.Fragment>
                 <Input
                     loading={this.state.isLoading}
                     placeholder="Search..."
@@ -82,7 +82,7 @@ export default class ChatsList extends React.Component {
                     onChange={this.handleSearchChange}
                 />
                 <Chats chats={this.state.results} />
-            </div>
+            </React.Fragment>
         );
     }
 }

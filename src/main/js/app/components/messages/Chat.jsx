@@ -14,31 +14,15 @@ const Header = styled.h2`
     color: #4c4b4b;
 `;
 
-export default class Chat extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+const Chat = ({ messages, addMessage, userId, user }) => (
+    <div>
+        <Header>Chat with {user ? user.name : 'User'}</Header>
+        <Link to="/messages">Back</Link>
+        <ChatContainer>
+            <MessagesList messages={messages.list} userId={userId} />
+            <MessagesPanel addMessage={addMessage} />
+        </ChatContainer>
+    </div>
+);
 
-    componentDidMount() {
-        // this.props.getMessages(this.props.userId);
-    }
-
-    render() {
-        const { messages, addMessage, userId, user } = this.props;
-        return (
-            <div>
-                {
-                    user && <Header>Chat with {user.name}</Header>
-                }
-                <Link to="/messages">Back</Link>
-                <ChatContainer>
-                    <MessagesList
-                        messages={messages.list}
-                        userId={userId}
-                    />
-                    <MessagesPanel addMessage={addMessage} />
-                </ChatContainer>
-            </div>
-        );
-    }
-}
+export default Chat;

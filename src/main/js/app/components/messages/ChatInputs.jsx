@@ -1,19 +1,25 @@
 import React from 'react';
-import { Form, Dropdown, Input } from 'semantic-ui-react';
-import DateInput from '../dateinput/DateInput';
+import { Form, Dropdown } from 'semantic-ui-react';
+import DateInput from '../inputs/DateInput';
+import FileInput from '../inputs/FileInput';
 
-const stateOptions = [{ key: 'AL', value: 'AL', text: 'Alabama' }];
+const stateOptions = [
+    { key: 'AL', value: 'AL', text: 'Al' },
+    { key: 'EL', value: 'EL', text: 'El' }
+];
 
 export default {
-    Text() {
-        return <Form.Input />;
+    Text(onChangeHandler) {
+        const changeHandler = (e, { value }) => onChangeHandler(value);
+        return <Form.Input onChange={changeHandler} />;
     },
 
     Date(onChangeHandler) {
         return <DateInput onChangeHandler={onChangeHandler} />;
     },
 
-    MultipleSelect() {
+    MultipleSelect(onChangeHandler) {
+        const changeHandler = (e, { value }) => onChangeHandler(value);
         return (
             <Dropdown
                 placeholder="State"
@@ -21,11 +27,12 @@ export default {
                 search
                 selection
                 options={stateOptions}
+                onChange={changeHandler}
             />
         );
     },
 
-    Audio() {
-        return <Input type="file" placeholer="Audio" />;
+    Audio(onChangeHandler) {
+        return <FileInput changeHandler={onChangeHandler} />;
     }
 };
