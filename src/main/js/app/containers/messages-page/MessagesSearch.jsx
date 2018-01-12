@@ -5,14 +5,18 @@ import { withRouter } from 'react-router';
 import actions from 'app/store/actions';
 import { checkAuthorization } from 'app/lib/checkAuth';
 import ChatsList from 'components/messages/ChatsList';
-
+import { Link } from 'react-router-dom';
+import { Icon } from 'semantic-ui-react';
+import { Header } from 'components/messages/Chat';
 
 const ChatsListPage = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-`
+    align-items: flex-start;
+    max-width: 500px;
+    margin: 0 auto;
+`;
 
 class MessagesSearch extends React.Component {
     constructor(props) {
@@ -20,15 +24,20 @@ class MessagesSearch extends React.Component {
     }
 
     componentDidMount() {
-        checkAuthorization(null, this.props.setClient);
-        this.props.chatsRequest();
+        const { client, setClient } = this.props;
+        checkAuthorization(null, setClient);
+        this.props.chatsRequest(client.token);
     }
 
     render() {
+        const { chats, searchChatRequest, client } = this.props;
         return (
             <ChatsListPage>
-                <h1>Chats List</h1>
-                <ChatsList chats={this.props.chats.list} />
+                <Header>Chats List</Header>
+                <Link to="/assets">
+                    <Icon name="arrow left" /> Back
+                </Link>
+                <ChatsList chats={chats} search={searchChatRequest} client={client} />
             </ChatsListPage>
         );
     }

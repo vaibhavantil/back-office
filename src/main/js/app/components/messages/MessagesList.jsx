@@ -25,19 +25,23 @@ export default class MessagesList extends React.Component {
     }
 
     render() {
-        const { messages, userId } = this.props;
+        const { messages, userId, error } = this.props;
         return (
             <MessagesListContainer innerRef={el => (this.messagesList = el)}>
                 {messages.length ? (
-                    messages.map(item => (
+                    messages.map((item, id) => (
                         <Message
-                            key={item.id}
+                            key={id}
                             content={item.message}
                             left={item.author === parseInt(userId, 10)}
                         />
                     ))
                 ) : (
-                    <EmptyList>No messages with this User</EmptyList>
+                    <EmptyList>
+                        {error
+                            ? 'No messages with this User'
+                            : 'Lost connection to server'}
+                    </EmptyList>
                 )}
             </MessagesListContainer>
         );

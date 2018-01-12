@@ -2,7 +2,10 @@ import initialState from '../initialState';
 import {
     CHATS_REQUESTING,
     CHATS_REQUEST_SUCCESS,
-    CHATS_REQUEST_ERROR
+    CHATS_REQUEST_ERROR,
+    CHAT_SEARCH_REQUESTING,
+    CHAT_SEARCH_SUCCESS,
+    CHAT_SEARCH_ERROR
 } from 'constants';
 
 export default function(state = initialState.chats, action) {
@@ -24,6 +27,34 @@ export default function(state = initialState.chats, action) {
             };
 
         case CHATS_REQUEST_ERROR:
+            return {
+                ...state,
+                requesting: false,
+                successful: false,
+                errors: state.errors.concat([
+                    {
+                        message: action.error.response.statusText,
+                        status: action.error.response.status
+                    }
+                ])
+            };
+        case CHAT_SEARCH_REQUESTING:
+            return {
+                ...state,
+                requesting: false,
+                successful: true,
+                errors: []
+            };
+
+        case CHAT_SEARCH_SUCCESS:
+            return {
+                list: action.chats,
+                requesting: false,
+                successful: true,
+                errors: []
+            };
+
+        case CHAT_SEARCH_ERROR:
             return {
                 ...state,
                 requesting: false,
