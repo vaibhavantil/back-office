@@ -11,6 +11,7 @@ spec:
     spec:
       containers:
       - name: back-office-service
-        image: 201427539538.dkr.ecr.eu-central-1.amazonaws.com/back-office:latest
+        image: 201427539538.dkr.ecr.eu-central-1.amazonaws.com/back-office:11
         ports:
-        - containerPort: 80
+        - containerPort: 8080
+          protocol: TCP
