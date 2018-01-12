@@ -17,7 +17,6 @@ const get = async (token) => {
         url: config.asset.get.url,
         method: config.asset.get.method,
         headers: {
-            ...axiosInstance.headers,
             [config.tokenHeaderName]: token,
         }
     });
@@ -28,7 +27,6 @@ const update = async (id, state, token) => {
         url: `${config.asset.update.url}/${id}`,
         method: config.asset.update.method,
         headers: {
-            ...axiosInstance.headers,
             [config.tokenHeaderName]: token,
         },
         data: {

@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import actions from 'app/store/actions';
 import Chat from 'components/messages/Chat';
-// import { setupSocket } from 'app/lib/sockets';
+import { setupSocket } from 'app/lib/sockets';
 
 const ChatContainer = styled.div`
     display: flex;
@@ -17,16 +17,33 @@ const ChatContainer = styled.div`
 class MessagesPage extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            socket: null
+        };
+        this.addMessageHandler = this.addMessageHandler.bind(this);
+    }
+
+    addMessageHandler(message) {
+        const { socket } = this.state;
+        if (socket) {
+            this.props.addMessage(message, socket);
+        }
     }
 
     componentDidMount() {
-        // const { messageReceived } = this.props;
-        // setupSocket({ messageReceived }, this.props.match.params.id);
+        const { messageReceived, match, getMessagesHistory } = this.props;
+        const socket = setupSocket(
+            { messageReceived, getMessagesHistory },
+            match.params.id
+        );
+        this.setState({
+            socket
+        });
     }
 
     render() {
         const userId = this.props.match.params.id;
-        const { messages, addMessage, chats } = this.props;
+        const { messages, chats } = this.props;
         const user = chats.list.filter(
             user => user.id === parseInt(userId, 10)
         )[0];
@@ -34,7 +51,7 @@ class MessagesPage extends React.Component {
             <ChatContainer>
                 <Chat
                     messages={messages}
-                    addMessage={addMessage}
+                    addMessage={this.addMessageHandler}
                     userId={userId}
                     user={user}
                 />

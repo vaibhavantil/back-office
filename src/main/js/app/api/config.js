@@ -24,7 +24,16 @@ export default {
     chats: {
         get: {
             method: 'get',
-            url: 'chat_users'
+            url: 'user'
         },
+        search: {
+            method: 'get',
+            url: 'user/search'
+        }
+    },
+    ws: {
+        endpoint: '/chat',
+        messages: '/topic/messages/',
+        history: '/app/messages/history/'
     }
 };

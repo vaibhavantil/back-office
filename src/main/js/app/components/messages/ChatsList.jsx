@@ -1,6 +1,4 @@
 import React from 'react';
-import filter from 'lodash.filter';
-import escapeRegExp from 'lodash.escaperegexp';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { List, Input } from 'semantic-ui-react';
@@ -16,15 +14,19 @@ const ListContainer = styled.div`
 const Chats = ({ chats }) => (
     <ListContainer>
         <List celled selection verticalAlign="middle" size="big">
-            {chats.map(item => (
-                <List.Item key={item.id}>
-                    <Link to={`/messages/${item.id}`} replace>
-                        <List.Content>
-                            <List.Header>{item.name}</List.Header>
-                        </List.Content>
-                    </Link>
-                </List.Item>
-            ))}
+            {chats.length ? (
+                chats.map(item => (
+                    <List.Item key={item.hid}>
+                        <Link to={`/messages/${item.hid}`} replace>
+                            <List.Content>
+                                <List.Header>{item.name}</List.Header>
+                            </List.Content>
+                        </Link>
+                    </List.Item>
+                ))
+            ) : (
+                <h2>Not found</h2>
+            )}
         </List>
     </ListContainer>
 );
@@ -38,36 +40,27 @@ export default class ChatsList extends React.Component {
             value: ''
         };
         this.handleSearchChange = this.handleSearchChange.bind(this);
-        this.resetSearchState = this.resetSearchState.bind(this);
-    }
-
-    resetSearchState() {
-        this.setState({
-            isLoading: false,
-            results: this.props.chats,
-            value: ''
-        });
+        this.searchRequest = this.searchRequest.bind(this);
     }
 
     handleSearchChange(e) {
-        this.setState({ isLoading: true, value: e.target.value });
-        // eslint-disable-next-line no-undef
-        setTimeout(() => {
-            if (!this.state.value) return this.resetSearchState();
+        const keyValue = e.key;
+        this.setState({ value: e.target.value }, () => {
+            if (keyValue === 'Enter') this.searchRequest();
+        });
+    }
 
-            const regexp = new RegExp(escapeRegExp(this.state.value), 'i');
-            const isMatch = result => regexp.test(result.name);
-            this.setState({
-                isLoading: false,
-                results: filter(this.props.chats, isMatch)
-            });
-        }, 250);
+    searchRequest() {
+        this.setState({ isLoading: true });
+        this.props.search(this.props.client.token, this.state.value);
     }
 
     componentWillReceiveProps(newProps) {
-        if (newProps.chats.length) {
+        if (newProps.chats.list.length) {
             this.setState({
-                results: newProps.chats
+                results: newProps.chats.list,
+                isLoading: newProps.chats.requesting,
+                value: ''
             });
         }
     }
@@ -79,7 +72,9 @@ export default class ChatsList extends React.Component {
                     loading={this.state.isLoading}
                     placeholder="Search..."
                     iconPosition="left"
-                    onChange={this.handleSearchChange}
+                    style={{ marginTop: '30px' }}
+                    onKeyPress={this.handleSearchChange}
+                    action={{ icon: 'search', onClick: this.searchRequest }}
                 />
                 <Chats chats={this.state.results} />
             </React.Fragment>
