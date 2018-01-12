@@ -33,7 +33,14 @@ botservice:
   urls:
     messages: /messages
     response: /addmessage
-  stub: true
+  stub: false
+
+userservice:
+  baseUrl: http://localhost:4084/member
+  urls:
+    users: /members
+    userById: /
+  stub: false
 
 jwt:
   enabled: true
