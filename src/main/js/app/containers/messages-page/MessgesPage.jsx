@@ -36,16 +36,14 @@ class MessagesPage extends React.Component {
             { messageReceived, getMessagesHistory },
             match.params.id
         );
-        this.setState({
-            socket
-        });
+        this.setState({ socket });
     }
 
     render() {
         const userId = this.props.match.params.id;
         const { messages, chats } = this.props;
         const user = chats.list.filter(
-            user => user.id === parseInt(userId, 10)
+            user => user.hid === userId
         )[0];
         return (
             <ChatContainer>
@@ -54,6 +52,7 @@ class MessagesPage extends React.Component {
                     addMessage={this.addMessageHandler}
                     userId={userId}
                     user={user}
+                    error={!!this.state.socket}
                 />
             </ChatContainer>
         );

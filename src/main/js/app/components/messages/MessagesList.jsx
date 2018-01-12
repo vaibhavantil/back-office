@@ -25,7 +25,7 @@ export default class MessagesList extends React.Component {
     }
 
     render() {
-        const { messages, userId } = this.props;
+        const { messages, userId, error } = this.props;
         return (
             <MessagesListContainer innerRef={el => (this.messagesList = el)}>
                 {messages.length ? (
@@ -37,7 +37,11 @@ export default class MessagesList extends React.Component {
                         />
                     ))
                 ) : (
-                    <EmptyList>No messages with this User</EmptyList>
+                    <EmptyList>
+                        {error
+                            ? 'No messages with this User'
+                            : 'Lost connection to server'}
+                    </EmptyList>
                 )}
             </MessagesListContainer>
         );
