@@ -54,7 +54,7 @@ public class AssetTrackerSchedulerConfig {
     }
 
     @Bean
-    public SchedulerFactoryBean scheduler(Trigger assetTrackerTrigger, JobDetail assetTrackerJob) {
+    public SchedulerFactoryBean assetTrackerScheduler(Trigger assetTrackerTrigger, JobDetail assetTrackerJob) {
         SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
         schedulerFactory.setJobFactory(new SpringBeanJobFactory());
         schedulerFactory.setJobDetails(assetTrackerJob);

@@ -182,6 +182,13 @@
                     <filesets>
                         <fileset>
                             <directory>src/main/resources/static</directory>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                            <excludes>
+                                <exclude>test/app.js</exclude>
+                                <exclude>test/index.html</exclude>
+                            </excludes>
                         </fileset>
                     </filesets>
                 </configuration>

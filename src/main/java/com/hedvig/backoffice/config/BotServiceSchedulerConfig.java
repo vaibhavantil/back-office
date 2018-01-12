@@ -65,7 +65,7 @@ public class BotServiceSchedulerConfig {
     }
 
     @Bean
-    public SchedulerFactoryBean scheduler(Trigger chatTrackerTrigger, JobDetail chatTrackerJob) {
+    public SchedulerFactoryBean botServiceScheduler(Trigger chatTrackerTrigger, JobDetail chatTrackerJob) {
         SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
         schedulerFactory.setJobFactory(new SpringBeanJobFactory());
         schedulerFactory.setJobDetails(chatTrackerJob);
