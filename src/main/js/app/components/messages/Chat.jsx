@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import MessagesList from '../messages/MessagesList';
 import MessagesPanel from '../messages/MessagesPanel';
 
@@ -13,25 +14,15 @@ const Header = styled.h2`
     color: #4c4b4b;
 `;
 
-/* eslint-disable */
-export default class Chat extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+const Chat = ({ messages, addMessage, userId, user }) => (
+    <div>
+        <Header>Chat with {user ? user.name : 'User'}</Header>
+        <Link to="/messages">Back</Link>
+        <ChatContainer>
+            <MessagesList messages={messages.list} userId={userId} />
+            <MessagesPanel addMessage={addMessage} />
+        </ChatContainer>
+    </div>
+);
 
-    render() {
-        const { messages, addMessage, userId } = this.props;
-        return (
-            <div>
-                <Header>Chat with {messages.user.name}</Header>
-                <ChatContainer>
-                    <MessagesList
-                        messages={messages.messages}
-                        userId={userId}
-                    />
-                    <MessagesPanel />
-                </ChatContainer>
-            </div>
-        );
-    }
-}
+export default Chat;

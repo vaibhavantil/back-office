@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Redirect } from 'react-router';
 import { checkAssetAuthorization } from '../lib/checkAuth';
 
-/* eslint-disable react/prop-types */
 const PrivateRoute = ({ component: Component, store, ...rest }) => {
     return (
         <Route

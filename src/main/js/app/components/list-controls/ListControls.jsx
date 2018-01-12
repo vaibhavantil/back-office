@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
-/* eslint-disable react/prop-types */
 export default class ListControls extends React.Component {
     constructor(props) {
         super(props);
@@ -36,6 +36,9 @@ export default class ListControls extends React.Component {
                     <Button onClick={this.pollStart}>poll start</Button>
                 )}
                 <Button onClick={this.logout}>logout</Button>
+                <Link to="messages">
+                    <Button>Messages</Button>
+                </Link>
             </div>
         );
     }

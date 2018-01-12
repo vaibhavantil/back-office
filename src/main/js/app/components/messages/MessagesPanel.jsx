@@ -13,28 +13,30 @@ const MessagesPanelContariner = styled.div`
     border-top: solid 2px #e8e5e5;
 `;
 
-/* eslint-disable react/prop-types */
 export default class MessgesPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            messageType: 'Text'
+            messageType: 'Text',
+            message: null
         };
         this.dropdownHander = this.dropdownHander.bind(this);
-        this.clickHandler = this.clickHandler.bind(this);
+        this.submitHandler = this.submitHandler.bind(this);
+        this.inputHandler = this.inputHandler.bind(this);
     }
 
     dropdownHander(e, { value }) {
         this.setState({ messageType: value });
     }
 
-    clickHandler() {
-        this.props.addMessage(this.state.msgContent);
+    submitHandler() {
+        this.props.addMessage(this.state.message);
     }
 
-    inputHandler() {
-        /* eslint-disable */
-        console.log(arguments)
+    inputHandler(value) {
+        this.setState({
+            message: value
+        });
     }
 
     getChatInput(type) {
@@ -42,10 +44,9 @@ export default class MessgesPanel extends React.Component {
     }
 
     render() {
-
         const chatInput = this.getChatInput(this.state.messageType);
         return (
-            <Form onSubmit={this.clickHandler}>
+            <Form onSubmit={this.submitHandler}>
                 <MessagesPanelContariner>
                     <Dropdown
                         onChange={this.dropdownHander}
@@ -54,8 +55,8 @@ export default class MessgesPanel extends React.Component {
                         selection
                         value={this.state.messageType}
                     />
-                    { chatInput }
-                    <Form.Button content='Send' primary />
+                    {chatInput}
+                    <Form.Button content="Send" primary />
                 </MessagesPanelContariner>
             </Form>
         );

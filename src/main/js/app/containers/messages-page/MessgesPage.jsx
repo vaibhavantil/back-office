@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import actions from 'app/store/actions';
 import Chat from 'components/messages/Chat';
+// import { setupSocket } from 'app/lib/sockets';
 
 const ChatContainer = styled.div`
     display: flex;
@@ -12,31 +14,47 @@ const ChatContainer = styled.div`
     background-color: #f5f5f5;
 `;
 
-/* eslint-disable react/prop-types */
 class MessagesPage extends React.Component {
     constructor(props) {
         super(props);
     }
 
+    componentDidMount() {
+        // const { messageReceived } = this.props;
+        // setupSocket({ messageReceived }, this.props.match.params.id);
+    }
+
     render() {
+        const userId = this.props.match.params.id;
+        const { messages, addMessage, chats } = this.props;
+        const user = chats.list.filter(
+            user => user.id === parseInt(userId, 10)
+        )[0];
         return (
             <ChatContainer>
                 <Chat
-                    messages={this.props.messages}
-                    addMessage={this.props.addMessage}
-                    userId={this.props.match.params.id}
+                    messages={messages}
+                    addMessage={addMessage}
+                    userId={userId}
+                    user={user}
                 />
             </ChatContainer>
         );
     }
 }
 
-const mapStateToProps = ({ client, messages }) => ({
-    client,
-    messages
-});
+const mapStateToProps = ({ client, messages, chats }) => {
+    return {
+        client,
+        messages,
+        chats
+    };
+};
 
-export default connect(mapStateToProps, {
-    ...actions.messagesActions,
-    ...actions.clientActions
-})(MessagesPage);
+export default withRouter(
+    connect(mapStateToProps, {
+        ...actions.messagesActions,
+        ...actions.chatUserActions,
+        ...actions.clientActions
+    })(MessagesPage)
+);

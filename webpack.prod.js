@@ -16,7 +16,8 @@ module.exports = {
     cache: true,
     output: {
         path: buildPath,
-        filename: '[name].js'
+        filename: '[name].js',
+        publicPath: '/'
     },
     module: {
         loaders: [

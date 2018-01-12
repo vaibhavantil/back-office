@@ -1,7 +1,6 @@
 import React from 'react';
 import { Form, Input, Message } from 'semantic-ui-react';
 
-/* eslint-disable react/prop-types */
 const FormField = ({
     input,
     type,

@@ -3,7 +3,6 @@ import { Card, Image, Dropdown, Button } from 'semantic-ui-react';
 import moment from 'moment';
 import { assetStates } from 'app/lib/selectOptions';
 
-/* eslint-disable react/prop-types */
 export default class AssetCard extends React.Component {
     constructor(props) {
         super(props);

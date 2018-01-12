@@ -6,7 +6,6 @@ import AssetList from 'components/asset-list/AssetList';
 import ListControls from 'components/list-controls/ListControls';
 import { checkAuthorization } from 'app/lib/checkAuth';
 
-/* eslint-disable react/prop-types */
 class MainPage extends React.Component {
     constructor(props) {
         super(props);
