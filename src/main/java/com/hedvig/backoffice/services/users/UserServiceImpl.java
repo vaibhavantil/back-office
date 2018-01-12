@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class UserServiceImpl implements UserService {
@@ -39,8 +40,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> find(String query) throws UserNotFoundException, UserServiceException {
-        return null;
+    public List<UserDTO> find(String query) throws UserServiceException {
+        List<UserDTO> users = list();
+
+        return users.stream()
+                .filter(u -> u.getHid().contains(query) || (u.getFirstName() != null && u.getFirstName().contains(query)))
+                .collect(Collectors.toList());
     }
 
     @Override

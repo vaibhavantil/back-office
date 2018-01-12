@@ -7,10 +7,10 @@ tracker:
   stub: true
 
 botservice:
-  stub: false
+  stub: true
 
 userservice:
-  stub: false
+  stub: true
 
 jwt:
   enabled: true

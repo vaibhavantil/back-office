@@ -5,10 +5,7 @@ import com.hedvig.backoffice.services.users.UserService;
 import com.hedvig.backoffice.services.users.UserServiceException;
 import com.hedvig.backoffice.web.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,9 +30,9 @@ public class UserController {
         return userService.findByHid(hid);
     }
 
-    @GetMapping("/search/{search}")
-    public List<UserDTO> find(@PathVariable String search) throws UserNotFoundException, UserServiceException {
-        return userService.find(search);
+    @GetMapping("/search")
+    public List<UserDTO> find(@RequestParam("q") String query) throws UserNotFoundException, UserServiceException {
+        return userService.find(query);
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.List;
 public interface UserService {
 
     List<UserDTO> list() throws UserServiceException;
-    List<UserDTO> find(String query) throws UserNotFoundException, UserServiceException;
+    List<UserDTO> find(String query) throws UserServiceException;
     UserDTO findByHid(String hid) throws UserNotFoundException, UserServiceException;
 
 }
