@@ -5,6 +5,8 @@ import com.hedvig.backoffice.services.chat.data.ChatMessage;
 import com.hedvig.backoffice.services.chat.data.PayloadChatMessage;
 import lombok.Value;
 import org.apache.commons.lang3.RandomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BotServiceStub implements BotService {
+
+    private static Logger logger = LoggerFactory.getLogger(BotServiceStub.class);
 
     private static final String STUB_MESSAGE_TEMPLATE = "{" +
             "'globalId': %s, " +
@@ -55,6 +59,9 @@ public class BotServiceStub implements BotService {
         this.messages = new ConcurrentHashMap<>();
         this.positions = new ConcurrentHashMap<>();
         this.updateMessages = new ConcurrentHashMap<>();
+
+        logger.info("BOT SERVICE:");
+        logger.info("class: " + BotServiceStub.class.getName());
     }
 
     @Override

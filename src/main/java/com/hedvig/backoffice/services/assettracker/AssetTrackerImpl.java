@@ -23,21 +23,26 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class RemoteAssetTracker implements AssetTracker {
+public class AssetTrackerImpl implements AssetTracker {
 
-    private static Logger logger = LoggerFactory.getLogger(RemoteAssetTracker.class);
+    private static Logger logger = LoggerFactory.getLogger(AssetTrackerImpl.class);
 
     private CommandGateway commandGateway;
     private String trackerUrl;
     private String assetsPath;
 
     @Autowired
-    public RemoteAssetTracker(CommandBus commandBus,
-                              @Value("${tracker.baseUrl}") String trackerUrl,
-                              @Value("${tracker.urls.assets}") String assetsPath) {
+    public AssetTrackerImpl(CommandBus commandBus,
+                            @Value("${tracker.baseUrl}") String trackerUrl,
+                            @Value("${tracker.urls.assets}") String assetsPath) {
         this.commandGateway = new DefaultCommandGateway(commandBus);
         this.trackerUrl = trackerUrl;
         this.assetsPath = assetsPath;
+
+        logger.info("ASSET TRACKER SERVICE:");
+        logger.info("class: " + AssetTrackerImpl.class.getName());
+        logger.info("base: " + trackerUrl);
+        logger.info("assets: " + assetsPath);
     }
 
     @Override

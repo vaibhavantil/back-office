@@ -8,6 +8,7 @@ import com.hedvig.backoffice.services.chat.data.ErrorChatMessage;
 import com.hedvig.backoffice.services.chat.data.ChatMessage;
 import com.hedvig.backoffice.services.users.UserNotFoundException;
 import com.hedvig.backoffice.services.users.UserService;
+import com.hedvig.backoffice.services.users.UserServiceException;
 import com.hedvig.backoffice.web.dto.UserDTO;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -39,26 +40,14 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void append(String hid, ChatMessage message) {
-        UserDTO user;
-        try {
-            user = userService.findByHid(hid);
-        } catch (UserNotFoundException e) {
-            retranslate(hid, new ErrorChatMessage(404, "User with hid " + hid + " not found"));
-            return;
-        }
-
         Optional<ChatContext> chatOptional = chatContextRepository.finByHid(hid);
         if (!chatOptional.isPresent()) {
             retranslate(hid, new ErrorChatMessage(404, "Chat for user with hid " + hid + " not found"));
             return;
         }
 
-        ChatContext chat = chatOptional.get();
-        chat.setTimestamp(new Date().toInstant());
-        chatContextRepository.save(chat);
-
         try {
-            botService.response(user.getHid(), message);
+            botService.response(hid, message);
         } catch (BotServiceException e) {
             retranslate(hid, new ErrorChatMessage(500, e.getMessage()));
             return;
@@ -78,6 +67,9 @@ public class ChatServiceImpl implements ChatService {
             user = userService.findByHid(hid);
         } catch (UserNotFoundException e) {
             retranslate(hid, new ErrorChatMessage(404, "User with hid " + hid + " not found"));
+            return;
+        } catch (UserServiceException e) {
+            retranslate(hid, new ErrorChatMessage(500, e.getMessage()));
             return;
         }
 

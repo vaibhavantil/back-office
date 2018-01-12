@@ -5,6 +5,7 @@ import com.hedvig.common.constant.AssetState;
 import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,11 +14,17 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class LocalAssetTracker implements AssetTracker {
+public class AssetTrackerStub implements AssetTracker {
 
-    private static Logger logger = LoggerFactory.getLogger(LocalAssetTracker.class);
+    private static Logger logger = LoggerFactory.getLogger(AssetTrackerStub.class);
 
     private boolean generated = false;
+
+    @Autowired
+    public AssetTrackerStub() {
+        logger.info("ASSET TRACKER SERVICE:");
+        logger.info("class: " + AssetTrackerStub.class.getName());
+    }
 
     @Override
     public List<Asset> findPendingAssets() {
