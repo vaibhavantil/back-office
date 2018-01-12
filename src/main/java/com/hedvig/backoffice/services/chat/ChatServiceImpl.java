@@ -39,6 +39,13 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public void retranslate(String hid, List<ChatMessage> messages) {
+        for (ChatMessage m : messages) {
+            retranslate(hid, m);
+        }
+    }
+
+    @Override
     public void append(String hid, ChatMessage message) {
         Optional<ChatContext> chatOptional = chatContextRepository.finByHid(hid);
         if (!chatOptional.isPresent()) {
@@ -51,6 +58,24 @@ public class ChatServiceImpl implements ChatService {
         } catch (BotServiceException e) {
             retranslate(hid, new ErrorChatMessage(500, e.getMessage()));
             return;
+        }
+    }
+
+    @Override
+    public void messages(String hid) {
+        try {
+            retranslate(hid, botService.messages(hid));
+        } catch (BotServiceException e) {
+            retranslate(hid, new ErrorChatMessage(500, e.getMessage()));
+        }
+    }
+
+    @Override
+    public void messages(String hid, int count) {
+        try {
+            retranslate(hid, botService.messages(hid, count));
+        } catch (BotServiceException e) {
+            retranslate(hid, new ErrorChatMessage(500, e.getMessage()));
         }
     }
 

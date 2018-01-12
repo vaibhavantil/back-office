@@ -26,9 +26,8 @@ public class UserDTO {
     private LocalDate birthDate;
     private String apartment;
 
-    public UserDTO(long memberId, String name) {
+    public UserDTO(long memberId) {
         this.memberId = memberId;
-        this.firstName = name;
     }
 
     public String getHid() {
