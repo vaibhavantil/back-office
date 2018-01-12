@@ -7,6 +7,7 @@ import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.services.chat.data.ChatMessage;
 import com.hedvig.backoffice.services.chat.data.PayloadChatMessage;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -101,18 +102,20 @@ public class BotServiceImpl implements BotService {
         HttpEntity entity = doRequest(client, get);
 
         ObjectMapper mapper = new ObjectMapper();
-        List<ChatMessage> messages;
+        List<ChatMessage> messages = null;
 
         try {
             String result = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
-            JsonNode root = mapper.readValue(result, JsonNode.class);
-            Iterable<Map.Entry<String, JsonNode>> iterable = root::fields;
+            if (StringUtils.isNotBlank(result)) {
 
-            messages = StreamSupport
-                    .stream(iterable.spliterator(), false)
-                    .map(e -> new PayloadChatMessage(e.getValue().toString()))
-                    .collect(Collectors.toList());
+                JsonNode root = mapper.readValue(result, JsonNode.class);
+                Iterable<Map.Entry<String, JsonNode>> iterable = root::fields;
 
+                messages = StreamSupport
+                        .stream(iterable.spliterator(), false)
+                        .map(e -> new PayloadChatMessage(e.getValue().toString()))
+                        .collect(Collectors.toList());
+            }
         } catch (IOException e) {
             closeRequest(client);
             throw new BotServiceException(e);

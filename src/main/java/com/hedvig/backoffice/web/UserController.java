@@ -2,6 +2,7 @@ package com.hedvig.backoffice.web;
 
 import com.hedvig.backoffice.services.users.UserNotFoundException;
 import com.hedvig.backoffice.services.users.UserService;
+import com.hedvig.backoffice.services.users.UserServiceException;
 import com.hedvig.backoffice.web.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,12 +24,17 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDTO> users() {
+    public List<UserDTO> users() throws UserServiceException {
         return userService.list();
     }
 
+    @GetMapping("/{hid}")
+    public UserDTO findOne(@PathVariable String hid) throws UserServiceException, UserNotFoundException {
+        return userService.findByHid(hid);
+    }
+
     @GetMapping("/search/{search}")
-    public UserDTO find(@PathVariable String search) throws UserNotFoundException {
+    public List<UserDTO> find(@PathVariable String search) throws UserNotFoundException, UserServiceException {
         return userService.find(search);
     }
 

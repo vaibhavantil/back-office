@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserDTO> list();
-    UserDTO find(String query) throws UserNotFoundException;
-    UserDTO findByHid(String hid) throws UserNotFoundException;
+    List<UserDTO> list() throws UserServiceException;
+    List<UserDTO> find(String query) throws UserNotFoundException, UserServiceException;
+    UserDTO findByHid(String hid) throws UserNotFoundException, UserServiceException;
 
 }

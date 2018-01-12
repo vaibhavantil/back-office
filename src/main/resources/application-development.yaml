@@ -6,5 +6,11 @@ security:
 tracker:
   stub: true
 
+botservice:
+  stub: false
+
+userservice:
+  stub: false
+
 jwt:
   enabled: true
