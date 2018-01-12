@@ -16,6 +16,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class BotServiceImpl implements BotService {
+
+    private static Logger logger = LoggerFactory.getLogger(BotServiceImpl.class);
 
     private String baseUrl;
     private String messagesUrl;
@@ -46,6 +50,12 @@ public class BotServiceImpl implements BotService {
         this.messagesUrl = messagesUrl;
         this.responseUrl = responseUrl;
         this.chatContextRepository = chatContextRepository;
+
+        logger.info("BOT SERVICE:");
+        logger.info("class: " + BotServiceImpl.class.getName());
+        logger.info("base: " + baseUrl);
+        logger.info("messages: " + messagesUrl);
+        logger.info("response: " + responseUrl);
     }
 
     @Override

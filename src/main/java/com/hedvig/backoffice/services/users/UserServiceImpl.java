@@ -1,6 +1,8 @@
 package com.hedvig.backoffice.services.users;
 
 import com.hedvig.backoffice.web.dto.UserDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -8,12 +10,15 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 public class UserServiceImpl implements UserService {
+
+    private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private String baseUrl;
     private String usersUrl;
@@ -25,6 +30,12 @@ public class UserServiceImpl implements UserService {
         this.baseUrl = baseUrl;
         this.usersUrl = usersUrl;
         this.userByIdUrl = userByIdUrl;
+
+        logger.info("USER SERVICE:");
+        logger.info("class: " + UserServiceImpl.class.getName());
+        logger.info("base: " + baseUrl);
+        logger.info("users: " + usersUrl);
+        logger.info("id: " + userByIdUrl);
     }
 
     @Override

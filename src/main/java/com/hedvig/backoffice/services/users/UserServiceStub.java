@@ -2,12 +2,16 @@ package com.hedvig.backoffice.services.users;
 
 import com.hedvig.backoffice.web.dto.UserDTO;
 import org.apache.commons.lang3.RandomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class UserServiceStub implements UserService {
+
+    private static Logger logger = LoggerFactory.getLogger(UserServiceStub.class);
 
     private List<UserDTO> users;
 
@@ -17,6 +21,9 @@ public class UserServiceStub implements UserService {
 
             return new UserDTO(RandomUtils.nextLong(), name);
         }).collect(Collectors.toList());
+
+        logger.info("USER SERVICE:");
+        logger.info("class: " + UserServiceStub.class.getName());
     }
 
     @Override

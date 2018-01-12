@@ -1,8 +1,8 @@
 package com.hedvig.backoffice.config;
 
 import com.hedvig.backoffice.services.assettracker.AssetTracker;
-import com.hedvig.backoffice.services.assettracker.LocalAssetTracker;
-import com.hedvig.backoffice.services.assettracker.RemoteAssetTracker;
+import com.hedvig.backoffice.services.assettracker.AssetTrackerStub;
+import com.hedvig.backoffice.services.assettracker.AssetTrackerImpl;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceImpl;
 import com.hedvig.backoffice.services.messages.BotServiceStub;
@@ -27,8 +27,8 @@ public class ExternalServicesConfig {
         val factory = context.getAutowireCapableBeanFactory();
 
         return stub
-                ? factory.createBean(LocalAssetTracker.class)
-                : factory.createBean(RemoteAssetTracker.class);
+                ? factory.createBean(AssetTrackerStub.class)
+                : factory.createBean(AssetTrackerImpl.class);
     }
 
     @Bean
