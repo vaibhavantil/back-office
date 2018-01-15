@@ -8,6 +8,7 @@ import ChatsList from 'components/messages/ChatsList';
 import { Link } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
 import { Header } from 'components/messages/Chat';
+import * as sockets from 'app/lib/sockets';
 
 const ChatsListPage = styled.div`
     display: flex;
@@ -27,6 +28,7 @@ class MessagesSearch extends React.Component {
         const { client, setClient } = this.props;
         checkAuthorization(null, setClient);
         this.props.chatsRequest(client.token);
+        sockets.connect();
     }
 
     render() {
@@ -37,7 +39,11 @@ class MessagesSearch extends React.Component {
                 <Link to="/assets">
                     <Icon name="arrow left" /> Back
                 </Link>
-                <ChatsList chats={chats} search={searchChatRequest} client={client} />
+                <ChatsList
+                    chats={chats}
+                    search={searchChatRequest}
+                    client={client}
+                />
             </ChatsListPage>
         );
     }

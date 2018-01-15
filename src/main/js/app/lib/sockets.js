@@ -1,26 +1,43 @@
 import SockJS from 'sockjs-client';
 import Stomp from '@stomp/stompjs';
 import config from 'app/api/config';
-export const setupSocket = (actions, client) => {
-    const socket = new SockJS(config.ws.endpoint);
-    const stompClient = Stomp.over(socket);
 
+let stompClient;
+
+export const connect = () => {
+    const socket = new SockJS(config.ws.endpoint);
+    stompClient = Stomp.over(socket);
     stompClient.connect(
         {},
-        () => {
-            stompClient.subscribe(config.ws.messages + client, response => {
-                const data = JSON.parse(response.body);
-                actions.messageReceived(data);
-            });
-
-            stompClient.send(config.ws.history + client);
-
-            return stompClient;
+        connection => {
+            // eslint-disable-next-line
+            console.info('connected ', connection);
         },
         error => {
             // eslint-disable-next-line
             console.error(error);
-            return null;
         }
     );
+};
+
+export const subscribe = (actions, client) => {
+    if (stompClient) {
+        const subscription = stompClient.subscribe(
+            config.ws.messages + client,
+            response => {
+                const data = JSON.parse(response.body);
+                actions.messageReceived(data);
+            }
+        );
+
+        stompClient.send(config.ws.history + client);
+
+        return { stompClient, subscription };
+    } else {
+        return null;
+    }
+};
+
+export const unsubscribe = subscription => {
+    if (subscription) subscription.unsubscribe();
 };

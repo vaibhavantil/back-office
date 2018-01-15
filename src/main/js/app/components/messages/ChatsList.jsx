@@ -19,7 +19,11 @@ const Chats = ({ chats }) => (
                     <List.Item key={item.hid}>
                         <Link to={`/messages/${item.hid}`} replace>
                             <List.Content>
-                                <List.Header>{`${item.firstName} ${item.lastName || ''}`}</List.Header>
+                                {
+                                    item.firstName
+                                     ? <List.Header>{`${item.firstName} ${item.lastName || ''}`}</List.Header>
+                                     : <List.Header>User-{item.hid}</List.Header>
+                                }
                             </List.Content>
                         </Link>
                     </List.Item>
