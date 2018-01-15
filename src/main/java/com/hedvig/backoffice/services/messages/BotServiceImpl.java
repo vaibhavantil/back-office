@@ -2,8 +2,6 @@ package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hedvig.backoffice.domain.ChatContext;
-import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.services.chat.data.ChatMessage;
 import com.hedvig.backoffice.services.chat.data.PayloadChatMessage;
 import org.apache.commons.io.IOUtils;
@@ -24,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,18 +37,14 @@ public class BotServiceImpl implements BotService {
     private String messagesUrl;
     private String responseUrl;
 
-    private ChatContextRepository chatContextRepository;
-
     @Autowired
     private BotServiceImpl(@Value("${botservice.baseUrl}") String baseUrl,
                            @Value("${botservice.urls.messages}") String messagesUrl,
-                           @Value("${botservice.urls.response}") String responseUrl,
-                           ChatContextRepository chatContextRepository) {
+                           @Value("${botservice.urls.response}") String responseUrl) {
 
         this.baseUrl = baseUrl;
         this.messagesUrl = messagesUrl;
         this.responseUrl = responseUrl;
-        this.chatContextRepository = chatContextRepository;
 
         logger.info("BOT SERVICE:");
         logger.info("class: " + BotServiceImpl.class.getName());
@@ -69,18 +64,11 @@ public class BotServiceImpl implements BotService {
     }
 
     @Override
-    public List<ChatMessage> updates(ChatContext chat) throws BotServiceException {
-        List<ChatMessage> msgs = messages(baseUrl + messagesUrl + "/5", chat.getHid())
+    public List<ChatMessage> updates(String hid, Instant timestamp) throws BotServiceException {
+        return messages(baseUrl + messagesUrl + "/5", hid)
                 .stream()
-                .filter(msg -> chat.getTimestamp().isBefore(msg.getTimestamp()))
+                .filter(msg -> timestamp.isBefore(msg.getTimestamp()))
                 .collect(Collectors.toList());
-
-        if (msgs.size() > 0) {
-            chat.setTimestamp(msgs.get(msgs.size() - 1).getTimestamp());
-            chatContextRepository.save(chat);
-        }
-
-        return msgs;
     }
 
     @Override

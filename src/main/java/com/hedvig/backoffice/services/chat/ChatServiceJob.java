@@ -24,13 +24,16 @@ public class ChatServiceJob extends QuartzJobBean {
         for (ChatContext chat : chats) {
             List<ChatMessage> messages;
             try {
-                messages = botService.updates(chat);
+                messages = botService.updates(chat.getHid(), chat.getTimestamp());
             } catch (BotServiceException e) {
                 chatService.retranslate(chat.getHid(), new ErrorChatMessage(500, e.getMessage()));
                 throw new JobExecutionException(e);
             }
-            for (ChatMessage m : messages) {
-                chatService.retranslate(chat.getHid(), m);
+
+            if (messages.size() > 0) {
+                chat.setTimestamp(messages.get(messages.size() - 1).getTimestamp());
+                chatContextRepository.save(chat);
+                chatService.retranslate(chat.getHid(), messages);
             }
         }
     }

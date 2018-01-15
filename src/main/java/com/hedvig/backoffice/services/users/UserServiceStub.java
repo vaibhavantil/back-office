@@ -17,9 +17,9 @@ public class UserServiceStub implements UserService {
 
     public UserServiceStub() {
         users = IntStream.range(0, 10).mapToObj(i -> {
-            String name = "Test user " + i;
-
-            return new UserDTO(RandomUtils.nextLong(), name);
+            UserDTO user = new UserDTO(RandomUtils.nextLong());
+            user.setFirstName("Test user " + i);
+            return user;
         }).collect(Collectors.toList());
 
         logger.info("USER SERVICE:");
@@ -38,7 +38,9 @@ public class UserServiceStub implements UserService {
                 .collect(Collectors.toList());
 
         if (result.size() == 0) {
-            result.add(new UserDTO(RandomUtils.nextLong(), query));
+            UserDTO dto = new UserDTO(RandomUtils.nextLong());
+            dto.setFirstName(query);
+            result.add(dto);
         }
 
         return result;
@@ -49,7 +51,7 @@ public class UserServiceStub implements UserService {
         return users.stream()
                 .filter(u -> u.getHid().equals(hid))
                 .findAny()
-                .orElse(new UserDTO(Long.parseLong(hid), ""));
+                .orElse(new UserDTO(Long.parseLong(hid)));
     }
 
 }
