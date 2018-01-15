@@ -42,7 +42,9 @@ const MessageBox = styled.div`
 
 const Message = ({ left, content }) => (
     <MessageRow left={left}>
-        <MessageBox left={left}>{content.body.text}</MessageBox>
+        <MessageBox left={left}>
+            {!left ? content : content.body.text}
+        </MessageBox>
     </MessageRow>
 );
 

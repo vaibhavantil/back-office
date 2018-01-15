@@ -22,10 +22,11 @@ module.exports = {
             secure: false
         }, {
             context: [
-                '/websocket'
+                '/chat'
             ],
             target: 'ws://127.0.0.1:8080',
-            ws: true
+            ws: true,
+            secure: false            
         }],
         watchOptions: {
             ignored: /node_modules/

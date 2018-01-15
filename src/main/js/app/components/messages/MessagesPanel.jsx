@@ -31,12 +31,11 @@ export default class MessgesPanel extends React.Component {
 
     submitHandler() {
         this.props.addMessage(this.state.message);
+        this.setState({ message: '' });
     }
 
     inputHandler(value) {
-        this.setState({
-            message: value
-        });
+        this.setState({ message: value });
     }
 
     getChatInput(type) {
