@@ -22,6 +22,9 @@ public class JWTServiceImpl implements JWTService {
     @Value("${jwt.header:Authorization}")
     private String header;
 
+    @Value("${jwt.param:token}")
+    private String param;
+
     @Override
     public JWTDTO createTokenForUser(String email) {
         String jwtToken = Jwts.builder()
@@ -41,11 +44,15 @@ public class JWTServiceImpl implements JWTService {
     @Override
     public String resolveUserFromToken(HttpServletRequest request) throws JWTInvalidTokenException {
         String token = request.getHeader(header);
+        if (StringUtils.isBlank(token)) {
+            token = request.getParameter(param);
+        }
+
         if (StringUtils.isNotBlank(token)) {
             try {
                 return Jwts.parser()
                         .setSigningKey(secret)
-                        .parseClaimsJws(token)
+                        .parseClaimsJws(StringUtils.trim(token))
                         .getBody()
                         .getSubject();
             } catch (Exception ex) {
