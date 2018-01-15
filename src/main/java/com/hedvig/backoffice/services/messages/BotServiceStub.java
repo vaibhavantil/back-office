@@ -19,27 +19,27 @@ public class BotServiceStub implements BotService {
     private static Logger logger = LoggerFactory.getLogger(BotServiceStub.class);
 
     private static final String STUB_MESSAGE_TEMPLATE = "{" +
-            "'globalId': %s, " +
-            "'id': 'message.onboardingstart'," +
-            "'header': { " +
-            "   'messageId': 1," +
-            "   'fromId': 1," +
-            "   'responsePath': '/response', " +
-            "   'timeStamp': 1515499154030," +
-            "   'loadingIndicator': 'loader'," +
-            "   'avatarName': null, " +
-            "   'pollingInterval': 625," +
-            "   'editAllowed': false" +
+            "\"globalId\": %s, " +
+            "\"id\": \"message.onboardingstart\"," +
+            "\"header\": { " +
+            "   \"messageId\": 1," +
+            "   \"fromId\": 1," +
+            "   \"responsePath\": \"/response\", " +
+            "   \"timeStamp\": 1515499154030," +
+            "   \"loadingIndicator\": \"loader\"," +
+            "   \"avatarName\": null, " +
+            "   \"pollingInterval\": 625," +
+            "   \"editAllowed\": false" +
             "}," +
-            "'body': {" +
-            "   'type': 'paragraph'," +
-            "   'id': 1," +
-            "   'text': 'Test message %s', " +
-            "   'imageURL': null," +
-            "   'imageWidth': null," +
-            "   'imageHeight': null" +
+            "\"body\": {" +
+            "   \"type\": \"paragraph\"," +
+            "   \"id\": 1," +
+            "   \"text\": \"Test message %s\", " +
+            "   \"imageURL\": null," +
+            "   \"imageWidth\": null," +
+            "   \"imageHeight\": null" +
             "}," +
-            "'timestamp':'2018-01-09T11:59:14.030Z'" +
+            "\"timestamp\":\"2018-01-09T11:59:14.030Z\"" +
             "}";
 
     @Value

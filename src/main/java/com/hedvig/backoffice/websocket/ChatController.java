@@ -25,12 +25,12 @@ public class ChatController {
         chatService.append(hid, new PayloadChatMessage(body));
     }
 
-    @SubscribeMapping("/{hid}")
+    @SubscribeMapping("/history/{hid}")
     public void messages(@DestinationVariable String hid) {
         chatService.messages(hid);
     }
 
-    @SubscribeMapping("/{hid}/{count}")
+    @SubscribeMapping("/history/{hid}/{count}")
     public void messages(@DestinationVariable String hid, @DestinationVariable int count) {
         chatService.messages(hid, count);
     }

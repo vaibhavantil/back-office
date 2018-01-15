@@ -8,19 +8,13 @@ export const setupSocket = (actions, client) => {
     stompClient.connect(
         {},
         () => {
+            stompClient.subscribe(config.ws.messages + client, response => {
+                const data = JSON.parse(response.body);
+                actions.messageReceived(data);
+            });
+
             stompClient.send(config.ws.history + client);
 
-            // todo add websocket endpoint 2 get messagesList
-            stompClient.subscribe(config.ws.history + client, response => {
-                const data = JSON.parse(response);
-                actions.getMessagesHistory(data.body);
-                stompClient.unsubscribe(config.ws.history + client, () => {});
-            });
-
-            stompClient.subscribe(+client, response => {
-                const data = JSON.parse(response);
-                actions.messageReceived(data.body);
-            });
             return stompClient;
         },
         error => {

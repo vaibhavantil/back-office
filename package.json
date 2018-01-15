@@ -75,6 +75,7 @@
   },
   "scripts": {
     "start": "./target/node/yarn/dist/bin/yarn run webpack-dev-server --config webpack.dev.js --progress --inline --hot --profile --port=9060 --watch-content-base",
-    "webpack-dev-server": "./target/node/node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js"
+    "webpack-dev-server": "./target/node/node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "webpack": "webpack --config webpack.dev.js --watch"
   }
 }
