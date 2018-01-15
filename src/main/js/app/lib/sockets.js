@@ -5,7 +5,7 @@ import config from 'app/api/config';
 let stompClient;
 
 export const connect = () => {
-    const socket = new SockJS(config.ws.endpoint);
+    const socket = new SockJS(config.ws.endpoint + '?token=' + JSON.parse(localStorage.getItem('token')));
     stompClient = Stomp.over(socket);
     stompClient.connect(
         {},

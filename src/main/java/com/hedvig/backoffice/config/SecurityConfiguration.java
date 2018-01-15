@@ -54,7 +54,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         if (jwtEnabled) {
             http.authorizeRequests()
                     .antMatchers("/api/login").permitAll()
-                    .antMatchers("/api/**").authenticated();
+                    .antMatchers("/api/**").authenticated()
+                    .antMatchers("/chat/**").authenticated();
         }
     }
 }

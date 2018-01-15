@@ -47,6 +47,7 @@ jwt:
   expiration: 864000000
   secret: fGWPyfB8wBGoXB5B07xoa6KKfXobo79p
   header: Authorization
+  param: token
 
 amqp:
   hostname: localhost
