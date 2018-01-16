@@ -4,7 +4,7 @@ import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.security.JWTDTO;
 import com.hedvig.backoffice.security.JWTService;
-import com.hedvig.backoffice.services.login.PersonnelService;
+import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.web.dto.PersonnelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +30,7 @@ public class LoginController {
 
     @PostMapping(value = "/login")
     public JWTDTO login(@RequestBody @Valid PersonnelDTO dto, HttpServletResponse response) throws AuthorizationException {
-        Personnel personnel = personnelService.authorizeUser(dto.getEmail(), dto.getPassword());
+        Personnel personnel = personnelService.authorize(dto.getEmail(), dto.getPassword());
         JWTDTO jwt = jwtService.createTokenForUser(personnel.getEmail());
         jwtService.addTokenToHeader(jwt.getToken(), response);
 
