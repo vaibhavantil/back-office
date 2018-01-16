@@ -23,7 +23,7 @@ public class BotServiceStub implements BotService {
             "\"id\": \"message.onboardingstart\"," +
             "\"header\": { " +
             "   \"messageId\": 1," +
-            "   \"fromId\": 1," +
+            "   \"fromId\": %s," +
             "   \"responsePath\": \"/response\", " +
             "   \"timeStamp\": 1515499154030," +
             "   \"loadingIndicator\": \"loader\"," +
@@ -89,7 +89,7 @@ public class BotServiceStub implements BotService {
             MessagePositionStub newPos = new MessagePositionStub(Instant.ofEpochMilli(new Date().getTime()), pos.position + 1);
             positions.put(hid, newPos);
 
-            ChatMessage msg = new PayloadChatMessage(String.format(STUB_MESSAGE_TEMPLATE, pos.position, pos.position));
+            ChatMessage msg = new PayloadChatMessage(String.format(STUB_MESSAGE_TEMPLATE, pos.position, hid, pos.position));
             result.add(msg);
         }
 
