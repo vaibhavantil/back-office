@@ -23,8 +23,8 @@ public class DatabaseLoader {
     }
 
     @Transactional
-    public void createUser() {
-        val email = "victor@hedvig.com";
+    public void createAdmin() {
+        val email = "admin@hedvig.com";
         if (!personnelRepository.findByEmail(email).isPresent()) {
             personnelRepository.save(new Personnel(email, passwordEncoder.encode("123")));
         }
