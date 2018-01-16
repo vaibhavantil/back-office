@@ -1,5 +1,5 @@
 'use strict';
-
+const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
@@ -60,6 +60,9 @@ module.exports = {
         }
     },
     plugins: [
+        new webpack.DefinePlugin({
+            DEV: 'false'
+        }),
         extractCSS,
         new HtmlWebpackPlugin({
             template: './src/main/js/index.html',

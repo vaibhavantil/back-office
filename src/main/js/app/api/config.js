@@ -32,7 +32,8 @@ export default {
         }
     },
     ws: {
-        endpoint: '/chat',
+        // eslint-disable-next-line
+        endpoint: DEV ? '/sockjs-node': '/chat',
         messages: '/topic/messages/',
         history: '/app/messages/history/'
     }

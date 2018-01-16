@@ -18,9 +18,9 @@ export default class MessagesList extends React.Component {
         super(props);
     }
 
-    componentDidMount() {
+    componentWillReceiveProps() {
         if (this.messagesList) {
-            this.messagesList.scrollTop = this.messagesList.scrollHeight;
+            this.messagesList.scrollTop = this.messagesList.scrollHeight + 150;
         }
     }
 

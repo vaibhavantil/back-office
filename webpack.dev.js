@@ -22,11 +22,12 @@ module.exports = {
             secure: false
         }, {
             context: [
-                '/chat'
+                '/sockjs-node/*'
             ],
-            target: 'ws://127.0.0.1:8080',
+            target: 'ws://127.0.0.1:8080/chat',
+            pathRewrite: {'^/sockjs-node': ''},
             ws: true,
-            secure: false            
+            secure: false
         }],
         watchOptions: {
             ignored: /node_modules/
@@ -93,6 +94,9 @@ module.exports = {
         }
     },
     plugins: [
+        new webpack.DefinePlugin({
+            DEV: 'true'
+        }),
         new HtmlWebpackPlugin({
             template: './src/main/js/index.html',
             chunksSortMode: 'dependency',

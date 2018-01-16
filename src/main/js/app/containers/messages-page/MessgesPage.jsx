@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import actions from 'app/store/actions';
 import Chat from 'components/messages/Chat';
-import { subscribe, unsubscribe } from 'app/lib/sockets';
+import * as sockets from 'app/lib/sockets';
 
 const ChatContainer = styled.div`
     display: flex;
@@ -21,26 +21,38 @@ class MessagesPage extends React.Component {
             socket: null
         };
         this.addMessageHandler = this.addMessageHandler.bind(this);
+        this.subscribeSocket = this.subscribeSocket.bind(this);
     }
 
     addMessageHandler(message) {
         const { socket } = this.state;
-        if (socket) {
-            this.props.addMessage(message, socket);
-        }
+        if (socket) this.props.addMessage(message, socket);
     }
 
-    componentDidMount() {
+    subscribeSocket() {
         const { messageReceived, match, getMessagesHistory } = this.props;
-        const { stompClient, subscription } = subscribe(
+
+        const { stompClient, subscription } = sockets.subscribe(
             { messageReceived, getMessagesHistory },
             match.params.id
         );
+        return { stompClient, subscription };
+    }
+
+    componentDidMount() {
+        let { stompClient, subscription } = this.subscribeSocket();
+        // trying to reconnect if ws-connection lost
+        if (!stompClient) {
+            sockets.connect();
+            const socketConnection = this.subscribeSocket();
+            stompClient = socketConnection.stompClient;
+            subscription = socketConnection.subscription;
+        }
         this.setState({ socket: stompClient, subscription });
     }
 
     componentWillUnmount() {
-        unsubscribe(this.state.subscription);
+        sockets.unsubscribe(this.state.subscription);
     }
 
     render() {

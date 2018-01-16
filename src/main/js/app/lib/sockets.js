@@ -5,7 +5,12 @@ import config from 'app/api/config';
 let stompClient;
 
 export const connect = () => {
-    const socket = new SockJS(config.ws.endpoint + '?token=' + JSON.parse(localStorage.getItem('token')));
+    const socket = new SockJS(
+        `${config.ws.endpoint}?token=${JSON.parse(
+            // eslint-disable-next-line no-undef
+            localStorage.getItem('token')
+        )}`
+    );
     stompClient = Stomp.over(socket);
     stompClient.connect(
         {},
@@ -22,19 +27,23 @@ export const connect = () => {
 
 export const subscribe = (actions, client) => {
     if (stompClient) {
-        const subscription = stompClient.subscribe(
-            config.ws.messages + client,
-            response => {
-                const data = JSON.parse(response.body);
-                actions.messageReceived(data);
-            }
-        );
+        try {
+            const subscription = stompClient.subscribe(
+                config.ws.messages + client,
+                response => {
+                    const data = JSON.parse(response.body);
+                    actions.messageReceived(data);
+                }
+            );
 
-        stompClient.send(config.ws.history + client);
+            stompClient.send(config.ws.history + client);
 
-        return { stompClient, subscription };
+            return { stompClient, subscription };
+        } catch (e) {
+            return { stompClient: null, subscription: null };
+        }
     } else {
-        return null;
+        return { stompClient: null, subscription: null };
     }
 };
 
