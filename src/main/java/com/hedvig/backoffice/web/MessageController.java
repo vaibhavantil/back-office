@@ -1,9 +1,11 @@
 package com.hedvig.backoffice.web;
 
+import com.hedvig.backoffice.services.chat.data.PayloadChatMessage;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.chat.data.ChatMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +29,12 @@ public class MessageController {
     @GetMapping("/{hid}/{count}")
     public List<ChatMessage> messages(@PathVariable String hid, @PathVariable int count) throws BotServiceException {
         return botService.messages(hid, count);
+    }
+
+    @PostMapping("/response/{hid}")
+    public ResponseEntity<?> response(@PathVariable String hid, @RequestBody String body) throws BotServiceException {
+        botService.response(hid, new PayloadChatMessage(body));
+        return ResponseEntity.noContent().build();
     }
 
 }
