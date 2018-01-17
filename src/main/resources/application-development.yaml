@@ -18,3 +18,15 @@ jwt:
 cors:
   origins: http://localhost:9000
   methods: GET, POST, PUT, DELETE
+
+spring:
+  datasource:
+    url: jdbc:h2:file:~/memorydb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect

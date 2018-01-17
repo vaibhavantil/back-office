@@ -8,13 +8,31 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:h2:file:~/memorydb
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/back-office
+    username: postgres
+    password: iambatman
+    platform: POSTGRESQL
+    driver-class-name: org.postgresql.Driver
+
+  http:
+      multipart:
+        max-file-size: 512MB
+        max-request-size: 512MB
+  cloud:
+    config:
+      allow-override: false
 
   profiles:
     active: development
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 job:
   interval: 1000
