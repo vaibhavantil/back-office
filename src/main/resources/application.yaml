@@ -52,3 +52,7 @@ jwt:
 amqp:
   hostname: localhost
   exchange: hedvig-assets-state
+
+cors:
+  origins:
+  methods:
