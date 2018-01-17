@@ -40,13 +40,14 @@ class MessagesPage extends React.Component {
     }
 
     componentDidMount() {
+        const { messageReceived, getMessagesHistory, match } = this.props;
         let { stompClient, subscription } = this.subscribeSocket();
         // trying to reconnect if ws-connection lost
         if (!stompClient) {
-            sockets.connect();
-            const socketConnection = this.subscribeSocket();
-            stompClient = socketConnection.stompClient;
-            subscription = socketConnection.subscription;
+            sockets.reconnect(
+                { messageReceived, getMessagesHistory },
+                match.params.id
+            );
         }
         this.setState({ socket: stompClient, subscription });
     }

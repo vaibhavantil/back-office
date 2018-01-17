@@ -6,7 +6,7 @@ const MessagesListContainer = styled.div`
     height: 800px;
     box-sizing: border-box;
     overflow-y: auto;
-    padding: 20px;
+    padding: 20px 20px 60px;
 `;
 
 const EmptyList = styled.h3`
@@ -20,7 +20,7 @@ export default class MessagesList extends React.Component {
 
     componentWillReceiveProps() {
         if (this.messagesList) {
-            this.messagesList.scrollTop = this.messagesList.scrollHeight + 150;
+            this.messagesList.scrollTop = this.messagesList.scrollHeight;
         }
     }
 

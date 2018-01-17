@@ -61,7 +61,10 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            DEV: 'false'
+            DEV: 'false',
+            'process.env': {
+                NODE_ENV: JSON.stringify('production')
+            }
         }),
         extractCSS,
         new HtmlWebpackPlugin({

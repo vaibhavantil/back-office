@@ -4,25 +4,24 @@ import config from 'app/api/config';
 
 let stompClient;
 
+/* eslint-disable no-undef */
 export const connect = () => {
-    const socket = new SockJS(
-        `${config.ws.endpoint}?token=${JSON.parse(
-            // eslint-disable-next-line no-undef
-            localStorage.getItem('token')
-        )}`
-    );
-    stompClient = Stomp.over(socket);
-    stompClient.connect(
-        {},
-        connection => {
-            // eslint-disable-next-line
-            console.info('connected ', connection);
-        },
-        error => {
-            // eslint-disable-next-line
-            console.error(error);
-        }
-    );
+    const token = JSON.parse(localStorage.getItem('token'));
+    return new Promise((resolve, reject) => {
+        //eslint-disable-next-line
+        console.log(`${config.ws.endpoint}?token=${token}`);
+        const socket = new SockJS(`${config.ws.endpoint}?token=${token}`);
+        stompClient = Stomp.over(socket);
+        stompClient.connect(
+            {},
+            () => {
+                resolve(stompClient);
+            },
+            error => {
+                reject(error);
+            }
+        );
+    });
 };
 
 export const subscribe = (actions, client) => {
@@ -49,4 +48,15 @@ export const subscribe = (actions, client) => {
 
 export const unsubscribe = subscription => {
     if (subscription) subscription.unsubscribe();
+};
+
+export const reconnect = (actions, client) => {
+    connect()
+        .then(() => {
+            const { stompClient, subscription } = subscribe(actions, client);
+            return { stompClient, subscription };
+        })
+        .catch(() => {
+            return { stompClient: null, subscription: null };
+        });
 };

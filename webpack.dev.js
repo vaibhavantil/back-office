@@ -24,7 +24,7 @@ module.exports = {
             context: [
                 '/sockjs-node/*'
             ],
-            target: 'ws://127.0.0.1:8080/chat',
+            target: 'http://localhost:8080/chat',
             pathRewrite: {'^/sockjs-node': ''},
             ws: true,
             secure: false
