@@ -32,7 +32,7 @@ export default {
         );
     },
 
-    Audio(onChangeHandler) {
+    File(onChangeHandler) {
         return <FileInput changeHandler={onChangeHandler} />;
     }
 };

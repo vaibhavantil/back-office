@@ -1,8 +1,10 @@
-import { ADD_MESSAGE, MESSAGE_RECEIVED, GET_MESSAGES_HISTORY } from 'constants';
+import { ADD_MESSAGE, MESSAGE_RECEIVED, CLEAR_MESSAGES_LIST } from 'constants';
 
-export const addMessage = (message, socket) => ({
+export const addMessage = (message, messageType, userId, socket) => ({
     type: ADD_MESSAGE,
     message,
+    messageType,
+    userId,
     socket
 });
 
@@ -11,7 +13,6 @@ export const messageReceived = message => ({
     message
 });
 
-export const getMessagesHistory = messages => ({
-    type: GET_MESSAGES_HISTORY,
-    messages
-})
+export const clearMessagesList = () => ({
+    type: CLEAR_MESSAGES_LIST
+});

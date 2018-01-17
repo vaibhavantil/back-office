@@ -28,7 +28,7 @@ const search = async (token, queryString) => {
         params: {
             search: queryString
         },
-        header: {
+        headers: {
             [config.tokenHeaderName]: token
         }
     });

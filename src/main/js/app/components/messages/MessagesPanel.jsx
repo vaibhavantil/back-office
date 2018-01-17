@@ -30,7 +30,8 @@ export default class MessgesPanel extends React.Component {
     }
 
     submitHandler() {
-        this.props.addMessage(this.state.message);
+        const { message, messageType } = this.state;
+        this.props.addMessage(message, messageType);
         this.setState({ message: '' });
     }
 

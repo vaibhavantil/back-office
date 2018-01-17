@@ -15,14 +15,14 @@ export const Header = styled.h2`
     color: #4c4b4b;
 `;
 
-const Chat = ({ messages, addMessage, user, error }) => (
+const Chat = ({ messages, addMessage, user, error, userId }) => (
     <div>
         <Header>Chat with {user ? `${user.firstName} ${user.lastName || ''}` : 'User'}</Header>
         <Link to="/messages">
             <Icon name="arrow left" /> Back
         </Link>
         <ChatContainer>
-            <MessagesList messages={messages.list} error={error} />
+            <MessagesList messages={messages.list} error={error} userId={userId} />
             <MessagesPanel addMessage={addMessage} />
         </ChatContainer>
     </div>

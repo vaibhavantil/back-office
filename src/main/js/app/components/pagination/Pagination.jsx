@@ -23,9 +23,9 @@ export default class Pagination extends React.Component {
     }
 
     setPage(page) {
-        const { items, onChangePage } = this.props;
+        const { items, onChangePage, pageSize } = this.props;
 
-        const newPageState = getPageState(items.length, page);
+        const newPageState = getPageState(items.length, page, pageSize);
         const pageOfItems = items.slice(
             newPageState.startIndex,
             newPageState.endIndex + 1

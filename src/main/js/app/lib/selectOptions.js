@@ -11,5 +11,5 @@ export const messageTypes = [
     { key: 1, text: 'Text', value: 'Text' },
     { key: 2, text: 'Date', value: 'Date' },
     { key: 3, text: 'Multiple Select', value: 'MultipleSelect' },
-    { key: 4, text: 'Audio', value: 'Audio' }
+    { key: 4, text: 'File', value: 'File' }
 ]

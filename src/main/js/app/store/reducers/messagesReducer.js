@@ -1,17 +1,14 @@
 import initialState from '../initialState';
-import { ADD_MESSAGE, MESSAGE_RECEIVED, GET_MESSAGES_HISTORY } from 'constants';
+import { MESSAGE_RECEIVED, CLEAR_MESSAGES_LIST } from 'constants';
 
 export default function(state = initialState.messages, action) {
     switch (action.type) {
-        case ADD_MESSAGE:
         case MESSAGE_RECEIVED:
             return {
-                list: [...state.list, { message: action.message }]
+                list: [...state.list, action.message]
             };
-        case GET_MESSAGES_HISTORY:
-            return {
-                list: [...state.list, ...action.messages]
-            };
+        case CLEAR_MESSAGES_LIST:
+            return initialState.messages;
         default:
             return state;
     }

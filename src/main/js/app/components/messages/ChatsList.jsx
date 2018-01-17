@@ -1,39 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { List, Input } from 'semantic-ui-react';
+import Chats from 'components/chats/Chats';
+import { Input } from 'semantic-ui-react';
 
-const ListContainer = styled.div`
-    width: 500px;
-    border: solid 1px #dfe0e0;
-    border-radius: 5px;
-    padding: 20px 10px;
-    margin-top: 30px;
-`;
-
-const Chats = ({ chats }) => (
-    <ListContainer>
-        <List celled selection verticalAlign="middle" size="big">
-            {chats.length ? (
-                chats.map(item => (
-                    <List.Item key={item.hid}>
-                        <Link to={`/messages/${item.hid}`} replace>
-                            <List.Content>
-                                {
-                                    item.firstName
-                                     ? <List.Header>{`${item.firstName} ${item.lastName || ''}`}</List.Header>
-                                     : <List.Header>User-{item.hid}</List.Header>
-                                }
-                            </List.Content>
-                        </Link>
-                    </List.Item>
-                ))
-            ) : (
-                <h2>Not found</h2>
-            )}
-        </List>
-    </ListContainer>
-);
 
 export default class ChatsList extends React.Component {
     constructor(props) {
@@ -56,15 +24,16 @@ export default class ChatsList extends React.Component {
 
     searchRequest() {
         this.setState({ isLoading: true });
-        this.props.search(this.props.client.token, this.state.value);
+        if (this.state.value) {
+            this.props.search(this.props.client.token, this.state.value);
+        }
     }
 
     componentWillReceiveProps(newProps) {
         if (newProps.chats.list.length) {
             this.setState({
                 results: newProps.chats.list,
-                isLoading: newProps.chats.requesting,
-                value: ''
+                isLoading: newProps.chats.requesting
             });
         }
     }

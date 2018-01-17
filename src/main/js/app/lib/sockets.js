@@ -51,12 +51,17 @@ export const unsubscribe = subscription => {
 };
 
 export const reconnect = (actions, client) => {
-    connect()
-        .then(() => {
-            const { stompClient, subscription } = subscribe(actions, client);
-            return { stompClient, subscription };
-        })
-        .catch(() => {
-            return { stompClient: null, subscription: null };
-        });
+    return new Promise((resolve, reject) => {
+        connect()
+            .then(() => {
+                const { stompClient, subscription } = subscribe(
+                    actions,
+                    client
+                );
+                resolve({ stompClient, subscription });
+            })
+            .catch(() => {
+                reject({ stompClient: null, subscription: null });
+            });
+    });
 };
