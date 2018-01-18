@@ -21,12 +21,12 @@ cors:
 
 spring:
   datasource:
-    url: jdbc:h2:file:~/memorydb
+    url: jdbc:h2:mem:~/memorydb
     username: sa
     password:
     driver-class-name: org.h2.Driver
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect

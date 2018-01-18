@@ -1,14 +1,13 @@
 package com.hedvig.backoffice.services.chat;
 
-import com.hedvig.backoffice.services.chat.data.ChatMessage;
+import com.hedvig.backoffice.services.chat.data.Message;
 
 import java.util.List;
 
 public interface ChatService {
 
-    void retranslate(String hid, ChatMessage message);
-    void retranslate(String hid, List<ChatMessage> messages);
-    void append(String hid, ChatMessage message);
+    void send(String hid, Message message);
+    void append(String hid, String message);
     void messages(String hid);
     void messages(String hid, int count);
     void close(String sessionId);
