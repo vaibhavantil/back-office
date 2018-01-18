@@ -14,7 +14,7 @@ const ChatContainer = styled.div`
     background-color: #f5f5f5;
 `;
 
-class MessagesPage extends React.Component {
+class ChatPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,11 +35,12 @@ class MessagesPage extends React.Component {
             messageReceived,
             match,
             getMessagesHistory,
-            messages
+            messages,
+            errorReceived
         } = this.props;
 
         const { stompClient, subscription } = sockets.subscribe(
-            { messageReceived, getMessagesHistory },
+            { messageReceived, getMessagesHistory, errorReceived },
             match.params.id,
             messages.activeConnection
         );
@@ -51,11 +52,15 @@ class MessagesPage extends React.Component {
             messageReceived,
             getMessagesHistory,
             match,
-            setActiveConnection
+            setActiveConnection,
+            errorReceived
         } = this.props;
 
         sockets
-            .reconnect({ messageReceived, getMessagesHistory }, match.params.id)
+            .reconnect(
+                { messageReceived, getMessagesHistory, errorReceived },
+                match.params.id
+            )
             .then(reslut => {
                 const { stompClient, subscription } = reslut;
                 this.setState({ socket: stompClient, subscription });
@@ -87,7 +92,8 @@ class MessagesPage extends React.Component {
                     messages={messages}
                     addMessage={this.addMessageHandler}
                     user={user}
-                    error={!!this.state.socket}
+                    error={messages.error}
+                    lostConnection={!!this.state.socket}
                     userId={userId}
                 />
             </ChatContainer>
@@ -108,5 +114,5 @@ export default withRouter(
         ...actions.messagesActions,
         ...actions.chatUserActions,
         ...actions.clientActions
-    })(MessagesPage)
+    })(ChatPage)
 );

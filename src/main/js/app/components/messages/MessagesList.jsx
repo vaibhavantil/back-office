@@ -26,7 +26,7 @@ export default class MessagesList extends React.Component {
 
     render() {
         const { messages, error } = this.props;
-        const userId = parseInt(this.props.userId);
+        const userId = this.props.userId;
         return (
             <MessagesListContainer innerRef={el => (this.messagesList = el)}>
                 {messages.length ? (

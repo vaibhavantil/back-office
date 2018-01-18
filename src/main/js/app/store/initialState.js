@@ -19,7 +19,8 @@ export default {
     },
     messages: {
         list: [],
-        activeConnection: null
+        activeConnection: null,
+        error: null
     },
     chats: {
         list: [],

@@ -26,7 +26,7 @@ const ListItem = ({ item }) => (
     </Link>
 );
 
-export default class Chats extends React.Component {
+export default class UsersList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

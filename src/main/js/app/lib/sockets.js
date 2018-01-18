@@ -5,6 +5,18 @@ import config from 'app/api/config';
 const connectError = { stompClient: null, subscription: null };
 
 /* eslint-disable no-undef */
+
+const responseHandler = (actions, response) => {
+    const parsedRes = JSON.parse(response.body);
+    const data = parsedRes.payload;
+
+    if (parsedRes.type === 'ERROR') {
+        actions.errorReceived(data);
+        return;
+    }
+    actions.messageReceived(data.messages);
+};
+
 export const connect = () => {
     const token = JSON.parse(localStorage.getItem('token'));
     return new Promise((resolve, reject) => {
@@ -27,10 +39,7 @@ export const subscribe = (actions, clientId, stompClient) => {
         try {
             const subscription = stompClient.subscribe(
                 config.ws.messages + clientId,
-                response => {
-                    const data = JSON.parse(response.body);
-                    actions.messageReceived(data);
-                }
+                responseHandler.bind(this, actions)
             );
             stompClient.send(config.ws.history + clientId);
             return { stompClient, subscription };

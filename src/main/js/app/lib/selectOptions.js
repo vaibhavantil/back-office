@@ -9,7 +9,14 @@ export const assetStates = [
 
 export const messageTypes = [
     { key: 1, text: 'Text', value: 'text' },
-    { key: 2, text: 'Date', value: 'Date' },
-    { key: 3, text: 'Multiple Select', value: 'MultipleSelect' },
-    { key: 4, text: 'File', value: 'File' }
+    { key: 2, text: 'Number', value: 'number' },
+    { key: 3, text: 'Single select', value: 'single_select' },
+    { key: 4, text: 'Multiple select', value: 'multiple_select' },
+    { key: 5, text: 'Date', value: 'date_picker' },
+    { key: 6, text: 'Audio', value: 'audio' },
+    { key: 7, text: 'Photo', value: 'photo_upload' },
+    { key: 8, text: 'Video', value: 'video' },
+    { key: 9, text: 'Hero', value: 'hero' },
+    { key: 10, text: 'Paragraph', value: 'paragraph' },
+    { key: 11, text: 'Bank id collect', value: 'bankid_collect' },
 ]

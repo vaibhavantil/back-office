@@ -1,9 +1,9 @@
 import React from 'react';
-import Chats from 'components/chats/Chats';
+import UsersList from 'components/users-list/UsersList';
 import { Input } from 'semantic-ui-react';
 
 
-export default class ChatsList extends React.Component {
+export default class Users extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -49,7 +49,7 @@ export default class ChatsList extends React.Component {
                     onKeyPress={this.handleSearchChange}
                     action={{ icon: 'search', onClick: this.searchRequest }}
                 />
-                <Chats chats={this.state.results} />
+                <UsersList chats={this.state.results} />
             </React.Fragment>
         );
     }
