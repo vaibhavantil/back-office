@@ -1,10 +1,5 @@
 package com.hedvig.backoffice.services.chat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
@@ -47,7 +42,7 @@ public class ChatServiceImpl implements ChatService {
     public void append(String hid, String message) {
         Optional<ChatContext> chatOptional = chatContextRepository.finByHid(hid);
         if (!chatOptional.isPresent()) {
-            send(hid, Message.error(404, "User with hid " + hid + " not found"));
+            send(hid, Message.error(400, "User with hid " + hid + " not found"));
             return;
         }
 
@@ -89,7 +84,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             user = userService.findByHid(hid);
         } catch (UserNotFoundException e) {
-            send(hid, Message.error(404, "User with hid " + hid + " not found"));
+            send(hid, Message.error(400, "User with hid " + hid + " not found"));
             return;
         } catch (UserServiceException e) {
             send(hid, Message.error(500, e.getMessage()));

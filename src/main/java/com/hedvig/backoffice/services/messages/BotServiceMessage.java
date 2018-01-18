@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -24,12 +25,16 @@ public class BotServiceMessage {
 
     public Instant getTimestamp() throws BotServiceException {
         if (timestamp == null) {
-            String value = Optional.of(root.get("timestamp"))
-                    .map(JsonNode::asText)
+            JsonNode value = Optional.ofNullable(root.get("timestamp"))
                     .orElseThrow(() -> new BotServiceException("message must contains timestamp"));
 
+            String timeStr = value.asText();
+            if (StringUtils.isBlank(timeStr)) {
+                throw new BotServiceException("message must contains timestamp");
+            }
+
             try {
-                timestamp = Instant.parse(value);
+                timestamp = Instant.parse(timeStr);
             } catch (DateTimeParseException e) {
                 throw new BotServiceException(e);
             }

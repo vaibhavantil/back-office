@@ -39,7 +39,7 @@ public class ChatServiceJob extends QuartzJobBean {
                 try {
                     chat.setTimestamp(messages.get(messages.size() - 1).getTimestamp());
                 } catch (BotServiceException e) {
-                    logger.error("bot-service error:", e);
+                    chatService.send(chat.getHid(), Message.error(400, e.getMessage()));
                     chat.setTimestamp(new Date().toInstant());
                 }
                 chatContextRepository.save(chat);
