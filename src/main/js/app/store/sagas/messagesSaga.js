@@ -13,8 +13,10 @@ const messagesWatcher = function*() {
                 'type': messageType || 'text',
                 'text': message
             },
-        }
-        socket.send(config.ws.messages + userId, {}, JSON.stringify(content));
+            timestamp: new Date().toISOString()
+        };
+
+        socket.send(config.ws.send + userId, {}, JSON.stringify(content));
     });
 };
 
