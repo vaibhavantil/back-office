@@ -49,8 +49,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             botService.response(hid, new BotServiceMessage(message));
         } catch (BotServiceException e) {
-            send(hid, Message.error(500, e.getMessage()));
-            return;
+            send(hid, Message.error(e.getCode(), e.getMessage()));
         }
     }
 
@@ -59,7 +58,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             send(hid, Message.chat(botService.messages(hid)));
         } catch (BotServiceException e) {
-            send(hid, Message.error(500, e.getMessage()));
+            send(hid, Message.error(e.getCode(), e.getMessage()));
         }
     }
 
@@ -68,7 +67,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             send(hid, Message.chat(botService.messages(hid, count)));
         } catch (BotServiceException e) {
-            send(hid, Message.error(500, e.getMessage()));
+            send(hid, Message.error(e.getCode(), e.getMessage()));
         }
     }
 

@@ -17,8 +17,6 @@ import java.util.List;
 
 public class ChatServiceJob extends QuartzJobBean {
 
-    private static Logger logger = LoggerFactory.getLogger(ChatServiceJob.class);
-
     private ChatService chatService;
     private ChatContextRepository chatContextRepository;
     private BotService botService;
@@ -31,7 +29,7 @@ public class ChatServiceJob extends QuartzJobBean {
             try {
                 messages = botService.updates(chat.getHid(), chat.getTimestamp());
             } catch (BotServiceException e) {
-                chatService.send(chat.getHid(), Message.error(500, e.getMessage()));
+                chatService.send(chat.getHid(), Message.error(e.getCode(), e.getMessage()));
                 throw new JobExecutionException(e);
             }
 
@@ -39,7 +37,7 @@ public class ChatServiceJob extends QuartzJobBean {
                 try {
                     chat.setTimestamp(messages.get(messages.size() - 1).getTimestamp());
                 } catch (BotServiceException e) {
-                    chatService.send(chat.getHid(), Message.error(400, e.getMessage()));
+                    chatService.send(chat.getHid(), Message.error(e.getCode(), e.getMessage()));
                     chat.setTimestamp(new Date().toInstant());
                 }
                 chatContextRepository.save(chat);
