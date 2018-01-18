@@ -18,7 +18,7 @@ export default class MessgesPanel extends React.Component {
         super(props);
         this.state = {
             messageType: 'text',
-            message: null
+            message: ''
         };
         this.dropdownHander = this.dropdownHander.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
@@ -31,8 +31,10 @@ export default class MessgesPanel extends React.Component {
 
     submitHandler() {
         const { message, messageType } = this.state;
-        this.props.addMessage(message, messageType);
-        this.setState({ message: '' });
+        if (message && messageType) {
+            this.props.addMessage(message, messageType);
+            this.setState({ message: '' });
+        }
     }
 
     inputHandler(value) {
@@ -40,11 +42,12 @@ export default class MessgesPanel extends React.Component {
     }
 
     getChatInput(type) {
-        return chatInputs[type](this.inputHandler);
+        return chatInputs[type](this.inputHandler, this.state.message);
     }
 
     render() {
-        const chatInput = this.getChatInput(this.state.messageType);
+        const { messageType } = this.state;
+        const chatInput = this.getChatInput(messageType);
         return (
             <Form onSubmit={this.submitHandler}>
                 <MessagesPanelContariner>

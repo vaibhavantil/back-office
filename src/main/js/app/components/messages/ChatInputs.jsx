@@ -3,15 +3,16 @@ import { Form, Dropdown } from 'semantic-ui-react';
 import DateInput from '../inputs/DateInput';
 import FileInput from '../inputs/FileInput';
 
+// todo get options through props 
 const stateOptions = [
     { key: 'AL', value: 'AL', text: 'Al' },
     { key: 'EL', value: 'EL', text: 'El' }
 ];
 
 export default {
-    text(onChangeHandler) {
+    text(onChangeHandler, value) {
         const changeHandler = (e, { value }) => onChangeHandler(value);
-        return <Form.Input onChange={changeHandler} />;
+        return <Form.Input onChange={changeHandler} value={value} />;
     },
 
     Date(onChangeHandler) {
