@@ -18,7 +18,8 @@ export default {
         polling: false
     },
     messages: {
-        list: []
+        list: [],
+        activeConnection: null
     },
     chats: {
         list: [],

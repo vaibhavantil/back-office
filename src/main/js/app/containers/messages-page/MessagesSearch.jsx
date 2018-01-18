@@ -25,10 +25,21 @@ class MessagesSearch extends React.Component {
     }
 
     componentDidMount() {
-        const { client, setClient } = this.props;
+        const {
+            client,
+            setClient,
+            chatsRequest,
+            setActiveConnection,
+            messages
+        } = this.props;
+
         checkAuthorization(null, setClient);
-        this.props.chatsRequest(client.token);
-        sockets.connect();
+        chatsRequest(client.token);
+        if (!messages.activeConnection) {
+            sockets.connect().then(stompClient => {
+                setActiveConnection(stompClient);
+            });
+        }
     }
 
     render() {
@@ -58,6 +69,7 @@ const mapStateToProps = ({ client, chats, messages }) => ({
 export default withRouter(
     connect(mapStateToProps, {
         ...actions.clientActions,
-        ...actions.chatUserActions
+        ...actions.chatUserActions,
+        ...actions.messagesActions
     })(MessagesSearch)
 );

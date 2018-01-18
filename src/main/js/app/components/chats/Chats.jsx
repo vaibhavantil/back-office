@@ -55,7 +55,7 @@ export default class Chats extends React.Component {
                         <h2>Not found</h2>
                     )}
                 </List>
-                <Pagination items={chats} onChangePage={this.onChangePage} pageSize={2} />
+                <Pagination items={chats} onChangePage={this.onChangePage} pageSize={4} />
             </ListContainer>
         );
     }

@@ -31,23 +31,35 @@ class MessagesPage extends React.Component {
     }
 
     subscribeSocket() {
-        const { messageReceived, match, getMessagesHistory } = this.props;
+        const {
+            messageReceived,
+            match,
+            getMessagesHistory,
+            messages
+        } = this.props;
 
         const { stompClient, subscription } = sockets.subscribe(
             { messageReceived, getMessagesHistory },
-            match.params.id
+            match.params.id,
+            messages.activeConnection
         );
         return { stompClient, subscription };
     }
 
     reconnectSocket() {
-        const { messageReceived, getMessagesHistory, match } = this.props;
+        const {
+            messageReceived,
+            getMessagesHistory,
+            match,
+            setActiveConnection
+        } = this.props;
 
         sockets
             .reconnect({ messageReceived, getMessagesHistory }, match.params.id)
             .then(reslut => {
                 const { stompClient, subscription } = reslut;
                 this.setState({ socket: stompClient, subscription });
+                setActiveConnection(stompClient);
             });
     }
 
@@ -60,7 +72,8 @@ class MessagesPage extends React.Component {
     }
 
     componentWillUnmount() {
-        sockets.unsubscribe(this.state.subscription);
+        const { subscription } = this.state;
+        sockets.disconnect(null, subscription);
         this.props.clearMessagesList();
     }
 

@@ -9,7 +9,7 @@ const stateOptions = [
 ];
 
 export default {
-    Text(onChangeHandler) {
+    text(onChangeHandler) {
         const changeHandler = (e, { value }) => onChangeHandler(value);
         return <Form.Input onChange={changeHandler} />;
     },

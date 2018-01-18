@@ -17,7 +17,7 @@ export default class MessgesPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            messageType: 'Text',
+            messageType: 'text',
             message: null
         };
         this.dropdownHander = this.dropdownHander.bind(this);
