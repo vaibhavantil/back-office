@@ -149,7 +149,7 @@ public class BotServiceImpl implements BotService {
 
             if (!(code == 200 || code == 202 || code == 204)) {
                 closeRequest(client);
-                throw new BotServiceException("bot-service return code " + code);
+                throw new BotServiceException(code, "bot-service return code " + code);
             }
 
             return response.getEntity();

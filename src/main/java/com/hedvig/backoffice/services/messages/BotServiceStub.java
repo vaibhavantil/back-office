@@ -94,6 +94,7 @@ public class BotServiceStub implements BotService {
 
     @Override
     public void response(String hid, BotServiceMessage message) throws BotServiceException {
+        message.getTimestamp();
         List<BotServiceMessage> msg = updateMessages.computeIfAbsent(hid, k -> new ArrayList<>());
         msg.add(message);
     }
