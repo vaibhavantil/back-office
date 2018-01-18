@@ -98,7 +98,9 @@ public class ChatServiceImpl implements ChatService {
             return;
         }
 
-        ChatContext chat = new ChatContext();
+        Optional<ChatContext> optional = chatContextRepository.finByHid(user.getHid());
+        ChatContext chat = optional.orElseGet(ChatContext::new);
+
         chat.setHid(user.getHid());
         chat.setSubId(subId);
         chat.setSessionId(sessionId);
@@ -109,7 +111,8 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void unsubscribe(String subId, String sessionId) {
-        chatContextRepository.findBySubIdAndSessionId(subId, sessionId).ifPresent(chatContextRepository::delete);
+        Optional<ChatContext> optional = chatContextRepository.findBySubIdAndSessionId(subId, sessionId);
+        optional.ifPresent(chatContextRepository::delete);
     }
 
     @Override
