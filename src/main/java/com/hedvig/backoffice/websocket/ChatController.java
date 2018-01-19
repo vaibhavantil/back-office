@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.websocket;
 
 import com.hedvig.backoffice.services.chat.ChatService;
-import com.hedvig.backoffice.services.chat.data.PayloadChatMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -22,7 +21,7 @@ public class ChatController {
 
     @SubscribeMapping("/send/{hid}")
     public void send(@DestinationVariable String hid, @RequestBody String body) {
-        chatService.append(hid, new PayloadChatMessage(body));
+        chatService.append(hid, body);
     }
 
     @SubscribeMapping("/history/{hid}")

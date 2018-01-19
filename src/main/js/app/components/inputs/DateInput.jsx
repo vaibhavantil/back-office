@@ -52,7 +52,7 @@ class DateInput extends React.Component {
         this.setState({
             date: moment(date)
         });
-        this.props.onChangeHandler(moment(date));
+        this.props.onChangeHandler(moment(this.state.date));
     }
 
     componentDidMount() {

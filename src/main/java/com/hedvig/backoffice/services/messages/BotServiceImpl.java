@@ -2,8 +2,6 @@ package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hedvig.backoffice.services.chat.data.ChatMessage;
-import com.hedvig.backoffice.services.chat.data.PayloadChatMessage;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -26,6 +24,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -54,31 +53,37 @@ public class BotServiceImpl implements BotService {
     }
 
     @Override
-    public List<ChatMessage> messages(String hid) throws BotServiceException {
+    public List<BotServiceMessage> messages(String hid) throws BotServiceException {
         return messages(baseUrl + messagesUrl, hid);
     }
 
     @Override
-    public List<ChatMessage> messages(String hid, int count) throws BotServiceException {
+    public List<BotServiceMessage> messages(String hid, int count) throws BotServiceException {
         return messages(baseUrl + messagesUrl + "/" + count, hid);
     }
 
     @Override
-    public List<ChatMessage> updates(String hid, Instant timestamp) throws BotServiceException {
+    public List<BotServiceMessage> updates(String hid, Instant timestamp) throws BotServiceException {
         return messages(baseUrl + messagesUrl + "/5", hid)
                 .stream()
-                .filter(msg -> timestamp.isBefore(msg.getTimestamp()))
+                .filter(msg -> {
+                    try {
+                        return timestamp.isBefore(msg.getTimestamp());
+                    } catch (BotServiceException e) {
+                        return false;
+                    }
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void response(String hid, ChatMessage message) throws BotServiceException {
+    public void response(String hid, BotServiceMessage message) throws BotServiceException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(baseUrl + responseUrl);
 
         StringEntity entity;
         try {
-            entity = new StringEntity(message.getPayload());
+            entity = new StringEntity(message.getMessage().toString());
         } catch (UnsupportedEncodingException e) {
             throw new BotServiceException(e);
         }
@@ -92,7 +97,7 @@ public class BotServiceImpl implements BotService {
         closeRequest(client);
     }
 
-    private List<ChatMessage> messages(String url, String hid) throws BotServiceException {
+    private List<BotServiceMessage> messages(String url, String hid) throws BotServiceException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpGet get = new HttpGet(url);
         get.setHeader("hedvig.token", hid);
@@ -100,7 +105,7 @@ public class BotServiceImpl implements BotService {
         HttpEntity entity = doRequest(client, get);
 
         ObjectMapper mapper = new ObjectMapper();
-        List<ChatMessage> messages = null;
+        List<BotServiceMessage> messages = null;
 
         try {
             String result = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
@@ -111,7 +116,14 @@ public class BotServiceImpl implements BotService {
 
                 messages = StreamSupport
                         .stream(iterable.spliterator(), false)
-                        .map(e -> new PayloadChatMessage(e.getValue().toString()))
+                        .map(e -> {
+                            try {
+                                return new BotServiceMessage(e.getValue().toString());
+                            } catch (BotServiceException ex) {
+                                return null;
+                            }
+                        })
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList());
             }
         } catch (IOException e) {
@@ -137,7 +149,7 @@ public class BotServiceImpl implements BotService {
 
             if (!(code == 200 || code == 202 || code == 204)) {
                 closeRequest(client);
-                throw new BotServiceException("bot-service return code " + code);
+                throw new BotServiceException(code, "bot-service return code " + code);
             }
 
             return response.getEntity();

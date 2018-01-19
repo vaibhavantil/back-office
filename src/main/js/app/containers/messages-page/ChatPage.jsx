@@ -14,7 +14,7 @@ const ChatContainer = styled.div`
     background-color: #f5f5f5;
 `;
 
-class MessagesPage extends React.Component {
+class ChatPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -24,36 +24,62 @@ class MessagesPage extends React.Component {
         this.subscribeSocket = this.subscribeSocket.bind(this);
     }
 
-    addMessageHandler(message) {
+    addMessageHandler(message, messageType) {
         const { socket } = this.state;
-        if (socket) this.props.addMessage(message, socket);
+        const userId = this.props.match.params.id;
+        if (socket) this.props.addMessage(message, messageType, userId, socket);
     }
 
     subscribeSocket() {
-        const { messageReceived, match, getMessagesHistory } = this.props;
+        const {
+            messageReceived,
+            match,
+            getMessagesHistory,
+            messages,
+            errorReceived
+        } = this.props;
 
         const { stompClient, subscription } = sockets.subscribe(
-            { messageReceived, getMessagesHistory },
-            match.params.id
+            { messageReceived, getMessagesHistory, errorReceived },
+            match.params.id,
+            messages.activeConnection
         );
         return { stompClient, subscription };
     }
 
-    componentDidMount() {
-        const { messageReceived, getMessagesHistory, match } = this.props;
-        let { stompClient, subscription } = this.subscribeSocket();
-        // trying to reconnect if ws-connection lost
-        if (!stompClient) {
-            sockets.reconnect(
-                { messageReceived, getMessagesHistory },
+    reconnectSocket() {
+        const {
+            messageReceived,
+            getMessagesHistory,
+            match,
+            setActiveConnection,
+            errorReceived
+        } = this.props;
+
+        sockets
+            .reconnect(
+                { messageReceived, getMessagesHistory, errorReceived },
                 match.params.id
-            );
+            )
+            .then(reslut => {
+                const { stompClient, subscription } = reslut;
+                this.setState({ socket: stompClient, subscription });
+                setActiveConnection(stompClient);
+            });
+    }
+
+    componentDidMount() {
+        const { stompClient, subscription } = this.subscribeSocket();
+        if (!stompClient) {
+            this.reconnectSocket();
         }
         this.setState({ socket: stompClient, subscription });
     }
 
     componentWillUnmount() {
-        sockets.unsubscribe(this.state.subscription);
+        const { subscription } = this.state;
+        sockets.disconnect(null, subscription);
+        this.props.clearMessagesList();
     }
 
     render() {
@@ -66,7 +92,9 @@ class MessagesPage extends React.Component {
                     messages={messages}
                     addMessage={this.addMessageHandler}
                     user={user}
-                    error={!!this.state.socket}
+                    error={messages.error}
+                    lostConnection={!!this.state.socket}
+                    userId={userId}
                 />
             </ChatContainer>
         );
@@ -86,5 +114,5 @@ export default withRouter(
         ...actions.messagesActions,
         ...actions.chatUserActions,
         ...actions.clientActions
-    })(MessagesPage)
+    })(ChatPage)
 );

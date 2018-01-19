@@ -13,6 +13,8 @@ const MessageBox = styled.div`
     position: relative;
     max-width: 400px;
     padding: 0.8em 1em;
+    white-space: pre-wrap;
+    word-wrap: break-word;
     z-index: 2000;
     border: 1px solid #d4d4d5;
     color: #4b4b4b;
@@ -42,9 +44,7 @@ const MessageBox = styled.div`
 
 const Message = ({ left, content }) => (
     <MessageRow left={left}>
-        <MessageBox left={left}>
-            {!left ? content : content.body.text}
-        </MessageBox>
+        <MessageBox left={left}>{content && content.text}</MessageBox>
     </MessageRow>
 );
 

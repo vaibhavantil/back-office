@@ -35,6 +35,7 @@ export default {
         // eslint-disable-next-line
         endpoint: DEV ? 'http://localhost:8080/chat': '/chat',
         messages: '/topic/messages/',
-        history: '/app/messages/history/'
+        history: '/app/messages/history/',
+        send: '/app/messages/send/'
     }
 };

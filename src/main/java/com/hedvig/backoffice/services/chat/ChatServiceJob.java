@@ -2,14 +2,17 @@ package com.hedvig.backoffice.services.chat;
 
 import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.repository.ChatContextRepository;
+import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
-import com.hedvig.backoffice.services.chat.data.ErrorChatMessage;
-import com.hedvig.backoffice.services.chat.data.ChatMessage;
+import com.hedvig.backoffice.services.messages.BotServiceMessage;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import java.util.Date;
 import java.util.List;
 
 public class ChatServiceJob extends QuartzJobBean {
@@ -22,18 +25,23 @@ public class ChatServiceJob extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         Iterable<ChatContext> chats = chatContextRepository.findAll();
         for (ChatContext chat : chats) {
-            List<ChatMessage> messages;
+            List<BotServiceMessage> messages;
             try {
                 messages = botService.updates(chat.getHid(), chat.getTimestamp());
             } catch (BotServiceException e) {
-                chatService.retranslate(chat.getHid(), new ErrorChatMessage(500, e.getMessage()));
+                chatService.send(chat.getHid(), Message.error(e.getCode(), e.getMessage()));
                 throw new JobExecutionException(e);
             }
 
             if (messages.size() > 0) {
-                chat.setTimestamp(messages.get(messages.size() - 1).getTimestamp());
+                try {
+                    chat.setTimestamp(messages.get(messages.size() - 1).getTimestamp());
+                } catch (BotServiceException e) {
+                    chatService.send(chat.getHid(), Message.error(e.getCode(), e.getMessage()));
+                    chat.setTimestamp(new Date().toInstant());
+                }
                 chatContextRepository.save(chat);
-                chatService.retranslate(chat.getHid(), messages);
+                chatService.send(chat.getHid(), Message.chat(messages));
             }
         }
     }

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Icon } from 'semantic-ui-react'; 
+import { Icon, Message } from 'semantic-ui-react'; 
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import MessagesList from '../messages/MessagesList';
-import MessagesPanel from '../messages/MessagesPanel';
+import ChatPanel from '../messages/ChatPanel';
 
 const ChatContainer = styled.div`
     width: 700px;
@@ -15,15 +15,18 @@ export const Header = styled.h2`
     color: #4c4b4b;
 `;
 
-const Chat = ({ messages, addMessage, user, error }) => (
+const Chat = ({ messages, addMessage, user, error, lostConnection, userId }) => (
     <div>
         <Header>Chat with {user ? `${user.firstName} ${user.lastName || ''}` : 'User'}</Header>
         <Link to="/messages">
             <Icon name="arrow left" /> Back
         </Link>
         <ChatContainer>
-            <MessagesList messages={messages.list} error={error} />
-            <MessagesPanel addMessage={addMessage} />
+            <MessagesList messages={messages.list} error={lostConnection} userId={userId} />
+            <ChatPanel addMessage={addMessage} />
+            {
+                error && <Message negative>{error.message}</Message>
+            }
         </ChatContainer>
     </div>
 );

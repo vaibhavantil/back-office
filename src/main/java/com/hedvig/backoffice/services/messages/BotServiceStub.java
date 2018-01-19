@@ -1,7 +1,5 @@
 package com.hedvig.backoffice.services.messages;
 
-import com.hedvig.backoffice.services.chat.data.ChatMessage;
-import com.hedvig.backoffice.services.chat.data.PayloadChatMessage;
 import lombok.Value;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
@@ -19,27 +17,14 @@ public class BotServiceStub implements BotService {
     private static Logger logger = LoggerFactory.getLogger(BotServiceStub.class);
 
     private static final String STUB_MESSAGE_TEMPLATE = "{" +
-            "\"globalId\": %s, " +
-            "\"id\": \"message.onboardingstart\"," +
             "\"header\": { " +
-            "   \"messageId\": 1," +
-            "   \"fromId\": %s," +
-            "   \"responsePath\": \"/response\", " +
-            "   \"timeStamp\": 1515499154030," +
-            "   \"loadingIndicator\": \"loader\"," +
-            "   \"avatarName\": null, " +
-            "   \"pollingInterval\": 625," +
-            "   \"editAllowed\": false" +
+            "   \"fromId\": \"%s\"" +
             "}," +
             "\"body\": {" +
-            "   \"type\": \"paragraph\"," +
-            "   \"id\": 1," +
-            "   \"text\": \"Test message %s\", " +
-            "   \"imageURL\": null," +
-            "   \"imageWidth\": null," +
-            "   \"imageHeight\": null" +
+            "   \"type\": \"text\"," +
+            "   \"text\": \"Test message %s\"" +
             "}," +
-            "\"timestamp\":\"2018-01-09T11:59:14.030Z\"" +
+            "\"timestamp\":\"%s\"" +
             "}";
 
     @Value
@@ -48,9 +33,9 @@ public class BotServiceStub implements BotService {
         private int position;
     }
 
-    private ConcurrentHashMap<String, List<ChatMessage>> messages;
+    private ConcurrentHashMap<String, List<BotServiceMessage>> messages;
     private ConcurrentHashMap<String, MessagePositionStub> positions;
-    private ConcurrentHashMap<String, List<ChatMessage>> updateMessages;
+    private ConcurrentHashMap<String, List<BotServiceMessage>> updateMessages;
 
     @Autowired
     public BotServiceStub() {
@@ -63,13 +48,13 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<ChatMessage> messages(String hid) throws BotServiceException {
+    public List<BotServiceMessage> messages(String hid) throws BotServiceException {
         return messages.computeIfAbsent(hid, k -> new ArrayList<>());
     }
 
     @Override
-    public List<ChatMessage> messages(String hid, int count) throws BotServiceException {
-        List<ChatMessage> all = messages.computeIfAbsent(hid, k -> new ArrayList<>());
+    public List<BotServiceMessage> messages(String hid, int count) throws BotServiceException {
+        List<BotServiceMessage> all = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         if (all.size() <= count) {
             return all;
         }
@@ -78,29 +63,29 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<ChatMessage> updates(String hid, Instant timestamp) throws BotServiceException {
+    public List<BotServiceMessage> updates(String hid, Instant timestamp) throws BotServiceException {
         MessagePositionStub pos = positions.computeIfAbsent(hid,
                 k -> new MessagePositionStub(Instant.ofEpochMilli(new Date().getTime()), 0));
 
-        List<ChatMessage> result = new ArrayList<>();
+        List<BotServiceMessage> result = new ArrayList<>();
 
         Instant current = Instant.ofEpochMilli(new Date().getTime());
         if (current.minusSeconds(RandomUtils.nextInt(3, 7)).isAfter(pos.time)) {
             MessagePositionStub newPos = new MessagePositionStub(Instant.ofEpochMilli(new Date().getTime()), pos.position + 1);
             positions.put(hid, newPos);
 
-            ChatMessage msg = new PayloadChatMessage(String.format(STUB_MESSAGE_TEMPLATE, pos.position, hid, pos.position));
+            BotServiceMessage msg = new BotServiceMessage(String.format(STUB_MESSAGE_TEMPLATE, hid, pos.position, new Date().toInstant().toString()));
             result.add(msg);
         }
 
-        List<ChatMessage> updates = updateMessages.computeIfAbsent(hid, k -> new ArrayList<>());
+        List<BotServiceMessage> updates = updateMessages.computeIfAbsent(hid, k -> new ArrayList<>());
         if (updates.size() > 0) {
             result.addAll(updates);
             updateMessages.put(hid, new ArrayList<>());
         }
 
         if (result.size() > 0) {
-            List<ChatMessage> userMessages = messages.computeIfAbsent(hid, k -> new ArrayList<>());
+            List<BotServiceMessage> userMessages = messages.computeIfAbsent(hid, k -> new ArrayList<>());
             userMessages.addAll(result);
         }
 
@@ -108,8 +93,9 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public void response(String hid, ChatMessage message) throws BotServiceException {
-        List<ChatMessage> msg = updateMessages.computeIfAbsent(hid, k -> new ArrayList<>());
+    public void response(String hid, BotServiceMessage message) throws BotServiceException {
+        message.getTimestamp();
+        List<BotServiceMessage> msg = updateMessages.computeIfAbsent(hid, k -> new ArrayList<>());
         msg.add(message);
     }
 }

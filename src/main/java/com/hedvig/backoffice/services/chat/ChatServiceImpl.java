@@ -2,10 +2,10 @@ package com.hedvig.backoffice.services.chat;
 
 import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.repository.ChatContextRepository;
+import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
-import com.hedvig.backoffice.services.chat.data.ErrorChatMessage;
-import com.hedvig.backoffice.services.chat.data.ChatMessage;
+import com.hedvig.backoffice.services.messages.BotServiceMessage;
 import com.hedvig.backoffice.services.users.UserNotFoundException;
 import com.hedvig.backoffice.services.users.UserService;
 import com.hedvig.backoffice.services.users.UserServiceException;
@@ -34,48 +34,40 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void retranslate(String hid, ChatMessage message) {
-        template.convertAndSend(getTopicPrefix() + hid, message.getPayload());
+    public void send(String hid, Message message) {
+        template.convertAndSend(getTopicPrefix() + hid, message.toJson());
     }
 
     @Override
-    public void retranslate(String hid, List<ChatMessage> messages) {
-        for (ChatMessage m : messages) {
-            retranslate(hid, m);
-        }
-    }
-
-    @Override
-    public void append(String hid, ChatMessage message) {
+    public void append(String hid, String message) {
         Optional<ChatContext> chatOptional = chatContextRepository.finByHid(hid);
         if (!chatOptional.isPresent()) {
-            retranslate(hid, new ErrorChatMessage(404, "Chat for user with hid " + hid + " not found"));
+            send(hid, Message.error(400, "User with hid " + hid + " not found"));
             return;
         }
 
         try {
-            botService.response(hid, message);
+            botService.response(hid, new BotServiceMessage(message));
         } catch (BotServiceException e) {
-            retranslate(hid, new ErrorChatMessage(500, e.getMessage()));
-            return;
+            send(hid, Message.error(e.getCode(), e.getMessage()));
         }
     }
 
     @Override
     public void messages(String hid) {
         try {
-            retranslate(hid, botService.messages(hid));
+            send(hid, Message.chat(botService.messages(hid)));
         } catch (BotServiceException e) {
-            retranslate(hid, new ErrorChatMessage(500, e.getMessage()));
+            send(hid, Message.error(e.getCode(), e.getMessage()));
         }
     }
 
     @Override
     public void messages(String hid, int count) {
         try {
-            retranslate(hid, botService.messages(hid, count));
+            send(hid, Message.chat(botService.messages(hid, count)));
         } catch (BotServiceException e) {
-            retranslate(hid, new ErrorChatMessage(500, e.getMessage()));
+            send(hid, Message.error(e.getCode(), e.getMessage()));
         }
     }
 
@@ -91,14 +83,16 @@ public class ChatServiceImpl implements ChatService {
         try {
             user = userService.findByHid(hid);
         } catch (UserNotFoundException e) {
-            retranslate(hid, new ErrorChatMessage(404, "User with hid " + hid + " not found"));
+            send(hid, Message.error(400, "User with hid " + hid + " not found"));
             return;
         } catch (UserServiceException e) {
-            retranslate(hid, new ErrorChatMessage(500, e.getMessage()));
+            send(hid, Message.error(500, e.getMessage()));
             return;
         }
 
-        ChatContext chat = new ChatContext();
+        Optional<ChatContext> optional = chatContextRepository.finByHid(user.getHid());
+        ChatContext chat = optional.orElseGet(ChatContext::new);
+
         chat.setHid(user.getHid());
         chat.setSubId(subId);
         chat.setSessionId(sessionId);
@@ -109,7 +103,8 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void unsubscribe(String subId, String sessionId) {
-        chatContextRepository.findBySubIdAndSessionId(subId, sessionId).ifPresent(chatContextRepository::delete);
+        Optional<ChatContext> optional = chatContextRepository.findBySubIdAndSessionId(subId, sessionId);
+        optional.ifPresent(chatContextRepository::delete);
     }
 
     @Override

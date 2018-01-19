@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import actions from 'app/store/actions';
 import { checkAuthorization } from 'app/lib/checkAuth';
-import ChatsList from 'components/messages/ChatsList';
+import Users from 'components/users/Users';
 import { Link } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
 import { Header } from 'components/messages/Chat';
@@ -19,16 +19,27 @@ const ChatsListPage = styled.div`
     margin: 0 auto;
 `;
 
-class MessagesSearch extends React.Component {
+class UsersPage extends React.Component {
     constructor(props) {
         super(props);
     }
 
     componentDidMount() {
-        const { client, setClient } = this.props;
+        const {
+            client,
+            setClient,
+            chatsRequest,
+            setActiveConnection,
+            messages
+        } = this.props;
+
         checkAuthorization(null, setClient);
-        this.props.chatsRequest(client.token);
-        sockets.connect();
+        chatsRequest(client.token);
+        if (!messages.activeConnection) {
+            sockets.connect().then(stompClient => {
+                setActiveConnection(stompClient);
+            });
+        }
     }
 
     render() {
@@ -39,7 +50,7 @@ class MessagesSearch extends React.Component {
                 <Link to="/assets">
                     <Icon name="arrow left" /> Back
                 </Link>
-                <ChatsList
+                <Users
                     chats={chats}
                     search={searchChatRequest}
                     client={client}
@@ -58,6 +69,7 @@ const mapStateToProps = ({ client, chats, messages }) => ({
 export default withRouter(
     connect(mapStateToProps, {
         ...actions.clientActions,
-        ...actions.chatUserActions
-    })(MessagesSearch)
+        ...actions.chatUserActions,
+        ...actions.messagesActions
+    })(UsersPage)
 );
