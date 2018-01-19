@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Message from './Message';
 
 const MessagesListContainer = styled.div`
-    height: 800px;
+    height: 600px;
     box-sizing: border-box;
     overflow-y: auto;
     padding: 20px 20px 60px;
