@@ -46,6 +46,18 @@ public class BotServiceMessage {
         return root;
     }
 
+    public void setRoot(JsonNode root) {
+        this.root = root;
+    }
+
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setGlobalId(Long globalId) {
+        this.globalId = globalId;
+    }
+
     private void parseTimestamp() throws BotServiceException {
         JsonNode value = Optional.ofNullable(root.get("timestamp"))
                 .orElseThrow(() -> new BotServiceException("message must contains timestamp"));
