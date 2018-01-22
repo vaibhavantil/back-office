@@ -1,11 +1,9 @@
 import React from 'react';
 import { Input, Form } from 'semantic-ui-react';
 import DateInput from '../inputs/DateInput';
-import FileInput from '../inputs/FileInput';
 import TextFileInput from '../inputs/TextFileInput';
 import NumberInput from '../inputs/NumberInput';
-import SingleSelect from '../inputs/SingleSelectInput';
-import MultipleSelect from '../inputs/MultipleSelectInput';
+import SelectCreator from '../inputs/SelectCreator';
 
 import * as types from 'app/lib/messageTypes';
 
@@ -33,23 +31,13 @@ export default {
         return <DateInput changeHandler={onChangeHandler} />;
     },
 
-    [types.MULTIPLE_SELECT](onChangeHandler, options) {
+    select(onChangeHandler) {
         return (
-            <MultipleSelect options={options} changeHandler={onChangeHandler} />
-        );
-    },
-
-    [types.SINGLE_SELECT](onChangeHandler, options) {
-        return (
-            <SingleSelect changeHandler={onChangeHandler} options={options} />
+            <SelectCreator changeHandler={onChangeHandler} />
         );
     },
 
     file(onChangeHandler, type) {
         return <TextFileInput changeHandler={onChangeHandler} type={type} />;
     },
-
-    [types.BANK_ID_COLLECT](onChangeHandler) {
-        return <FileInput changeHandler={onChangeHandler} />;
-    }
 };

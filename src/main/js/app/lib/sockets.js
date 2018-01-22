@@ -94,8 +94,10 @@ export const updateMessageBody = (content, message, type) => {
         case types.AUDIO:
         case types.VIDEO:
         case types.PHOTO:
-        case types.HERO:
             updated.body.URL = message[type];
+            break;
+        case types.HERO:
+            updated.body.imageUri = message[type];
             break;
         default:
             break;

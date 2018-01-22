@@ -43,8 +43,6 @@ public class BotServiceStub implements BotService {
                 "        },{" +
                 "           \"type\": \"link\"," +
                 "           \"text\":\"I want to see my assets\"," +
-                "           \"view\": \"AssetTracker\"," +
-                "           \"appUrl\": \"bankid://\"," +
                 "           \"webUrl\": \"http://hedvig.com\"," +
                 "           \"selected\": true" +
                 "        }" +
@@ -59,8 +57,6 @@ public class BotServiceStub implements BotService {
                 "        },{" +
                 "           \"type\": \"link\"," +
                 "           \"text\":\"I want to see my assets\"," +
-                "           \"view\": \"AssetTracker\"," +
-                "           \"appUrl\": \"bankid://\"," +
                 "           \"webUrl\": \"http://hedvig.com\"," +
                 "           \"selected\": true" +
                 "        }" +
@@ -71,7 +67,7 @@ public class BotServiceStub implements BotService {
 
         typesTemplates.put("audio", ", \"URL\": \"http://78.media.tumblr.com/tumblr_ll313eVnI91qjahcpo1_1280.jpg\"");
         typesTemplates.put("photo_upload", ", \"URL\": \"http://78.media.tumblr.com/tumblr_ll313eVnI91qjahcpo1_1280.jpg\"");
-        typesTemplates.put("video", ", \"URL\": \"http://78.media.tumblr.com/tumblr_ll313eVnI91qjahcpo1_1280.jpg\"");
+        typesTemplates.put("video", ", \"URL\": \"https://media.w3.org/2010/05/sintel/trailer.mp4\"");
 
         typesTemplates.put("hero", ", \"imageUri\": \"http://78.media.tumblr.com/tumblr_ll313eVnI91qjahcpo1_1280.jpg\"");
 

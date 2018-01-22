@@ -5,20 +5,13 @@ import { messageTypes } from 'app/lib/selectOptions';
 import chatInputs from './ChatInputs';
 import * as types from 'app/lib/messageTypes';
 
-const options = [
-    { key: 'AL', value: 'AL', text: 'First select option' },
-    { key: 'EL', value: 'EL', text: 'Second select option' },
-    { key: 'IL', value: 'IL', text: 'Il item' },
-    { key: 'OL', value: 'OL', text: 'Ol item' },
-    { key: 'YL', value: 'YL', text: 'Yl item' }
-];
-
 const messagesWithFiles = [
     types.AUDIO,
     types.VIDEO,
     types.PHOTO,
     types.PARAGRAPH,
-    types.HERO
+    types.HERO,
+    types.BANK_ID_COLLECT
 ];
 
 const MessagesPanelContariner = styled.div`
@@ -34,7 +27,7 @@ export default class MessgesPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            messageType: 'text',
+            messageType: types.TEXT,
             message: {}
         };
         this.dropdownHander = this.dropdownHander.bind(this);
@@ -68,8 +61,13 @@ export default class MessgesPanel extends React.Component {
         let input;
         if (isFileInput) {
             input = chatInputs.file(this.inputHandler, type);
+        } else if (
+            type === types.MULTIPLE_SELECT ||
+            type === types.SINGLE_SELECT
+        ) {
+            input = chatInputs.select(this.inputHandler);
         } else {
-            input = chatInputs[type](this.inputHandler, options);
+            input = chatInputs[type](this.inputHandler);
         }
         return <div style={{ width: '400px' }}>{input}</div>;
     }
@@ -92,7 +90,11 @@ export default class MessgesPanel extends React.Component {
                         />
                     </Form.Field>
                     {chatInput}
-                    <Form.Button content="Send" primary />
+                    <Form.Button
+                        content="Send"
+                        primary
+                        style={{ marginTop: '23px' }}
+                    />
                 </MessagesPanelContariner>
             </Form>
         );
