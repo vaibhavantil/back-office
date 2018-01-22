@@ -11,7 +11,7 @@ public interface ChatService {
     void messages(String hid);
     void messages(String hid, int count);
     void close(String sessionId);
-    void subscribe(String hid, String subId, String sessionId);
+    void subscribe(String hid, String subId, String sessionId, String principal);
     void unsubscribe(String subId, String sessionId);
 
     String getTopicPrefix();

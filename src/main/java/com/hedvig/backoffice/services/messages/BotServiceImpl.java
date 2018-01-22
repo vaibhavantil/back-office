@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,20 +59,6 @@ public class BotServiceImpl implements BotService {
     @Override
     public List<BotServiceMessage> messages(String hid, int count) throws BotServiceException {
         return messages(baseUrl + messagesUrl + "/" + count, hid);
-    }
-
-    @Override
-    public List<BotServiceMessage> updates(String hid, Instant timestamp) throws BotServiceException {
-        return messages(baseUrl + messagesUrl + "/5", hid)
-                .stream()
-                .filter(msg -> {
-                    try {
-                        return timestamp.isBefore(msg.getTimestamp());
-                    } catch (BotServiceException e) {
-                        return false;
-                    }
-                })
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -120,6 +105,7 @@ public class BotServiceImpl implements BotService {
                             try {
                                 return new BotServiceMessage(e.getValue().toString());
                             } catch (BotServiceException ex) {
+                                logger.error(ex.getMessage(), ex);
                                 return null;
                             }
                         })

@@ -6,6 +6,7 @@ import { updateMessageBody } from 'app/lib/sockets';
 const messagesWatcher = function*() {
     yield takeEvery(ADD_MESSAGE, ({ message, messageType, socket, userId }) => {
         const content = {
+            id: "message.hello",
             header: {
                 fromId: 1
             },

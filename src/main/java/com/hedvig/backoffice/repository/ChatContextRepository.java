@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.repository;
 
 import com.hedvig.backoffice.domain.ChatContext;
+import com.hedvig.backoffice.domain.Personnel;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -19,6 +20,9 @@ public interface ChatContextRepository extends CrudRepository<ChatContext, Strin
     List<ChatContext> findBySessionId(@Param("sessionId") String sessionId);
 
     @Query("select c from ChatContext c where c.hid = :hid")
-    Optional<ChatContext> finByHid(@Param("hid") String hid);
+    Optional<ChatContext> findByHid(@Param("hid") String hid);
+
+    @Query("select c from ChatContext c where c.hid = :hid and c.personnel = :personnel")
+    Optional<ChatContext> findByHidAndPersonnel(@Param("hid") String hid, @Param("personnel") Personnel personnel);
 
 }
