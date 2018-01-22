@@ -62,7 +62,7 @@ public class BotServiceStub implements BotService {
         return all.subList(all.size() - count, all.size());
     }
 
-    @Override
+    /*@Override
     public List<BotServiceMessage> updates(String hid, Instant timestamp) throws BotServiceException {
         MessagePositionStub pos = positions.computeIfAbsent(hid,
                 k -> new MessagePositionStub(Instant.ofEpochMilli(new Date().getTime()), 0));
@@ -90,11 +90,10 @@ public class BotServiceStub implements BotService {
         }
 
         return result;
-    }
+    }*/
 
     @Override
     public void response(String hid, BotServiceMessage message) throws BotServiceException {
-        message.getTimestamp();
         List<BotServiceMessage> msg = updateMessages.computeIfAbsent(hid, k -> new ArrayList<>());
         msg.add(message);
     }

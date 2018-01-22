@@ -7,36 +7,28 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Entity
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class ChatContext {
+public class MessageInfo {
 
     @Id
     @GeneratedValue
     private Long id;
 
     @NotNull
-    private String hid;
-
-    @NotNull
-    private String subId;
-
-    @NotNull
-    private String sessionId;
+    private Long messageId;
 
     @NotNull
     private Instant timestamp;
 
-    @ManyToOne
-    private Subscription subscription;
-
-    @ManyToOne
-    private Personnel personnel;
+    public MessageInfo(long messageId, Instant timestamp) {
+        this.messageId = messageId;
+        this.timestamp = timestamp;
+    }
 
 }

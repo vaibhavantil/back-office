@@ -13,38 +13,60 @@ public class BotServiceMessage {
 
     private JsonNode root;
     private Instant timestamp;
+    private Long globalId;
 
     public BotServiceMessage(String message) throws BotServiceException {
+        this(message, false);
+    }
+
+    public BotServiceMessage(String message, boolean newMessage) throws BotServiceException {
         ObjectMapper mapper = new ObjectMapper();
         try {
             root = mapper.readValue(message, JsonNode.class);
         } catch (IOException e) {
             throw new BotServiceException(e);
         }
-    }
 
-    public Instant getTimestamp() throws BotServiceException {
-        if (timestamp == null) {
-            JsonNode value = Optional.ofNullable(root.get("timestamp"))
-                    .orElseThrow(() -> new BotServiceException("message must contains timestamp"));
-
-            String timeStr = value.asText();
-            if (StringUtils.isBlank(timeStr)) {
-                throw new BotServiceException("message must contains timestamp");
-            }
-
-            try {
-                timestamp = Instant.parse(timeStr);
-            } catch (DateTimeParseException e) {
-                throw new BotServiceException(e);
-            }
+        if (!newMessage) {
+            parseGlobalId();
         }
 
+        parseTimestamp();
+    }
+
+    public Instant getTimestamp() {
         return timestamp;
+    }
+
+    public Long getGlobalId() {
+        return globalId;
     }
 
     public JsonNode getMessage() {
         return root;
+    }
+
+    private void parseTimestamp() throws BotServiceException {
+        JsonNode value = Optional.ofNullable(root.get("timestamp"))
+                .orElseThrow(() -> new BotServiceException("message must contains timestamp"));
+
+        String timeStr = value.asText();
+        if (StringUtils.isBlank(timeStr)) {
+            throw new BotServiceException("message must contains timestamp");
+        }
+
+        try {
+            timestamp = Instant.parse(timeStr);
+        } catch (DateTimeParseException e) {
+            throw new BotServiceException(e);
+        }
+    }
+
+    private void parseGlobalId() throws BotServiceException {
+        JsonNode value = Optional.ofNullable(root.get("globalId"))
+                .orElseThrow(() -> new BotServiceException("message must contains globalId"));
+
+        globalId = value.asLong();
     }
 
 }

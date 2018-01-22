@@ -1,7 +1,11 @@
 package com.hedvig.backoffice.services.chat;
 
 import com.hedvig.backoffice.domain.ChatContext;
+import com.hedvig.backoffice.domain.Personnel;
+import com.hedvig.backoffice.domain.Subscription;
 import com.hedvig.backoffice.repository.ChatContextRepository;
+import com.hedvig.backoffice.repository.PersonnelRepository;
+import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
@@ -12,6 +16,7 @@ import com.hedvig.backoffice.services.users.UserServiceException;
 import com.hedvig.backoffice.web.dto.UserDTO;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -24,13 +29,22 @@ public class ChatServiceImpl implements ChatService {
     private final BotService botService;
     private final UserService userService;
     private final ChatContextRepository chatContextRepository;
+    private final PersonnelRepository personnelRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
-    public ChatServiceImpl(SimpMessagingTemplate template, BotService botService, UserService userService,
-                           ChatContextRepository chatContextRepository) {
+    public ChatServiceImpl(SimpMessagingTemplate template,
+                           BotService botService,
+                           UserService userService,
+                           ChatContextRepository chatContextRepository,
+                           PersonnelRepository personnelRepository,
+                           SubscriptionRepository subscriptionRepository) {
+
         this.template = template;
         this.botService = botService;
         this.userService = userService;
         this.chatContextRepository = chatContextRepository;
+        this.personnelRepository = personnelRepository;
+        this.subscriptionRepository = subscriptionRepository;
     }
 
     @Override
@@ -47,7 +61,7 @@ public class ChatServiceImpl implements ChatService {
         }
 
         try {
-            botService.response(hid, new BotServiceMessage(message));
+            botService.response(hid, new BotServiceMessage(message, true));
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
         }
@@ -72,13 +86,15 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    @Transactional
     public void close(String sessionId) {
         List<ChatContext> chats = chatContextRepository.findBySessionId(sessionId);
         chatContextRepository.delete(chats);
     }
 
     @Override
-    public void subscribe(String hid, String subId, String sessionId) {
+    @Transactional
+    public void subscribe(String hid, String subId, String sessionId, String principal) {
         UserDTO user;
         try {
             user = userService.findByHid(hid);
@@ -90,18 +106,36 @@ public class ChatServiceImpl implements ChatService {
             return;
         }
 
-        Optional<ChatContext> optional = chatContextRepository.finByHid(user.getHid());
-        ChatContext chat = optional.orElseGet(ChatContext::new);
+        Optional<Personnel> personnelOptional = personnelRepository.findByEmail(principal);
+        if (!personnelOptional.isPresent()) {
+            send(hid, Message.error(400, "Not authorized"));
+            return;
+        }
+
+        Personnel personnel = personnelOptional.get();
+
+        Optional<ChatContext> chatOptional = chatContextRepository.findByHidAndPersonnel(user.getHid(), personnel);
+        ChatContext chat = chatOptional.orElseGet(ChatContext::new);
 
         chat.setHid(user.getHid());
         chat.setSubId(subId);
         chat.setSessionId(sessionId);
         chat.setTimestamp(new Date().toInstant());
+        chat.setPersonnel(personnel);
 
+        Optional<Subscription> subOptional = subscriptionRepository.finByHid(user.getHid());
+        Subscription sub = subOptional.orElseGet(() -> {
+            Subscription newSub = new Subscription(user.getHid());
+            subscriptionRepository.save(newSub);
+            return newSub;
+        });
+
+        chat.setSubscription(sub);
         chatContextRepository.save(chat);
     }
 
     @Override
+    @Transactional
     public void unsubscribe(String subId, String sessionId) {
         Optional<ChatContext> optional = chatContextRepository.findBySubIdAndSessionId(subId, sessionId);
         optional.ifPresent(chatContextRepository::delete);
