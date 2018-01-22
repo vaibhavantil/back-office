@@ -54,7 +54,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void append(String hid, String message) {
-        Optional<ChatContext> chatOptional = chatContextRepository.finByHid(hid);
+        Optional<ChatContext> chatOptional = chatContextRepository.findByHid(hid);
         if (!chatOptional.isPresent()) {
             send(hid, Message.error(400, "User with hid " + hid + " not found"));
             return;
