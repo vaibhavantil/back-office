@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.config;
 
 import com.hedvig.backoffice.repository.ChatContextRepository;
+import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.chat.ChatService;
 import com.hedvig.backoffice.services.chat.ChatServiceJob;
 import com.hedvig.backoffice.services.messages.BotService;
@@ -21,7 +22,7 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 public class BotServiceSchedulerConfig {
 
     public static final String CHAT_SERVICE_VAR = "chatService";
-    public static final String REPOSITORY_VAR = "chatContextRepository";
+    public static final String SUB_REPOSITORY_VAR = "subscriptionRepository";
     public static final String MESSAGE_SERVICE_VER = "botService";
 
     @Value("${chat.interval}")
@@ -29,13 +30,18 @@ public class BotServiceSchedulerConfig {
 
     private final ChatService chatService;
     private final ChatContextRepository chatContextRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final BotService botService;
 
     @Autowired
-    public BotServiceSchedulerConfig(ChatService chatService, ChatContextRepository chatContextRepository,
-                                     BotService botService) {
+    public BotServiceSchedulerConfig(ChatService chatService,
+                                     ChatContextRepository chatContextRepository,
+                                     BotService botService,
+                                     SubscriptionRepository subscriptionRepository) {
+
         this.chatService = chatService;
         this.chatContextRepository = chatContextRepository;
+        this.subscriptionRepository = subscriptionRepository;
         this.botService = botService;
     }
 
@@ -47,7 +53,7 @@ public class BotServiceSchedulerConfig {
 
         JobDataMap data = new JobDataMap();
         data.put(CHAT_SERVICE_VAR, chatService);
-        data.put(REPOSITORY_VAR, chatContextRepository);
+        data.put(SUB_REPOSITORY_VAR, subscriptionRepository);
         data.put(MESSAGE_SERVICE_VER, botService);
 
         jobDetailFactory.setJobDataMap(data);
