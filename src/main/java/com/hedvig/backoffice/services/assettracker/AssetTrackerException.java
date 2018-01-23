@@ -10,4 +10,8 @@ public class AssetTrackerException extends Exception {
         super(message);
     }
 
+    public AssetTrackerException(Throwable e) {
+        super(e);
+    }
+
 }

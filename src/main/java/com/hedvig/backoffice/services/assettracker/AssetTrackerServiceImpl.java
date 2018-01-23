@@ -61,8 +61,8 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
     public void changeAssetState(String assetId, AssetState state) throws AssetNotFoundException, AssetTrackerException {
         Asset asset = assetRepository.findOne(assetId);
         if (asset != null) {
-            tracker.updateAssetState(assetId, state);
             asset.setState(state);
+            tracker.updateAsset(asset);
             assetRepository.save(asset);
             logger.info(String.format("state for asset with id %s changed to %s", assetId, state.name()));
         } else {
