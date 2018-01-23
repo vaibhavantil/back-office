@@ -57,18 +57,20 @@ export default class MessgesPanel extends React.Component {
     }
 
     getChatInput(type) {
+        const { messageType } = this.state;
         const isFileInput = !!(messagesWithFiles.indexOf(type) + 1);
+        const isSelectInput =
+            type === types.MULTIPLE_SELECT || type === types.SINGLE_SELECT;
+
         let input;
         if (isFileInput) {
             input = chatInputs.file(this.inputHandler, type);
-        } else if (
-            type === types.MULTIPLE_SELECT ||
-            type === types.SINGLE_SELECT
-        ) {
-            input = chatInputs.select(this.inputHandler);
+        } else if (isSelectInput) {
+            input = chatInputs.select(this.inputHandler, messageType);
         } else {
-            input = chatInputs[type](this.inputHandler);
+            input = chatInputs[type](this.inputHandler, messageType);
         }
+
         return <div style={{ width: '400px' }}>{input}</div>;
     }
 
@@ -76,7 +78,7 @@ export default class MessgesPanel extends React.Component {
         const { messageType } = this.state;
         const chatInput = this.getChatInput(messageType);
         return (
-            <Form onSubmit={this.submitHandler}>
+            <Form onSubmit={this.submitHandler} style={{ zIndex: 10000 }}>
                 <MessagesPanelContariner>
                     <Form.Field>
                         <label>Message type</label>

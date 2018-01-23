@@ -19,9 +19,10 @@ export default class MessagesList extends React.Component {
     }
 
     componentWillReceiveProps() {
-        if (this.messagesList) {
+        // eslint-disable-next-line
+        setTimeout(() => {
             this.messagesList.scrollTop = this.messagesList.scrollHeight;
-        }
+        });
     }
 
     render() {

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button, Form, Input, Icon } from 'semantic-ui-react';
-import { TEXT } from 'app/lib/messageTypes';
+import { TEXT, MULTIPLE_SELECT } from 'app/lib/messageTypes';
 
 const SelectItem = styled.span`
     display: flex;
@@ -49,9 +49,27 @@ export default class SingleSelectInput extends React.Component {
         this.removeFromList = this.removeFromList.bind(this);
     }
 
+    createChoicesList() {
+        return this.state.choicesList.map(item => {
+            if (this.props.selectType === MULTIPLE_SELECT) {
+                return {
+                    selected: false,
+                    text: item.text
+                };
+            } else {
+                return {
+                    type: 'selection',
+                    text: item.text,
+                    selected: false
+                };
+            }
+        });
+    }
+
     changeHandler() {
+        const optionsList = this.createChoicesList();
         this.props.changeHandler(this.props.selectType, null, {
-            value: this.state.choicesList
+            value: optionsList
         });
     }
 
@@ -65,13 +83,19 @@ export default class SingleSelectInput extends React.Component {
         e.stopPropagation();
         e.preventDefault();
         const { choicesList, optionName } = this.state;
-        this.setState({
-            choicesList: [
-                ...choicesList,
-                { id: Math.floor(Math.random() * 100), text: optionName }
-            ],
-            optionName: ''
-        }, () => this.changeHandler());
+        this.setState(
+            {
+                choicesList: [
+                    ...choicesList,
+                    {
+                        id: Math.floor(Math.random() * 1000),
+                        text: optionName
+                    }
+                ],
+                optionName: ''
+            },
+            () => this.changeHandler()
+        );
     }
 
     removeFromList(id) {

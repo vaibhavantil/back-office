@@ -55,8 +55,7 @@ const MessageImage = styled.img`
 const Message = ({ left, content }) => (
     <MessageRow left={left}>
         <MessageBox left={left}>
-        {/* TODO remove type text */}
-            {`${content.text} (${content.type})`}
+            {content.text}
             <br />
             <MessageContent content={content} />
         </MessageBox>
@@ -92,7 +91,14 @@ const MessageContent = ({ content }) => {
     switch (content.type) {
         case types.DATE:
             return (
-                <span>Date: {moment(content.date).format('MMMM Do YYYY')}</span>
+                <span>
+                    Date:{' '}
+                    {Array.isArray(content.date)
+                        ? moment(content.date).format('MMMM Do YYYY')
+                        : moment(JSON.parse(content.date)).format(
+                              'MMMM Do YYYY'
+                          )}
+                </span>
             );
         case types.AUDIO:
             return <audio src={content.URL} controls="controls" />;

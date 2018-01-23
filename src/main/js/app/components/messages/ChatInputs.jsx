@@ -31,13 +31,13 @@ export default {
         return <DateInput changeHandler={onChangeHandler} />;
     },
 
-    select(onChangeHandler) {
+    select(onChangeHandler, type) {
         return (
-            <SelectCreator changeHandler={onChangeHandler} />
+            <SelectCreator changeHandler={onChangeHandler} selectType={type} />
         );
     },
 
     file(onChangeHandler, type) {
         return <TextFileInput changeHandler={onChangeHandler} type={type} />;
-    },
+    }
 };

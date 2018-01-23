@@ -82,10 +82,8 @@ export const updateMessageBody = (content, message, type) => {
         case types.NUMBER:
             updated.body.number = message[type];
             break;
-        case types.SINGLE_SELECT:
-            updated.body.choices = [...message[type]];
-            break;
         case types.MULTIPLE_SELECT:
+        case types.SINGLE_SELECT:
             updated.body.choices = [...message[type]];
             break;
         case types.DATE:

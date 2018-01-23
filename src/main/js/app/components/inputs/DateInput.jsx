@@ -72,14 +72,12 @@ class DateInput extends React.Component {
     }
 
     render() {
+        const { changeHandler } = this.props;
         return (
             <React.Fragment>
                 <Form.Field>
                     <label>Text</label>
-                    <Input
-                        fluid
-                        onChange={this.props.changeHandler.bind(this, TEXT)}
-                    />
+                    <Input fluid onChange={changeHandler.bind(this, TEXT)} />
                 </Form.Field>
                 <Form.Field>
                     <label>Date</label>
