@@ -27,17 +27,17 @@ public class AssetTrackerImpl implements AssetTracker {
 
     private static Logger logger = LoggerFactory.getLogger(AssetTrackerImpl.class);
 
-    private CommandGateway commandGateway;
     private String trackerUrl;
     private String assetsPath;
+    private String updatePath;
 
     @Autowired
-    public AssetTrackerImpl(CommandBus commandBus,
-                            @Value("${tracker.baseUrl}") String trackerUrl,
-                            @Value("${tracker.urls.assets}") String assetsPath) {
-        this.commandGateway = new DefaultCommandGateway(commandBus);
+    public AssetTrackerImpl(@Value("${tracker.baseUrl}") String trackerUrl,
+                            @Value("${tracker.urls.assets}") String assetsPath,
+                            @Value("${tracker.urls.update}") String updatePath) {
         this.trackerUrl = trackerUrl;
         this.assetsPath = assetsPath;
+        this.updatePath = updatePath;
 
         logger.info("ASSET TRACKER SERVICE:");
         logger.info("class: " + AssetTrackerImpl.class.getName());
@@ -63,12 +63,12 @@ public class AssetTrackerImpl implements AssetTracker {
     }
 
     @Override
-    public void updateAssetState(String assetId, AssetState state) throws AssetTrackerException {
-        val aggregateId = UUID.randomUUID().toString();
+    public void updateAsset(Asset asset) throws AssetTrackerException {
+        RestTemplate template = new RestTemplate();
         try {
-            commandGateway.sendAndWait(new AssetStateChangeCommand(aggregateId, assetId, state));
-        } catch (CommandExecutionException ex) {
-            throw new AssetTrackerException("");
+            template.put(trackerUrl + updatePath + "/" +  asset.getId(), asset);
+        } catch (Exception e) {
+            throw new AssetTrackerException(e);
         }
     }
 

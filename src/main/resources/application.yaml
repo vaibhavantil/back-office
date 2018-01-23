@@ -41,9 +41,10 @@ chat:
   interval: 1000
 
 tracker:
-  baseUrl: http://localhost:4082/frontend
+  baseUrl: http://localhost:4082
   urls:
     assets: /assets
+    update: /asset
   stub: false
 
 botservice:
@@ -66,10 +67,6 @@ jwt:
   secret: fGWPyfB8wBGoXB5B07xoa6KKfXobo79p
   header: Authorization
   param: token
-
-amqp:
-  hostname: localhost
-  exchange: hedvig-assets-state
 
 cors:
   origins:
