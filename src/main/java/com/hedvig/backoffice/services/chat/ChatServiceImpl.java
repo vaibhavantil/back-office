@@ -57,8 +57,8 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void append(String hid, String message) {
-        Optional<ChatContext> chatOptional = chatContextRepository.findByHid(hid);
-        if (!chatOptional.isPresent()) {
+        Optional<Subscription> subscriptionOptional = subscriptionRepository.findByHid(hid);
+        if (!subscriptionOptional.isPresent()) {
             send(hid, Message.error(400, "User with hid " + hid + " not found"));
             return;
         }
@@ -128,7 +128,7 @@ public class ChatServiceImpl implements ChatService {
         chat.setTimestamp(new Date().toInstant());
         chat.setPersonnel(personnel);
 
-        Optional<Subscription> subOptional = subscriptionRepository.finByHid(user.getHid());
+        Optional<Subscription> subOptional = subscriptionRepository.findByHid(user.getHid());
         Subscription sub = subOptional.orElseGet(() -> {
             Subscription newSub = new Subscription(user.getHid());
             subscriptionRepository.save(newSub);

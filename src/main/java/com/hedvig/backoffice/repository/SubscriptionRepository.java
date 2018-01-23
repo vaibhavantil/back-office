@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
 
     @Query("select s from Subscription s where s.hid = :hid")
-    Optional<Subscription> finByHid(@Param("hid") String hid);
+    Optional<Subscription> findByHid(@Param("hid") String hid);
 
     @Query("select s from Subscription s where s.chats.size > 0")
     List<Subscription> findActiveSubscriptions();
