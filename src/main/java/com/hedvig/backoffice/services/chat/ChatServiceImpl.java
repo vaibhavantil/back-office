@@ -31,13 +31,15 @@ public class ChatServiceImpl implements ChatService {
     private final ChatContextRepository chatContextRepository;
     private final PersonnelRepository personnelRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final MessageUrlResolver messageUrlResolver;
 
     public ChatServiceImpl(SimpMessagingTemplate template,
                            BotService botService,
                            UserService userService,
                            ChatContextRepository chatContextRepository,
                            PersonnelRepository personnelRepository,
-                           SubscriptionRepository subscriptionRepository) {
+                           SubscriptionRepository subscriptionRepository,
+                           MessageUrlResolver messageUrlResolver) {
 
         this.template = template;
         this.botService = botService;
@@ -45,6 +47,7 @@ public class ChatServiceImpl implements ChatService {
         this.chatContextRepository = chatContextRepository;
         this.personnelRepository = personnelRepository;
         this.subscriptionRepository = subscriptionRepository;
+        this.messageUrlResolver = messageUrlResolver;
     }
 
     @Override
@@ -61,7 +64,9 @@ public class ChatServiceImpl implements ChatService {
         }
 
         try {
-            botService.response(hid, new BotServiceMessage(message, true));
+            BotServiceMessage msg = new BotServiceMessage(message, true);
+            messageUrlResolver.resolveUrls(msg);
+            botService.response(hid, msg);
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
         }
