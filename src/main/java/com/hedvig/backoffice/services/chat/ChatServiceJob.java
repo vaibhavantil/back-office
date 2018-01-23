@@ -6,7 +6,7 @@ import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
-import com.hedvig.backoffice.services.messages.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;

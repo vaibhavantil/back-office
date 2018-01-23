@@ -9,7 +9,7 @@ import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
-import com.hedvig.backoffice.services.messages.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
 import com.hedvig.backoffice.services.users.UserNotFoundException;
 import com.hedvig.backoffice.services.users.UserService;
 import com.hedvig.backoffice.services.users.UserServiceException;

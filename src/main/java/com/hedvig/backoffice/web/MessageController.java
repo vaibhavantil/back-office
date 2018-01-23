@@ -3,7 +3,7 @@ package com.hedvig.backoffice.web;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
-import com.hedvig.backoffice.services.messages.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
