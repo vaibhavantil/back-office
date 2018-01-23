@@ -50,7 +50,7 @@ public class AssetTrackerStub implements AssetTracker {
     }
 
     @Override
-    public void updateAssetState(String assetId, AssetState state) throws AssetTrackerException {
+    public void updateAsset(Asset asset) throws AssetTrackerException {
 
     }
 
