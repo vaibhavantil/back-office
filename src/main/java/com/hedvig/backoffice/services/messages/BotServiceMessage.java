@@ -14,6 +14,9 @@ public class BotServiceMessage {
     private JsonNode root;
     private Instant timestamp;
     private Long globalId;
+    private JsonNode body;
+    private JsonNode header;
+    private String type;
 
     public BotServiceMessage(String message) throws BotServiceException {
         this(message, false);
@@ -26,6 +29,16 @@ public class BotServiceMessage {
         } catch (IOException e) {
             throw new BotServiceException(e);
         }
+
+        header = Optional.ofNullable(root.get("header"))
+                .orElseThrow(() -> new BotServiceException("message must contains header"));
+
+        body = Optional.ofNullable(root.get("body"))
+                .orElseThrow(() -> new BotServiceException("message must contains body"));
+
+        type = Optional.ofNullable(body.get("type"))
+                .map(JsonNode::asText)
+                .orElseThrow(() -> new BotServiceException("message must contains type"));
 
         if (!newMessage) {
             parseGlobalId();
@@ -44,6 +57,26 @@ public class BotServiceMessage {
 
     public JsonNode getMessage() {
         return root;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public JsonNode getBody() {
+        return body;
+    }
+
+    public void setBody(JsonNode body) {
+        this.body = body;
+    }
+
+    public JsonNode getHeader() {
+        return header;
+    }
+
+    public void setHeader(JsonNode header) {
+        this.header = header;
     }
 
     public void setRoot(JsonNode root) {
