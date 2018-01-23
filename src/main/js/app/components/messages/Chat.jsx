@@ -23,7 +23,7 @@ const Chat = ({ messages, addMessage, user, error, lostConnection, userId }) => 
         </Link>
         <ChatContainer>
             <MessagesList messages={messages.list} error={lostConnection} userId={userId} />
-            <ChatPanel addMessage={addMessage} />
+            <ChatPanel addMessage={addMessage} select={messages.select}/>
             {
                 error && <Message negative>{error.message}</Message>
             }

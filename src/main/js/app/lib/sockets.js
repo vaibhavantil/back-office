@@ -1,11 +1,11 @@
 import SockJS from 'sockjs-client';
 import Stomp from '@stomp/stompjs';
 import config from 'app/api/config';
+import * as types from './messageTypes';
 
 const connectError = { stompClient: null, subscription: null };
 
 /* eslint-disable no-undef */
-
 const responseHandler = (actions, response) => {
     const parsedRes = JSON.parse(response.body);
     const data = parsedRes.payload;
@@ -71,4 +71,35 @@ export const reconnect = (actions, clientId) => {
                 reject(connectError);
             });
     });
+};
+
+export const updateMessageBody = (content, message, type) => {
+    const updated = { ...content };
+    switch (type) {
+        case types.PARAGRAPH:
+            updated.body.imageURL = message[type];
+            break;
+        case types.NUMBER:
+            updated.body.number = message[type];
+            break;
+        case types.MULTIPLE_SELECT:
+        case types.SINGLE_SELECT:
+            updated.body.choices = [...message[type]];
+            break;
+        case types.DATE:
+            updated.body.date = message[type];
+            break;
+        case types.AUDIO:
+        case types.VIDEO:
+        case types.PHOTO:
+            updated.body.URL = message[type];
+            break;
+        case types.HERO:
+            updated.body.imageUri = message[type];
+            break;
+        default:
+            break;
+    }
+
+    return JSON.stringify(updated);
 };

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Message from './Message';
 
 const MessagesListContainer = styled.div`
-    height: 800px;
+    height: 750px;
     box-sizing: border-box;
     overflow-y: auto;
     padding: 20px 20px 60px;
@@ -19,9 +19,10 @@ export default class MessagesList extends React.Component {
     }
 
     componentWillReceiveProps() {
-        if (this.messagesList) {
+        // eslint-disable-next-line
+        setTimeout(() => {
             this.messagesList.scrollTop = this.messagesList.scrollHeight;
-        }
+        });
     }
 
     render() {

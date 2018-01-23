@@ -1,73 +1,43 @@
 import React from 'react';
-import { Input, Dropdown, TextArea, Select } from 'semantic-ui-react';
+import { Input, Form } from 'semantic-ui-react';
 import DateInput from '../inputs/DateInput';
-import FileInput from '../inputs/FileInput';
+import TextFileInput from '../inputs/TextFileInput';
+import NumberInput from '../inputs/NumberInput';
+import SelectCreator from '../inputs/SelectCreator';
 
-// todo get options through props
-const stateOptions = [
-    { key: 'AL', value: 'AL', text: 'Al' },
-    { key: 'EL', value: 'EL', text: 'El' }
-];
+import * as types from 'app/lib/messageTypes';
 
 /**
- * returns input by message type from boot service
+ * returns input by message typename from boot service
  */
 export default {
-    text(onChangeHandler, value) {
-        const changeHandler = (e, { value }) => onChangeHandler(value);
-        return <Input onChange={changeHandler} value={value} />;
-    },
-
-    number(onChangeHandler, value) {
-        const changeHandler = (e, { value }) => onChangeHandler(value);
-        return <Input type="number" onChange={changeHandler} value={value} />;
-    },
-
-    date_picker(onChangeHandler) {
-        return <DateInput onChangeHandler={onChangeHandler} />;
-    },
-
-    multiple_select(onChangeHandler) {
-        const changeHandler = (e, { value }) => onChangeHandler(value);
+    [types.TEXT](onChangeHandler) {
         return (
-            <Dropdown
-                placeholder="State"
-                multiple
-                search
-                selection
-                options={stateOptions}
-                onChange={changeHandler}
-            />
+            <Form.Field>
+                <label>Text</label>
+                <Input
+                    fluid
+                    onChange={onChangeHandler.bind(this, types.TEXT)}
+                />
+            </Form.Field>
         );
     },
 
-    single_select(onChangeHandler) {
-        const changeHandler = (e, { value }) => onChangeHandler(value);
+    [types.NUMBER](onChangeHandler) {
+        return <NumberInput changeHandler={onChangeHandler} />;
+    },
+
+    [types.DATE](onChangeHandler) {
+        return <DateInput changeHandler={onChangeHandler} />;
+    },
+
+    select(onChangeHandler, type) {
         return (
-            <Select
-                placeholder="State"
-                options={stateOptions}
-                onChange={changeHandler}
-            />
+            <SelectCreator changeHandler={onChangeHandler} selectType={type} />
         );
     },
 
-    paragraph(onChangeHandler, value) {
-        const changeHandler = (e, { value }) => onChangeHandler(value);
-        return (
-            <TextArea type="number" onChange={changeHandler} value={value} />
-        );
-    },
-
-    audio(onChangeHandler) {
-        return <FileInput changeHandler={onChangeHandler} />;
-    },
-
-    video(onChangeHandler) {
-        return <FileInput changeHandler={onChangeHandler} />;
-    },
-
-    photo_upload(onChangeHandler) {
-        return <FileInput changeHandler={onChangeHandler} />;
+    file(onChangeHandler, type) {
+        return <TextFileInput changeHandler={onChangeHandler} type={type} />;
     }
 };

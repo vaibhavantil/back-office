@@ -1,17 +1,18 @@
 import React from 'react';
 import moment from 'moment';
 import 'moment/locale/sv';
-
+import { Input, Form } from 'semantic-ui-react';
 import styled from 'styled-components';
 import 'react-dates/initialize';
 import { SingleDatePicker } from 'react-dates';
 import { OPEN_UP } from 'react-dates/constants';
 import 'react-dates/lib/css/_datepicker';
+import { TEXT, DATE } from 'app/lib/messageTypes';
 
 const WidgetContainer = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
     > * {
         margin-top: 10px;
         &:first-child {
@@ -52,36 +53,53 @@ class DateInput extends React.Component {
         this.setState({
             date: moment(date)
         });
-        this.props.onChangeHandler(moment(this.state.date));
+        const dateArray = JSON.stringify([
+            ...moment(date)
+                .toArray()
+                .slice(0, 3),
+            0,
+            0
+        ]);
+        this.props.changeHandler(DATE, null, { value: dateArray });
     }
 
     componentDidMount() {
         if (!this.state.date && !this.props.date) {
-            this.setState({
-                date: moment()
+            this.setState({ date: moment() }, () => {
+                this.dateChangeHandler(this.state.date);
             });
         }
     }
 
     render() {
+        const { changeHandler } = this.props;
         return (
-            <WidgetContainer>
-                <DatePickerContainer>
-                    <SingleDatePicker
-                        date={this.state.date}
-                        onDateChange={this.dateChangeHandler}
-                        focused={this.state.focused}
-                        onFocusChange={({ focused }) =>
-                            this.setState({ focused })
-                        }
-                        numberOfMonths={1}
-                        isOutsideRange={() => false}
-                        openDirection={OPEN_UP}
-                        readOnly={true}
-                        hideKeyboardShortcutsPanel={true}
-                    />
-                </DatePickerContainer>
-            </WidgetContainer>
+            <React.Fragment>
+                <Form.Field>
+                    <label>Text</label>
+                    <Input fluid onChange={changeHandler.bind(this, TEXT)} />
+                </Form.Field>
+                <Form.Field>
+                    <label>Date</label>
+                    <WidgetContainer>
+                        <DatePickerContainer>
+                            <SingleDatePicker
+                                date={this.state.date}
+                                onDateChange={this.dateChangeHandler}
+                                focused={this.state.focused}
+                                onFocusChange={({ focused }) =>
+                                    this.setState({ focused })
+                                }
+                                numberOfMonths={1}
+                                isOutsideRange={() => false}
+                                openDirection={OPEN_UP}
+                                readOnly={true}
+                                hideKeyboardShortcutsPanel={true}
+                            />
+                        </DatePickerContainer>
+                    </WidgetContainer>
+                </Form.Field>
+            </React.Fragment>
         );
     }
 }

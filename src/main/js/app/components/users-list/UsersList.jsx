@@ -55,7 +55,7 @@ export default class UsersList extends React.Component {
                         <h2>Not found</h2>
                     )}
                 </List>
-                <Pagination items={chats} onChangePage={this.onChangePage} pageSize={4} />
+                <Pagination items={chats} onChangePage={this.onChangePage} pageSize={6} />
             </ListContainer>
         );
     }

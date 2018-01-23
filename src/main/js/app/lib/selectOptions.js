@@ -18,5 +18,5 @@ export const messageTypes = [
     { key: 8, text: 'Video', value: 'video' },
     { key: 9, text: 'Hero', value: 'hero' },
     { key: 10, text: 'Paragraph', value: 'paragraph' },
-    { key: 11, text: 'Bank id collect', value: 'bankid_collect' },
-]
+    { key: 11, text: 'Bank id collect', value: 'bankid_collect' }
+];
