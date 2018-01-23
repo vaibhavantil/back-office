@@ -57,6 +57,12 @@ export default class FileInput extends React.Component {
         this.setState({ acceptType });
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.cleanupForm) {
+            this.setState({ fileName: '' });
+        }
+    }
+
     componentWillUnmount() {
         this.setState({ acceptType: '' });
     }

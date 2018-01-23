@@ -1,9 +1,9 @@
 import React from 'react';
-import { Input, Form } from 'semantic-ui-react';
 import DateInput from '../inputs/DateInput';
 import TextFileInput from '../inputs/TextFileInput';
 import NumberInput from '../inputs/NumberInput';
 import SelectCreator from '../inputs/SelectCreator';
+import TextInput from '../inputs/TextInput';
 
 import * as types from 'app/lib/messageTypes';
 
@@ -11,15 +11,12 @@ import * as types from 'app/lib/messageTypes';
  * returns input by message typename from boot service
  */
 export default {
-    [types.TEXT](onChangeHandler) {
+    [types.TEXT](onChangeHandler, cleanupForm) {
         return (
-            <Form.Field>
-                <label>Text</label>
-                <Input
-                    fluid
-                    onChange={onChangeHandler.bind(this, types.TEXT)}
-                />
-            </Form.Field>
+            <TextInput
+                changeHandler={onChangeHandler}
+                cleanupForm={cleanupForm}
+            />
         );
     },
 
@@ -27,17 +24,32 @@ export default {
         return <NumberInput changeHandler={onChangeHandler} />;
     },
 
-    [types.DATE](onChangeHandler) {
-        return <DateInput changeHandler={onChangeHandler} />;
-    },
-
-    select(onChangeHandler, type) {
+    [types.DATE](onChangeHandler, cleanupForm) {
         return (
-            <SelectCreator changeHandler={onChangeHandler} selectType={type} />
+            <DateInput
+                changeHandler={onChangeHandler}
+                cleanupForm={cleanupForm}
+            />
         );
     },
 
-    file(onChangeHandler, type) {
-        return <TextFileInput changeHandler={onChangeHandler} type={type} />;
+    select(onChangeHandler, type, cleanupForm) {
+        return (
+            <SelectCreator
+                changeHandler={onChangeHandler}
+                selectType={type}
+                cleanupForm={cleanupForm}
+            />
+        );
+    },
+
+    file(onChangeHandler, type, cleanupForm) {
+        return (
+            <TextFileInput
+                changeHandler={onChangeHandler}
+                type={type}
+                cleanupForm={cleanupForm}
+            />
+        );
     }
 };
