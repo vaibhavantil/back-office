@@ -1,7 +1,8 @@
-package com.hedvig.backoffice.services.messages;
+package com.hedvig.backoffice.services.messages.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hedvig.backoffice.services.messages.BotServiceException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;

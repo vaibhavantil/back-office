@@ -2,24 +2,21 @@ package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.IOUtils;
+import com.hedvig.backoffice.services.messages.data.BackOfficeMessage;
+import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -63,37 +60,36 @@ public class BotServiceImpl implements BotService {
 
     @Override
     public void response(String hid, BotServiceMessage message) throws BotServiceException {
-        CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost post = new HttpPost(baseUrl + responseUrl);
+        RestTemplate template = new RestTemplate();
 
-        StringEntity entity;
         try {
-            entity = new StringEntity(message.getMessage().toString());
-        } catch (UnsupportedEncodingException e) {
+            HttpEntity<BackOfficeMessage> request
+                    = new org.springframework.http.HttpEntity<>(new BackOfficeMessage(hid, message.getMessage()));
+
+            template.postForEntity(baseUrl + responseUrl, request, Void.class);
+        } catch (RestClientException e) {
             throw new BotServiceException(e);
         }
-
-        post.setEntity(entity);
-        post.setHeader("Accept", "application/json");
-        post.setHeader("Content-type", "application/json");
-        post.setHeader("hedvig.token", hid);
-
-        doRequest(client, post);
-        closeRequest(client);
     }
 
     private List<BotServiceMessage> messages(String url, String hid) throws BotServiceException {
-        CloseableHttpClient client = HttpClients.createDefault();
-        HttpGet get = new HttpGet(url);
-        get.setHeader("hedvig.token", hid);
+        RestTemplate template = new RestTemplate();
+        String result;
 
-        HttpEntity entity = doRequest(client, get);
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("hedvig.token", hid);
+            HttpEntity<Void> request = new HttpEntity<>(headers);
+            ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, request, String.class);
+            result = response.getBody();
+        } catch (RestClientException e) {
+            throw new BotServiceException(e);
+        }
 
         ObjectMapper mapper = new ObjectMapper();
         List<BotServiceMessage> messages = null;
 
         try {
-            String result = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
             if (StringUtils.isNotBlank(result)) {
 
                 JsonNode root = mapper.readValue(result, JsonNode.class);
@@ -113,11 +109,8 @@ public class BotServiceImpl implements BotService {
                         .collect(Collectors.toList());
             }
         } catch (IOException e) {
-            closeRequest(client);
             throw new BotServiceException(e);
         }
-
-        closeRequest(client);
 
         if (messages != null) {
             return messages;
@@ -126,30 +119,4 @@ public class BotServiceImpl implements BotService {
         return new ArrayList<>();
     }
 
-    private HttpEntity doRequest(CloseableHttpClient client, HttpUriRequest request) throws BotServiceException {
-        CloseableHttpResponse response;
-
-        try {
-            response = client.execute(request);
-            int code = response.getStatusLine().getStatusCode();
-
-            if (!(code == 200 || code == 202 || code == 204)) {
-                closeRequest(client);
-                throw new BotServiceException(code, "bot-service return code " + code);
-            }
-
-            return response.getEntity();
-        } catch (IOException e) {
-            closeRequest(client);
-            throw new BotServiceException(e);
-        }
-    }
-
-    private void closeRequest(CloseableHttpClient client) throws BotServiceException {
-        try {
-            client.close();
-        } catch (IOException e) {
-            throw new BotServiceException(e);
-        }
-    }
 }
