@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.messages.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hedvig.backoffice.services.messages.BotServiceException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,6 +16,7 @@ public class BotServiceMessage {
     private JsonNode root;
     private Instant timestamp;
     private Long globalId;
+    private Long messageId;
     private JsonNode body;
     private JsonNode header;
     private String type;
@@ -42,7 +44,13 @@ public class BotServiceMessage {
                 .orElseThrow(() -> new BotServiceException("message must contains type"));
 
         if (!newMessage) {
-            parseGlobalId();
+            globalId = Optional.ofNullable(root.get("globalId"))
+                    .orElseThrow(() -> new BotServiceException("message must contains globalId"))
+                    .asLong();
+
+            messageId = Optional.ofNullable(header.get("messageId"))
+                    .orElseThrow(() -> new BotServiceException("message must contains globalId"))
+                    .asLong();
         }
 
         parseTimestamp();
@@ -68,28 +76,24 @@ public class BotServiceMessage {
         return body;
     }
 
-    public void setBody(JsonNode body) {
-        this.body = body;
-    }
-
     public JsonNode getHeader() {
         return header;
     }
 
-    public void setHeader(JsonNode header) {
-        this.header = header;
+    public Long getMessageId() {
+        return messageId;
     }
 
-    public void setRoot(JsonNode root) {
-        this.root = root;
-    }
-
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public void setMessageId(Long messageId) {
+        this.messageId = messageId;
+        ObjectNode header = (ObjectNode) this.header;
+        header.put("messageId", messageId);
     }
 
     public void setGlobalId(Long globalId) {
         this.globalId = globalId;
+        ObjectNode root = (ObjectNode) this.root;
+        root.put("globalId", globalId);
     }
 
     private void parseTimestamp() throws BotServiceException {
@@ -107,12 +111,4 @@ public class BotServiceMessage {
             throw new BotServiceException(e);
         }
     }
-
-    private void parseGlobalId() throws BotServiceException {
-        JsonNode value = Optional.ofNullable(root.get("globalId"))
-                .orElseThrow(() -> new BotServiceException("message must contains globalId"));
-
-        globalId = value.asLong();
-    }
-
 }

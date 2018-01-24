@@ -18,7 +18,7 @@ public class BotServiceStub implements BotService {
             "\"globalId\": %s," +
             "\"header\": { " +
             "   \"messageId\": %s," +
-            "   \"fromId\": \"%s\"" +
+            "   \"fromId\": %s" +
             "}," +
             "\"body\": {" +
             "   \"type\": \"%s\"," +
@@ -128,6 +128,7 @@ public class BotServiceStub implements BotService {
     public void response(String hid, BotServiceMessage message) throws BotServiceException {
         List<BotServiceMessage> msg = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         message.setGlobalId(increment.addAndGet(1));
+        message.setMessageId((long) msg.size());
 
         msg.add(message);
     }

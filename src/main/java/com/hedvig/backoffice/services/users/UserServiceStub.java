@@ -17,7 +17,7 @@ public class UserServiceStub implements UserService {
 
     public UserServiceStub() {
         users = IntStream.range(0, 10).mapToObj(i -> {
-            UserDTO user = new UserDTO(RandomUtils.nextLong());
+            UserDTO user = new UserDTO(RandomUtils.nextInt());
             user.setFirstName("Test user " + i);
             return user;
         }).collect(Collectors.toList());
