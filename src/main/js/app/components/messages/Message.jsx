@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import 'moment/locale/sv';
-
+import SelectList from './SelectList';
+import AudioMessage from './AudioMessage';
 import * as types from 'app/lib/messageTypes';
 
 const MessageRow = styled.div`
@@ -68,40 +69,15 @@ const Image = ({ src }) => (
     </a>
 );
 
-const SelectList = ({ content }) => {
-    const list = content.choices.map((item, id) => {
-        if (item.type === 'link') {
-            return (
-                <li key={id}>
-                    <a href={item.appUrl || item.webUrl || item.view}>
-                        {item.text}
-                    </a>
-                </li>
-            );
-        } else {
-            return <li key={id}>{item.text}</li>;
-        }
-    });
-
-    return <ul>{list}</ul>;
-};
-
 const MessageContent = ({ content }) => {
     /* eslint-disable no-case-declarations */
     switch (content.type) {
         case types.DATE:
             return (
-                <span>
-                    Date:{' '}
-                    {Array.isArray(content.date)
-                        ? moment(content.date).format('MMMM Do YYYY')
-                        : moment(JSON.parse(content.date)).format(
-                              'MMMM Do YYYY'
-                          )}
-                </span>
+                <span>Date: {moment(content.date).format('MMMM Do YYYY')}</span>
             );
         case types.AUDIO:
-            return <audio src={content.URL} controls="controls" />;
+            return <AudioMessage content={content.URL} />
         case types.VIDEO:
             return (
                 <video

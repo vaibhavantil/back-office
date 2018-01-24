@@ -54,14 +54,10 @@ class DateInput extends React.Component {
         this.setState({
             date: moment(date)
         });
-        const dateArray = JSON.stringify([
-            ...moment(date)
-                .toArray()
-                .slice(0, 3),
-            0,
-            0
-        ]);
-        this.props.changeHandler(DATE, null, { value: dateArray });
+
+        this.props.changeHandler(DATE, null, {
+            value: moment(date).toISOString()
+        });
     }
 
     componentDidMount() {

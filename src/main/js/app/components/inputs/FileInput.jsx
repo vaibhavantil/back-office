@@ -27,11 +27,11 @@ export default class FileInput extends React.Component {
         this.setState({ fileName: file.name });
         reader.onloadend = () => {
             this.props.changeHandler(this.props.type, null, {
-                value: JSON.stringify({
+                value: {
                     name: file.name,
                     type: file.type,
                     content: reader.result
-                })
+                }
             });
         };
 
@@ -60,6 +60,7 @@ export default class FileInput extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.cleanupForm) {
             this.setState({ fileName: '' });
+            this.fileInput.value = '';
         }
     }
 
@@ -80,6 +81,9 @@ export default class FileInput extends React.Component {
                         id="file"
                         onChange={this.changeHandler}
                         style={{ display: 'none' }}
+                        ref={input => {
+                            this.fileInput = input;
+                        }}
                     />
                     <FileButton htmlFor="file">Choose file</FileButton>
                     {fileName && <span>{fileName}</span>}
