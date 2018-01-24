@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,12 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
     public AssetTrackerServiceImpl(AssetRepository assetRepository, AssetTracker tracker) {
         this.assetRepository = assetRepository;
         this.tracker = tracker;
+    }
+
+    @PostConstruct
+    @Transactional
+    public void setup() {
+        assetRepository.deleteAll();
     }
 
     @Transactional

@@ -21,7 +21,7 @@ public class AssetTrackerSchedulerConfig {
 
     public static final String ASSET_TRACKER_SERVICE_VAR = "service";
 
-    @Value("${job.interval}")
+    @Value("${intervals.tracker}")
     private int interval;
 
     private AssetTrackerService service;
