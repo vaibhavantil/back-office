@@ -7,6 +7,9 @@ import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Optional;
 
 @Value
 public class AssetDTO {
@@ -43,13 +46,14 @@ public class AssetDTO {
     public static Asset toDomain(AssetDTO dto) {
         return new Asset(
                 dto.id,
-                dto.photoUrl,
-                dto.receiptUrl,
-                dto.title,
-                dto.state,
-                dto.includedInBasePackage,
-                dto.userId,
-                dto.registrationDate
+                Optional.ofNullable(dto.photoUrl).orElse(""),
+                Optional.ofNullable(dto.receiptUrl).orElse(""),
+                Optional.ofNullable(dto.title).orElse(""),
+                Optional.ofNullable(dto.state).orElse(AssetState.PENDING),
+                Optional.ofNullable(dto.includedInBasePackage).orElse(false),
+                Optional.ofNullable(dto.userId).orElse(""),
+                Optional.ofNullable(dto.registrationDate)
+                        .orElse(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
         );
     }
 }
