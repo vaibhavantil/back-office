@@ -13,25 +13,18 @@ public class AssetDTO {
     @NotNull
     String id;
 
-    @NotNull
     String photoUrl;
 
-    @NotNull
     String receiptUrl;
 
-    @NotNull
     String title;
 
-    @NotNull
     AssetState state;
 
-    @NotNull
     Boolean includedInBasePackage;
 
-    @NotNull
     String userId;
 
-    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDate registrationDate;
 

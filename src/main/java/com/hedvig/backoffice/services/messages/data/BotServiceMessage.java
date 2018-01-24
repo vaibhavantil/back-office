@@ -1,7 +1,9 @@
-package com.hedvig.backoffice.services.messages;
+package com.hedvig.backoffice.services.messages.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hedvig.backoffice.services.messages.BotServiceException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -14,6 +16,10 @@ public class BotServiceMessage {
     private JsonNode root;
     private Instant timestamp;
     private Long globalId;
+    private Long messageId;
+    private JsonNode body;
+    private JsonNode header;
+    private String type;
 
     public BotServiceMessage(String message) throws BotServiceException {
         this(message, false);
@@ -27,8 +33,24 @@ public class BotServiceMessage {
             throw new BotServiceException(e);
         }
 
+        header = Optional.ofNullable(root.get("header"))
+                .orElseThrow(() -> new BotServiceException("message must contains header"));
+
+        body = Optional.ofNullable(root.get("body"))
+                .orElseThrow(() -> new BotServiceException("message must contains body"));
+
+        type = Optional.ofNullable(body.get("type"))
+                .map(JsonNode::asText)
+                .orElseThrow(() -> new BotServiceException("message must contains type"));
+
         if (!newMessage) {
-            parseGlobalId();
+            globalId = Optional.ofNullable(root.get("globalId"))
+                    .orElseThrow(() -> new BotServiceException("message must contains globalId"))
+                    .asLong();
+
+            messageId = Optional.ofNullable(header.get("messageId"))
+                    .orElseThrow(() -> new BotServiceException("message must contains globalId"))
+                    .asLong();
         }
 
         parseTimestamp();
@@ -46,16 +68,32 @@ public class BotServiceMessage {
         return root;
     }
 
-    public void setRoot(JsonNode root) {
-        this.root = root;
+    public String getType() {
+        return type;
     }
 
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public JsonNode getBody() {
+        return body;
+    }
+
+    public JsonNode getHeader() {
+        return header;
+    }
+
+    public Long getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(Long messageId) {
+        this.messageId = messageId;
+        ObjectNode header = (ObjectNode) this.header;
+        header.put("messageId", messageId);
     }
 
     public void setGlobalId(Long globalId) {
         this.globalId = globalId;
+        ObjectNode root = (ObjectNode) this.root;
+        root.put("globalId", globalId);
     }
 
     private void parseTimestamp() throws BotServiceException {
@@ -73,12 +111,4 @@ public class BotServiceMessage {
             throw new BotServiceException(e);
         }
     }
-
-    private void parseGlobalId() throws BotServiceException {
-        JsonNode value = Optional.ofNullable(root.get("globalId"))
-                .orElseThrow(() -> new BotServiceException("message must contains globalId"));
-
-        globalId = value.asLong();
-    }
-
 }

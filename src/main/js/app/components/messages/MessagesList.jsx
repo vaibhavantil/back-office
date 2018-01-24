@@ -35,7 +35,7 @@ export default class MessagesList extends React.Component {
                         <Message
                             key={id}
                             content={item.body}
-                            left={item.header.fromId === userId}
+                            left={item.header.fromId == userId}
                         />
                     ))
                 ) : (

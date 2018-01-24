@@ -34,11 +34,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-job:
-  interval: 1000
-
-chat:
-  interval: 1000
+intervals:
+  tracker: 5000
+  chat: 1000
 
 tracker:
   baseUrl: http://localhost:4082

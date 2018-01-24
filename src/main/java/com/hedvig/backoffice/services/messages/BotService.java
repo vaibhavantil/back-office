@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.messages;
 
-import java.time.Instant;
+import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
+
 import java.util.List;
 
 public interface BotService {

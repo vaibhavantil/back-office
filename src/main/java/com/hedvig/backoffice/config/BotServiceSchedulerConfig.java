@@ -25,7 +25,7 @@ public class BotServiceSchedulerConfig {
     public static final String SUB_REPOSITORY_VAR = "subscriptionRepository";
     public static final String MESSAGE_SERVICE_VER = "botService";
 
-    @Value("${chat.interval}")
+    @Value("${intervals.chat}")
     private int interval;
 
     private final ChatService chatService;

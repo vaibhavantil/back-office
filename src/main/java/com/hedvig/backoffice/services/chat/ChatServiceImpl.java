@@ -9,7 +9,7 @@ import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
-import com.hedvig.backoffice.services.messages.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
 import com.hedvig.backoffice.services.users.UserNotFoundException;
 import com.hedvig.backoffice.services.users.UserService;
 import com.hedvig.backoffice.services.users.UserServiceException;
@@ -31,13 +31,15 @@ public class ChatServiceImpl implements ChatService {
     private final ChatContextRepository chatContextRepository;
     private final PersonnelRepository personnelRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final MessageUrlResolver messageUrlResolver;
 
     public ChatServiceImpl(SimpMessagingTemplate template,
                            BotService botService,
                            UserService userService,
                            ChatContextRepository chatContextRepository,
                            PersonnelRepository personnelRepository,
-                           SubscriptionRepository subscriptionRepository) {
+                           SubscriptionRepository subscriptionRepository,
+                           MessageUrlResolver messageUrlResolver) {
 
         this.template = template;
         this.botService = botService;
@@ -45,6 +47,7 @@ public class ChatServiceImpl implements ChatService {
         this.chatContextRepository = chatContextRepository;
         this.personnelRepository = personnelRepository;
         this.subscriptionRepository = subscriptionRepository;
+        this.messageUrlResolver = messageUrlResolver;
     }
 
     @Override
@@ -54,14 +57,16 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void append(String hid, String message) {
-        Optional<ChatContext> chatOptional = chatContextRepository.findByHid(hid);
-        if (!chatOptional.isPresent()) {
+        Optional<Subscription> subscriptionOptional = subscriptionRepository.findByHid(hid);
+        if (!subscriptionOptional.isPresent()) {
             send(hid, Message.error(400, "User with hid " + hid + " not found"));
             return;
         }
 
         try {
-            botService.response(hid, new BotServiceMessage(message, true));
+            BotServiceMessage msg = new BotServiceMessage(message, true);
+            messageUrlResolver.resolveUrls(msg);
+            botService.response(hid, msg);
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
         }
@@ -123,7 +128,7 @@ public class ChatServiceImpl implements ChatService {
         chat.setTimestamp(new Date().toInstant());
         chat.setPersonnel(personnel);
 
-        Optional<Subscription> subOptional = subscriptionRepository.finByHid(user.getHid());
+        Optional<Subscription> subOptional = subscriptionRepository.findByHid(user.getHid());
         Subscription sub = subOptional.orElseGet(() -> {
             Subscription newSub = new Subscription(user.getHid());
             subscriptionRepository.save(newSub);
