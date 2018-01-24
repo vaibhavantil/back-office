@@ -7,15 +7,19 @@ import org.springframework.security.config.annotation.web.messaging.MessageSecur
 import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
     private String[] corsOrigins;
+    private int maxFileSize;
 
-    public WebSocketConfig(@Value("${cors.origins}") String[] corsOrigins) {
+    public WebSocketConfig(@Value("${cors.origins}") String[] corsOrigins,
+                           @Value("${websocket.max-sile-size}") int maxFileSize) {
         this.corsOrigins = corsOrigins;
+        this.maxFileSize = maxFileSize;
     }
 
     @Override
@@ -34,6 +38,12 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chat").setAllowedOrigins(corsOrigins).withSockJS();
+    }
+
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+        registration.setSendBufferSizeLimit(maxFileSize);
+        registration.setMessageSizeLimit(maxFileSize);
     }
 
     @Override
