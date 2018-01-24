@@ -20,24 +20,18 @@ public class Asset {
     @Id
     private String id;
 
-    @NotNull
     private String photoUrl;
 
-    @NotNull
     private String receiptUrl;
 
-    @NotNull
     private String title;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
     private AssetState state;
 
-    @NotNull
     private Boolean includedInBasePackage;
 
     private String userId;
 
-    @NotNull
     private LocalDate registrationDate;
 }
