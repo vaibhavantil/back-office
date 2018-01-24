@@ -38,6 +38,9 @@ intervals:
   tracker: 5000
   chat: 1000
 
+websocket:
+  max-sile-size: 5242880
+
 tracker:
   baseUrl: http://localhost:4082
   urls:
