@@ -21,7 +21,7 @@ export default {
             url: 'logout'
         }
     },
-    chats: {
+    users: {
         get: {
             method: 'get',
             url: 'user'
@@ -33,7 +33,7 @@ export default {
     },
     ws: {
         // eslint-disable-next-line
-        endpoint: DEV ? 'http://localhost:8080/chat': '/chat',
+        endpoint: DEV ? 'http://localhost:8080/chat' : '/chat',
         messages: '/topic/messages/',
         history: '/app/messages/history/',
         send: '/app/messages/send/'

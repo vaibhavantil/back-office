@@ -3,7 +3,10 @@ import {
     MESSAGE_RECEIVED,
     CLEAR_MESSAGES_LIST,
     SET_ACTIVE_CONNECTION,
-    ERROR_RECEIVED
+    ERROR_RECEIVED,
+    USER_REQUESTING,
+    USER_REQUEST_SUCCESS,
+    USER_REQUEST_ERROR
 } from 'constants';
 
 export const addMessage = (message, messageType, userId, socket) => ({
@@ -31,4 +34,20 @@ export const clearMessagesList = () => ({
 export const setActiveConnection = connection => ({
     type: SET_ACTIVE_CONNECTION,
     connection
+});
+
+export const userRequest = (token, userId) => ({
+    type: USER_REQUESTING,
+    token,
+    userId
+});
+
+export const userRequestSuccess = user => ({
+    type: USER_REQUEST_SUCCESS,
+    user
+});
+
+export const userRequestError = error => ({
+    type: USER_REQUEST_ERROR,
+    error
 });

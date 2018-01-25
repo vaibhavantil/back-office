@@ -20,7 +20,7 @@ function* chatRequestFlow({ client }) {
 function* chatSearchRequestFlow({ client, queryString }) {
     try {
         const searchResult = yield call(api.search, client, queryString);
-        yield put(searchRequestSuccess(searchResult));
+        yield put(searchRequestSuccess(searchResult.data));
     } catch (error) {
         yield put(searchRequestError(error));
     }

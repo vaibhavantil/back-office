@@ -69,11 +69,13 @@ class ChatPage extends React.Component {
     }
 
     componentDidMount() {
+        const { client, match } = this.props;
         const { stompClient, subscription } = this.subscribeSocket();
         if (!stompClient) {
             this.reconnectSocket();
         }
         this.setState({ socket: stompClient, subscription });
+        this.props.userRequest(client.token, match.params.id);
     }
 
     componentWillUnmount() {
@@ -84,14 +86,13 @@ class ChatPage extends React.Component {
 
     render() {
         const userId = this.props.match.params.id;
-        const { messages, chats } = this.props;
-        const user = chats.list.filter(user => user.hid === userId)[0];
+        const { messages } = this.props;
         return (
             <ChatContainer>
                 <Chat
                     messages={messages}
                     addMessage={this.addMessageHandler}
-                    user={user}
+                    user={messages.user}
                     error={messages.error}
                     lostConnection={!!this.state.socket}
                     userId={userId}
@@ -101,11 +102,10 @@ class ChatPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({ client, messages, chats }) => {
+const mapStateToProps = ({ client, messages }) => {
     return {
         client,
-        messages,
-        chats
+        messages
     };
 };
 

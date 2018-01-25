@@ -20,7 +20,8 @@ export default {
     messages: {
         list: [],
         activeConnection: null,
-        error: null
+        error: null,
+        user: null
     },
     chats: {
         list: [],

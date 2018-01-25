@@ -13,8 +13,8 @@ const axiosInstance = axios.create({
 
 const get = async token => {
     return await axiosInstance.request({
-        url: config.chats.get.url,
-        method: config.chats.get.method,
+        url: config.users.get.url,
+        method: config.users.get.method,
         headers: {
             [config.tokenHeaderName]: token
         }
@@ -23,10 +23,10 @@ const get = async token => {
 
 const search = async (token, queryString) => {
     return await axiosInstance.request({
-        url: config.chats.search.url,
-        method: config.chats.search.method,
+        url: config.users.search.url,
+        method: config.users.search.method,
         params: {
-            search: queryString
+            q: queryString
         },
         headers: {
             [config.tokenHeaderName]: token
@@ -34,4 +34,14 @@ const search = async (token, queryString) => {
     });
 };
 
-export default { get, search };
+const getUser = async (token, userId) => {
+    return await axiosInstance.request({
+        url: `${config.users.get.url}/${userId}`,
+        method: config.users.get.method,
+        headers: {
+            [config.tokenHeaderName]: token
+        }
+    });
+};
+
+export default { get, search, getUser };

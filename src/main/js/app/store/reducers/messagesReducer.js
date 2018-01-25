@@ -4,9 +4,11 @@ import {
     MESSAGE_RECEIVED,
     CLEAR_MESSAGES_LIST,
     SET_ACTIVE_CONNECTION,
-    ERROR_RECEIVED
+    ERROR_RECEIVED,
+    USER_REQUESTING,
+    USER_REQUEST_SUCCESS,
+    USER_REQUEST_ERROR
 } from 'constants';
-
 
 export default function(state = initialState.messages, action) {
     switch (action.type) {
@@ -28,6 +30,22 @@ export default function(state = initialState.messages, action) {
             };
 
         case ERROR_RECEIVED:
+            return {
+                ...state,
+                error: action.error
+            };
+        case USER_REQUESTING:
+            return {
+                ...state
+            };
+
+        case USER_REQUEST_SUCCESS:
+            return {
+                ...state,
+                user: action.user
+            };
+
+        case USER_REQUEST_ERROR:
             return {
                 ...state,
                 error: action.error
