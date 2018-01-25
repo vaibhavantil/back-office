@@ -31,10 +31,15 @@ export default class App extends React.Component {
                             store={store}
                             component={Routes.DashboardPageRoute}
                         />
+                         <Routes.PrivateRoute
+                            path="/claims"
+                            store={store}
+                            component={Routes.ClaimsPageRoute}
+                        />
                         <Route
-                            path="/messages"
+                            path="/users"
                             render={routeProps => (
-                                <Routes.MessagesPageRoute
+                                <Routes.UsersPageRoute
                                     {...routeProps}
                                     store={store}
                                 />

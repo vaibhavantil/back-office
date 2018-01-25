@@ -1,6 +1,6 @@
 import React from 'react';
 import ChatPage from 'containers/messages-page/ChatPage';
-import UsersPage from 'containers/messages-page/UsersPage';
+import UsersPage from 'containers/users-page/UsersPage';
 import { Switch, Route } from 'react-router';
 import PrivateRoute from './PrivateRoute';
 
@@ -8,21 +8,21 @@ const MessgesPageRouter = ({ store }) => (
     <Switch>
         <Route
             exact
-            path="/messages"
+            path="/users"
             render={() => (
                 <PrivateRoute
                     component={UsersPage}
-                    path="/messages"
+                    path="/users"
                     store={store}
                 />
             )}
         />
         <Route
-            path="/messages/:id"
+            path="/users/:id"
             render={() => (
                 <PrivateRoute
                     component={ChatPage}
-                    path="/messages/:id"
+                    path="/users/:id"
                     store={store}
                 />
             )}

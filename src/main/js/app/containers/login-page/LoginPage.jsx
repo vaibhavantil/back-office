@@ -1,26 +1,22 @@
 import React from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { loginRequest } from 'app/store/actions/loginActions';
 import LoginForm from 'components/login-form/LoginForm';
 
-class LoginPage extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+const LoginContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
 
-    render() {
-        return (
-            <main className="login-container">
-                <h1>Login</h1>
-                <LoginForm
-                    onSubmit={this.props.loginRequest}
-                    errors={this.props.login.errors}
-                />
-            </main>
-        );
-    }
-}
-
+const LoginPage = ({ loginRequest, login }) => (
+    <LoginContainer>
+        <h1>Login</h1>
+        <LoginForm onSubmit={loginRequest} errors={login.errors} />
+    </LoginContainer>
+);
 const mapStateToProps = ({ login }) => ({
     login
 });

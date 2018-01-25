@@ -1,13 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-    Button,
-    Card,
-    Dimmer,
-    Loader,
-    Segment,
-    Message
-} from 'semantic-ui-react';
+import { Card, Dimmer, Loader, Segment, Message } from 'semantic-ui-react';
 import AssetCard from '../asset-card/AssetCard';
 import Pagination from '../pagination/Pagination';
 import Fliter from '../list-filter/AssetsListFilter';

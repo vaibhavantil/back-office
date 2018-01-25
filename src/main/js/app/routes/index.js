@@ -1,13 +1,15 @@
 import AssetsPageRoute from './AssetsPageRoute';
 import LoginPageRoute from './LoginPageRoute';
-import MessagesPageRoute from './MessagesPageRoute';
+import UsersPageRoute from './UsersPageRoute';
 import DashboardPageRoute from './DashboardPageRoute';
+import ClaimsPageRoute from './ClaimsPageRoute';
 import PrivateRoute from './PrivateRoute';
 
 export default {
     AssetsPageRoute,
     LoginPageRoute,
-    MessagesPageRoute,
+    UsersPageRoute,
     DashboardPageRoute,
+    ClaimsPageRoute,
     PrivateRoute
 };

@@ -10,13 +10,6 @@ html {
     min-height: 300px;
 }
 
-.login-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
 .login-form {
     display: inline-block;
     min-width: 600px;
