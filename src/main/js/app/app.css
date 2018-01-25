@@ -56,7 +56,18 @@ html {
     margin-top: 20px;
 }
 
-messages__input.messages__input {
-    margin: 0;
-    min-width: 300px;
+.chat-panel {
+    z-index: 10000;
+}
+
+.chat-panel .selection.dropdown {
+    min-width: 130px;
+}
+
+.chat-panel .selection.dropdown .menu {
+    max-height: 100px;
+}
+
+.chat-panel .primary.button {
+    margin-top: 23px;
 }

@@ -47,7 +47,7 @@ class UsersPage extends React.Component {
         return (
             <ChatsListPage>
                 <Header>Chats List</Header>
-                <Link to="/assets">
+                <Link to="/dashboard">
                     <Icon name="arrow left" /> Back
                 </Link>
                 <Users

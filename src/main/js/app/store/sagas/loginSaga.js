@@ -27,7 +27,7 @@ function* loginFlow(email, password) {
         yield put({ type: LOGIN_SUCCESS });
         // eslint-disable-next-line no-undef
         localStorage.setItem('token', JSON.stringify(token));
-        history.push('/assets');
+        history.push('/dashboard');
     } catch (error) {
         yield put({ type: LOGIN_ERROR, error });
     } finally {

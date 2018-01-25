@@ -45,7 +45,7 @@ export default class MessgesPanel extends React.Component {
         if (message && messageType) {
             this.props.addMessage(message, messageType);
             this.setState({ message: {}, cleanupForm: true }, () => {
-                this.setState({ cleanupForm: false });
+                this.setState({ cleanupForm: false, messageType: types.TEXT });
             });
         }
     }
@@ -85,7 +85,7 @@ export default class MessgesPanel extends React.Component {
         const { messageType } = this.state;
         const chatInput = this.getChatInput(messageType);
         return (
-            <Form onSubmit={this.submitHandler} style={{ zIndex: 10000 }}>
+            <Form onSubmit={this.submitHandler} className="chat-panel">
                 <MessagesPanelContariner>
                     <Form.Field>
                         <label>Message type</label>
@@ -95,14 +95,12 @@ export default class MessgesPanel extends React.Component {
                             placeholder="Choose asset state"
                             selection
                             value={this.state.messageType}
-                            style={{ minWidth: '100px' }}
                         />
                     </Form.Field>
                     {chatInput}
                     <Form.Button
                         content="Send"
                         primary
-                        style={{ marginTop: '23px' }}
                     />
                 </MessagesPanelContariner>
             </Form>
