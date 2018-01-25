@@ -1,6 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Dimmer, Loader, Segment, Message } from 'semantic-ui-react';
+import {
+    Button,
+    Card,
+    Dimmer,
+    Loader,
+    Segment,
+    Message
+} from 'semantic-ui-react';
 import AssetCard from '../asset-card/AssetCard';
 import Pagination from '../pagination/Pagination';
 import Fliter from '../list-filter/AssetsListFilter';
@@ -17,6 +24,7 @@ class AssetList extends React.Component {
         this.onChangePage = this.onChangePage.bind(this);
         this.filterChangeHandler = this.filterChangeHandler.bind(this);
         this.assetUpdateHandler = this.assetUpdateHandler.bind(this);
+        this.pollingHandler = this.pollingHandler.bind(this);
     }
 
     onChangePage(activeList) {
@@ -45,8 +53,29 @@ class AssetList extends React.Component {
         );
     }
 
+    pollingHandler() {
+        const { polling: { pollStart, pollStop, polling }, token } = this.props;
+        if (polling) {
+            pollStop(token, 2000);
+        } else {
+            pollStart(token, 2000);
+        }
+    }
+
+    componentWillUnmount() {
+        const { polling: { pollStop, polling } } = this.props;
+        if (polling) {
+            pollStop();
+        }
+    }
+
     render() {
-        const { assetsList, errors, updateStatus } = this.props;
+        const {
+            assetsList,
+            errors,
+            updateStatus,
+            polling: { polling }
+        } = this.props;
         const { activeList, filteredList, activeFilter } = this.state;
         const items = activeFilter === 'ALL' ? assetsList : filteredList;
         return (
@@ -62,10 +91,11 @@ class AssetList extends React.Component {
                             list={assetsList}
                             activeFilter={this.state.activeFilter}
                             filterChange={this.filterChangeHandler}
+                            polling={polling}
+                            pollingHandler={this.pollingHandler}
                         />
-                        <Card.Group itemsPerRow={5}>
-                            {assetsList &&
-                                !!activeList.length ?
+                        <Card.Group itemsPerRow={4}>
+                            {assetsList && !!activeList.length ? (
                                 activeList.map(asset => (
                                     <AssetCard
                                         key={asset.id}
@@ -73,7 +103,12 @@ class AssetList extends React.Component {
                                         assetUpdate={this.assetUpdateHandler}
                                         updateStatus={updateStatus}
                                     />
-                                )): <p className="filter__message">No items by this filter. Select other.</p>}
+                                ))
+                            ) : (
+                                <p className="filter__message">
+                                    No items by this filter. Select other.
+                                </p>
+                            )}
                         </Card.Group>
                         <Pagination
                             items={items}

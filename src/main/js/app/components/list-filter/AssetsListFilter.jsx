@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown } from 'semantic-ui-react';
+import { Button, Dropdown } from 'semantic-ui-react';
 import { assetStates } from 'app/lib/selectOptions';
 
 export default class Fliter extends React.Component {
@@ -24,15 +24,19 @@ export default class Fliter extends React.Component {
     }
 
     render() {
+        const { filterChange, activeFilter, polling, pollingHandler } = this.props;
         return (
             <div className="filter">
                 <label className="filter__label">Select asset state: </label>
                 <Dropdown
-                    onChange={this.props.filterChange}
+                    onChange={filterChange}
                     options={this.state.filters}
                     selection
-                    value={this.props.activeFilter}
+                    value={activeFilter}
                 />
+                <Button onClick={pollingHandler}>
+                    Poll {polling ? 'stop' : 'start'}
+                </Button>
             </div>
         );
     }

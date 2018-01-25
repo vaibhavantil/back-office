@@ -13,20 +13,21 @@ class MainPage extends React.Component {
     }
 
     componentDidMount() {
-        const { pollStart, client: { token } } = this.props;
+        const { client: { token } } = this.props;
         checkAuthorization(null, this.props.setClient);
-        pollStart(token, 2000);
-    }
-
-    componentWillUnmount() {
-        this.props.pollStop();
+        this.props.assetRequest(token);
     }
 
     render() {
         const {
             assets,
             assetUpdate,
+            pollStart,
+            pollStop,
+            poll: { polling },
+            client: { token }
         } = this.props;
+        const pollingEvents = { pollStart, pollStop, polling };
         return (
             <Container>
                 <h1>Assets List</h1>
@@ -38,6 +39,8 @@ class MainPage extends React.Component {
                     errors={assets.errors}
                     assetUpdate={assetUpdate}
                     updateStatus={assets.requesting}
+                    polling={pollingEvents}
+                    token={token}
                 />
             </Container>
         );
