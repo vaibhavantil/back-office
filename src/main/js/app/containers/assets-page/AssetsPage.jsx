@@ -1,48 +1,38 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Container } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { Icon } from 'semantic-ui-react';
 import actions from 'app/store/actions';
 import AssetList from 'components/asset-list/AssetList';
-import ListControls from 'components/list-controls/ListControls';
 import { checkAuthorization } from 'app/lib/checkAuth';
 
 class MainPage extends React.Component {
     constructor(props) {
         super(props);
-        this.fetchAssets = this.fetchAssets.bind(this);
-    }
-
-    fetchAssets() {
-        const { assetRequest, client: { token } } = this.props;
-        return assetRequest(token);
     }
 
     componentDidMount() {
+        const { pollStart, client: { token } } = this.props;
         checkAuthorization(null, this.props.setClient);
-        this.fetchAssets();
+        pollStart(token, 2000);
+    }
+
+    componentWillUnmount() {
+        this.props.pollStop();
     }
 
     render() {
         const {
-            pollStart,
-            pollStop,
-            unsetClient,
             assets,
             assetUpdate,
-            client,
-            poll
         } = this.props;
         return (
             <Container>
                 <h1>Assets List</h1>
-                <ListControls
-                    polling={poll.polling}
-                    pollStart={pollStart}
-                    pollStop={pollStop}
-                    unsetClient={unsetClient}
-                    client={client}
-                    fetchAssets={this.fetchAssets}
-                />
+                <Link to="/dashboard">
+                    <Icon name="arrow left" /> Back
+                </Link>
                 <AssetList
                     assetsList={assets.list}
                     errors={assets.errors}

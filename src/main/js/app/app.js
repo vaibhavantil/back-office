@@ -17,10 +17,30 @@ export default class App extends React.Component {
             <Provider store={store}>
                 <Router history={history}>
                     <Switch>
-                        <Route path="/login" component={Routes.LoginPageRoute} />
-                        <Routes.PrivateRoute path="/assets" store={store} component={Routes.MainPageRoute} />
-                        <Route path="/messages" render={routeProps => <Routes.MessagesPageRoute {...routeProps} store={store}/>} />
-                        <Redirect from="*" to="/assets"/>
+                        <Route
+                            path="/login"
+                            component={Routes.LoginPageRoute}
+                        />
+                        <Routes.PrivateRoute
+                            path="/assets"
+                            store={store}
+                            component={Routes.AssetsPageRoute}
+                        />
+                        <Routes.PrivateRoute
+                            path="/dashboard"
+                            store={store}
+                            component={Routes.DashboardPageRoute}
+                        />
+                        <Route
+                            path="/messages"
+                            render={routeProps => (
+                                <Routes.MessagesPageRoute
+                                    {...routeProps}
+                                    store={store}
+                                />
+                            )}
+                        />
+                        <Redirect from="*" to="/dashboard" />
                     </Switch>
                 </Router>
             </Provider>
