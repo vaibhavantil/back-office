@@ -3,7 +3,7 @@ import { Icon, Message } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import MessagesList from '../messages/MessagesList';
-import ChatPanel from '../messages/ChatPanel';
+import ChatPanel from './ChatPanel';
 
 const ChatContainer = styled.div`
     width: 700px;

@@ -1,15 +1,15 @@
 import React from 'react';
-import { Form, Input } from 'semantic-ui-react';
 import FileInput from './FileInput';
-import * as types from 'app/lib/messageTypes';
+import TextInput from './TextInput';
 
-const TextFileInput = ({ changeHandler, type }) => (
+const TextFileInput = ({ changeHandler, type, cleanupForm }) => (
     <React.Fragment>
-        <Form.Field>
-            <label>Text</label>
-            <Input fluid onChange={changeHandler.bind(this, types.TEXT)} />
-        </Form.Field>
-        <FileInput changeHandler={changeHandler} type={type} />
+        <TextInput changeHandler={changeHandler} cleanupForm={cleanupForm} />
+        <FileInput
+            changeHandler={changeHandler}
+            type={type}
+            cleanupForm={cleanupForm}
+        />
     </React.Fragment>
 );
 

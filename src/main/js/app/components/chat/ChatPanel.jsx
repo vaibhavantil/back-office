@@ -28,7 +28,8 @@ export default class MessgesPanel extends React.Component {
         super(props);
         this.state = {
             messageType: types.TEXT,
-            message: {}
+            message: {},
+            cleanupForm: false
         };
         this.dropdownHander = this.dropdownHander.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
@@ -43,7 +44,9 @@ export default class MessgesPanel extends React.Component {
         const { message, messageType } = this.state;
         if (message && messageType) {
             this.props.addMessage(message, messageType);
-            this.setState({ message: {} });
+            this.setState({ message: {}, cleanupForm: true }, () => {
+                this.setState({ cleanupForm: false });
+            });
         }
     }
 
@@ -57,18 +60,22 @@ export default class MessgesPanel extends React.Component {
     }
 
     getChatInput(type) {
-        const { messageType } = this.state;
+        const { messageType, cleanupForm } = this.state;
         const isFileInput = !!(messagesWithFiles.indexOf(type) + 1);
         const isSelectInput =
             type === types.MULTIPLE_SELECT || type === types.SINGLE_SELECT;
 
         let input;
         if (isFileInput) {
-            input = chatInputs.file(this.inputHandler, type);
+            input = chatInputs.file(this.inputHandler, type, cleanupForm);
         } else if (isSelectInput) {
-            input = chatInputs.select(this.inputHandler, messageType);
+            input = chatInputs.select(
+                this.inputHandler,
+                messageType,
+                cleanupForm
+            );
         } else {
-            input = chatInputs[type](this.inputHandler, messageType);
+            input = chatInputs[type](this.inputHandler, cleanupForm);
         }
 
         return <div style={{ width: '400px' }}>{input}</div>;

@@ -4,7 +4,7 @@ import { Card, Dimmer, Loader, Segment, Message } from 'semantic-ui-react';
 import AssetCard from '../asset-card/AssetCard';
 import Pagination from '../pagination/Pagination';
 import Fliter from '../list-filter/AssetsListFilter';
-import { filterList } from 'app/lib/filters';
+import { filterList } from 'app/lib/helpers';
 
 class AssetList extends React.Component {
     constructor(props) {

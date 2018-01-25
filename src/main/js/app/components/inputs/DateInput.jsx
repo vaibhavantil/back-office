@@ -1,13 +1,14 @@
 import React from 'react';
 import moment from 'moment';
 import 'moment/locale/sv';
-import { Input, Form } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import styled from 'styled-components';
 import 'react-dates/initialize';
 import { SingleDatePicker } from 'react-dates';
 import { OPEN_UP } from 'react-dates/constants';
 import 'react-dates/lib/css/_datepicker';
-import { TEXT, DATE } from 'app/lib/messageTypes';
+import { DATE } from 'app/lib/messageTypes';
+import TextInput from './TextInput';
 
 const WidgetContainer = styled.div`
     display: flex;
@@ -53,14 +54,10 @@ class DateInput extends React.Component {
         this.setState({
             date: moment(date)
         });
-        const dateArray = JSON.stringify([
-            ...moment(date)
-                .toArray()
-                .slice(0, 3),
-            0,
-            0
-        ]);
-        this.props.changeHandler(DATE, null, { value: dateArray });
+
+        this.props.changeHandler(DATE, null, {
+            value: moment(date).toISOString()
+        });
     }
 
     componentDidMount() {
@@ -72,13 +69,13 @@ class DateInput extends React.Component {
     }
 
     render() {
-        const { changeHandler } = this.props;
+        const { changeHandler, cleanupForm } = this.props;
         return (
             <React.Fragment>
-                <Form.Field>
-                    <label>Text</label>
-                    <Input fluid onChange={changeHandler.bind(this, TEXT)} />
-                </Form.Field>
+                <TextInput
+                    changeHandler={changeHandler}
+                    cleanupForm={cleanupForm}
+                />
                 <Form.Field>
                     <label>Date</label>
                     <WidgetContainer>

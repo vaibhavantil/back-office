@@ -7,7 +7,7 @@ import { checkAuthorization } from 'app/lib/checkAuth';
 import Users from 'components/users/Users';
 import { Link } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
-import { Header } from 'components/messages/Chat';
+import { Header } from 'components/chat/Chat';
 import * as sockets from 'app/lib/sockets';
 
 const ChatsListPage = styled.div`

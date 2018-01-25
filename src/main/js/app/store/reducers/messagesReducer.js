@@ -1,4 +1,5 @@
 import initialState from '../initialState';
+import { refreshMessagesList } from 'app/lib/helpers';
 import {
     MESSAGE_RECEIVED,
     CLEAR_MESSAGES_LIST,
@@ -6,12 +7,13 @@ import {
     ERROR_RECEIVED
 } from 'constants';
 
+
 export default function(state = initialState.messages, action) {
     switch (action.type) {
         case MESSAGE_RECEIVED:
             return {
                 ...state,
-                list: [...state.list, ...action.message]
+                list: refreshMessagesList(state.list.slice(), action.message)
             };
         case CLEAR_MESSAGES_LIST:
             return {

@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import 'moment/locale/sv';
-
+import SelectMessage from './SelectMessage';
+import AudioMessage from './AudioMessage';
+import ImageMessage from './ImageMessage';
 import * as types from 'app/lib/messageTypes';
 
 const MessageRow = styled.div`
@@ -46,12 +48,6 @@ const MessageBox = styled.div`
     }
 `;
 
-const MessageImage = styled.img`
-    margin-top: 5px;
-    background-image: url(${props => props.src});
-    height: 300px;
-`;
-
 const Message = ({ left, content }) => (
     <MessageRow left={left}>
         <MessageBox left={left}>
@@ -62,63 +58,23 @@ const Message = ({ left, content }) => (
     </MessageRow>
 );
 
-const Image = ({ src }) => (
-    <a target="_blank" href={src}>
-        <MessageImage src={src} />
-    </a>
-);
-
-const SelectList = ({ content }) => {
-    const list = content.choices.map((item, id) => {
-        if (item.type === 'link') {
-            return (
-                <li key={id}>
-                    <a href={item.appUrl || item.webUrl || item.view}>
-                        {item.text}
-                    </a>
-                </li>
-            );
-        } else {
-            return <li key={id}>{item.text}</li>;
-        }
-    });
-
-    return <ul>{list}</ul>;
-};
-
 const MessageContent = ({ content }) => {
-    /* eslint-disable no-case-declarations */
     switch (content.type) {
         case types.DATE:
-            return (
-                <span>
-                    Date:{' '}
-                    {Array.isArray(content.date)
-                        ? moment(content.date).format('MMMM Do YYYY')
-                        : moment(JSON.parse(content.date)).format(
-                              'MMMM Do YYYY'
-                          )}
-                </span>
-            );
+            return <p>Date: {moment(content.date).format('MMMM Do YYYY')}</p>;
         case types.AUDIO:
-            return <audio src={content.URL} controls="controls" />;
+            return <AudioMessage content={content.URL} />;
         case types.VIDEO:
             return (
-                <video
-                    src={content.URL}
-                    controls="controls"
-                    style={{ width: '350px' }}
-                />
+                <video src={content.URL} controls style={{ width: '350px' }} />
             );
         case types.PHOTO:
         case types.PARAGRAPH:
         case types.HERO:
-            const { URL, imageUri, imageURL } = content;
-            const url = URL || imageUri || imageURL;
-            return url ? <Image src={url} /> : null;
+            return <ImageMessage content={content} />;
         case types.MULTIPLE_SELECT:
         case types.SINGLE_SELECT:
-            return <SelectList content={content} />;
+            return <SelectMessage content={content} />;
         default:
             return null;
     }

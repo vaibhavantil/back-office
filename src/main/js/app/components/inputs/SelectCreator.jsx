@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button, Form, Input, Icon } from 'semantic-ui-react';
-import { TEXT, MULTIPLE_SELECT } from 'app/lib/messageTypes';
+import { MULTIPLE_SELECT } from 'app/lib/messageTypes';
+import TextInput from './TextInput';
 
 const SelectItem = styled.span`
     display: flex;
@@ -83,19 +84,21 @@ export default class SingleSelectInput extends React.Component {
         e.stopPropagation();
         e.preventDefault();
         const { choicesList, optionName } = this.state;
-        this.setState(
-            {
-                choicesList: [
-                    ...choicesList,
-                    {
-                        id: Math.floor(Math.random() * 1000),
-                        text: optionName
-                    }
-                ],
-                optionName: ''
-            },
-            () => this.changeHandler()
-        );
+        if (optionName) {
+            this.setState(
+                {
+                    choicesList: [
+                        ...choicesList,
+                        {
+                            id: Math.floor(Math.random() * 1000),
+                            text: optionName
+                        }
+                    ],
+                    optionName: ''
+                },
+                () => this.changeHandler()
+            );
+        }
     }
 
     removeFromList(id) {
@@ -106,16 +109,20 @@ export default class SingleSelectInput extends React.Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.cleanupForm) {
+            this.setState({ choicesList: [] });
+        }
+    }
+
     render() {
+        const { changeHandler, cleanupForm } = this.props;
         return (
             <React.Fragment>
-                <Form.Field>
-                    <label>Text</label>
-                    <Input
-                        fluid
-                        onChange={this.props.changeHandler.bind(this, TEXT)}
-                    />
-                </Form.Field>
+                <TextInput
+                    changeHandler={changeHandler}
+                    cleanupForm={cleanupForm}
+                />
                 <Form.Field>
                     <label>Option text</label>
                     <Input
