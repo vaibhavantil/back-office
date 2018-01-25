@@ -62,6 +62,13 @@ userservice:
     userById: /
   stub: false
 
+claims:
+  baseUrl: http://localhost:4083
+  urls:
+    claims: /claims
+    claimById: /claim
+  stub: false
+
 jwt:
   enabled: true
   expiration: 864000000
