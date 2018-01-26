@@ -2,6 +2,8 @@ package com.hedvig.backoffice.services.assettracker;
 
 import com.hedvig.backoffice.domain.Asset;
 import com.hedvig.backoffice.repository.AssetRepository;
+import com.hedvig.backoffice.services.updates.UpdateType;
+import com.hedvig.backoffice.services.updates.UpdatesService;
 import com.hedvig.backoffice.web.dto.AssetDTO;
 import com.hedvig.common.constant.AssetState;
 import org.slf4j.Logger;
@@ -21,11 +23,13 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
 
     private final AssetRepository assetRepository;
     private final AssetTracker tracker;
+    private final UpdatesService updatesService;
 
     @Autowired
-    public AssetTrackerServiceImpl(AssetRepository assetRepository, AssetTracker tracker) {
+    public AssetTrackerServiceImpl(AssetRepository assetRepository, AssetTracker tracker, UpdatesService updatesService) {
         this.assetRepository = assetRepository;
         this.tracker = tracker;
+        this.updatesService = updatesService;
     }
 
     @PostConstruct
@@ -39,6 +43,14 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
     public void loadPendingAssetsFromTracker() {
         List<Asset> assets = tracker.findPendingAssets();
         if (assets.size() > 0) {
+            List<String> ids = assets
+                    .stream()
+                    .map(Asset::getId)
+                    .collect(Collectors.toList());
+
+            List<Asset> exists = assetRepository.findAssetsById(ids);
+            updatesService.append(assets.size() - exists.size(), UpdateType.ASSETS);
+
             assetRepository.save(assets);
             logger.info("Pending assets added");
         }
