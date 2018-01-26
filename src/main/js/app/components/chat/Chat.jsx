@@ -1,9 +1,10 @@
 import React from 'react';
-import { Icon, Message } from 'semantic-ui-react'; 
+import { Icon, Message } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import MessagesList from '../messages/MessagesList';
 import ChatPanel from './ChatPanel';
+import * as sockets from 'app/lib/sockets';
 
 const ChatContainer = styled.div`
     width: 700px;
@@ -15,20 +16,118 @@ export const Header = styled.h2`
     color: #4c4b4b;
 `;
 
-const Chat = ({ messages, addMessage, user, error, lostConnection, userId }) => (
-    <div>
-        <Header>Chat with {user ? `${user.firstName} ${user.lastName || ''}` : 'User'}</Header>
-        <Link to="/messages">
-            <Icon name="arrow left" /> Back
-        </Link>
-        <ChatContainer>
-            <MessagesList messages={messages.list} error={lostConnection} userId={userId} />
-            <ChatPanel addMessage={addMessage} select={messages.select}/>
-            {
-                error && <Message negative>{error.message}</Message>
-            }
-        </ChatContainer>
-    </div>
-);
+export const ChatHeader = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 700px;
+`;
 
-export default Chat;
+export default class Chat extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            socket: null
+        };
+        this.addMessageHandler = this.addMessageHandler.bind(this);
+        this.subscribeSocket = this.subscribeSocket.bind(this);
+        this.getChatTitle = this.getChatTitle.bind(this);
+    }
+
+    addMessageHandler(message, messageType) {
+        const { socket } = this.state;
+        const { userId, addMessage } = this.props;
+        if (socket) addMessage(message, messageType, userId, socket);
+    }
+
+    subscribeSocket() {
+        const {
+            messageReceived,
+            match,
+            getMessagesHistory,
+            messages,
+            errorReceived
+        } = this.props;
+
+        const { stompClient, subscription } = sockets.subscribe(
+            { messageReceived, getMessagesHistory, errorReceived },
+            match.params.id,
+            messages.activeConnection
+        );
+        return { stompClient, subscription };
+    }
+
+    reconnectSocket() {
+        const {
+            messageReceived,
+            getMessagesHistory,
+            match,
+            setActiveConnection,
+            errorReceived
+        } = this.props;
+
+        sockets
+            .reconnect(
+                { messageReceived, getMessagesHistory, errorReceived },
+                match.params.id
+            )
+            .then(reslut => {
+                const { stompClient, subscription } = reslut;
+                this.setState({ socket: stompClient, subscription });
+                setActiveConnection(stompClient);
+            });
+    }
+
+    getChatTitle() {
+        const { messages } = this.props;
+
+        return `Chat with ${
+            messages.user
+                ? messages.user.firstName + ' ' + (messages.user.lastName || '')
+                : 'User'
+        }`;
+    }
+
+    componentDidMount() {
+        const { client: { token }, match, userRequest } = this.props;
+        const { stompClient, subscription } = this.subscribeSocket();
+        if (!stompClient) {
+            this.reconnectSocket();
+        }
+        this.setState({ socket: stompClient, subscription });
+        userRequest(token, match.params.id);
+    }
+
+    componentWillUnmount() {
+        const { subscription } = this.state;
+        sockets.disconnect(null, subscription);
+        this.props.clearMessagesList();
+    }
+
+    render() {
+        const { messages, addMessage, error, userId } = this.props;
+        return (
+            <React.Fragment>
+                <ChatHeader>
+                    <Header>{this.getChatTitle()}</Header>
+                    <Link to="/users">
+                        <Icon name="arrow left" /> Back
+                    </Link>
+                </ChatHeader>
+
+                <ChatContainer>
+                    <MessagesList
+                        messages={messages.list}
+                        error={!!this.state.socket}
+                        userId={userId}
+                    />
+                    <ChatPanel
+                        addMessage={addMessage}
+                        select={messages.select}
+                    />
+                    {error && <Message negative>{error.message}</Message>}
+                </ChatContainer>
+            </React.Fragment>
+        );
+    }
+}

@@ -13,7 +13,7 @@ const ListContainer = styled.div`
 `;
 
 const ListItem = ({ item }) => (
-    <Link to={`/messages/${item.hid}`} replace>
+    <Link to={`/users/${item.hid}`} replace>
         <List.Content>
             {item.firstName ? (
                 <List.Header>

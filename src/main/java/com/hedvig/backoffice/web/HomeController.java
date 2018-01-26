@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class HomeController {
 
-    @RequestMapping(value = { "/", "/login", "/assets", "/messages/**", "/dashboard" })
+    @RequestMapping(value = { "/", "/login", "/assets", "/users/**", "/dashboard", "/claims/**" })
     @ResponseBody
     public Resource index() {
         return new ClassPathResource("static/index.html");

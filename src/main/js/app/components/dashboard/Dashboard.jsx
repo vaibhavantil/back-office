@@ -10,7 +10,7 @@ const pages = [
     },
     {
         text: 'Users overview',
-        route: '/messages'
+        route: '/users'
     },
     {
         text: 'Questions',
@@ -18,7 +18,7 @@ const pages = [
     },
     {
         text: 'Claims',
-        route: ''
+        route: '/claims'
     }
 ];
 
