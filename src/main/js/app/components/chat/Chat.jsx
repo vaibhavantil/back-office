@@ -36,8 +36,8 @@ export default class Chat extends React.Component {
 
     addMessageHandler(message, messageType) {
         const { socket } = this.state;
-        const { userId, addMessage } = this.props;
-        if (socket) addMessage(message, messageType, userId, socket);
+        const { addMessage, match } = this.props;
+        if (socket) addMessage(message, messageType, match.params.id, socket);
     }
 
     subscribeSocket() {
@@ -105,7 +105,7 @@ export default class Chat extends React.Component {
     }
 
     render() {
-        const { messages, addMessage, error, userId } = this.props;
+        const { messages, error, match } = this.props;
         return (
             <React.Fragment>
                 <ChatHeader>
@@ -119,10 +119,10 @@ export default class Chat extends React.Component {
                     <MessagesList
                         messages={messages.list}
                         error={!!this.state.socket}
-                        userId={userId}
+                        userId={match.params.id}
                     />
                     <ChatPanel
-                        addMessage={addMessage}
+                        addMessage={this.addMessageHandler}
                         select={messages.select}
                     />
                     {error && <Message negative>{error.message}</Message>}
