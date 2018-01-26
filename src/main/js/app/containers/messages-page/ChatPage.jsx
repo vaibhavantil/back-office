@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import actions from 'app/store/actions';
 import Chat from 'components/chat/Chat';
 
-const ChatContainer = styled.div`
+export const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,9 +13,9 @@ const ChatContainer = styled.div`
     background-color: #f5f5f5;
 `;
 const ChatPage = props => (
-    <ChatContainer>
+    <PageContainer>
         <Chat {...props} />
-    </ChatContainer>
+    </PageContainer>
 );
 
 const mapStateToProps = ({ client, messages }) => {
