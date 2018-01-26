@@ -79,11 +79,11 @@ export default class Chat extends React.Component {
     }
 
     getChatTitle() {
-        const { messages } = this.props;
+        const { messages: { user } } = this.props;
 
         return `Chat with ${
-            messages.user
-                ? messages.user.firstName + ' ' + (messages.user.lastName || '')
+            user && (user.firstName || user.lastName)
+                ? user.firstName + ' ' + (user.lastName || '')
                 : 'User'
         }`;
     }
