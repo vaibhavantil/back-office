@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router';
 import PrivateRoute from './PrivateRoute';
 import ClaimsPage from 'containers/claims-page/ClaimsPage';
-import ClaimDetails from 'containers/claim-details/ClaimDetails';
+import ClaimDetailsPage from 'containers/claim-details-page/ClaimDetailsPage';
 
 const ClaimsPageRoute = ({ store }) => (
     <Switch>
@@ -22,7 +22,7 @@ const ClaimsPageRoute = ({ store }) => (
             path="/claims/:id"
             render={() => (
                 <PrivateRoute
-                    component={ClaimDetails}
+                    component={ClaimDetailsPage}
                     path="/claims/:id"
                     store={store}
                 />
