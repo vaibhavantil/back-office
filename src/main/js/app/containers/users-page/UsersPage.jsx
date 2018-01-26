@@ -3,14 +3,11 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import actions from 'app/store/actions';
-import { checkAuthorization } from 'app/lib/checkAuth';
 import Users from 'components/users/Users';
-import { Link } from 'react-router-dom';
-import { Icon } from 'semantic-ui-react';
+import BackLink from 'components/link/BackLink';
 import { Header } from 'components/chat/Chat';
-import * as sockets from 'app/lib/sockets';
 
-const ChatsListPage = styled.div`
+const UsersListPage = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,50 +16,22 @@ const ChatsListPage = styled.div`
     margin: 0 auto;
 `;
 
-class UsersPage extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+const UsersPage = ({ users, searchUserRequest, client, usersRequest }) => (
+    <UsersListPage>
+        <Header>Chats List</Header>
+        <BackLink path="dashboard" />
+        <Users
+            users={users}
+            search={searchUserRequest}
+            client={client}
+            usersRequest={usersRequest}
+        />
+    </UsersListPage>
+);
 
-    componentDidMount() {
-        const {
-            client,
-            setClient,
-            chatsRequest,
-            setActiveConnection,
-            messages
-        } = this.props;
-
-        checkAuthorization(null, setClient);
-        chatsRequest(client.token);
-        if (!messages.activeConnection) {
-            sockets.connect().then(stompClient => {
-                setActiveConnection(stompClient);
-            });
-        }
-    }
-
-    render() {
-        const { chats, searchChatRequest, client } = this.props;
-        return (
-            <ChatsListPage>
-                <Header>Chats List</Header>
-                <Link to="/dashboard">
-                    <Icon name="arrow left" /> Back
-                </Link>
-                <Users
-                    chats={chats}
-                    search={searchChatRequest}
-                    client={client}
-                />
-            </ChatsListPage>
-        );
-    }
-}
-
-const mapStateToProps = ({ client, chats, messages }) => ({
+const mapStateToProps = ({ client, users, messages }) => ({
     client,
-    chats,
+    users,
     messages
 });
 

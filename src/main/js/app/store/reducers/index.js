@@ -3,7 +3,7 @@ import assets from './assetsReducer';
 import poll from './pollReducer';
 import client from './clientReducer';
 import messages from './messagesReducer';
-import chats from './chatUserReducer';
+import users from './chatUserReducer';
 
 export default {
     login,
@@ -11,5 +11,5 @@ export default {
     poll,
     client,
     messages,
-    chats
+    users
 };

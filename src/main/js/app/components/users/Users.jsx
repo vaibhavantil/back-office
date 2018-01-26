@@ -2,7 +2,6 @@ import React from 'react';
 import UsersList from 'components/users-list/UsersList';
 import { Input } from 'semantic-ui-react';
 
-
 export default class Users extends React.Component {
     constructor(props) {
         super(props);
@@ -29,11 +28,16 @@ export default class Users extends React.Component {
         }
     }
 
+    componentDidMount() {
+        const { client, usersRequest } = this.props;
+        usersRequest(client.token);
+    }
+
     componentWillReceiveProps(newProps) {
-        if (newProps.chats.list.length) {
+        if (newProps.users.list.length) {
             this.setState({
-                results: newProps.chats.list,
-                isLoading: newProps.chats.requesting
+                results: newProps.users.list,
+                isLoading: newProps.users.requesting
             });
         }
     }
@@ -49,7 +53,7 @@ export default class Users extends React.Component {
                     onKeyPress={this.handleSearchChange}
                     action={{ icon: 'search', onClick: this.searchRequest }}
                 />
-                <UsersList chats={this.state.results} />
+                <UsersList users={this.state.results} />
             </React.Fragment>
         );
     }

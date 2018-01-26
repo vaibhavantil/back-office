@@ -23,10 +23,14 @@ export default {
         error: null,
         user: null
     },
-    chats: {
+    users: {
         list: [],
         requesting: false,
         successful: false,
         errors: []
+    },
+    dashboard: {
+        data: null,
+        error: null
     }
 };

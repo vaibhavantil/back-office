@@ -4,15 +4,17 @@ import { withRouter } from 'react-router';
 import actions from 'app/store/actions';
 import Dashboard from 'components/dashboard/Dashboard';
 
-const DashboardPage = ({ unsetClient }) => (
-    <Dashboard unsetClient={unsetClient} />
-);
+const DashboardPage = props => <Dashboard {...props} />;
 
 export default withRouter(
     connect(
-        ({ client }) => ({
-            client
+        ({ client, messages }) => ({
+            client,
+            messages
         }),
-        { ...actions.clientActions }
+        {
+            ...actions.dashboardActions,
+            ...actions.messagesActions
+        }
     )(DashboardPage)
 );

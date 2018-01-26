@@ -1,16 +1,16 @@
 import initialState from '../initialState';
 import {
-    CHATS_REQUESTING,
-    CHATS_REQUEST_SUCCESS,
-    CHATS_REQUEST_ERROR,
-    CHAT_SEARCH_REQUESTING,
-    CHAT_SEARCH_SUCCESS,
-    CHAT_SEARCH_ERROR
+    USERS_REQUESTING,
+    USERS_REQUEST_SUCCESS,
+    USERS_REQUEST_ERROR,
+    USER_SEARCH_REQUESTING,
+    USER_SEARCH_SUCCESS,
+    USER_SEARCH_ERROR
 } from 'constants';
 
-export default function(state = initialState.chats, action) {
+export default function(state = initialState.users, action) {
     switch (action.type) {
-        case CHATS_REQUESTING:
+        case USERS_REQUESTING:
             return {
                 ...state,
                 requesting: false,
@@ -18,15 +18,15 @@ export default function(state = initialState.chats, action) {
                 errors: []
             };
 
-        case CHATS_REQUEST_SUCCESS:
+        case USERS_REQUEST_SUCCESS:
             return {
-                list: action.chats,
+                list: action.users,
                 requesting: false,
                 successful: true,
                 errors: []
             };
 
-        case CHATS_REQUEST_ERROR:
+        case USERS_REQUEST_ERROR:
             return {
                 ...state,
                 requesting: false,
@@ -38,7 +38,7 @@ export default function(state = initialState.chats, action) {
                     }
                 ])
             };
-        case CHAT_SEARCH_REQUESTING:
+        case USER_SEARCH_REQUESTING:
             return {
                 ...state,
                 requesting: false,
@@ -46,15 +46,15 @@ export default function(state = initialState.chats, action) {
                 errors: []
             };
 
-        case CHAT_SEARCH_SUCCESS:
+        case USER_SEARCH_SUCCESS:
             return {
-                list: action.chats,
+                list: action.users,
                 requesting: false,
                 successful: true,
                 errors: []
             };
 
-        case CHAT_SEARCH_ERROR:
+        case USER_SEARCH_ERROR:
             return {
                 ...state,
                 requesting: false,

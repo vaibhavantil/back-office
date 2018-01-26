@@ -40,7 +40,7 @@ export default class UsersList extends React.Component {
     }
 
     render() {
-        const { chats } = this.props;
+        const { users } = this.props;
         const { activeList } = this.state;
         return (
             <ListContainer>
@@ -55,7 +55,11 @@ export default class UsersList extends React.Component {
                         <h2>Not found</h2>
                     )}
                 </List>
-                <Pagination items={chats} onChangePage={this.onChangePage} pageSize={6} />
+                <Pagination
+                    items={users}
+                    onChangePage={this.onChangePage}
+                    pageSize={6}
+                />
             </ListContainer>
         );
     }
