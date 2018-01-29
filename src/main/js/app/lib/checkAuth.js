@@ -1,15 +1,16 @@
 import { setClient } from '../store/actions/clientActions';
 
 export function checkAuthorization(dispatch, setClientAction) {
-    // eslint-disable-next-line no-undef
+    /* eslint-disable no-undef */
     const storedToken = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
     if (storedToken) {
         const token = JSON.parse(storedToken);
         if (setClientAction) {
-            setClientAction(token);
+            setClientAction(token, user);
             return true;
-        } 
-        dispatch(setClient(token));
+        }
+        dispatch(setClient(token, user));
         return true;
     }
     return false;

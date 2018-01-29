@@ -26,3 +26,6 @@ export const refreshMessagesList = (list, message, size) => {
     const sorted = slicedList.sort(sortByKey('globalId'));
     return updateList(sorted, message);
 };
+
+// TODO append field "newMessagesCounter" to each user
+export const setNewMessagesCounter = (users, /* counters */) => users;

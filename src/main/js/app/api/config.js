@@ -32,10 +32,16 @@ export default {
         }
     },
     ws: {
-        // eslint-disable-next-line
+        /* eslint-disable */
         endpoint: DEV ? 'http://localhost:8080/chat' : '/chat',
         messages: '/topic/messages/',
         history: '/app/messages/history/',
-        send: '/app/messages/send/'
+        send: '/app/messages/send/',
+        dashboardSub: '/user/',
+        cleanupDashboard: '/app/updates/clear/',
+        dashboardUpdates: '/app/updates/',
+        cleanupMessages: '/app/clear/',
+        newMessagesSub: '/app/updates/',
+        messagesUpdates: '/app/updates/'
     }
 };

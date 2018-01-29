@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import MessagesList from '../messages/MessagesList';
 import ChatPanel from './ChatPanel';
-import * as sockets from 'app/lib/sockets';
+import * as sockets from 'socketsLib';
 
 const ChatContainer = styled.div`
     width: 700px;
@@ -27,7 +27,8 @@ export default class Chat extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            socket: null
+            socket: null,
+            subscription: null
         };
         this.addMessageHandler = this.addMessageHandler.bind(this);
         this.subscribeSocket = this.subscribeSocket.bind(this);
@@ -49,7 +50,7 @@ export default class Chat extends React.Component {
             errorReceived
         } = this.props;
 
-        const { stompClient, subscription } = sockets.subscribe(
+        const { stompClient, subscription } = sockets.chatSubscribe(
             { messageReceived, getMessagesHistory, errorReceived },
             match.params.id,
             messages.activeConnection
@@ -67,7 +68,7 @@ export default class Chat extends React.Component {
         } = this.props;
 
         sockets
-            .reconnect(
+            .chatReconnect(
                 { messageReceived, getMessagesHistory, errorReceived },
                 match.params.id
             )

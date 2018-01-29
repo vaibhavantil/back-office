@@ -1,39 +1,45 @@
 import {
-    CHATS_REQUESTING,
-    CHATS_REQUEST_SUCCESS,
-    CHATS_REQUEST_ERROR,
-    CHAT_SEARCH_REQUESTING,
-    CHAT_SEARCH_SUCCESS,
-    CHAT_SEARCH_ERROR
+    USERS_REQUESTING,
+    USERS_REQUEST_SUCCESS,
+    USERS_REQUEST_ERROR,
+    USER_SEARCH_REQUESTING,
+    USER_SEARCH_SUCCESS,
+    USER_SEARCH_ERROR,
+    NEW_MESSAGES_RECEIVED
 } from 'constants';
 
-export const chatsRequest = client => ({
-    type: CHATS_REQUESTING,
+export const usersRequest = client => ({
+    type: USERS_REQUESTING,
     client
 });
 
-export const chatsRequestSuccess = chats => ({
-    type: CHATS_REQUEST_SUCCESS,
-    chats
+export const usersRequestSuccess = users => ({
+    type: USERS_REQUEST_SUCCESS,
+    users
 });
 
-export const chatsRequestError = error => ({
-    type: CHATS_REQUEST_ERROR,
+export const usersRequestError = error => ({
+    type: USERS_REQUEST_ERROR,
     error
 });
 
-export const searchChatRequest = (client, queryString) => ({
-    type: CHAT_SEARCH_REQUESTING,
+export const searchUserRequest = (client, queryString) => ({
+    type: USER_SEARCH_REQUESTING,
     client,
     queryString
 });
 
-export const searchRequestSuccess = chats => ({
-    type: CHAT_SEARCH_SUCCESS,
-    chats
+export const searchRequestSuccess = users => ({
+    type: USER_SEARCH_SUCCESS,
+    users
 });
 
 export const searchRequestError = error => ({
-    type: CHAT_SEARCH_ERROR,
+    type: USER_SEARCH_ERROR,
     error
+});
+
+export const newMessagesReceived = messagesCounters => ({
+    type: NEW_MESSAGES_RECEIVED,
+    messagesCounters
 });

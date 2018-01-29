@@ -1,8 +1,9 @@
 import { CLIENT_SET, CLIENT_UNSET } from 'constants';
 
-export const setClient = token => ({
+export const setClient = (token, user) => ({
     type: CLIENT_SET,
-    token
+    token,
+    user
 });
 
 export const unsetClient = () => ({

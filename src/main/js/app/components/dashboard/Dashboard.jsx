@@ -1,30 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { List } from 'semantic-ui-react';
+import { List, Label } from 'semantic-ui-react';
 import { history } from 'app/app';
-
-const pages = [
-    {
-        text: 'Assets',
-        route: '/assets'
-    },
-    {
-        text: 'Users overview',
-        route: '/users'
-    },
-    {
-        text: 'Questions',
-        route: ''
-    },
-    {
-        text: 'Claims',
-        route: '/claims'
-    }
-];
-
-const redirect = route => {
-    history.push(route);
-};
+import * as sockets from 'socketsLib';
+import { routesList } from 'app/lib/selectOptions';
 
 const DashboardContainer = styled.div`
     display: flex;
@@ -32,35 +11,122 @@ const DashboardContainer = styled.div`
     align-items: center;
     width: 100%;
     height: 70%;
-
 `;
 
 const ListContainer = styled.div`
-    width: 600px;
+    width: 300px;
 `;
 
-const Dashboard = ({ unsetClient }) => (
-    <DashboardContainer>
-        <ListContainer>
-            <List animated verticalAlign="middle" size="massive" selection>
-                {pages.map((item, id) => (
-                    <List.Item
-                        key={id}
-                        onClick={redirect.bind(this, item.route)}
-                    >
-                        <List.Content>
-                            <List.Header>{item.text}</List.Header>
-                        </List.Content>
-                    </List.Item>
-                ))}
-                <List.Item onClick={unsetClient}>
-                    <List.Content>
-                        <List.Header>Logout</List.Header>
-                    </List.Content>
-                </List.Item>
-            </List>
-        </ListContainer>
-    </DashboardContainer>
-);
+const LinkName = styled.span`
+    font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.87);
+`;
 
-export default Dashboard;
+export const ItemContent = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+export default class Dashboard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            socket: null,
+            subscription: null
+        };
+        this.subscribeSocket = this.subscribeSocket.bind(this);
+        this.getItemContent = this.getItemContent.bind(this);
+        this.redirect = this.redirect.bind(this);
+    }
+
+    subscribeSocket(connection) {
+        const {
+            dashboardUpdated,
+            dashboardErrorReceived,
+            updatesRequestSuccess,
+            client: { user }
+        } = this.props;
+        const { stompClient, subscription } = sockets.dashboardSubscribe(
+            { dashboardUpdated, dashboardErrorReceived, updatesRequestSuccess },
+            user,
+            connection
+        );
+        this.setState({
+            socket: stompClient,
+            subscription
+        });
+    }
+
+    redirect(route, type) {
+        this.props.cleanupDashboardItem(type, this.state.socket);
+        history.push(route);
+    }
+
+    getItemContent(item) {
+        const { dashboard: { data } } = this.props;
+
+        return (
+            <ItemContent>
+                <LinkName>{item.text}</LinkName>
+                {data && data[item.type] ? (
+                    <Label color="blue" horizontal circular>
+                        {data[item.type]}
+                    </Label>
+                ) : null}
+            </ItemContent>
+        );
+    }
+
+    componentDidMount() {
+        const { setActiveConnection, messages } = this.props;
+
+        if (!messages.activeConnection) {
+            sockets.connect().then(stompClient => {
+                setActiveConnection(stompClient);
+                this.subscribeSocket(stompClient);
+            });
+        } else {
+            this.subscribeSocket(messages.activeConnection);
+        }
+    }
+
+    componentWillUnmount() {
+        sockets.disconnect(null, this.state.subscription);
+    }
+
+    render() {
+        const { unsetClient } = this.props;
+        return (
+            <DashboardContainer>
+                <ListContainer>
+                    <List
+                        animated
+                        size="massive"
+                        verticalAlign="middle"
+                        selection
+                    >
+                        {routesList.map((item, id) => (
+                            <List.Item
+                                key={id}
+                                onClick={this.redirect.bind(
+                                    this,
+                                    item.route,
+                                    item.type
+                                )}
+                            >
+                                {this.getItemContent(item)}
+                            </List.Item>
+                        ))}
+                        <List.Item onClick={unsetClient}>
+                            <List.Content>
+                                <List.Header>Logout</List.Header>
+                            </List.Content>
+                        </List.Item>
+                    </List>
+                </ListContainer>
+            </DashboardContainer>
+        );
+    }
+}

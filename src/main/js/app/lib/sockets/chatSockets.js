@@ -1,11 +1,9 @@
-import SockJS from 'sockjs-client';
-import Stomp from '@stomp/stompjs';
 import config from 'app/api/config';
-import * as types from './messageTypes';
+import * as types from '../messageTypes';
+import { connect } from './sockets';
 
 const connectError = { stompClient: null, subscription: null };
 
-/* eslint-disable no-undef */
 const responseHandler = (actions, response) => {
     const parsedRes = JSON.parse(response.body);
     const data = parsedRes.payload;
@@ -17,31 +15,14 @@ const responseHandler = (actions, response) => {
     actions.messageReceived(data.messages);
 };
 
-export const connect = () => {
-    const token = JSON.parse(localStorage.getItem('token'));
-    return new Promise((resolve, reject) => {
-        const socket = new SockJS(`${config.ws.endpoint}?token=${token}`);
-        const stompClient = Stomp.over(socket);
-        stompClient.connect(
-            {},
-            () => {
-                resolve(stompClient);
-            },
-            () => {
-                reject(null);
-            }
-        );
-    });
-};
-
-export const subscribe = (actions, clientId, stompClient) => {
+export const subscribe = (actions, userId, stompClient) => {
     if (stompClient) {
         try {
             const subscription = stompClient.subscribe(
-                config.ws.messages + clientId,
+                config.ws.messages + userId,
                 responseHandler.bind(this, actions)
             );
-            stompClient.send(config.ws.history + clientId);
+            stompClient.send(config.ws.history + userId);
             return { stompClient, subscription };
         } catch (error) {
             return connectError;
@@ -51,18 +32,14 @@ export const subscribe = (actions, clientId, stompClient) => {
     }
 };
 
-export const disconnect = (connection, subscription) => {
-    if (connection) connection.disconnect();
-    if (subscription) subscription.unsubscribe();
-};
-
-export const reconnect = (actions, clientId) => {
+/* eslint-disable no-undef */
+export const reconnect = (actions, userId) => {
     return new Promise((resolve, reject) => {
         connect()
             .then(connection => {
                 const { stompClient, subscription } = subscribe(
                     actions,
-                    clientId,
+                    userId,
                     connection
                 );
                 resolve({ stompClient, subscription });

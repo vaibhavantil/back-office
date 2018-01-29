@@ -20,3 +20,26 @@ export const messageTypes = [
     { key: 10, text: 'Paragraph', value: 'paragraph' },
     { key: 11, text: 'Bank id collect', value: 'bankid_collect' }
 ];
+
+export const routesList = [
+    {
+        text: 'Assets',
+        route: '/assets',
+        type: 'ASSETS'
+    },
+    {
+        text: 'Users overview',
+        route: '/users',
+        type: 'CHATS'
+    },
+    {
+        text: 'Questions',
+        route: '',
+        type: 'QUESTIONS'
+    },
+    {
+        text: 'Claims',
+        route: '/claims',
+        type: 'CLAIMS'
+    }
+];
