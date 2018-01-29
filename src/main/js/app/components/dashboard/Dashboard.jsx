@@ -71,7 +71,7 @@ export default class Dashboard extends React.Component {
                 <LinkName>{item.text}</LinkName>
                 {data && data[item.type] ? (
                     <Label color="blue" horizontal circular>
-                        {Math.floor(Math.random() * 10)}
+                        {data[item.type]}
                     </Label>
                 ) : null}
             </ItemContent>
