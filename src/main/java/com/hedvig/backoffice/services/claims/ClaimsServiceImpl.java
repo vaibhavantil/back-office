@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.web.dto.ClaimDTO;
+import com.hedvig.backoffice.web.dto.ClaimTypeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,21 @@ public class ClaimsServiceImpl implements ClaimsService {
         } catch (RestClientException e) {
             throw new ClaimsServiceException(e);
         }
+    }
+
+    @Override
+    public void changeStatus(String id, ClaimStatus status) throws ClaimsServiceException, ClaimNotFoundException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public List<ClaimTypeDTO> types() throws ClaimsServiceException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public void changeType(String id, ClaimTypeDTO dto) throws ClaimsServiceException, ClaimNotFoundException {
+        throw new RuntimeException("Not implemented yet!");
     }
 
 }
