@@ -6,12 +6,14 @@ export default function clientReducer(state = initialState.client, action) {
         case CLIENT_SET:
             return {
                 id: action.token.userId,
-                token: action.token
+                token: action.token,
+                user: action.user
             };
         case CLIENT_UNSET:
             return {
                 id: null,
-                token: null
+                token: null,
+                user: null
             };
         default:
             return state;

@@ -12,7 +12,8 @@ export default {
     },
     client: {
         id: null,
-        token: null
+        token: null,
+        user: null
     },
     poll: {
         polling: false

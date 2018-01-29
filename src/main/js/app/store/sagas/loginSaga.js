@@ -11,9 +11,9 @@ import {
 
 import { setClient, unsetClient } from '../actions/clientActions';
 
+/* eslint-disable no-undef */
 export function* logout() {
     yield put(unsetClient());
-    // eslint-disable-next-line no-undef
     localStorage.removeItem('token');
     history.push('/login');
 }
@@ -23,10 +23,10 @@ function* loginFlow(email, password) {
     try {
         request = yield call(api.login, email, password);
         const token = request.data.token;
-        yield put(setClient(token));
+        yield put(setClient(token, email));
         yield put({ type: LOGIN_SUCCESS });
-        // eslint-disable-next-line no-undef
         localStorage.setItem('token', JSON.stringify(token));
+        localStorage.setItem('user', email);
         history.push('/dashboard');
     } catch (error) {
         yield put({ type: LOGIN_ERROR, error });

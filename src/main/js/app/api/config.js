@@ -37,7 +37,8 @@ export default {
         messages: '/topic/messages/',
         history: '/app/messages/history/',
         send: '/app/messages/send/',
-        dashboardUpdates: '/app/dashboard/updates/',
-        cleanupDashboard: '/app/dashboard/cleanup/'
+        dashboardSub: '/user/',
+        cleanupDashboard: '/app/updates/clear/',
+        dashboardUpdates: '/app/updates/'
     }
 };

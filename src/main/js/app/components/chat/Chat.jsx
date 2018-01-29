@@ -27,7 +27,8 @@ export default class Chat extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            socket: null
+            socket: null,
+            subscription: null
         };
         this.addMessageHandler = this.addMessageHandler.bind(this);
         this.subscribeSocket = this.subscribeSocket.bind(this);

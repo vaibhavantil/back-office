@@ -3,24 +3,28 @@ import config from 'app/api/config';
 const connectError = { stompClient: null, subscription: null };
 
 const responseHandler = (actions, response) => {
-    const parsedRes = JSON.parse(response.body);
-    const data = parsedRes.payload;
+    const data = JSON.parse(response.body);
 
-    if (parsedRes.type === 'ERROR') {
+    if (data.type === 'ERROR') {
         actions.errorReceived(data);
         return;
     }
-    actions.dashboardUpdated(data);
+    const result = {};
+
+    data.forEach(item => {
+        result[item.type] = item.count;
+    });
+    actions.dashboardUpdated(result);
 };
 
-export const subscribe = (actions, userId, stompClient) => {
+export const subscribe = (actions, user, stompClient) => {
     if (stompClient) {
         try {
             const subscription = stompClient.subscribe(
-                config.ws.messages + userId,
+                `${config.ws.dashboardSub}${user}/updates`,
                 responseHandler.bind(this, actions)
             );
-            stompClient.send(config.ws.history + userId);
+            stompClient.send(config.ws.dashboardUpdates);
             return { stompClient, subscription };
         } catch (error) {
             return connectError;

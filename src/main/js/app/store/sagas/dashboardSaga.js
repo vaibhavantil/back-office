@@ -4,8 +4,8 @@ import config from 'app/api/config';
 
 function* messagesWatcher() {
     yield [
-        takeEvery(CLEANUP_DASHDBOARD_ITEM, ({ name, socket, userId }) => {
-            socket.send(config.ws.send + userId, {}, { name });
+        takeEvery(CLEANUP_DASHDBOARD_ITEM, ({ name, socket }) => {
+            socket.send(`${config.ws.cleanupDashboard}/${name}`, {}, '');
         })
     ];
 }

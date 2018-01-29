@@ -8,13 +8,14 @@ const DashboardPage = props => <Dashboard {...props} />;
 
 export default withRouter(
     connect(
-        ({ client, messages }) => ({
+        ({ client, messages, dashboard }) => ({
             client,
-            messages
+            messages,
+            dashboard
         }),
         {
             ...actions.dashboardActions,
-            ...actions.messagesActions
+            setActiveConnection: actions.messagesActions.setActiveConnection
         }
     )(DashboardPage)
 );

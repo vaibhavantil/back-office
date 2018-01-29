@@ -3,29 +3,7 @@ import styled from 'styled-components';
 import { List, Label } from 'semantic-ui-react';
 import { history } from 'app/app';
 import * as sockets from 'app/lib/sockets';
-
-const pages = [
-    {
-        text: 'Assets',
-        route: '/assets'
-    },
-    {
-        text: 'Users overview',
-        route: '/users'
-    },
-    {
-        text: 'Questions',
-        route: ''
-    },
-    {
-        text: 'Claims',
-        route: '/claims'
-    }
-];
-
-const redirect = route => {
-    history.push(route);
-};
+import { routesList } from 'app/lib/selectOptions';
 
 const DashboardContainer = styled.div`
     display: flex;
@@ -54,33 +32,67 @@ const ItemContent = styled.div`
 export default class Dashboard extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            socket: null,
+            subscription: null
+        };
+        this.subscribeSocket = this.subscribeSocket.bind(this);
+        this.getItemContent = this.getItemContent.bind(this);
+        this.redirect = this.redirect.bind(this);
+    }
+
+    subscribeSocket(connection) {
+        const {
+            dashboardUpdated,
+            dashboardErrorReceived,
+            client: { user }
+        } = this.props;
+        const { stompClient, subscription } = sockets.dashboardSubscribe(
+            { dashboardUpdated, dashboardErrorReceived },
+            user,
+            connection
+        );
+        this.setState({
+            socket: stompClient,
+            subscription
+        });
+    }
+
+    redirect(route, type) {
+        this.props.cleanupDashboardItem(type, this.state.socket);
+        history.push(route);
+    }
+
+    getItemContent(item) {
+        const { dashboard: { data } } = this.props;
+
+        return (
+            <ItemContent>
+                <LinkName>{item.text}</LinkName>
+                {data && data[item.type] ? (
+                    <Label color="blue" horizontal circular>
+                        {Math.floor(Math.random() * 10)}
+                    </Label>
+                ) : null}
+            </ItemContent>
+        );
     }
 
     componentDidMount() {
-        const {
-            setActiveConnection,
-            messages,
-            dashboardUpdated,
-            errorReceived,
-            match: { params }
-        } = this.props;
+        const { setActiveConnection, messages } = this.props;
 
         if (!messages.activeConnection) {
             sockets.connect().then(stompClient => {
                 setActiveConnection(stompClient);
-                sockets.dashboardSubscribe(
-                    { dashboardUpdated, errorReceived },
-                    params.id,
-                    stompClient
-                );
+                this.subscribeSocket(stompClient);
             });
         } else {
-            sockets.dashboardSubscribe(
-                { dashboardUpdated, errorReceived },
-                params.id,
-                messages.activeConnection
-            );
+            this.subscribeSocket(messages.activeConnection);
         }
+    }
+
+    componentWillUnmount() {
+        sockets.disconnect(null, this.state.subscription);
     }
 
     render() {
@@ -94,17 +106,16 @@ export default class Dashboard extends React.Component {
                         verticalAlign="middle"
                         selection
                     >
-                        {pages.map((item, id) => (
+                        {routesList.map((item, id) => (
                             <List.Item
                                 key={id}
-                                onClick={redirect.bind(this, item.route)}
+                                onClick={this.redirect.bind(
+                                    this,
+                                    item.route,
+                                    item.type
+                                )}
                             >
-                                <ItemContent>
-                                    <LinkName>{item.text}</LinkName>
-                                    <Label color="blue" horizontal circular>
-                                        {Math.floor(Math.random() * 10)}
-                                    </Label>
-                                </ItemContent>
+                                {this.getItemContent(item)}
                             </List.Item>
                         ))}
                         <List.Item onClick={unsetClient}>

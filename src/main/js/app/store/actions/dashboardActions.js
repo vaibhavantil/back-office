@@ -1,12 +1,13 @@
 import {
     CLEANUP_DASHDBOARD_ITEM,
     DASHBOARD_ERROR_RECEIVED,
-    DASHBOARD_UADATED
+    DASHBOARD_UPDATED
 } from 'constants';
 
-export const cleanupDashboardItem = name => ({
+export const cleanupDashboardItem = (name, socket) => ({
     type: CLEANUP_DASHDBOARD_ITEM,
-    name
+    name,
+    socket
 });
 
 export const dashboardErrorReceived = error => ({
@@ -15,6 +16,6 @@ export const dashboardErrorReceived = error => ({
 });
 
 export const dashboardUpdated = status => ({
-    type: DASHBOARD_UADATED,
+    type: DASHBOARD_UPDATED,
     status
 });
