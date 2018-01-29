@@ -78,7 +78,7 @@ public class BotServiceStub implements BotService {
     }
 
     private ConcurrentHashMap<String, List<BotServiceMessage>> messages;
-    private Instant timestamp;
+    private ConcurrentHashMap<String, Instant> timestamps;
     private AtomicLong increment;
 
     @Autowired
@@ -87,7 +87,7 @@ public class BotServiceStub implements BotService {
         increment = new AtomicLong();
         increment.set(0);
 
-        timestamp = new Date().toInstant();
+        timestamps = new ConcurrentHashMap<>();
 
         logger.info("BOT SERVICE:");
         logger.info("class: " + BotServiceStub.class.getName());
@@ -97,8 +97,10 @@ public class BotServiceStub implements BotService {
     public List<BotServiceMessage> messages(String hid) throws BotServiceException {
         List<BotServiceMessage> current = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         Instant time = new Date().toInstant();
+        Instant timestamp = timestamps.computeIfAbsent(hid, k -> new Date().toInstant());
+
         if (time.minusSeconds(5).isAfter(timestamp)) {
-            timestamp = new Date().toInstant();
+            timestamps.put(hid, new Date().toInstant());
             String type = typeNames.get(current.size() % typeNames.size());
 
             current.add(new BotServiceMessage(String.format(STUB_MESSAGE_TEMPLATE,
@@ -108,7 +110,7 @@ public class BotServiceStub implements BotService {
                     type,
                     current.size(),
                     typesTemplates.get(type),
-                    timestamp.toString())));
+                    time.toString())));
         }
 
         return current;
