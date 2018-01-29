@@ -94,7 +94,10 @@ public class ChatServiceImpl implements ChatService {
     @Transactional
     public void close(String sessionId) {
         List<ChatContext> chats = chatContextRepository.findBySessionId(sessionId);
-        chatContextRepository.delete(chats);
+        if (chats.size() > 0) {
+            chats.forEach(c -> c.setActive(false));
+            chatContextRepository.save(chats);
+        }
     }
 
     @Override
@@ -125,6 +128,7 @@ public class ChatServiceImpl implements ChatService {
         chat.setHid(user.getHid());
         chat.setSubId(subId);
         chat.setSessionId(sessionId);
+        chat.setActive(true);
         chat.setTimestamp(new Date().toInstant());
         chat.setPersonnel(personnel);
 
@@ -143,7 +147,10 @@ public class ChatServiceImpl implements ChatService {
     @Transactional
     public void unsubscribe(String subId, String sessionId) {
         Optional<ChatContext> optional = chatContextRepository.findBySubIdAndSessionId(subId, sessionId);
-        optional.ifPresent(chatContextRepository::delete);
+        optional.ifPresent(c -> {
+            c.setActive(false);
+            chatContextRepository.save(c);
+        });
     }
 
     @Override
