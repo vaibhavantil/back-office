@@ -16,16 +16,11 @@ const UsersListPage = styled.div`
     margin: 0 auto;
 `;
 
-const UsersPage = ({ users, searchUserRequest, client, usersRequest }) => (
+const UsersPage = props => (
     <UsersListPage>
         <Header>Chats List</Header>
         <BackLink path="dashboard" />
-        <Users
-            users={users}
-            search={searchUserRequest}
-            client={client}
-            usersRequest={usersRequest}
-        />
+        <Users {...props} />
     </UsersListPage>
 );
 

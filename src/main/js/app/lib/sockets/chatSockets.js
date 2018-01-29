@@ -1,5 +1,5 @@
 import config from 'app/api/config';
-import * as types from './messageTypes';
+import * as types from '../messageTypes';
 import { connect } from './sockets';
 
 const connectError = { stompClient: null, subscription: null };

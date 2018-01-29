@@ -5,7 +5,7 @@ import config from 'app/api/config';
 function* messagesWatcher() {
     yield [
         takeEvery(CLEANUP_DASHDBOARD_ITEM, ({ name, socket }) => {
-            socket.send(`${config.ws.cleanupDashboard}/${name}`, {}, '');
+            socket.send(`${config.ws.cleanupDashboard}${name}`, {}, '');
         })
     ];
 }

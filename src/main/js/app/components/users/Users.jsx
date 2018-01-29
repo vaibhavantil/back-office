@@ -1,6 +1,6 @@
 import React from 'react';
-import UsersList from 'components/users-list/UsersList';
 import { Input } from 'semantic-ui-react';
+import UsersList from 'components/users-list/UsersList';
 
 export default class Users extends React.Component {
     constructor(props) {
@@ -24,7 +24,10 @@ export default class Users extends React.Component {
     searchRequest() {
         this.setState({ isLoading: true });
         if (this.state.value) {
-            this.props.search(this.props.client.token, this.state.value);
+            this.props.searchUserRequest(
+                this.props.client.token,
+                this.state.value
+            );
         }
     }
 
@@ -43,17 +46,30 @@ export default class Users extends React.Component {
     }
 
     render() {
+        const {
+            messages,
+            newMessagesReceived,
+            setActiveConnection,
+            client
+        } = this.props;
+        const { isLoading, results } = this.state;
         return (
             <React.Fragment>
                 <Input
-                    loading={this.state.isLoading}
+                    loading={isLoading}
                     placeholder="Search..."
                     iconPosition="left"
                     style={{ marginTop: '30px' }}
                     onKeyPress={this.handleSearchChange}
                     action={{ icon: 'search', onClick: this.searchRequest }}
                 />
-                <UsersList users={this.state.results} />
+                <UsersList
+                    users={results}
+                    messages={messages}
+                    newMessagesReceived={newMessagesReceived}
+                    setActiveConnection={setActiveConnection}
+                    client={client}
+                />
             </React.Fragment>
         );
     }

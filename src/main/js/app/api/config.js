@@ -39,6 +39,9 @@ export default {
         send: '/app/messages/send/',
         dashboardSub: '/user/',
         cleanupDashboard: '/app/updates/clear/',
-        dashboardUpdates: '/app/updates/'
+        dashboardUpdates: '/app/updates/',
+        cleanupMessages: '/app/clear/',
+        newMessagesSub: '/app/updates/',
+        messagesUpdates: '/app/updates/'
     }
 };

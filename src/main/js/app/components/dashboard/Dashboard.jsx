@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { List, Label } from 'semantic-ui-react';
 import { history } from 'app/app';
-import * as sockets from 'app/lib/sockets';
+import * as sockets from 'socketsLib';
 import { routesList } from 'app/lib/selectOptions';
 
 const DashboardContainer = styled.div`
@@ -23,7 +23,7 @@ const LinkName = styled.span`
     color: rgba(0, 0, 0, 0.87);
 `;
 
-const ItemContent = styled.div`
+export const ItemContent = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -45,10 +45,11 @@ export default class Dashboard extends React.Component {
         const {
             dashboardUpdated,
             dashboardErrorReceived,
+            updatesRequestSuccess,
             client: { user }
         } = this.props;
         const { stompClient, subscription } = sockets.dashboardSubscribe(
-            { dashboardUpdated, dashboardErrorReceived },
+            { dashboardUpdated, dashboardErrorReceived, updatesRequestSuccess },
             user,
             connection
         );

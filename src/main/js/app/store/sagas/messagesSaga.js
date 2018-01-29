@@ -1,7 +1,7 @@
 import { call, takeEvery, put, takeLatest } from 'redux-saga/effects';
 import { USER_REQUESTING, ADD_MESSAGE } from 'constants';
 import config from 'app/api/config';
-import { updateMessageBody } from 'app/lib/chatSockets';
+import { updateMessageBody } from 'app/lib/sockets/chatSockets';
 import api from 'app/api/ChatApi';
 import {
     userRequestSuccess,

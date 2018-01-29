@@ -9,22 +9,18 @@ const responseHandler = (actions, response) => {
         actions.errorReceived(data);
         return;
     }
-    const result = {};
 
-    data.forEach(item => {
-        result[item.type] = item.count;
-    });
-    actions.dashboardUpdated(result);
+    actions.newMessagesReceived(data);
 };
 
 export const subscribe = (actions, user, stompClient) => {
     if (stompClient) {
         try {
             const subscription = stompClient.subscribe(
-                `${config.ws.dashboardSub}${user}/updates`,
+                `${config.ws.newMessagesSub}${user}/updates`,
                 responseHandler.bind(this, actions)
             );
-            stompClient.send(config.ws.dashboardUpdates);
+            stompClient.send(config.ws.messagesUpdates);
             return { stompClient, subscription };
         } catch (error) {
             return connectError;

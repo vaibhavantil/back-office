@@ -1,11 +1,13 @@
 import initialState from '../initialState';
+import { setNewMessagesCounter } from 'app/lib/helpers';
 import {
     USERS_REQUESTING,
     USERS_REQUEST_SUCCESS,
     USERS_REQUEST_ERROR,
     USER_SEARCH_REQUESTING,
     USER_SEARCH_SUCCESS,
-    USER_SEARCH_ERROR
+    USER_SEARCH_ERROR,
+    NEW_MESSAGES_RECEIVED
 } from 'constants';
 
 export default function(state = initialState.users, action) {
@@ -65,6 +67,14 @@ export default function(state = initialState.users, action) {
                         status: action.error.response.status
                     }
                 ])
+            };
+        case NEW_MESSAGES_RECEIVED:
+            return {
+                ...state,
+                list: setNewMessagesCounter(
+                    state.list.slice(),
+                    action.messagesCouters
+                )
             };
         default:
             return state;
