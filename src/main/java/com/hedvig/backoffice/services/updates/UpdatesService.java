@@ -5,6 +5,7 @@ public interface UpdatesService {
     void append(int count, UpdateType type);
     void subscribe(String email);
     void unsubscribe(String email);
-    void send();
+    void clear(String email, UpdateType type);
+    void updates(String email);
 
 }

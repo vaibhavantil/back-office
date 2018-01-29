@@ -64,6 +64,6 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
             }
         }
 
-        updatesService.append(updatesCount, UpdateType.CHAT);
+        updatesService.append(updatesCount, UpdateType.CHATS);
     }
 }
