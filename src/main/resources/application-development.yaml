@@ -12,6 +12,9 @@ botservice:
 userservice:
   stub: true
 
+claims:
+  stub: true
+
 jwt:
   enabled: true
 
