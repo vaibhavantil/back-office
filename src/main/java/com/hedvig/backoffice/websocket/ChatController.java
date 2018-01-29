@@ -19,7 +19,7 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @SubscribeMapping("/updates/{hid}")
+    @SubscribeMapping("/send/{hid}")
     public void send(@DestinationVariable String hid, @RequestBody String body) {
         chatService.append(hid, body);
     }
