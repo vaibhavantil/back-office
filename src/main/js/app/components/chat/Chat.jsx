@@ -50,7 +50,7 @@ export default class Chat extends React.Component {
             errorReceived
         } = this.props;
 
-        const { stompClient, subscription } = sockets.subscribe(
+        const { stompClient, subscription } = sockets.chatSubscribe(
             { messageReceived, getMessagesHistory, errorReceived },
             match.params.id,
             messages.activeConnection
@@ -68,7 +68,7 @@ export default class Chat extends React.Component {
         } = this.props;
 
         sockets
-            .reconnect(
+            .chatReconnect(
                 { messageReceived, getMessagesHistory, errorReceived },
                 match.params.id
             )
