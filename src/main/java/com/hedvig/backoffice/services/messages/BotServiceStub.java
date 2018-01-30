@@ -1,14 +1,18 @@
 package com.hedvig.backoffice.services.messages;
 
+import com.hedvig.backoffice.repository.SubscriptionRepository;
+import com.hedvig.backoffice.services.messages.data.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class BotServiceStub implements BotService {
 
@@ -77,17 +81,21 @@ public class BotServiceStub implements BotService {
         typesTemplates.put("bankid_collect", ", \"referenceId\": \"811228-9874\"");
     }
 
+    private final SubscriptionRepository subscriptionRepository;
+
     private ConcurrentHashMap<String, List<BotServiceMessage>> messages;
     private ConcurrentHashMap<String, Instant> timestamps;
     private AtomicLong increment;
 
     @Autowired
-    public BotServiceStub() {
+    public BotServiceStub(SubscriptionRepository subscriptionRepository) {
         this.messages = new ConcurrentHashMap<>();
         increment = new AtomicLong();
         increment.set(0);
 
         timestamps = new ConcurrentHashMap<>();
+
+        this.subscriptionRepository = subscriptionRepository;
 
         logger.info("BOT SERVICE:");
         logger.info("class: " + BotServiceStub.class.getName());
@@ -127,11 +135,40 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
+    public List<BackOfficeMessage> fetch(Instant timestamp) throws BotServiceException {
+        return messages
+                .entrySet()
+                .stream()
+                .flatMap(e -> {
+                    String hid = e.getKey();
+                    List<BotServiceMessage> messages = e.getValue();
+                    return messages
+                            .stream()
+                            .filter(Objects::nonNull)
+                            .filter(m -> m.getTimestamp().isAfter(timestamp))
+                            .map(m -> new BackOfficeMessage(hid, m.getMessage()));
+                })
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
     public void response(String hid, BotServiceMessage message) throws BotServiceException {
         List<BotServiceMessage> msg = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         message.setGlobalId(increment.addAndGet(1));
         message.setMessageId((long) msg.size());
 
         msg.add(message);
+    }
+
+    @Scheduled(fixedDelay = 1000)
+    public void addMessage() {
+        subscriptionRepository.findActiveSubscriptions().forEach(s -> {
+            try {
+                messages(s.getHid());
+            } catch (BotServiceException e) {
+                logger.error("stub bot-service error", e);
+            }
+        });
     }
 }

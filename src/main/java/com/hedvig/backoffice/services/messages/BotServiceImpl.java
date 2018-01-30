@@ -17,6 +17,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,11 @@ public class BotServiceImpl implements BotService {
     @Override
     public List<BotServiceMessage> messages(String hid, int count) throws BotServiceException {
         return messages(baseUrl + messagesUrl + "/" + count, hid);
+    }
+
+    @Override
+    public List<BackOfficeMessage> fetch(Instant timestamp) throws BotServiceException {
+        throw new RuntimeException("not implemented yet!");
     }
 
     @Override
