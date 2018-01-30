@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Value
@@ -44,7 +45,10 @@ public class Message {
     public static Message chat(List<BotServiceMessage> messages) {
         return new Message(MessageType.MESSAGE,
                 new Date().toInstant(),
-                new ChatMessages(messages.stream().map(BotServiceMessage::getMessage).collect(Collectors.toList())));
+                new ChatMessages(messages.stream()
+                        .filter(Objects::nonNull)
+                        .map(BotServiceMessage::getMessage)
+                        .collect(Collectors.toList())));
     }
 
 }

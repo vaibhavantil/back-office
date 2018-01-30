@@ -28,32 +28,17 @@ public class BotServiceMessage {
     public BotServiceMessage(String message, boolean newMessage) throws BotServiceException {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            root = mapper.readValue(message, JsonNode.class);
+            this.root = mapper.readValue(message, JsonNode.class);
         } catch (IOException e) {
             throw new BotServiceException(e);
         }
 
-        header = Optional.ofNullable(root.get("header"))
-                .orElseThrow(() -> new BotServiceException("message must contains header"));
+        parseFields(newMessage);
+    }
 
-        body = Optional.ofNullable(root.get("body"))
-                .orElseThrow(() -> new BotServiceException("message must contains body"));
-
-        type = Optional.ofNullable(body.get("type"))
-                .map(JsonNode::asText)
-                .orElseThrow(() -> new BotServiceException("message must contains type"));
-
-        if (!newMessage) {
-            globalId = Optional.ofNullable(root.get("globalId"))
-                    .orElseThrow(() -> new BotServiceException("message must contains globalId"))
-                    .asLong();
-
-            messageId = Optional.ofNullable(header.get("messageId"))
-                    .orElseThrow(() -> new BotServiceException("message must contains globalId"))
-                    .asLong();
-        }
-
-        parseTimestamp();
+    public BotServiceMessage(JsonNode root, boolean newMessage) throws BotServiceException {
+        this.root = root;
+        parseFields(newMessage);
     }
 
     public Instant getTimestamp() {
@@ -96,7 +81,27 @@ public class BotServiceMessage {
         root.put("globalId", globalId);
     }
 
-    private void parseTimestamp() throws BotServiceException {
+    private void parseFields(boolean newMessage) throws BotServiceException {
+        header = Optional.ofNullable(root.get("header"))
+                .orElseThrow(() -> new BotServiceException("message must contains header"));
+
+        body = Optional.ofNullable(root.get("body"))
+                .orElseThrow(() -> new BotServiceException("message must contains body"));
+
+        type = Optional.ofNullable(body.get("type"))
+                .map(JsonNode::asText)
+                .orElseThrow(() -> new BotServiceException("message must contains type"));
+
+        if (!newMessage) {
+            globalId = Optional.ofNullable(root.get("globalId"))
+                    .orElseThrow(() -> new BotServiceException("message must contains globalId"))
+                    .asLong();
+
+            messageId = Optional.ofNullable(header.get("messageId"))
+                    .orElseThrow(() -> new BotServiceException("message must contains globalId"))
+                    .asLong();
+        }
+
         JsonNode value = Optional.ofNullable(root.get("timestamp"))
                 .orElseThrow(() -> new BotServiceException("message must contains timestamp"));
 
