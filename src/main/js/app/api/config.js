@@ -31,6 +31,12 @@ export default {
             url: 'user/search'
         }
     },
+    claims: {
+        getList: {
+            url: 'claims',
+            method: 'get'
+        }
+    },
     ws: {
         // eslint-disable-next-line
         endpoint: DEV ? 'http://localhost:8080/chat' : '/chat',

@@ -3,11 +3,16 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Claims from 'components/claims/Claims';
 import { PageContainer } from '../messages-page/ChatPage';
+import actions from 'app/store/actions';
 
-const ClaimsPage = () => (
+const ClaimsPage = props => (
     <PageContainer>
-        <Claims />
+        <Claims {...props} />
     </PageContainer>
 );
 
-export default withRouter(connect(() => ({}), {})(ClaimsPage));
+export default withRouter(
+    connect(({ claims, client }) => ({ claims, client }), {
+        ...actions.claimsActions
+    })(ClaimsPage)
+);
