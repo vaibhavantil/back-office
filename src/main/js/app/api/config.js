@@ -32,7 +32,7 @@ export default {
         }
     },
     ws: {
-        /* eslint-disable */
+        // eslint-disable-next-line
         endpoint: DEV ? 'http://localhost:8080/chat' : '/chat',
         messages: '/topic/messages/',
         history: '/app/messages/history/',

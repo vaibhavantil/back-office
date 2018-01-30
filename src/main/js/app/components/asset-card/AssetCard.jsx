@@ -19,7 +19,10 @@ export default class AssetCard extends React.Component {
     }
     saveClickHandler() {
         this.setState(() => ({ disabled: true }));
-        this.props.assetUpdate(this.props.asset.id, this.state.dropdownValue);
+        this.props.assetUpdate(
+            this.props.asset.id,
+            this.state.dropdownValue || this.props.asset.state
+        );
     }
 
     componentWillReceiveProps(nextProps) {

@@ -25,7 +25,8 @@ class AssetList extends React.Component {
     }
 
     assetUpdateHandler(id, value) {
-        this.props.assetUpdate(id, value);
+        const { assetUpdate, token } = this.props;
+        assetUpdate(id, value, token);
         this.filterChangeHandler(null, { value: this.state.activeFilter });
     }
 
