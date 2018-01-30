@@ -15,6 +15,7 @@ export default withRouter(
         }),
         {
             ...actions.dashboardActions,
+            ...actions.clientActions,
             setActiveConnection: actions.messagesActions.setActiveConnection
         }
     )(DashboardPage)
