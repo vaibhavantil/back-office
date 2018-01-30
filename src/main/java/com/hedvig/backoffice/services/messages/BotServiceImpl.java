@@ -17,10 +17,8 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.time.Instant;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -31,15 +29,18 @@ public class BotServiceImpl implements BotService {
     private String baseUrl;
     private String messagesUrl;
     private String responseUrl;
+    private String fetchUrl;
 
     @Autowired
     private BotServiceImpl(@Value("${botservice.baseUrl}") String baseUrl,
                            @Value("${botservice.urls.messages}") String messagesUrl,
-                           @Value("${botservice.urls.response}") String responseUrl) {
+                           @Value("${botservice.urls.internal.response}") String responseUrl,
+                           @Value("${botservice.urls.internal.fetch}") String fetchUrl) {
 
         this.baseUrl = baseUrl;
         this.messagesUrl = messagesUrl;
         this.responseUrl = responseUrl;
+        this.fetchUrl = fetchUrl;
 
         logger.info("BOT SERVICE:");
         logger.info("class: " + BotServiceImpl.class.getName());
@@ -56,6 +57,20 @@ public class BotServiceImpl implements BotService {
     @Override
     public List<BotServiceMessage> messages(String hid, int count) throws BotServiceException {
         return messages(baseUrl + messagesUrl + "/" + count, hid);
+    }
+
+    @Override
+    public List<BackOfficeMessage> fetch(Instant timestamp) throws BotServiceException {
+        RestTemplate template = new RestTemplate();
+        try {
+            String time = Long.toString(timestamp.toEpochMilli());
+            ResponseEntity<BackOfficeMessage[]> messages
+                    = template.getForEntity(baseUrl + fetchUrl + "/" + time, BackOfficeMessage[].class);
+
+            return Arrays.asList(messages.getBody());
+        } catch (RestClientException e) {
+            throw new BotServiceException(e);
+        }
     }
 
     @Override

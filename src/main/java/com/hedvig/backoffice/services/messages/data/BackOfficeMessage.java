@@ -2,11 +2,13 @@ package com.hedvig.backoffice.services.messages.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
+import lombok.Value;
 
 @AllArgsConstructor
+@Value
 public class BackOfficeMessage {
 
-    public String userId;
-    public JsonNode msg;
+    private String userId;
+    private JsonNode msg;
 
 }
