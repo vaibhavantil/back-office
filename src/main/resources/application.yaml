@@ -52,7 +52,9 @@ botservice:
   baseUrl: http://localhost:4081
   urls:
     messages: /messages
-    response: /addmessage
+    internal:
+      response: /_/messages/addmessage
+      fetch: /_/messages
   stub: false
 
 userservice:
