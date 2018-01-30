@@ -4,7 +4,7 @@ import { Container } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
 import actions from 'app/store/actions';
-import AssetList from 'components/asset-list/AssetList';
+import AssetList from 'components/assets/asset-list/AssetList';
 import { checkAuthorization } from 'app/lib/checkAuth';
 
 class MainPage extends React.Component {

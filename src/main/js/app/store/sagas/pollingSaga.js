@@ -11,11 +11,12 @@ import {
 function* pollAssetsSaga({ client, duration }) {
     while (true) {
         try {
-            const assets = yield call(api, client, config.assets.get);
+            const assets = yield call(api, client, config.asset.get);
             yield put(assetRequestSuccess(assets));
             yield call(delay, duration);
         } catch (error) {
             yield put(assetRequestError(error));
+            take(POLL_STOP);
         }
     }
 }

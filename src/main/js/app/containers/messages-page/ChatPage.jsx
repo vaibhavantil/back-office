@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import actions from 'app/store/actions';
-import Chat from 'components/chat/Chat';
+import Chat from 'components/chat/chat/Chat';
 
 export const PageContainer = styled.div`
     display: flex;
