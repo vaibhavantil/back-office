@@ -18,9 +18,8 @@ const ChatPage = props => (
     </PageContainer>
 );
 
-const mapStateToProps = ({ client, messages }) => {
+const mapStateToProps = ({ messages }) => {
     return {
-        client,
         messages
     };
 };

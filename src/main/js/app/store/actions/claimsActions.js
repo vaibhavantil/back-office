@@ -4,9 +4,8 @@ import {
     CLAIM_REQUEST_ERROR
 } from 'constants';
 
-export const claimsRequest = token => ({
-    type: CLAIM_REQUESTING,
-    token
+export const claimsRequest = () => ({
+    type: CLAIM_REQUESTING
 });
 
 export const claimsRequestSuccess = claims => ({

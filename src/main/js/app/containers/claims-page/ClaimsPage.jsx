@@ -12,7 +12,7 @@ const ClaimsPage = props => (
 );
 
 export default withRouter(
-    connect(({ claims, client }) => ({ claims, client }), {
+    connect(({ claims }) => ({ claims }), {
         ...actions.claimsActions
     })(ClaimsPage)
 );

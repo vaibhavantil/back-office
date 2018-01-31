@@ -3,6 +3,7 @@ import { USER_REQUESTING, ADD_MESSAGE } from 'constants';
 import { updateMessageBody } from 'app/lib/sockets/chat';
 import api from 'app/api';
 import config from 'app/api/config';
+import { getAuthToken } from 'app/lib/checkAuth';
 import {
     userRequestSuccess,
     userRequestError
@@ -10,7 +11,8 @@ import {
 
 function* userRequestFlow(action) {
     try {
-        const { token, userId } = action;
+        const { userId } = action;
+        const token = getAuthToken();
         const user = yield call(api, token, config.users.get, null, userId);
         yield put(userRequestSuccess(user.data));
     } catch (error) {

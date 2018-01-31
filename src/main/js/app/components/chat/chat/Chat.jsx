@@ -90,13 +90,13 @@ export default class Chat extends React.Component {
     }
 
     componentDidMount() {
-        const { client: { token }, match, userRequest } = this.props;
+        const { match, userRequest } = this.props;
         const { stompClient, subscription } = this.subscribeSocket();
         if (!stompClient) {
             this.reconnectSocket();
         }
         this.setState({ socket: stompClient, subscription });
-        userRequest(token, match.params.id);
+        userRequest(match.params.id);
     }
 
     componentWillUnmount() {

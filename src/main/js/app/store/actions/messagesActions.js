@@ -36,9 +36,8 @@ export const setActiveConnection = connection => ({
     connection
 });
 
-export const userRequest = (token, userId) => ({
+export const userRequest = userId => ({
     type: USER_REQUESTING,
-    token,
     userId
 });
 

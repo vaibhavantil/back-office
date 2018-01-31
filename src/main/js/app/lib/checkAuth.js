@@ -21,3 +21,8 @@ export function checkAssetAuthorization({ dispatch, getState }) {
     if (client && client.token) return true;
     return checkAuthorization(dispatch);
 }
+
+export const getAuthToken = () => {
+    const token = localStorage.getItem('token');
+    return token ? JSON.parse(token) : '';
+};

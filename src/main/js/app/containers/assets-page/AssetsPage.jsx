@@ -13,9 +13,8 @@ class MainPage extends React.Component {
     }
 
     componentDidMount() {
-        const { client: { token } } = this.props;
         checkAuthorization(null, this.props.setClient);
-        this.props.assetRequest(token);
+        this.props.assetRequest();
     }
 
     render() {
@@ -24,8 +23,7 @@ class MainPage extends React.Component {
             assetUpdate,
             pollStart,
             pollStop,
-            poll: { polling },
-            client: { token }
+            poll: { polling }
         } = this.props;
         const pollingEvents = { pollStart, pollStop, polling };
         return (
@@ -40,16 +38,14 @@ class MainPage extends React.Component {
                     assetUpdate={assetUpdate}
                     updateStatus={assets.requesting}
                     polling={pollingEvents}
-                    token={token}
                 />
             </Container>
         );
     }
 }
 
-const mapStateToProps = ({ assets, client, poll }) => ({
+const mapStateToProps = ({ assets, poll }) => ({
     assets,
-    client,
     poll
 });
 

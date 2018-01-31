@@ -25,8 +25,8 @@ class AssetList extends React.Component {
     }
 
     assetUpdateHandler(id, value) {
-        const { assetUpdate, token } = this.props;
-        assetUpdate(id, value, token);
+        const { assetUpdate} = this.props;
+        assetUpdate(id, value);
         this.filterChangeHandler(null, { value: this.state.activeFilter });
     }
 
@@ -48,11 +48,11 @@ class AssetList extends React.Component {
     }
 
     pollingHandler() {
-        const { polling: { pollStart, pollStop, polling }, token } = this.props;
+        const { polling: { pollStart, pollStop, polling } } = this.props;
         if (polling) {
-            pollStop(token, 2000);
+            pollStop(2000);
         } else {
-            pollStart(token, 2000);
+            pollStart(2000);
         }
     }
 

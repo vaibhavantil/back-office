@@ -27,15 +27,14 @@ export default class Users extends React.Component {
         this.setState({ isLoading: true });
         if (this.state.value) {
             this.props.searchUserRequest(
-                this.props.client.token,
                 this.state.value
             );
         }
     }
 
     componentDidMount() {
-        const { client, usersRequest } = this.props;
-        usersRequest(client.token);
+        const { usersRequest } = this.props;
+        usersRequest();
     }
 
     componentWillReceiveProps(newProps) {

@@ -7,8 +7,8 @@ export default class Claims extends React.Component {
     }
 
     componentDidMount() {
-        const { client: { token }, claimsRequest } = this.props;
-        claimsRequest(token);
+        const {claimsRequest } = this.props;
+        claimsRequest();
     }
 
     render() {

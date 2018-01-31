@@ -1,8 +1,7 @@
 import { POLL_START, POLL_STOP } from 'constants';
 
-export const pollStart = (client, duration) => ({
+export const pollStart = (duration) => ({
     type: POLL_START,
-    client,
     duration
 });
 

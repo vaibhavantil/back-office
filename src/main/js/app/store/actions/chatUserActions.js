@@ -23,9 +23,8 @@ export const usersRequestError = error => ({
     error
 });
 
-export const searchUserRequest = (client, queryString) => ({
+export const searchUserRequest = queryString => ({
     type: USER_SEARCH_REQUESTING,
-    client,
     queryString
 });
 
