@@ -2,7 +2,11 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import api from 'app/api';
 import config from 'app/api/config';
 import { getAuthToken } from 'app/lib/checkAuth';
-import { CLAIM_REQUESTING, CLAIM_UPDATING, CLAIM_CREATING } from 'constants/claims';
+import {
+    CLAIMS_REQUESTING,
+    CLAIM_UPDATING,
+    CLAIM_CREATING
+} from 'constants/claims';
 import * as actions from '../actions/claimsActions';
 
 function* requestFlow() {
@@ -43,7 +47,7 @@ function* createFlow({ data }) {
 
 function* claimsWatcher() {
     yield [
-        takeLatest(CLAIM_REQUESTING, requestFlow),
+        takeLatest(CLAIMS_REQUESTING, requestFlow),
         takeLatest(CLAIM_UPDATING, updateFlow),
         takeLatest(CLAIM_CREATING, createFlow)
     ];

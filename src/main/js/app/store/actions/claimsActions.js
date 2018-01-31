@@ -1,18 +1,18 @@
 import {
-    CLAIM_REQUESTING,
-    CLAIM_REQUEST_SUCCESS,
-    CLAIM_REQUEST_ERROR
+    CLAIMS_REQUESTING,
+    CLAIMS_REQUEST_SUCCESS,
+    CLAIMS_REQUEST_ERROR
 } from 'constants/claims';
 
 export const claimsRequest = () => ({
-    type: CLAIM_REQUESTING
+    type: CLAIMS_REQUESTING
 });
 
 export const claimsRequestSuccess = claims => ({
-    type: CLAIM_REQUEST_SUCCESS,
+    type: CLAIMS_REQUEST_SUCCESS,
     claims
 });
 export const claimsRequestError = error => ({
-    type: CLAIM_REQUEST_ERROR,
+    type: CLAIMS_REQUEST_ERROR,
     error
 });

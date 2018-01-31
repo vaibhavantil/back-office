@@ -39,5 +39,8 @@ export default {
         requesting: false,
         successful: false,
         errors: []
+    },
+    claimDetails: {
+        data: null
     }
 };

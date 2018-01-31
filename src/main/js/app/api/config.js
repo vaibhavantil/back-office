@@ -35,7 +35,7 @@ export default {
         getList: {
             url: 'claims',
             method: 'get'
-        }
+        },
     },
     ws: {
         // eslint-disable-next-line
