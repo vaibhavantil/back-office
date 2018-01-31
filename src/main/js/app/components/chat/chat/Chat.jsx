@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import MessagesList from '../messages/MessagesList';
 import ChatPanel from './ChatPanel';
-import * as sockets from 'socketsLib';
+import * as sockets from 'sockets';
 
 const ChatContainer = styled.div`
     width: 700px;

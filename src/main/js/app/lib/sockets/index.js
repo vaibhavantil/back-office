@@ -1,9 +1,9 @@
 import SockJS from 'sockjs-client';
 import Stomp from '@stomp/stompjs';
 import config from 'app/api/config';
-import * as dashboard from './dashboardSockets';
-import * as usersList from './usersListSockets';
-import * as chat from './chatSockets';
+import * as dashboard from './dashboard';
+import * as usersList from './users';
+import * as chat from './chat';
 
 /* eslint-disable no-undef */
 export const connect = () => {

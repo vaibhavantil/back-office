@@ -57,7 +57,7 @@ module.exports = {
             components: path.resolve(__dirname, "src/main/js/app/components"),
             containers: path.resolve(__dirname, "src/main/js/app/containers"),
             constants$: path.resolve(__dirname, "src/main/js/app/store/constants/actionTypes.js"),
-            socketsLib$: path.resolve(__dirname, "src/main/js/app/lib/sockets/sockets.js"),
+            sockets$: path.resolve(__dirname, "src/main/js/app/lib/sockets/index.js")
         }
     },
     plugins: [
