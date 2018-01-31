@@ -24,7 +24,7 @@ public class ClaimsController {
         this.claimsService = claimsService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public List<ClaimDTO> claims() throws ClaimsServiceException {
         return claimsService.list();
     }
