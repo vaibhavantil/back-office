@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.hedvig.backoffice.services.claims.ClaimStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Value;
 
 import java.time.LocalDate;
 

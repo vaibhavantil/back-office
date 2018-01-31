@@ -1,10 +1,11 @@
 package com.hedvig.backoffice.web;
 
-import com.hedvig.backoffice.services.claims.ClaimNotFoundException;
+import com.hedvig.backoffice.services.claims.ClaimException;
 import com.hedvig.backoffice.services.claims.ClaimStatus;
-import com.hedvig.backoffice.services.claims.ClaimsServiceException;
+import com.hedvig.backoffice.services.claims.ClaimUpdateService;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.web.dto.ClaimDTO;
+import com.hedvig.backoffice.web.dto.ClaimEventDTO;
 import com.hedvig.backoffice.web.dto.ClaimTypeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,43 +19,50 @@ import java.util.List;
 public class ClaimsController {
 
     private final ClaimsService claimsService;
+    private final ClaimUpdateService updateService;
 
     @Autowired
-    public ClaimsController(ClaimsService claimsService) {
+    public ClaimsController(ClaimsService claimsService, ClaimUpdateService claimUpdateService) {
         this.claimsService = claimsService;
+        this.updateService = claimUpdateService;
     }
 
     @GetMapping
-    public List<ClaimDTO> claims() throws ClaimsServiceException {
+    public List<ClaimDTO> claims() throws ClaimException {
         return claimsService.list();
     }
 
     @GetMapping("/{id}")
-    public ClaimDTO claim(@PathVariable String id) throws ClaimsServiceException, ClaimNotFoundException {
+    public ClaimDTO claim(@PathVariable String id) throws ClaimException {
         return claimsService.find(id);
     }
 
     @PostMapping("/{id}/status/{status}")
     public ResponseEntity<?> status(@PathVariable String id, @PathVariable ClaimStatus status)
-            throws ClaimsServiceException, ClaimNotFoundException {
-        claimsService.changeStatus(id, status);
+            throws ClaimException {
+        updateService.changeStatus(id, status);
 
         return ResponseEntity
                 .noContent().build();
     }
 
     @GetMapping("/types")
-    public List<ClaimTypeDTO> types() throws ClaimsServiceException {
+    public List<ClaimTypeDTO> types() throws ClaimException {
         return claimsService.types();
     }
 
     @PostMapping("/{id}/type")
     public ResponseEntity<?> type(@PathVariable String id, @RequestBody @Valid ClaimTypeDTO dto)
-            throws ClaimsServiceException, ClaimNotFoundException {
-        claimsService.changeType(id, dto);
+            throws ClaimException {
+        updateService.changeType(id, dto);
 
         return ResponseEntity
                 .noContent().build();
+    }
+
+    @GetMapping("/{id}/events")
+    public List<ClaimEventDTO> events(@PathVariable String id) throws ClaimException {
+        return claimsService.events(id);
     }
 
 }
