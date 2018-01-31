@@ -10,4 +10,8 @@ public class AuthorizationException extends Exception {
         super(message);
     }
 
+    public AuthorizationException() {
+        super();
+    }
+
 }

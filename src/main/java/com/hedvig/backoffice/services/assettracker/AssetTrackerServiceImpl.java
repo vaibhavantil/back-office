@@ -4,7 +4,7 @@ import com.hedvig.backoffice.domain.Asset;
 import com.hedvig.backoffice.repository.AssetRepository;
 import com.hedvig.backoffice.services.updates.UpdateType;
 import com.hedvig.backoffice.services.updates.UpdatesService;
-import com.hedvig.backoffice.web.dto.AssetDTO;
+import com.hedvig.backoffice.web.dto.assets.AssetDTO;
 import com.hedvig.common.constant.AssetState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
