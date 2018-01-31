@@ -2,7 +2,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import api from 'app/api';
 import config from 'app/api/config';
 import { getAuthToken } from '../../lib/checkAuth';
-import { USERS_REQUESTING, USER_SEARCH_REQUESTING } from 'constants';
+import { USERS_REQUESTING, USER_SEARCH_REQUESTING } from 'constants/chatUsers';
 import {
     usersRequestSuccess,
     usersRequestError,

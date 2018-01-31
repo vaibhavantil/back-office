@@ -3,7 +3,7 @@ import {
     LOGIN_REQUESTING,
     LOGIN_SUCCESS,
     LOGIN_ERROR
-} from 'constants';
+} from 'constants/login';
 
 export default function(state = initialState.login, action) {
     switch (action.type) {

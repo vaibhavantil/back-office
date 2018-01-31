@@ -1,7 +1,8 @@
 import React from 'react';
 import { Input } from 'semantic-ui-react';
-import UsersList from 'components/users/users-list/UsersList';
-
+import UsersList from '../users-list/UsersList';
+import BackLink from 'components/shared/link/BackLink';
+import { Header } from 'components/chat/chat/Chat';
 export default class Users extends React.Component {
     constructor(props) {
         super(props);
@@ -26,9 +27,7 @@ export default class Users extends React.Component {
     searchRequest() {
         this.setState({ isLoading: true });
         if (this.state.value) {
-            this.props.searchUserRequest(
-                this.state.value
-            );
+            this.props.searchUserRequest(this.state.value);
         }
     }
 
@@ -57,6 +56,8 @@ export default class Users extends React.Component {
         const { isLoading, results, value } = this.state;
         return (
             <React.Fragment>
+                <Header>Chats List</Header>
+                <BackLink />
                 <Input
                     loading={isLoading}
                     placeholder="Search..."

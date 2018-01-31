@@ -1,10 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Dimmer, Loader, Segment, Message } from 'semantic-ui-react';
+import { Card, Dimmer, Loader, Message } from 'semantic-ui-react';
 import AssetCard from '../asset-card/AssetCard';
-import Pagination from 'components/common/pagination/Pagination';
+import Pagination from 'components/shared/pagination/Pagination';
 import Fliter from '../assets-list-filter/AssetsListFilter';
 import { filterList } from 'app/lib/helpers';
+import { checkAuthorization } from 'app/lib/checkAuth';
+import BackLink from 'components/shared/link/BackLink';
+import { Header } from 'components/chat/chat/Chat';
+import { ListContainer } from 'components/shared';
 
 class AssetList extends React.Component {
     constructor(props) {
@@ -25,7 +29,7 @@ class AssetList extends React.Component {
     }
 
     assetUpdateHandler(id, value) {
-        const { assetUpdate} = this.props;
+        const { assetUpdate } = this.props;
         assetUpdate(id, value);
         this.filterChangeHandler(null, { value: this.state.activeFilter });
     }
@@ -38,7 +42,7 @@ class AssetList extends React.Component {
             () => {
                 const filteredList = filterList(
                     this.state.activeFilter,
-                    this.props.assetsList
+                    this.props.assets.list
                 );
                 this.setState({
                     filteredList
@@ -48,54 +52,54 @@ class AssetList extends React.Component {
     }
 
     pollingHandler() {
-        const { polling: { pollStart, pollStop, polling } } = this.props;
-        if (polling) {
-            pollStop(2000);
-        } else {
-            pollStart(2000);
-        }
+        const { poll: { polling }, pollStart, pollStop } = this.props;
+        if (polling) pollStop(2000);
+        else pollStart(2000);
+    }
+
+    componentDidMount() {
+        checkAuthorization(null, this.props.setClient);
+        this.props.assetRequest();
     }
 
     componentWillUnmount() {
-        const { polling: { pollStop, polling } } = this.props;
-        if (polling) {
-            pollStop();
-        }
+        const { poll: { polling }, pollStop } = this.props;
+        if (polling) pollStop();
     }
 
     render() {
         const {
-            assetsList,
-            errors,
-            updateStatus,
-            polling: { polling }
+            assets: { list, errors, requesting },
+            poll: { polling }
         } = this.props;
         const { activeList, filteredList, activeFilter } = this.state;
-        const items = activeFilter === 'ALL' ? assetsList : filteredList;
+        const items = activeFilter === 'ALL' ? list : filteredList;
         return (
-            <Segment className="assets-list">
-                <Dimmer active={assetsList && !assetsList.length} inverted>
+            <React.Fragment>
+                <Header>Claims List</Header>
+                <BackLink />
+                <Dimmer active={list && !list.length} inverted>
                     <Loader size="large">Loading</Loader>
                 </Dimmer>
                 {errors && errors.length ? (
                     <AssetListErrors errors={errors} />
                 ) : (
-                    <div>
+                    <ListContainer autoWidth={true}>
                         <Fliter
-                            list={assetsList}
+                            list={list}
                             activeFilter={this.state.activeFilter}
                             filterChange={this.filterChangeHandler}
                             polling={polling}
                             pollingHandler={this.pollingHandler}
                         />
                         <Card.Group itemsPerRow={4}>
-                            {assetsList && !!activeList.length ? (
+                            {list && !!activeList.length ? (
                                 activeList.map(asset => (
                                     <AssetCard
                                         key={asset.id}
                                         asset={asset}
                                         assetUpdate={this.assetUpdateHandler}
-                                        updateStatus={updateStatus}
+                                        updateStatus={requesting}
                                     />
                                 ))
                             ) : (
@@ -108,9 +112,9 @@ class AssetList extends React.Component {
                             items={items}
                             onChangePage={this.onChangePage}
                         />
-                    </div>
+                    </ListContainer>
                 )}
-            </Segment>
+            </React.Fragment>
         );
     }
 }

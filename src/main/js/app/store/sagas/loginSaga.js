@@ -8,7 +8,7 @@ import {
     LOGIN_SUCCESS,
     LOGIN_ERROR,
     CLIENT_UNSET
-} from '../constants/actionTypes';
+} from 'constants/login';
 
 
 /* eslint-disable no-undef */

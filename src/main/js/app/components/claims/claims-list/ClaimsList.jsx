@@ -1,7 +1,16 @@
 import React from 'react';
-import PaginatorList from 'components/common/paginator-list/PaginatorList';
+import { Link } from 'react-router-dom';
+import { ItemContent } from '../../dashboard/Dashboard';
+import PaginatorList from 'components/shared/paginator-list/PaginatorList';
 
-const ListItem = ({ item }) => <div>{item}</div>;
+const ListItem = ({ item }) => (
+    <Link to={`claims/${item.id}`}>
+        <ItemContent>
+            <div>{item.type.name}</div>
+            <div>{item.registrationDate}</div>
+        </ItemContent>
+    </Link>
+)
 
 const ClaimsList = ({ claims }) => (
     <PaginatorList

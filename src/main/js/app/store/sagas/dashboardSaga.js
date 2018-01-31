@@ -1,5 +1,5 @@
 import { takeEvery } from 'redux-saga/effects';
-import { CLEANUP_DASHDBOARD_ITEM } from 'constants';
+import { CLEANUP_DASHDBOARD_ITEM } from 'constants/dashboard';
 import config from 'app/api/config';
 
 function* messagesWatcher() {

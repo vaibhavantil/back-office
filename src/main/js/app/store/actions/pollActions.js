@@ -1,4 +1,4 @@
-import { POLL_START, POLL_STOP } from 'constants';
+import { POLL_START, POLL_STOP } from 'constants/assets';
 
 export const pollStart = (duration) => ({
     type: POLL_START,

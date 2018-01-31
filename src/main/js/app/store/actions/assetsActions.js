@@ -5,7 +5,7 @@ import {
     ASSET_REQUESTING,
     ASSET_REQUEST_SUCCESS,
     ASSET_REQUEST_ERROR
-} from 'constants';
+} from 'constants/assets';
 
 export const assetUpdate = (assetId, assetState) => ({
     type: ASSET_UPDATING,

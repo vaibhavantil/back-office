@@ -2,7 +2,8 @@ import { call, put, takeLatest, select, take } from 'redux-saga/effects';
 import api from 'app/api';
 import config from 'app/api/config';
 import { getAuthToken } from 'app/lib/checkAuth';
-import { ASSET_UPDATING, ASSET_REQUESTING, CLIENT_UNSET } from 'constants';
+import { ASSET_UPDATING, ASSET_REQUESTING } from 'constants/assets';
+import { CLIENT_UNSET } from 'constants/login';
 import {
     assetUpdateSuccess,
     assetUpdateError,

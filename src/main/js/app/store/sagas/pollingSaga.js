@@ -2,7 +2,7 @@ import { take, put, call, race } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import api from 'app/api';
 import config from 'app/api/config';
-import { POLL_START, POLL_STOP } from 'constants';
+import { POLL_START, POLL_STOP } from 'constants/assets';
 import { getAuthToken } from 'app/lib/checkAuth';
 import {
     assetRequestError,

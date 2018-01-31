@@ -3,7 +3,7 @@ import {
     DASHBOARD_ERROR_RECEIVED,
     DASHBOARD_UPDATED,
     UPDATES_REQUEST_SUCCESS
-} from 'constants';
+} from 'constants/dashboard';
 
 export const cleanupDashboardItem = (name, socket) => ({
     type: CLEANUP_DASHDBOARD_ITEM,

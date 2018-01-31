@@ -1,5 +1,5 @@
 import initialState from '../initialState';
-import { POLL_START, POLL_STOP } from 'constants';
+import { POLL_START, POLL_STOP } from 'constants/assets';
 
 export default function(state = initialState.poll, action) {
     switch (action.type) {

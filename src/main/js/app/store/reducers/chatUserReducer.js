@@ -8,7 +8,7 @@ import {
     USER_SEARCH_SUCCESS,
     USER_SEARCH_ERROR,
     NEW_MESSAGES_RECEIVED
-} from 'constants';
+} from 'constants/chatUsers';
 
 export default function(state = initialState.users, action) {
     switch (action.type) {

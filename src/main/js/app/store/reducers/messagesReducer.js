@@ -8,7 +8,7 @@ import {
     USER_REQUESTING,
     USER_REQUEST_SUCCESS,
     USER_REQUEST_ERROR
-} from 'constants';
+} from 'constants/chatUsers';
 
 export default function(state = initialState.messages, action) {
     switch (action.type) {

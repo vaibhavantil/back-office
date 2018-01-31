@@ -7,7 +7,7 @@ import {
     USER_REQUESTING,
     USER_REQUEST_SUCCESS,
     USER_REQUEST_ERROR
-} from 'constants';
+} from 'constants/chatUsers';
 
 export const addMessage = (message, messageType, userId, socket) => ({
     type: ADD_MESSAGE,
