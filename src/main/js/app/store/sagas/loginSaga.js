@@ -1,7 +1,8 @@
 import { take, fork, cancel, call, put, cancelled } from 'redux-saga/effects';
 import { history } from 'app/app';
-import api from 'app/api/LoginApi';
-
+import api from 'app/api';
+import config from 'app/api/config';
+import { setClient, unsetClient } from '../actions/clientActions';
 import {
     LOGIN_REQUESTING,
     LOGIN_SUCCESS,
@@ -9,7 +10,6 @@ import {
     CLIENT_UNSET
 } from '../constants/actionTypes';
 
-import { setClient, unsetClient } from '../actions/clientActions';
 
 /* eslint-disable no-undef */
 export function* logout() {
@@ -21,7 +21,10 @@ export function* logout() {
 function* loginFlow(email, password) {
     let request;
     try {
-        request = yield call(api.login, email, password);
+        request = yield call(api, '', config.login.login, {
+            email,
+            password
+        });
         const token = request.data.token;
         yield put(setClient(token, email));
         yield put({ type: LOGIN_SUCCESS });

@@ -1,5 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import api from 'app/api/ChatApi';
+import api from 'app/api';
+import config from 'app/api/config';
 import { USERS_REQUESTING, USER_SEARCH_REQUESTING } from 'constants';
 import {
     usersRequestSuccess,
@@ -10,7 +11,7 @@ import {
 
 function* chatRequestFlow({ client }) {
     try {
-        const users = yield call(api.get, client);
+        const users = yield call(api, client, config.users.get);
         yield put(usersRequestSuccess(users.data));
     } catch (error) {
         yield put(usersRequestError(error));
@@ -19,7 +20,14 @@ function* chatRequestFlow({ client }) {
 
 function* chatSearchRequestFlow({ client, queryString }) {
     try {
-        const searchResult = yield call(api.search, client, queryString);
+        const searchResult = yield call(
+            api,
+            client,
+            config.users.search,
+            null,
+            '',
+            { q: queryString }
+        );
         yield put(searchRequestSuccess(searchResult.data));
     } catch (error) {
         yield put(searchRequestError(error));

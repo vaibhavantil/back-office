@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input } from 'semantic-ui-react';
-import UsersList from 'components/users-list/UsersList';
+import UsersList from 'components/users/users-list/UsersList';
 
 export default class Users extends React.Component {
     constructor(props) {
@@ -10,15 +10,17 @@ export default class Users extends React.Component {
             results: [],
             value: ''
         };
-        this.handleSearchChange = this.handleSearchChange.bind(this);
+        this.keyPressHandler = this.keyPressHandler.bind(this);
+        this.inputChangeHandler = this.inputChangeHandler.bind(this);
         this.searchRequest = this.searchRequest.bind(this);
     }
 
-    handleSearchChange(e) {
-        const keyValue = e.key;
-        this.setState({ value: e.target.value }, () => {
-            if (keyValue === 'Enter') this.searchRequest();
-        });
+    inputChangeHandler(e, { value }) {
+        this.setState({ value: value });
+    }
+
+    keyPressHandler(e) {
+        if (e.key === 'Enter') this.searchRequest();
     }
 
     searchRequest() {
@@ -40,7 +42,8 @@ export default class Users extends React.Component {
         if (newProps.users.list.length) {
             this.setState({
                 results: newProps.users.list,
-                isLoading: newProps.users.requesting
+                isLoading: newProps.users.requesting,
+                value: newProps.users.requesting ? this.state.value : ''
             });
         }
     }
@@ -52,7 +55,7 @@ export default class Users extends React.Component {
             setActiveConnection,
             client
         } = this.props;
-        const { isLoading, results } = this.state;
+        const { isLoading, results, value } = this.state;
         return (
             <React.Fragment>
                 <Input
@@ -60,8 +63,10 @@ export default class Users extends React.Component {
                     placeholder="Search..."
                     iconPosition="left"
                     style={{ marginTop: '30px' }}
-                    onKeyPress={this.handleSearchChange}
+                    onKeyPress={this.keyPressHandler}
+                    onChange={this.inputChangeHandler}
                     action={{ icon: 'search', onClick: this.searchRequest }}
+                    value={value}
                 />
                 <UsersList
                     users={results}

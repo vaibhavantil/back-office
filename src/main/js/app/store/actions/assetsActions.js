@@ -7,10 +7,11 @@ import {
     ASSET_REQUEST_ERROR
 } from 'constants';
 
-export const assetUpdate = (assetId, assetState) => ({
+export const assetUpdate = (assetId, assetState, token) => ({
     type: ASSET_UPDATING,
     assetId,
-    assetState
+    assetState,
+    token
 });
 
 export const assetUpdateSuccess = asset => ({
@@ -23,9 +24,9 @@ export const assetUpdateError = error => ({
     error
 });
 
-export const assetRequest = client => ({
+export const assetRequest = token => ({
     type: ASSET_REQUESTING,
-    client
+    token
 });
 
 export const assetRequestSuccess = assets => ({

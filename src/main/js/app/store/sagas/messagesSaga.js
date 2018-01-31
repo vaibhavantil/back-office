@@ -1,8 +1,8 @@
 import { call, takeEvery, put, takeLatest } from 'redux-saga/effects';
 import { USER_REQUESTING, ADD_MESSAGE } from 'constants';
-import config from 'app/api/config';
 import { updateMessageBody } from 'app/lib/sockets/chatSockets';
-import api from 'app/api/ChatApi';
+import api from 'app/api';
+import config from 'app/api/config';
 import {
     userRequestSuccess,
     userRequestError
@@ -11,7 +11,7 @@ import {
 function* userRequestFlow(action) {
     try {
         const { token, userId } = action;
-        const user = yield call(api.getUser, token, userId);
+        const user = yield call(api, token, config.users.get, null, userId);
         yield put(userRequestSuccess(user.data));
     } catch (error) {
         yield put(userRequestError(error));

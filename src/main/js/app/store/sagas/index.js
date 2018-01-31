@@ -4,6 +4,7 @@ import PollingSaga from './pollingSaga';
 import ChatUserSaga from './chatUserSaga';
 import MessagesSaga from './messagesSaga';
 import DashboardSaga from './dashboardSaga';
+import ClaimsSaga from './claimsSaga';
 
 export default function* IndexSaga() {
     yield [
@@ -12,6 +13,7 @@ export default function* IndexSaga() {
         PollingSaga(),
         ChatUserSaga(),
         MessagesSaga(),
-        DashboardSaga()
+        DashboardSaga(),
+        ClaimsSaga()
     ];
 }

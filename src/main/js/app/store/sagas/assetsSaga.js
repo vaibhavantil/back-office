@@ -1,5 +1,6 @@
 import { call, put, takeLatest, select, take } from 'redux-saga/effects';
-import api from 'app/api/AssetApi';
+import api from 'app/api';
+import config from 'app/api/config';
 import { ASSET_UPDATING, ASSET_REQUESTING, CLIENT_UNSET } from 'constants';
 import {
     assetUpdateSuccess,
@@ -9,17 +10,19 @@ import {
 } from '../actions/assetsActions';
 import { logout } from './loginSaga';
 
-function* assetUpdateFlow(action) {
+function* assetUpdateFlow({ assetId, assetState, token }) {
     try {
-        const { assetId, assetState } = action;
-        // eslint-disable-next-line no-undef
-        const token = localStorage.getItem('token');
-        const authToken = token ? JSON.parse(token) : '';
-        const { data } = yield call(api.update, assetId, assetState, authToken);
+        const { data } = yield call(
+            api,
+            token,
+            config.asset.update,
+            { state: assetState },
+            assetId
+        );
         const { assets: { list } } = yield select();
         const updatedList = list.map(asset => {
             if (asset.id === data.id) {
-                return {...asset, state: data.state};
+                return { ...asset, state: data.state };
             }
             return asset;
         });
@@ -29,10 +32,9 @@ function* assetUpdateFlow(action) {
     }
 }
 
-function* assetRequestFlow(action) {
+function* assetRequestFlow({ token }) {
     try {
-        const { client } = action;
-        const assets = yield call(api.get, client);
+        const assets = yield call(api, token, config.asset.get);
         yield put(assetRequestSuccess(assets));
     } catch (error) {
         yield put(assetRequestError(error));

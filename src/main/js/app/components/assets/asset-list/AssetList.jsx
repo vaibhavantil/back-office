@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Dimmer, Loader, Segment, Message } from 'semantic-ui-react';
 import AssetCard from '../asset-card/AssetCard';
-import Pagination from '../pagination/Pagination';
-import Fliter from '../list-filter/AssetsListFilter';
+import Pagination from 'components/common/pagination/Pagination';
+import Fliter from '../assets-list-filter/AssetsListFilter';
 import { filterList } from 'app/lib/helpers';
 
 class AssetList extends React.Component {
@@ -25,7 +25,8 @@ class AssetList extends React.Component {
     }
 
     assetUpdateHandler(id, value) {
-        this.props.assetUpdate(id, value);
+        const { assetUpdate, token } = this.props;
+        assetUpdate(id, value, token);
         this.filterChangeHandler(null, { value: this.state.activeFilter });
     }
 

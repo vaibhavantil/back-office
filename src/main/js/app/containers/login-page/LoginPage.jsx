@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { loginRequest } from 'app/store/actions/loginActions';
-import LoginForm from 'components/login-form/LoginForm';
+import LoginForm from 'components/login/login-form/LoginForm';
 
 const LoginContainer = styled.div`
     display: flex;

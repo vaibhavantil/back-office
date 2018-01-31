@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import actions from 'app/store/actions';
-import Users from 'components/users/Users';
-import BackLink from 'components/link/BackLink';
-import { Header } from 'components/chat/Chat';
+import Users from 'components/users/users/Users';
+import BackLink from 'components/common/link/BackLink';
+import { Header } from 'components/chat/chat/Chat';
 
 const UsersListPage = styled.div`
     display: flex;

@@ -33,5 +33,11 @@ export default {
     dashboard: {
         data: null,
         error: null
+    },
+    claims: {
+        list: [],
+        requesting: false,
+        successful: false,
+        errors: []
     }
 };
