@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.services.assettracker;
 
-import com.hedvig.backoffice.web.dto.AssetDTO;
+import com.hedvig.backoffice.web.dto.assets.AssetDTO;
 import com.hedvig.common.constant.AssetState;
 
 import java.util.List;

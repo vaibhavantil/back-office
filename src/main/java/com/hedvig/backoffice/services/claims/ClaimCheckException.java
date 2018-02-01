@@ -3,10 +3,10 @@ package com.hedvig.backoffice.services.claims;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class ClaimNotFoundException extends ClaimException {
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class ClaimCheckException extends ClaimException {
 
-    public ClaimNotFoundException(String msg) {
+    public ClaimCheckException(String msg) {
         super(msg);
     }
 

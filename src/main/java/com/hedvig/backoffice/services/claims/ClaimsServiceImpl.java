@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.services.claims;
 
-import com.hedvig.backoffice.web.dto.ClaimDTO;
-import com.hedvig.backoffice.web.dto.ClaimTypeDTO;
+import com.hedvig.backoffice.web.dto.claims.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     }
 
     @Override
-    public List<ClaimDTO> list() throws ClaimsServiceException {
+    public List<ClaimDTO> list() throws ClaimException {
         RestTemplate template = new RestTemplate();
 
         try {
@@ -51,7 +51,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     }
 
     @Override
-    public ClaimDTO find(String id) throws ClaimsServiceException, ClaimNotFoundException {
+    public ClaimDTO find(String id) throws ClaimException {
         RestTemplate template = new RestTemplate();
         try {
             ResponseEntity<ClaimDTO> response = template.getForEntity(baseUrl + claimById + "/" + id, ClaimDTO.class);
@@ -64,17 +64,67 @@ public class ClaimsServiceImpl implements ClaimsService {
     }
 
     @Override
-    public void changeStatus(String id, ClaimStatus status) throws ClaimsServiceException, ClaimNotFoundException {
+    public List<ClaimTypeDTO> types() throws ClaimException {
         throw new RuntimeException("Not implemented yet!");
     }
 
     @Override
-    public List<ClaimTypeDTO> types() throws ClaimsServiceException {
+    public void save(ClaimDTO dto) throws ClaimException {
         throw new RuntimeException("Not implemented yet!");
     }
 
     @Override
-    public void changeType(String id, ClaimTypeDTO dto) throws ClaimsServiceException, ClaimNotFoundException {
+    public List<ClaimEventDTO> events(String id) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public void addEvent(ClaimEventDTO dto) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public List<ClaimPayoutDTO> payouts(String id) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public void addPayout(ClaimPayoutDTO dto) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public void removePayout(String id, String claimId) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public List<ClaimNoteDTO> notes(String id) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public void addNote(ClaimNoteDTO dto) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public void removeNote(String id, String claimId) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public void changeType(String id, ClaimTypeDTO dto) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public void changeStatus(String id, ClaimStatus status) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public void setResume(String id, BigDecimal resume) throws ClaimException {
         throw new RuntimeException("Not implemented yet!");
     }
 

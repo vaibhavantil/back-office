@@ -1,14 +1,7 @@
 package com.hedvig.backoffice.services.assettracker;
 
 import com.hedvig.backoffice.domain.Asset;
-import com.hedvig.backoffice.web.dto.AssetDTO;
-import com.hedvig.common.commands.AssetStateChangeCommand;
-import com.hedvig.common.constant.AssetState;
-import lombok.val;
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.CommandExecutionException;
-import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
+import com.hedvig.backoffice.web.dto.assets.AssetDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +13,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class AssetTrackerImpl implements AssetTracker {

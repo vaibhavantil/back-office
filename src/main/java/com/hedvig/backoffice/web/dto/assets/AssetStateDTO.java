@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.web.dto;
+package com.hedvig.backoffice.web.dto.assets;
 
 import com.hedvig.common.constant.AssetState;
 import lombok.Value;

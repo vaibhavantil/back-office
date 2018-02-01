@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.web.dto;
+package com.hedvig.backoffice.web.dto.claims;
 
 import lombok.Value;
 

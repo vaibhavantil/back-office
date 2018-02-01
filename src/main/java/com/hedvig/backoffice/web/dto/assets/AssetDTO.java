@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.web.dto;
+package com.hedvig.backoffice.web.dto.assets;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hedvig.backoffice.domain.Asset;
