@@ -6,7 +6,6 @@ import { ASSET_UPDATING, ASSET_REQUESTING } from 'constants/assets';
 import { CLIENT_UNSET } from 'constants/login';
 import {
     assetUpdateSuccess,
-    assetUpdateError,
     assetRequestSuccess,
     assetRequestError
 } from '../actions/assetsActions';
@@ -31,7 +30,7 @@ function* assetUpdateFlow({ assetId, assetState }) {
         });
         yield put(assetUpdateSuccess(updatedList));
     } catch (error) {
-        yield put(assetUpdateError(error));
+        yield put(assetRequestError(error));
     }
 }
 

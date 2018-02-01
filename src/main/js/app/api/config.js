@@ -36,6 +36,20 @@ export default {
             url: 'claims',
             method: 'get'
         },
+        types: {
+            url: 'claims/types',
+            method: 'get'
+        },
+        update: {
+            status: {
+                url: 'claims',
+                method: 'post'
+            },
+            type: {
+                url: 'claims',
+                method: 'post'
+            }
+        }
     },
     ws: {
         // eslint-disable-next-line

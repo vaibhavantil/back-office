@@ -12,6 +12,7 @@ import {
 
 export default function(state = initialState.users, action) {
     switch (action.type) {
+        case USER_SEARCH_REQUESTING:
         case USERS_REQUESTING:
             return {
                 ...state,
@@ -20,6 +21,7 @@ export default function(state = initialState.users, action) {
                 errors: []
             };
 
+        case USER_SEARCH_SUCCESS:
         case USERS_REQUEST_SUCCESS:
             return {
                 list: action.users,
@@ -28,6 +30,7 @@ export default function(state = initialState.users, action) {
                 errors: []
             };
 
+        case USER_SEARCH_ERROR:
         case USERS_REQUEST_ERROR:
             return {
                 ...state,
@@ -40,34 +43,7 @@ export default function(state = initialState.users, action) {
                     }
                 ])
             };
-        case USER_SEARCH_REQUESTING:
-            return {
-                ...state,
-                requesting: false,
-                successful: true,
-                errors: []
-            };
 
-        case USER_SEARCH_SUCCESS:
-            return {
-                list: action.users,
-                requesting: false,
-                successful: true,
-                errors: []
-            };
-
-        case USER_SEARCH_ERROR:
-            return {
-                ...state,
-                requesting: false,
-                successful: false,
-                errors: state.errors.concat([
-                    {
-                        message: action.error.response.statusText,
-                        status: action.error.response.status
-                    }
-                ])
-            };
         case NEW_MESSAGES_RECEIVED:
             return {
                 ...state,

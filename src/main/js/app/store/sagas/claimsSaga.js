@@ -5,7 +5,8 @@ import { getAuthToken } from 'app/lib/checkAuth';
 import {
     CLAIMS_REQUESTING,
     CLAIM_UPDATING,
-    CLAIM_CREATING
+    CLAIM_CREATING,
+    CLAIM_TYPES
 } from 'constants/claims';
 import * as actions from '../actions/claimsActions';
 
@@ -19,19 +20,17 @@ function* requestFlow() {
     }
 }
 
-function* updateFlow({ data, id }) {
+function* updateFlow({ data, id, reqType }) {
     try {
         const token = yield call(getAuthToken);
-        const updatedClaim = yield call(
-            api,
-            token,
-            config.claims.update,
-            data,
-            id
-        );
-        yield put(actions.claimsUpdateSuccess(updatedClaim));
+        const conf = config.claims.update[reqType];
+        const path = `${id}/${reqType}${
+            reqType === 'status' ? '/' + data.status : ''
+        }`;
+        yield call(api, token, conf, data, path);
+        yield put(actions.claimUpdateSuccess());
     } catch (error) {
-        yield put(actions.claimsUpdateError(error));
+        yield put(actions.claimsRequestError(error));
     }
 }
 
@@ -45,11 +44,22 @@ function* createFlow({ data }) {
     }
 }
 
+function* claimTypesFlow() {
+    try {
+        const token = yield call(getAuthToken);
+        const typesList = yield call(api, token, config.claims.types);
+        yield put(actions.claimsTypesSuccess(typesList));
+    } catch (error) {
+        yield put(actions.claimsRequestError(error));
+    }
+}
+
 function* claimsWatcher() {
     yield [
         takeLatest(CLAIMS_REQUESTING, requestFlow),
         takeLatest(CLAIM_UPDATING, updateFlow),
-        takeLatest(CLAIM_CREATING, createFlow)
+        takeLatest(CLAIM_CREATING, createFlow),
+        takeLatest(CLAIM_TYPES, claimTypesFlow)
     ];
 }
 

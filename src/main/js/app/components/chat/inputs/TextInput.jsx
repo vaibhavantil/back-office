@@ -8,10 +8,9 @@ export default class TextInput extends React.Component {
         this.state = {
             textValue: ''
         };
-        this.textChangeHandler = this.textChangeHandler.bind(this);
     }
 
-    textChangeHandler(e, { value }) {
+    textChangeHandler = (e, { value }) => {
         this.setState({ textValue: value });
         this.props.changeHandler(TEXT, null, { value });
     }

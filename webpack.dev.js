@@ -48,11 +48,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loaders: [
                     {
-                        loader: 'babel-loader',
-                        query: {
-                            cacheDirectory: true,
-                            presets: ['es2015', 'react']
-                        }
+                        loader: 'babel-loader'
                     },
                     {
                         loader: 'eslint-loader',

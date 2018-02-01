@@ -10,6 +10,7 @@ import {
 
 export default function(state = initialState.assets, action) {
     switch (action.type) {
+        case ASSET_REQUESTING:
         case ASSET_UPDATING:
             return {
                 ...state,
@@ -26,6 +27,7 @@ export default function(state = initialState.assets, action) {
                 errors: []
             };
 
+        case ASSET_REQUEST_ERROR:
         case ASSET_UPDATE_ERROR:
             return {
                 ...state,
@@ -33,18 +35,10 @@ export default function(state = initialState.assets, action) {
                 successful: false,
                 errors: state.errors.concat([
                     {
-                        message: action.error.response.message,
+                        message: action.error.response.statusText,
                         status: action.error.response.status
                     }
                 ])
-            };
-
-        case ASSET_REQUESTING:
-            return {
-                ...state,
-                requesting: false,
-                successful: true,
-                errors: []
             };
 
         case ASSET_REQUEST_SUCCESS:
@@ -53,19 +47,6 @@ export default function(state = initialState.assets, action) {
                 requesting: false,
                 successful: true,
                 errors: []
-            };
-
-        case ASSET_REQUEST_ERROR:
-            return {
-                requesting: false,
-                successful: false,
-                messages: [],
-                errors: state.errors.concat([
-                    {
-                        message: action.error.response.statusText,
-                        status: action.error.response.status
-                    }
-                ])
             };
 
         default:

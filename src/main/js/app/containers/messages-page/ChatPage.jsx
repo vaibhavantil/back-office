@@ -11,11 +11,7 @@ const ChatPage = props => (
     </PageContainer>
 );
 
-const mapStateToProps = ({ messages }) => {
-    return {
-        messages
-    };
-};
+const mapStateToProps = ({ messages }) => ({messages});
 
 export default withRouter(
     connect(mapStateToProps, {

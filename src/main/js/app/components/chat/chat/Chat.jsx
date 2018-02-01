@@ -30,18 +30,15 @@ export default class Chat extends React.Component {
             socket: null,
             subscription: null
         };
-        this.addMessageHandler = this.addMessageHandler.bind(this);
-        this.subscribeSocket = this.subscribeSocket.bind(this);
-        this.getChatTitle = this.getChatTitle.bind(this);
     }
 
-    addMessageHandler(message, messageType) {
+    addMessageHandler = (message, messageType) => {
         const { socket } = this.state;
         const { addMessage, match } = this.props;
         if (socket) addMessage(message, messageType, match.params.id, socket);
-    }
+    };
 
-    subscribeSocket() {
+    subscribeSocket = () => {
         const {
             messageReceived,
             match,
@@ -56,9 +53,9 @@ export default class Chat extends React.Component {
             messages.activeConnection
         );
         return { stompClient, subscription };
-    }
+    };
 
-    reconnectSocket() {
+    reconnectSocket = () => {
         const {
             messageReceived,
             getMessagesHistory,
@@ -77,9 +74,9 @@ export default class Chat extends React.Component {
                 this.setState({ socket: stompClient, subscription });
                 setActiveConnection(stompClient);
             });
-    }
+    };
 
-    getChatTitle() {
+    getChatTitle = () => {
         const { messages: { user } } = this.props;
 
         return `Chat with ${
@@ -87,7 +84,7 @@ export default class Chat extends React.Component {
                 ? user.firstName + ' ' + (user.lastName || '')
                 : 'User'
         }`;
-    }
+    };
 
     componentDidMount() {
         const { match, userRequest } = this.props;

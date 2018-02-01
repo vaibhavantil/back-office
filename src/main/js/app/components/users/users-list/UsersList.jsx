@@ -31,10 +31,9 @@ export default class UsersList extends React.Component {
             socket: null,
             subscription: null
         };
-        this.subscribeSocket = this.subscribeSocket.bind(this);
     }
 
-    subscribeSocket(connection) {
+    subscribeSocket = connection => {
         const { newMessagesReceived, client: { name } } = this.props;
         const { stompClient, subscription } = sockets.usersListSubscribe(
             { newMessagesReceived },
@@ -45,7 +44,7 @@ export default class UsersList extends React.Component {
             socket: stompClient,
             subscription
         });
-    }
+    };
 
     componentDidMount() {
         // TODO uncomment when ready method to count the number of unread messages
