@@ -1,15 +1,7 @@
 import React from 'react';
 import { List } from 'semantic-ui-react';
-import styled from 'styled-components';
 import Pagination from '../pagination/Pagination';
-
-const ListContainer = styled.div`
-    width: 500px;
-    border: solid 1px #dfe0e0;
-    border-radius: 5px;
-    padding: 20px 10px;
-    margin-top: 30px;
-`;
+import { ListContainer } from 'components/shared';
 
 export default class PaginatorList extends React.Component {
     constructor(props) {
@@ -32,7 +24,7 @@ export default class PaginatorList extends React.Component {
                 <List selection size="big">
                     {activeList.length ? (
                         activeList.map(item => (
-                            <List.Item key={item.hid}>
+                            <List.Item key={item.hid || item.id}>
                                 {itemContent(item)}
                             </List.Item>
                         ))

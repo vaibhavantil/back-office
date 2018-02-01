@@ -6,7 +6,7 @@ import {
     USER_SEARCH_SUCCESS,
     USER_SEARCH_ERROR,
     NEW_MESSAGES_RECEIVED
-} from 'constants';
+} from 'constants/chatUsers';
 
 export const usersRequest = client => ({
     type: USERS_REQUESTING,
@@ -23,9 +23,8 @@ export const usersRequestError = error => ({
     error
 });
 
-export const searchUserRequest = (client, queryString) => ({
+export const searchUserRequest = queryString => ({
     type: USER_SEARCH_REQUESTING,
-    client,
     queryString
 });
 

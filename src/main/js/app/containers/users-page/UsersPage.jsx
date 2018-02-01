@@ -1,27 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import actions from 'app/store/actions';
 import Users from 'components/users/users/Users';
-import BackLink from 'components/common/link/BackLink';
-import { Header } from 'components/chat/chat/Chat';
-
-const UsersListPage = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    max-width: 500px;
-    margin: 0 auto;
-`;
+import { ListPage } from 'components/shared';
 
 const UsersPage = props => (
-    <UsersListPage>
-        <Header>Chats List</Header>
-        <BackLink path="dashboard" />
+    <ListPage>
         <Users {...props} />
-    </UsersListPage>
+    </ListPage>
 );
 
 const mapStateToProps = ({ client, users, messages }) => ({

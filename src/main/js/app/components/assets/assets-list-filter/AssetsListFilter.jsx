@@ -34,7 +34,7 @@ export default class Fliter extends React.Component {
                     selection
                     value={activeFilter}
                 />
-                <Button onClick={pollingHandler}>
+                <Button onClick={pollingHandler} size="mini">
                     Poll {polling ? 'stop' : 'start'}
                 </Button>
             </div>

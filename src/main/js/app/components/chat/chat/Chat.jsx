@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import MessagesList from '../messages/MessagesList';
 import ChatPanel from './ChatPanel';
-import * as sockets from 'socketsLib';
+import * as sockets from 'sockets';
 
 const ChatContainer = styled.div`
     width: 700px;
@@ -90,13 +90,13 @@ export default class Chat extends React.Component {
     }
 
     componentDidMount() {
-        const { client: { token }, match, userRequest } = this.props;
+        const { match, userRequest } = this.props;
         const { stompClient, subscription } = this.subscribeSocket();
         if (!stompClient) {
             this.reconnectSocket();
         }
         this.setState({ socket: stompClient, subscription });
-        userRequest(token, match.params.id);
+        userRequest(match.params.id);
     }
 
     componentWillUnmount() {

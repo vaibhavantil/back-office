@@ -7,7 +7,7 @@ import {
     USER_REQUESTING,
     USER_REQUEST_SUCCESS,
     USER_REQUEST_ERROR
-} from 'constants';
+} from 'constants/chatUsers';
 
 export const addMessage = (message, messageType, userId, socket) => ({
     type: ADD_MESSAGE,
@@ -36,9 +36,8 @@ export const setActiveConnection = connection => ({
     connection
 });
 
-export const userRequest = (token, userId) => ({
+export const userRequest = userId => ({
     type: USER_REQUESTING,
-    token,
     userId
 });
 

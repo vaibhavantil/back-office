@@ -6,6 +6,7 @@ import * as chatUserActions from './chatUserActions';
 import * as messagesActions from './messagesActions';
 import * as dashboardActions from './dashboardActions';
 import * as claimsActions from './claimsActions';
+import * as claimDetailsActions from './claimDetailsActions';
 
 export default {
     loginActions,
@@ -15,5 +16,6 @@ export default {
     chatUserActions,
     messagesActions,
     dashboardActions,
-    claimsActions
+    claimsActions,
+    claimDetailsActions
 };

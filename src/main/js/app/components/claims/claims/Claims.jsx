@@ -1,22 +1,23 @@
 import React from 'react';
-import BackLink from 'components/common/link/BackLink';
 import ClaimsList from '../claims-list/ClaimsList';
+import BackLink from 'components/shared/link/BackLink';
+import { Header } from 'components/chat/chat/Chat';
 export default class Claims extends React.Component {
     constructor(props) {
         super(props);
     }
 
     componentDidMount() {
-        const { client: { token }, claimsRequest } = this.props;
-        claimsRequest(token);
+        const { claimsRequest } = this.props;
+        claimsRequest();
     }
 
     render() {
         return (
             <React.Fragment>
-                <h1>Claims page</h1>
+                <Header>Claims List</Header>
                 <BackLink />
-                <ClaimsList />
+                <ClaimsList claims={this.props.claims.list} />
             </React.Fragment>
         );
     }

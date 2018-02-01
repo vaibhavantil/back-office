@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Label, List } from 'semantic-ui-react';
 import { ItemContent } from '../../dashboard/Dashboard';
-import PaginatorList from 'components/common/paginator-list/PaginatorList';
-import * as sockets from 'socketsLib';
+import PaginatorList from 'components/shared/paginator-list/PaginatorList';
+import * as sockets from 'sockets';
 
 const ListItem = ({ item }) => (
     <Link to={`/users/${item.hid}`} replace>

@@ -1,5 +1,24 @@
 import React from 'react';
+import BackLink from 'components/shared/link/BackLink'
+export default class ClaimDetails extends React.Component {
+    constructor(props) {
+        super(props);
+    }
 
-const ClaimDetails = ({ match }) => <h2>claim - {match.params.id}</h2>;
+    componentDidMount() {
+        const { match: { params }, claimRequest } = this.props;
+        claimRequest(params.id);
+    }
 
-export default ClaimDetails;
+    render() {
+        const { claimDetails } = this.props;
+        return (
+            <React.Fragment>
+                <BackLink path="claims"/>
+                <pre>
+                    <code>{JSON.stringify(claimDetails.data, null, 4)}</code>
+                </pre>
+            </React.Fragment>
+        );
+    }
+}

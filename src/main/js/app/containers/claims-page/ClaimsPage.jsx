@@ -2,17 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Claims from 'components/claims/claims/Claims';
-import { PageContainer } from '../messages-page/ChatPage';
+import { ListPage } from 'components/shared';
 import actions from 'app/store/actions';
 
 const ClaimsPage = props => (
-    <PageContainer>
+    <ListPage>
         <Claims {...props} />
-    </PageContainer>
+    </ListPage>
 );
 
 export default withRouter(
-    connect(({ claims, client }) => ({ claims, client }), {
+    connect(({ claims }) => ({ claims }), {
         ...actions.claimsActions
     })(ClaimsPage)
 );

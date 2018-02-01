@@ -1,13 +1,14 @@
 import SockJS from 'sockjs-client';
 import Stomp from '@stomp/stompjs';
 import config from 'app/api/config';
-import * as dashboard from './dashboardSockets';
-import * as usersList from './usersListSockets';
-import * as chat from './chatSockets';
+import * as dashboard from './dashboard';
+import * as usersList from './users';
+import * as chat from './chat';
+import { getAuthToken } from '../checkAuth';
 
 /* eslint-disable no-undef */
 export const connect = () => {
-    const token = JSON.parse(localStorage.getItem('token'));
+    const token = getAuthToken();
     return new Promise((resolve, reject) => {
         const socket = new SockJS(`${config.ws.endpoint}?token=${token}`);
         const stompClient = Stomp.over(socket);
