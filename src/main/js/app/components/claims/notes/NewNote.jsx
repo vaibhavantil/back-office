@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import FileInput from 'components/chat/inputs/FileInput';
 
 export default class NewNote extends React.Component {
@@ -7,7 +7,8 @@ export default class NewNote extends React.Component {
         super(props);
         this.state = {
             text: '',
-            file: null
+            file: null,
+            cleanupForm: false
         };
     }
 
@@ -15,23 +16,43 @@ export default class NewNote extends React.Component {
         this.setState({ text: value });
     };
 
-    fileChangeHandler = (e, { value }) => {
-        this.setState({ file: value });
+    fileChangeHandler = (type, e, { value }) => {
+        this.setState({ file: JSON.stringify(value) });
     };
 
-    removeClickHandler = () => {};
-
-    createClickHandler = () => {};
+    createClickHandler = () => {
+        const { createNote, id } = this.props;
+        const { text, file } = this.state;
+        createNote(id, { text, file });
+        this.setState(
+            {
+                text: '',
+                file: '',
+                cleanupForm: true
+            },
+            () => {
+                this.setState({
+                    cleanupForm: false
+                });
+            }
+        );
+    };
 
     render() {
         return (
-            <React.Fragment>
-                <Input
-                    onChange={this.textChangeHandler}
-                    placeholder="Note text..."
+            <Form onSubmit={this.createClickHandler}>
+                <Form.Group>
+                    <Form.Input
+                        onChange={this.textChangeHandler}
+                        placeholder="Note text..."
+                    />
+                    <Form.Button primary content="Add" />
+                </Form.Group>
+                <FileInput
+                    changeHandler={this.fileChangeHandler}
+                    cleanupForm={this.state.cleanupForm}
                 />
-                <FileInput changeHandler={this.fileChangeHandler} />
-            </React.Fragment>
+            </Form>
         );
     }
 }

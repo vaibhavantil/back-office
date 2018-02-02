@@ -6,6 +6,9 @@ import { claimStatus } from 'app/lib/selectOptions';
 const ClaimInfoContainer = styled.div`
     display: flex;
     justify-content: space-around;
+    margin: 100px;
+    padding: 30px;
+    border: solid 1px #ccc;
 `;
 
 const Column = styled.div`
@@ -30,29 +33,31 @@ export default class ClaimInfo extends React.Component {
     };
 
     typeChangeHandler = (e, { value }) => {
-        const { claimUpdate, id, typeOptions } = this.props;
+        const { claimUpdate, id, types } = this.props;
         this.setState({ type: value });
-        const type = typeOptions.filter(item => item.name === value)[0];
+        const type = types.filter(item => item.name === value)[0];
         claimUpdate(id, { id, ...type }, 'type');
     };
 
     componentDidMount() {
-        const { userRequest, claim } = this.props;
-        if (claim.userId) userRequest(claim.userId);
+        const { userRequest, claimDetails: { data } } = this.props;
+        if (data.userId) userRequest(data.userId);
         this.setState({
-            status: claim.status,
-            type: claim.type.name
+            status: data.status,
+            type: data.type.name
         });
     }
 
     render() {
-        const { claim, user, typeOptions } = this.props;
+        const { user, types, claimDetails: { data } } = this.props;
         const { type, status } = this.state;
         return (
             <ClaimInfoContainer>
                 <Column>
-                    <span>Registration date: {claim.registrationDate}</span>
-                    {user && <span>User: {user.firstName}</span>}
+                    <span>
+                        Registration date: {data.registrationDate}
+                    </span>
+                    <span>User: {user && user.firstName}</span>
                 </Column>
 
                 <Column>
@@ -67,7 +72,7 @@ export default class ClaimInfo extends React.Component {
                     Type
                     <Dropdown
                         onChange={this.typeChangeHandler}
-                        options={typeOptions}
+                        options={types}
                         placeholder="Type"
                         selection
                         value={type}

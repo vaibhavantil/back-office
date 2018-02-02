@@ -3,7 +3,6 @@ import {
     CLAIMS_REQUESTING,
     CLAIMS_REQUEST_SUCCESS,
     CLAIMS_REQUEST_ERROR,
-    CLAIMS_UPDATE_ERROR,
     CLAIM_TYPES,
     CLAIM_TYPES_SUCCESS
 } from 'constants/claims';
@@ -29,7 +28,6 @@ export default function(state = initialState.claims, action) {
             };
         
         case CLAIMS_REQUEST_ERROR:
-        case CLAIMS_UPDATE_ERROR:
             return {
                 ...state,
                 requesting: false,

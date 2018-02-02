@@ -15,6 +15,7 @@ const mapStateToProps = ({ claimDetails, claims, messages }) => ({
 export default withRouter(
     connect(mapStateToProps, {
         ...actions.claimDetailsActions,
+        ...actions.paymentActions,
         userRequest: actions.messagesActions.userRequest,
         claimTypes: actions.claimsActions.claimTypes,
         claimUpdate: actions.claimsActions.claimUpdate

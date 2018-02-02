@@ -4,17 +4,15 @@ import config from 'app/api/config';
 import { getAuthToken } from 'app/lib/checkAuth';
 import {
     CLAIM_REQUESTING,
-    CREATE_PAYMENT_REQUESTING,
-    REMOVE_PAYMENT_REQUESTING,
-    CREATE_NOTE_REQUESTING
-} from 'constants/claims';
+    CREATE_NOTE_REQUESTING,
+    NOTES_REQUESTING,
+    REMOVE_NOTE_REQUESTING
+} from '../constants/claims';
 import * as actions from '../actions/claimDetailsActions';
 
 function* requestFlow({ id }) {
     try {
         const token = yield call(getAuthToken);
-        //eslint-disable-next-line
-        console.log(id)
         const claim = yield call(api, token, config.claims.getList, null, id);
         yield put(actions.claimRequestSuccess(claim));
     } catch (error) {
@@ -22,42 +20,56 @@ function* requestFlow({ id }) {
     }
 }
 
-function* createPaymentFlow({ data }) {
+function* removeNoteFlow({ claimId, noteId }) {
     try {
         const token = yield call(getAuthToken);
-        const newPayment = yield call(api, token, config.payment.create, data);
-        yield put(actions.addPaymentSuccess(newPayment));
+        const path = `${claimId}/notes/${noteId}`;
+        yield call(api, token, config.claims.details.remove, null, path);
+        yield put(actions.removeNoteSuccess(noteId));
     } catch (error) {
-        actions;
+        yield put(actions.claimRequestError(error));
     }
 }
 
-function* removePaymentFlow({ id }) {
+function* createNoteFlow({ data, id }) {
     try {
         const token = yield call(getAuthToken);
-        const removed = yield call(api, token, config.payment.remove, null, id);
-        yield call(actions.removePaymentSuccess(removed));
+        const note = yield call(
+            api,
+            token,
+            config.claims.details.create,
+            data,
+            `${id}/notes`
+        );
+        // TODO remove "|| data"; needs to return created note with Id from server
+        yield put(actions.createNoteSuccess(note.data || data));
     } catch (error) {
-        yield call(actions.removePaymentError(error));
+        yield put(actions.claimRequestError(error));
     }
 }
 
-function* createNoteFlow({ data }) {
+function* notesRequestFlow({ id }) {
     try {
         const token = yield call(getAuthToken);
-        const newNote = yield call(api, token, config.notes.create, data);
-        yield put(actions.claimCreateSuccess(newNote));
+        const notes = yield call(
+            api,
+            token,
+            config.claims.details.get,
+            null,
+            `${id}/notes`
+        );
+        yield put(actions.notesRequestSuccess(notes));
     } catch (error) {
-        yield put(actions.claimCreateError(error));
+        yield put(actions.claimRequestError(error));
     }
 }
 
 function* watcher() {
     yield [
         takeLatest(CLAIM_REQUESTING, requestFlow),
-        takeLatest(CREATE_PAYMENT_REQUESTING, createPaymentFlow),
-        takeLatest(REMOVE_PAYMENT_REQUESTING, removePaymentFlow),
-        takeLatest(CREATE_NOTE_REQUESTING, createNoteFlow)
+        takeLatest(CREATE_NOTE_REQUESTING, createNoteFlow),
+        takeLatest(NOTES_REQUESTING, notesRequestFlow),
+        takeLatest(REMOVE_NOTE_REQUESTING, removeNoteFlow)
     ];
 }
 

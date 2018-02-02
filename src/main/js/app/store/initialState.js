@@ -42,6 +42,8 @@ export default {
         types: []
     },
     claimDetails: {
-        data: null
+        data: null,
+        notes: [],
+        payments: []
     }
 };

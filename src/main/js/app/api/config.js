@@ -41,13 +41,21 @@ export default {
             method: 'get'
         },
         update: {
-            status: {
+            url: 'claims',
+            method: 'post'
+        },
+        details: {
+            get: {
                 url: 'claims',
-                method: 'post'
+                method: 'get'
             },
-            type: {
+            create: {
                 url: 'claims',
-                method: 'post'
+                method: 'put'
+            },
+            remove: {
+                url: 'claims',
+                method: 'delete'
             }
         }
     },

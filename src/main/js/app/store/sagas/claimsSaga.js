@@ -23,11 +23,10 @@ function* requestFlow() {
 function* updateFlow({ data, id, reqType }) {
     try {
         const token = yield call(getAuthToken);
-        const conf = config.claims.update[reqType];
         const path = `${id}/${reqType}${
             reqType === 'status' ? '/' + data.status : ''
         }`;
-        yield call(api, token, conf, data, path);
+        yield call(api, token, config.claims.update, data, path);
         yield put(actions.claimUpdateSuccess());
     } catch (error) {
         yield put(actions.claimsRequestError(error));
@@ -40,7 +39,7 @@ function* createFlow({ data }) {
         const newClaim = yield call(api, token, config.claims.create, data);
         yield put(actions.claimCreateSuccess(newClaim));
     } catch (error) {
-        yield put(actions.claimCreateError(error));
+        yield put(actions.claimsRequestError(error));
     }
 }
 

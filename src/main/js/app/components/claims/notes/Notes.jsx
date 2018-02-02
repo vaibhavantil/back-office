@@ -6,14 +6,15 @@ import NotesList from './NotesList';
 const NotesContainer = styled.div`
     display: flex;
     flex-direction: column;
-    width: 500px;
     margin: 100px;
+    padding: 30px;
+    border: solid 1px #ccc;
 `;
 
-const Notes = ({ addNote, removeNote, notes }) => (
+const Notes = ({ createNote, removeNote, notes, id }) => (
     <NotesContainer>
-        <NewNote addNote={addNote} />
-        <NotesList notes={notes} removeNote={removeNote} />
+        <NewNote createNote={createNote} id={id} />
+        <NotesList notes={notes} removeNote={removeNote} claimId={id} />
     </NotesContainer>
 );
 
