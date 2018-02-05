@@ -33,16 +33,6 @@ function* updateFlow({ data, id, reqType }) {
     }
 }
 
-function* createFlow({ data }) {
-    try {
-        const token = yield call(getAuthToken);
-        const newClaim = yield call(api, token, config.claims.create, data);
-        yield put(actions.claimCreateSuccess(newClaim));
-    } catch (error) {
-        yield put(actions.claimsRequestError(error));
-    }
-}
-
 function* claimTypesFlow() {
     try {
         const token = yield call(getAuthToken);
@@ -57,7 +47,6 @@ function* claimsWatcher() {
     yield [
         takeLatest(CLAIMS_REQUESTING, requestFlow),
         takeLatest(CLAIM_UPDATING, updateFlow),
-        takeLatest(CLAIM_CREATING, createFlow),
         takeLatest(CLAIM_TYPES, claimTypesFlow)
     ];
 }
