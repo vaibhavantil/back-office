@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Input } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
 import PayoutsList from './PayoutsList';
 
 const PaymentsContainer = styled.div`
@@ -44,12 +44,13 @@ export default class Payments extends React.Component {
     }
 
     render() {
-        const { claimDetails: { payments } } = this.props;
+        const { claimDetails } = this.props;
         const { resume, editDisabled } = this.state;
         return (
             <PaymentsContainer>
-                <div>
-                    <Input
+                <Form>
+                    <Form.Group>
+                    <Form.Input
                         value={resume}
                         disabled={editDisabled}
                         onChange={this.resumeChangeHandler}
@@ -60,9 +61,11 @@ export default class Payments extends React.Component {
                     ) : (
                         <Button onClick={this.updateResume}>Save</Button>
                     )}
-                </div>
-                <PayoutsList list={payments} />
-                <span>Total payed out: {321}</span>
+                    </Form.Group>
+                    
+                </Form>
+                <PayoutsList list={claimDetails.payments} />
+                <h2>Total payed out: {claimDetails.data && claimDetails.data.total}</h2>
             </PaymentsContainer>
         );
     }

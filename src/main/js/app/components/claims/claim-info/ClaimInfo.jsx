@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Dropdown } from 'semantic-ui-react';
 import { claimStatus } from 'app/lib/selectOptions';
@@ -58,6 +58,8 @@ export default class ClaimInfo extends React.Component {
                         Registration date: {data.registrationDate}
                     </span>
                     <span>User: {user && user.firstName}</span>
+                    <span>Audio:</span>
+                    <audio src={data.url} controls></audio>
                 </Column>
 
                 <Column>
