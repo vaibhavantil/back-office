@@ -8,21 +8,9 @@ export default class Pagination extends React.Component {
         this.state = {
             pageState: {}
         };
-        this.setPage = this.setPage.bind(this);
     }
 
-    componentWillMount() {
-        const { items, initialPage } = this.props;
-        if (items && items.length) this.setPage(initialPage);
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.items !== prevProps.items) {
-            this.setPage(this.props.initialPage);
-        }
-    }
-
-    setPage(page) {
+    setPage = (page) => {
         const { items, onChangePage, pageSize } = this.props;
 
         const newPageState = getPageState(items.length, page, pageSize);
@@ -40,6 +28,17 @@ export default class Pagination extends React.Component {
 
         this.setState({ pageState: newPageState });
         onChangePage(pageOfItems);
+    }
+
+    componentWillMount() {
+        const { items, initialPage } = this.props;
+        if (items && items.length) this.setPage(initialPage);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.items !== prevProps.items) {
+            this.setPage(this.props.initialPage);
+        }
     }
 
     render() {

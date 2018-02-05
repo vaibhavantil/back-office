@@ -47,10 +47,9 @@ class DateInput extends React.Component {
         this.state = {
             focused: false
         };
-        this.dateChangeHandler = this.dateChangeHandler.bind(this);
     }
 
-    dateChangeHandler(date) {
+    dateChangeHandler = date => {
         this.setState({
             date: moment(date)
         });
@@ -58,7 +57,7 @@ class DateInput extends React.Component {
         this.props.changeHandler(DATE, null, {
             value: moment(date).toISOString()
         });
-    }
+    };
 
     componentDidMount() {
         if (!this.state.date && !this.props.date) {

@@ -44,13 +44,9 @@ export default class SingleSelectInput extends React.Component {
             choicesList: [],
             optionName: ''
         };
-        this.changeHandler = this.changeHandler.bind(this);
-        this.createNewOption = this.createNewOption.bind(this);
-        this.setOptionName = this.setOptionName.bind(this);
-        this.removeFromList = this.removeFromList.bind(this);
     }
 
-    createChoicesList() {
+    createChoicesList = () => {
         return this.state.choicesList.map(item => {
             if (this.props.selectType === MULTIPLE_SELECT) {
                 return {
@@ -65,22 +61,22 @@ export default class SingleSelectInput extends React.Component {
                 };
             }
         });
-    }
+    };
 
-    changeHandler() {
+    changeHandler = () => {
         const optionsList = this.createChoicesList();
         this.props.changeHandler(this.props.selectType, null, {
             value: optionsList
         });
-    }
+    };
 
-    setOptionName(e, { value }) {
+    setOptionName = (e, { value }) => {
         e.stopPropagation();
         e.preventDefault();
         this.setState({ optionName: value });
-    }
+    };
 
-    createNewOption(e) {
+    createNewOption = e => {
         e.stopPropagation();
         e.preventDefault();
         const { choicesList, optionName } = this.state;
@@ -99,15 +95,15 @@ export default class SingleSelectInput extends React.Component {
                 () => this.changeHandler()
             );
         }
-    }
+    };
 
-    removeFromList(id) {
+    removeFromList = id => {
         const { choicesList } = this.state;
         const newList = choicesList.filter(item => item.id !== id);
         this.setState({
             choicesList: newList
         });
-    }
+    };
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.cleanupForm) {

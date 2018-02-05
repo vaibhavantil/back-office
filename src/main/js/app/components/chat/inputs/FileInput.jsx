@@ -17,10 +17,9 @@ export default class FileInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = { acceptType: '', fileName: '' };
-        this.changeHandler = this.changeHandler.bind(this);
     }
 
-    changeHandler(e) {
+    changeHandler = e => {
         // eslint-disable-next-line
         const reader = new FileReader();
         const file = e.target.files[0];
@@ -36,7 +35,7 @@ export default class FileInput extends React.Component {
         };
 
         reader.readAsDataURL(file);
-    }
+    };
 
     componentDidMount() {
         const { type } = this.props;

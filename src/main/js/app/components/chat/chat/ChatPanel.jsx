@@ -31,16 +31,13 @@ export default class MessgesPanel extends React.Component {
             message: {},
             cleanupForm: false
         };
-        this.dropdownHander = this.dropdownHander.bind(this);
-        this.submitHandler = this.submitHandler.bind(this);
-        this.inputHandler = this.inputHandler.bind(this);
     }
 
-    dropdownHander(e, { value }) {
+    dropdownHander = (e, { value }) => {
         this.setState({ messageType: value, message: {} });
-    }
+    };
 
-    submitHandler() {
+    submitHandler = () => {
         const { message, messageType } = this.state;
         if (message && messageType) {
             this.props.addMessage(message, messageType);
@@ -48,18 +45,18 @@ export default class MessgesPanel extends React.Component {
                 this.setState({ cleanupForm: false, messageType: types.TEXT });
             });
         }
-    }
+    };
 
-    inputHandler(type, e, { value }) {
+    inputHandler = (type, e, { value }) => {
         this.setState({
             message: {
                 ...this.state.message,
                 [type]: value
             }
         });
-    }
+    };
 
-    getChatInput(type) {
+    getChatInput = type => {
         const { messageType, cleanupForm } = this.state;
         const isFileInput = !!(messagesWithFiles.indexOf(type) + 1);
         const isSelectInput =
@@ -79,7 +76,7 @@ export default class MessgesPanel extends React.Component {
         }
 
         return <div style={{ width: '400px' }}>{input}</div>;
-    }
+    };
 
     render() {
         const { messageType } = this.state;
@@ -98,10 +95,7 @@ export default class MessgesPanel extends React.Component {
                         />
                     </Form.Field>
                     {chatInput}
-                    <Form.Button
-                        content="Send"
-                        primary
-                    />
+                    <Form.Button content="Send" primary />
                 </MessagesPanelContariner>
             </Form>
         );

@@ -9,12 +9,11 @@ export default class PaginatorList extends React.Component {
         this.state = {
             activeList: []
         };
-        this.onChangePage = this.onChangePage.bind(this);
     }
 
-    onChangePage(activeList) {
+    onChangePage = activeList => {
         this.setState({ activeList });
-    }
+    };
 
     render() {
         const { activeList } = this.state;

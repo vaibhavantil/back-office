@@ -38,9 +38,12 @@ export default {
         list: [],
         requesting: false,
         successful: false,
-        errors: []
+        errors: [],
+        types: []
     },
     claimDetails: {
-        data: null
+        data: null,
+        notes: [],
+        payments: []
     }
 };

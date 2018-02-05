@@ -28,12 +28,6 @@ export default function(state = initialState.messages, action) {
                 ...state,
                 activeConnection: action.connection
             };
-
-        case ERROR_RECEIVED:
-            return {
-                ...state,
-                error: action.error
-            };
         case USER_REQUESTING:
             return {
                 ...state
@@ -44,7 +38,7 @@ export default function(state = initialState.messages, action) {
                 ...state,
                 user: action.user
             };
-
+        case ERROR_RECEIVED:
         case USER_REQUEST_ERROR:
             return {
                 ...state,

@@ -43,3 +43,9 @@ export const routesList = [
         type: 'CLAIMS'
     }
 ];
+
+export const claimStatus = [
+    { key: 1, text: 'Open', value: 'OPEN' },
+    { key: 2, text: 'Closed', value: 'CLOSED' },
+    { key: 3, text: 'Reopened', value: 'REOPENED' }
+];

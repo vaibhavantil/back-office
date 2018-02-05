@@ -36,12 +36,9 @@ export default class Dashboard extends React.Component {
             socket: null,
             subscription: null
         };
-        this.subscribeSocket = this.subscribeSocket.bind(this);
-        this.getItemContent = this.getItemContent.bind(this);
-        this.redirect = this.redirect.bind(this);
     }
 
-    subscribeSocket(connection) {
+    subscribeSocket = connection => {
         const {
             dashboardUpdated,
             dashboardErrorReceived,
@@ -57,14 +54,14 @@ export default class Dashboard extends React.Component {
             socket: stompClient,
             subscription
         });
-    }
+    };
 
-    redirect(route, type) {
+    redirect = (route, type) => {
         this.props.cleanupDashboardItem(type, this.state.socket);
         history.push(route);
-    }
+    };
 
-    getItemContent(item) {
+    getItemContent = item => {
         const { dashboard: { data } } = this.props;
 
         return (
@@ -77,7 +74,7 @@ export default class Dashboard extends React.Component {
                 ) : null}
             </ItemContent>
         );
-    }
+    };
 
     componentDidMount() {
         const { setActiveConnection, messages } = this.props;

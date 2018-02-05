@@ -6,6 +6,7 @@ import MessagesSaga from './messagesSaga';
 import DashboardSaga from './dashboardSaga';
 import ClaimsSaga from './claimsSaga';
 import ClaimDetailsSaga from './claimDetailsSaga';
+import PaymentsSaga from './paymentsSaga';
 
 export default function* IndexSaga() {
     yield [
@@ -16,6 +17,7 @@ export default function* IndexSaga() {
         MessagesSaga(),
         DashboardSaga(),
         ClaimsSaga(),
-        ClaimDetailsSaga()
+        ClaimDetailsSaga(),
+        PaymentsSaga()
     ];
 }

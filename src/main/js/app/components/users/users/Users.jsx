@@ -11,25 +11,22 @@ export default class Users extends React.Component {
             results: [],
             value: ''
         };
-        this.keyPressHandler = this.keyPressHandler.bind(this);
-        this.inputChangeHandler = this.inputChangeHandler.bind(this);
-        this.searchRequest = this.searchRequest.bind(this);
     }
 
-    inputChangeHandler(e, { value }) {
+    inputChangeHandler = (e, { value }) => {
         this.setState({ value: value });
-    }
+    };
 
-    keyPressHandler(e) {
+    keyPressHandler = e => {
         if (e.key === 'Enter') this.searchRequest();
-    }
+    };
 
-    searchRequest() {
+    searchRequest = () => {
         this.setState({ isLoading: true });
         if (this.state.value) {
             this.props.searchUserRequest(this.state.value);
         }
-    }
+    };
 
     componentDidMount() {
         const { usersRequest } = this.props;

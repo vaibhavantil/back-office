@@ -6,8 +6,18 @@ import actions from 'app/store/actions';
 
 const ClaimDetailsPage = props => <ClaimDetails {...props} />;
 
+const mapStateToProps = ({ claimDetails, claims, messages }) => ({
+    claimDetails,
+    types: claims.types,
+    user: messages.user
+});
+
 export default withRouter(
-    connect(({ claimDetails }) => ({ claimDetails }), {
-        ...actions.claimDetailsActions
+    connect(mapStateToProps, {
+        ...actions.claimDetailsActions,
+        ...actions.paymentActions,
+        userRequest: actions.messagesActions.userRequest,
+        claimTypes: actions.claimsActions.claimTypes,
+        claimUpdate: actions.claimsActions.claimUpdate
     })(ClaimDetailsPage)
 );

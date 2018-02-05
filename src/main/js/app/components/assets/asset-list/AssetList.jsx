@@ -18,23 +18,19 @@ class AssetList extends React.Component {
             filteredList: [],
             activeFilter: 'ALL'
         };
-        this.onChangePage = this.onChangePage.bind(this);
-        this.filterChangeHandler = this.filterChangeHandler.bind(this);
-        this.assetUpdateHandler = this.assetUpdateHandler.bind(this);
-        this.pollingHandler = this.pollingHandler.bind(this);
     }
 
-    onChangePage(activeList) {
+    onChangePage = activeList => {
         this.setState({ activeList });
-    }
+    };
 
-    assetUpdateHandler(id, value) {
+    assetUpdateHandler = (id, value) => {
         const { assetUpdate } = this.props;
         assetUpdate(id, value);
         this.filterChangeHandler(null, { value: this.state.activeFilter });
-    }
+    };
 
-    filterChangeHandler(e, { value }) {
+    filterChangeHandler = (e, { value }) => {
         this.setState(
             {
                 activeFilter: value
@@ -49,13 +45,13 @@ class AssetList extends React.Component {
                 });
             }
         );
-    }
+    };
 
-    pollingHandler() {
+    pollingHandler = () => {
         const { poll: { polling }, pollStart, pollStop } = this.props;
         if (polling) pollStop(2000);
         else pollStart(2000);
-    }
+    };
 
     componentDidMount() {
         checkAuthorization(null, this.props.setClient);

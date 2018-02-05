@@ -10,20 +10,18 @@ export default class AssetCard extends React.Component {
             disabled: false,
             dropdownValue: ''
         };
-        this.dropdownHandler = this.dropdownHandler.bind(this);
-        this.saveClickHandler = this.saveClickHandler.bind(this);
     }
 
-    dropdownHandler(e, { value }) {
+    dropdownHandler = (e, { value }) => {
         this.setState(() => ({ dropdownValue: value }));
-    }
-    saveClickHandler() {
+    };
+    saveClickHandler = () => {
         this.setState(() => ({ disabled: true }));
         this.props.assetUpdate(
             this.props.asset.id,
             this.state.dropdownValue || this.props.asset.state
         );
-    }
+    };
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.updateStatus !== this.props.updateStatus) {
