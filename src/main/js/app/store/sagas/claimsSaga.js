@@ -5,7 +5,6 @@ import { getAuthToken } from 'app/lib/checkAuth';
 import {
     CLAIMS_REQUESTING,
     CLAIM_UPDATING,
-    CLAIM_CREATING,
     CLAIM_TYPES
 } from 'constants/claims';
 import * as actions from '../actions/claimsActions';
