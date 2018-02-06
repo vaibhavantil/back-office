@@ -38,7 +38,7 @@ FormField.propTypes = {
     label: PropTypes.string,
     placeholder: PropTypes.string,
     meta: PropTypes.object.isRequired,
-    as: PropTypes.element.isRequired
+    as: PropTypes.func.isRequired
 };
 
 export default FormField;

@@ -96,5 +96,5 @@ export default class FileInput extends React.Component {
 FileInput.propTypes = {
     cleanupForm: PropTypes.bool,
     changeHandler: PropTypes.func.isRequired,
-    type: PropTypes.string.isRequired
+    type: PropTypes.string
 };

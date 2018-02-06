@@ -104,5 +104,5 @@ export default class DateInput extends React.Component {
 DateInput.propTypes = {
     cleanupForm: PropTypes.bool,
     date: PropTypes.object,
-    changeHandler: PropTypes.object.isRequired
+    changeHandler: PropTypes.func.isRequired
 };

@@ -87,7 +87,7 @@ export default class ClaimInfo extends React.Component {
 ClaimInfo.propTypes = {
     user: PropTypes.object,
     claimUpdate: PropTypes.func.isRequired,
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
     types: PropTypes.array.isRequired,
     userRequest: PropTypes.func.isRequired,
     claimDetails: PropTypes.object.isRequired
