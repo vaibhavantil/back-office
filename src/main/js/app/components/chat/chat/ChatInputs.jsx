@@ -4,7 +4,6 @@ import TextFileInput from '../inputs/TextFileInput';
 import NumberInput from '../inputs/NumberInput';
 import SelectCreator from '../inputs/SelectCreator';
 import TextInput from '../inputs/TextInput';
-
 import * as types from 'app/lib/messageTypes';
 
 /**
