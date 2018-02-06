@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Form } from 'semantic-ui-react';
 import PayoutsList from './PayoutsList';
@@ -50,23 +51,33 @@ export default class Payments extends React.Component {
             <PaymentsContainer>
                 <Form>
                     <Form.Group>
-                    <Form.Input
-                        value={resume}
-                        disabled={editDisabled}
-                        onChange={this.resumeChangeHandler}
-                    />
+                        <Form.Input
+                            value={resume}
+                            disabled={editDisabled}
+                            onChange={this.resumeChangeHandler}
+                        />
 
-                    {editDisabled ? (
-                        <Button onClick={this.editClickHandler}>Edit</Button>
-                    ) : (
-                        <Button onClick={this.updateResume}>Save</Button>
-                    )}
+                        {editDisabled ? (
+                            <Button onClick={this.editClickHandler}>
+                                Edit
+                            </Button>
+                        ) : (
+                            <Button onClick={this.updateResume}>Save</Button>
+                        )}
                     </Form.Group>
-                    
                 </Form>
                 <PayoutsList list={claimDetails.payments} />
-                <h2>Total payed out: {claimDetails.data && claimDetails.data.total}</h2>
+                <h2>
+                    Total payed out:{' '}
+                    {claimDetails.data && claimDetails.data.total}
+                </h2>
             </PaymentsContainer>
         );
     }
 }
+
+Payments.propTypes = {
+    claimDetails: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
+    updateResume: PropTypes.func.isRequired
+};

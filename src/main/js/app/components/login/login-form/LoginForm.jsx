@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Form, Button, Segment, Message } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
 import FormField from '../form-field/FormField';
@@ -45,6 +46,13 @@ class LoginForm extends React.Component {
         );
     }
 }
+
+LoginForm.propTypes = {
+    submitting: PropTypes.bool,
+    pristine: PropTypes.bool,
+    handleSubmit: PropTypes.func.isRequired,
+    errors: PropTypes.array
+};
 
 const LoginFormErrors = errors => {
     return errors.errors.map((err, id) => (

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import FileInput from './FileInput';
 import TextInput from './TextInput';
 
@@ -14,3 +15,9 @@ const TextFileInput = ({ changeHandler, type, cleanupForm }) => (
 );
 
 export default TextFileInput;
+
+TextFileInput.propTypes = {
+    changeHandler: PropTypes.func.isRequired,
+    type: PropTypes.string.isRequired,
+    cleanupForm: PropTypes.bool
+};

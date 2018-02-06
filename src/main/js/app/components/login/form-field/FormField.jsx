@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Form, Input, Message } from 'semantic-ui-react';
 
 const FormField = ({
@@ -29,6 +30,15 @@ const FormField = ({
                     (warning && <Message warning>{warning}</Message>))}
         </Form.Field>
     );
+};
+
+FormField.propTypes = {
+    input: PropTypes.object.isRequired,
+    type: PropTypes.string,
+    label: PropTypes.string,
+    placeholder: PropTypes.string,
+    meta: PropTypes.object.isRequired,
+    as: PropTypes.element.isRequired
 };
 
 export default FormField;

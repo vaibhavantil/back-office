@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Form, Input, Icon } from 'semantic-ui-react';
 import { MULTIPLE_SELECT } from 'app/lib/messageTypes';
@@ -37,7 +38,12 @@ const SelectedOptionsList = ({ options, removeFromList }) => (
     </ListContainer>
 );
 
-export default class SingleSelectInput extends React.Component {
+SelectedOptionsList.propTypes = {
+    options: PropTypes.array.isRequired,
+    removeFromList: PropTypes.func.isRequired
+};
+
+export default class SelectCreator extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -136,3 +142,9 @@ export default class SingleSelectInput extends React.Component {
         );
     }
 }
+
+SelectCreator.propTypes = {
+    cleanupForm: PropTypes.bool,
+    selectType: PropTypes.string.isRequired,
+    changeHandler: PropTypes.func.isRequired
+};

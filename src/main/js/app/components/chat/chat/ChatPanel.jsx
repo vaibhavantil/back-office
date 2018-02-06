@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Form, Dropdown } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { messageTypes } from 'app/lib/selectOptions';
@@ -23,7 +24,7 @@ const MessagesPanelContariner = styled.div`
     border-top: solid 2px #e8e5e5;
 `;
 
-export default class MessgesPanel extends React.Component {
+export default class ChatPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -101,3 +102,7 @@ export default class MessgesPanel extends React.Component {
         );
     }
 }
+
+ChatPanel.propTypes = {
+    addMessage: PropTypes.func.isRequired
+};

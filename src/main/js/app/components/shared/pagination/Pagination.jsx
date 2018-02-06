@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
 import { getPageState } from 'app/lib/paginator';
 
@@ -10,7 +11,7 @@ export default class Pagination extends React.Component {
         };
     }
 
-    setPage = (page) => {
+    setPage = page => {
         const { items, onChangePage, pageSize } = this.props;
 
         const newPageState = getPageState(items.length, page, pageSize);
@@ -28,7 +29,7 @@ export default class Pagination extends React.Component {
 
         this.setState({ pageState: newPageState });
         onChangePage(pageOfItems);
-    }
+    };
 
     componentWillMount() {
         const { items, initialPage } = this.props;
@@ -89,4 +90,11 @@ export default class Pagination extends React.Component {
 
 Pagination.defaultProps = {
     initialPage: 1
+};
+
+Pagination.propTypes = {
+    items: PropTypes.array.isRequired,
+    onChangePage: PropTypes.func.isRequired,
+    pageSize: PropTypes.number,
+    initialPage: PropTypes.number
 };

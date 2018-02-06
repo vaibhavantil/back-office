@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Label, List } from 'semantic-ui-react';
 import { ItemContent } from '../../dashboard/Dashboard';
@@ -23,6 +24,10 @@ const ListItem = ({ item }) => (
         </ItemContent>
     </Link>
 );
+
+ListItem.propTypes = {
+    item: PropTypes.object.isRequired
+};
 
 export default class UsersList extends React.Component {
     constructor(props) {
@@ -69,3 +74,9 @@ export default class UsersList extends React.Component {
         );
     }
 }
+
+UsersList.propTypes = {
+    users: PropTypes.array.isRequired,
+    newMessagesReceived: PropTypes.func.isRequired,
+    client: PropTypes.object.isRequired
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { List, Label } from 'semantic-ui-react';
 import { history } from 'app/app';
@@ -127,3 +128,15 @@ export default class Dashboard extends React.Component {
         );
     }
 }
+
+Dashboard.propTypes = {
+    unsetClient: PropTypes.func.isRequired,
+    setActiveConnection: PropTypes.func.isRequired,
+    messages: PropTypes.object.isRequired,
+    dashboard: PropTypes.object.isRequired,
+    cleanupDashboardItem: PropTypes.func.isRequired,
+    dashboardUpdated: PropTypes.func.isRequired,
+    dashboardErrorReceived: PropTypes.func.isRequired,
+    updatesRequestSuccess: PropTypes.func.isRequired,
+    client: PropTypes.object.isRequired
+};

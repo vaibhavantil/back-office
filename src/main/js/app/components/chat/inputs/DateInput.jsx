@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import 'moment/locale/sv';
 import { Form } from 'semantic-ui-react';
@@ -41,7 +42,7 @@ const DatePickerContainer = styled.div`
     }
 `;
 
-class DateInput extends React.Component {
+export default class DateInput extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -100,4 +101,8 @@ class DateInput extends React.Component {
     }
 }
 
-export default DateInput;
+DateInput.propTypes = {
+    cleanupForm: PropTypes.bool,
+    date: PropTypes.object,
+    changeHandler: PropTypes.object.isRequired
+};

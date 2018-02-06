@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Dropdown } from 'semantic-ui-react';
 import { claimStatus } from 'app/lib/selectOptions';
@@ -54,12 +55,10 @@ export default class ClaimInfo extends React.Component {
         return (
             <ClaimInfoContainer>
                 <Column>
-                    <span>
-                        Registration date: {data.registrationDate}
-                    </span>
+                    <span>Registration date: {data.registrationDate}</span>
                     <span>User: {user && user.firstName}</span>
                     <span>Audio:</span>
-                    <audio src={data.url} controls></audio>
+                    <audio src={data.url} controls />
                 </Column>
 
                 <Column>
@@ -84,3 +83,12 @@ export default class ClaimInfo extends React.Component {
         );
     }
 }
+
+ClaimInfo.propTypes = {
+    user: PropTypes.object,
+    claimUpdate: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired,
+    types: PropTypes.array.isRequired,
+    userRequest: PropTypes.func.isRequired,
+    claimDetails: PropTypes.object.isRequired
+};

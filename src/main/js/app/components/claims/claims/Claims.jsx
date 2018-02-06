@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ClaimsList from '../claims-list/ClaimsList';
 import BackLink from 'components/shared/link/BackLink';
 import { Header } from 'components/chat/chat/Chat';
@@ -22,3 +23,8 @@ export default class Claims extends React.Component {
         );
     }
 }
+
+Claims.propTypes = {
+    claimsRequest: PropTypes.func.isRequired,
+    claims: PropTypes.object.isRequired
+};

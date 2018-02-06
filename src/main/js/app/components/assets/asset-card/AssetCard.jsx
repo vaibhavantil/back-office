@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Card, Image, Dropdown, Button } from 'semantic-ui-react';
 import moment from 'moment';
 import { assetStates } from 'app/lib/selectOptions';
@@ -66,3 +67,9 @@ export default class AssetCard extends React.Component {
         );
     }
 }
+
+AssetCard.propTypes = {
+    asset: PropTypes.object.isRequired,
+    assetUpdate: PropTypes.func.isRequired,
+    updateStatus: PropTypes.bool
+};

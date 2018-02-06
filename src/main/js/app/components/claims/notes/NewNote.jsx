@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 import FileInput from 'components/chat/inputs/FileInput';
 
@@ -56,3 +57,8 @@ export default class NewNote extends React.Component {
         );
     }
 }
+
+NewNote.propTypes = {
+    createNote: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired
+};

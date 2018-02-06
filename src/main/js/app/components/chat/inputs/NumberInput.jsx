@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Form, Input } from 'semantic-ui-react';
 import { TEXT, NUMBER } from 'app/lib/messageTypes';
 
@@ -20,3 +21,7 @@ const NumberInput = ({ changeHandler }) => (
 );
 
 export default NumberInput;
+
+NumberInput.propTypes = {
+    changeHandler: PropTypes.func.isRequired
+};

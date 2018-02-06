@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { List } from 'semantic-ui-react';
 import Pagination from '../pagination/Pagination';
 import { ListContainer } from 'components/shared';
@@ -40,3 +41,8 @@ export default class PaginatorList extends React.Component {
         );
     }
 }
+
+PaginatorList.propTypes = {
+    list: PropTypes.array.isRequired,
+    itemContent: PropTypes.element.isRequired
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { loginRequest } from 'app/store/actions/loginActions';
@@ -17,10 +18,17 @@ const LoginPage = ({ loginRequest, login }) => (
         <LoginForm onSubmit={loginRequest} errors={login.errors} />
     </LoginContainer>
 );
-const mapStateToProps = ({ login }) => ({
-    login
-});
 
-export default connect(mapStateToProps, {
-    loginRequest
-})(LoginPage);
+LoginPage.propTypes = {
+    loginRequest: PropTypes.func.isRequired,
+    login: PropTypes.object.isRequired
+};
+
+export default connect(
+    ({ login }) => ({
+        login
+    }),
+    {
+        loginRequest
+    }
+)(LoginPage);

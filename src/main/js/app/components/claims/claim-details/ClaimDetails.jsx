@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import BackLink from 'components/shared/link/BackLink';
 import ClaimInfo from '../claim-info/ClaimInfo';
 import Notes from '../notes/Notes';
@@ -50,3 +51,15 @@ export default class ClaimDetails extends React.Component {
         );
     }
 }
+
+ClaimDetails.propTypes = {
+    claimDetails: PropTypes.object.isRequired,
+    createNote: PropTypes.func.isRequired,
+    removeNote: PropTypes.func.isRequired,
+    updateResume: PropTypes.func.isRequired,
+    match: PropTypes.object.isRequired,
+    claimRequest: PropTypes.func.isRequired,
+    claimTypes: PropTypes.func.isRequired,
+    notesRequest: PropTypes.func.isRequired,
+    paymentsRequest: PropTypes.func.isRequired
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router';
 import PrivateRoute from './PrivateRoute';
 import ClaimsPage from 'containers/claims-page/ClaimsPage';
@@ -30,5 +31,9 @@ const ClaimsPageRoute = ({ store }) => (
         />
     </Switch>
 );
+
+ClaimsPageRoute.propTypes = {
+    store: PropTypes.object.isRequired
+}
 
 export default ClaimsPageRoute;
