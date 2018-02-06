@@ -16,13 +16,11 @@
         "transform-async-to-generator",
         "transform-regenerator",
         "transform-runtime",
-        "transform-class-properties",
-        [
-            "transform-react-remove-prop-types",
-            {
-                "mode": "remove",
-                "ignoreFilenames": ["node_modules"]
-            }
-        ]
-    ]
+        "transform-class-properties"
+    ],
+    "env": {
+        "production": {
+            "plugins": ["transform-react-remove-prop-types"]
+        }
+    }
 }
