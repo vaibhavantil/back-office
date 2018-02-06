@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 export default class AudioMessage extends React.Component {
@@ -14,7 +15,7 @@ export default class AudioMessage extends React.Component {
         // todo remove if/else
         if (content.indexOf('{') + 1) {
             const data = JSON.parse(content);
-            // todo move axios request to backend or /api dir 
+            // todo move axios request to backend or /api dir
             axios
                 .post('http://localhost:3056/convert', {
                     name: data.name,
@@ -36,3 +37,7 @@ export default class AudioMessage extends React.Component {
         return <audio src={this.state.url} controls />;
     }
 }
+
+AudioMessage.propTypes = {
+    content: PropTypes.string.isRequired
+};

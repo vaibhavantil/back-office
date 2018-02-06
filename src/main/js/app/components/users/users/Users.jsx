@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Input } from 'semantic-ui-react';
 import UsersList from '../users-list/UsersList';
 import BackLink from 'components/shared/link/BackLink';
@@ -76,3 +77,12 @@ export default class Users extends React.Component {
         );
     }
 }
+
+Users.propTypes = {
+    messages: PropTypes.object.isRequired,
+    newMessagesReceived: PropTypes.func.isRequired,
+    setActiveConnection: PropTypes.func.isRequired,
+    client: PropTypes.object.isRequired,
+    searchUserRequest: PropTypes.func.isRequired,
+    usersRequest: PropTypes.func.isRequired
+};

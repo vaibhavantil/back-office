@@ -17,6 +17,7 @@
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.35",
     "@stomp/stompjs": "^4.0.0",
     "axios": "^0.17.1",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.12",
     "history": "^4.7.2",
     "lodash.escaperegexp": "^4.1.2",
     "lodash.filter": "^4.6.0",

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Message from './Message';
 
@@ -49,3 +50,9 @@ export default class MessagesList extends React.Component {
         );
     }
 }
+
+MessagesList.propTypes = {
+    messages: PropTypes.array,
+    error: PropTypes.bool,
+    userId: PropTypes.string.isRequired
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Image = styled.img`
@@ -18,3 +19,7 @@ const ImageMessage = ({ content }) => {
 };
 
 export default ImageMessage;
+
+ImageMessage.propTypes = {
+    content: PropTypes.object.isRequired
+};

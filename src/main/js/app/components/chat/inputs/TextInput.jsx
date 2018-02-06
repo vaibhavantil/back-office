@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Form, Input } from 'semantic-ui-react';
 import { TEXT } from 'app/lib/messageTypes';
 
@@ -13,7 +14,7 @@ export default class TextInput extends React.Component {
     textChangeHandler = (e, { value }) => {
         this.setState({ textValue: value });
         this.props.changeHandler(TEXT, null, { value });
-    }
+    };
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.cleanupForm) {
@@ -34,3 +35,8 @@ export default class TextInput extends React.Component {
         );
     }
 }
+
+TextInput.propTypes = {
+    changeHandler: PropTypes.func.isRequired,
+    cleanupForm: PropTypes.bool
+};

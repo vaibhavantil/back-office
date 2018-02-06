@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Dropdown } from 'semantic-ui-react';
 import { assetStates } from 'app/lib/selectOptions';
 
-export default class Fliter extends React.Component {
+export default class Filter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -24,7 +25,12 @@ export default class Fliter extends React.Component {
     }
 
     render() {
-        const { filterChange, activeFilter, polling, pollingHandler } = this.props;
+        const {
+            filterChange,
+            activeFilter,
+            polling,
+            pollingHandler
+        } = this.props;
         return (
             <div className="filter">
                 <label className="filter__label">Select asset state: </label>
@@ -41,3 +47,10 @@ export default class Fliter extends React.Component {
         );
     }
 }
+
+Filter.propTypes = {
+    filterChange: PropTypes.func.isRequired,
+    activeFilter: PropTypes.string.isRequired,
+    polling: PropTypes.bool,
+    pollingHandler: PropTypes.func
+};

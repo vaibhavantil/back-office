@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Form } from 'semantic-ui-react';
 import * as types from 'app/lib/messageTypes';
@@ -91,3 +92,9 @@ export default class FileInput extends React.Component {
         );
     }
 }
+
+FileInput.propTypes = {
+    cleanupForm: PropTypes.bool,
+    changeHandler: PropTypes.func.isRequired,
+    type: PropTypes.string
+};

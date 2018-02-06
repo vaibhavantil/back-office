@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { List } from 'semantic-ui-react';
 
 const PayoutsList = ({ list }) => (
@@ -17,5 +18,9 @@ const PayoutsList = ({ list }) => (
         )}
     </React.Fragment>
 );
+
+PayoutsList.propTypes = {
+    list: PropTypes.array.isRequired
+};
 
 export default PayoutsList;

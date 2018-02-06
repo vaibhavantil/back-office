@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import 'moment/locale/sv';
@@ -58,6 +59,11 @@ const Message = ({ left, content }) => (
     </MessageRow>
 );
 
+Message.propTypes = {
+    left: PropTypes.bool.isRequired,
+    content: PropTypes.object.isRequired
+};
+
 const MessageContent = ({ content }) => {
     switch (content.type) {
         case types.DATE:
@@ -78,6 +84,10 @@ const MessageContent = ({ content }) => {
         default:
             return null;
     }
+};
+
+MessageContent.propTypes = {
+    content: PropTypes.object.isRequired
 };
 
 export default Message;

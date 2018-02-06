@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Icon, Message } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -39,16 +40,10 @@ export default class Chat extends React.Component {
     };
 
     subscribeSocket = () => {
-        const {
-            messageReceived,
-            match,
-            getMessagesHistory,
-            messages,
-            errorReceived
-        } = this.props;
+        const { messageReceived, match, messages, errorReceived } = this.props;
 
         const { stompClient, subscription } = sockets.chatSubscribe(
-            { messageReceived, getMessagesHistory, errorReceived },
+            { messageReceived, errorReceived },
             match.params.id,
             messages.activeConnection
         );
@@ -58,17 +53,13 @@ export default class Chat extends React.Component {
     reconnectSocket = () => {
         const {
             messageReceived,
-            getMessagesHistory,
             match,
             setActiveConnection,
             errorReceived
         } = this.props;
 
         sockets
-            .chatReconnect(
-                { messageReceived, getMessagesHistory, errorReceived },
-                match.params.id
-            )
+            .chatReconnect({ messageReceived, errorReceived }, match.params.id)
             .then(reslut => {
                 const { stompClient, subscription } = reslut;
                 this.setState({ socket: stompClient, subscription });
@@ -129,3 +120,15 @@ export default class Chat extends React.Component {
         );
     }
 }
+
+Chat.propTypes = {
+    messageReceived: PropTypes.func.isRequired,
+    match: PropTypes.object.isRequired,
+    messages: PropTypes.object.isRequired,
+    errorReceived: PropTypes.func,
+    addMessage: PropTypes.func.isRequired,
+    setActiveConnection: PropTypes.func.isRequired,
+    userRequest: PropTypes.func.isRequired,
+    error: PropTypes.object,
+    clearMessagesList: PropTypes.func.isRequired
+};

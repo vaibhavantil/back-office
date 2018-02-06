@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Card, Dimmer, Loader, Message } from 'semantic-ui-react';
 import AssetCard from '../asset-card/AssetCard';
@@ -131,3 +132,13 @@ const AssetListErrors = errors => {
 };
 
 export default AssetList;
+
+AssetList.propTypes = {
+    assetUpdate: PropTypes.func.isRequired,
+    assets: PropTypes.object,
+    poll: PropTypes.object,
+    pollStart: PropTypes.func,
+    pollStop: PropTypes.func,
+    setClient: PropTypes.func.isRequired,
+    assetRequest: PropTypes.func.isRequired
+};
