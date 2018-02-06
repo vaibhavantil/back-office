@@ -22,8 +22,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ExternalServicesConfig {
 
+    private final ApplicationContext context;
+
     @Autowired
-    private ApplicationContext context;
+    public ExternalServicesConfig(ApplicationContext context) {
+        this.context = context;
+    }
 
     @Bean
     public AssetTracker assetTracker(@Value("${tracker.stub:false}") boolean stub) {
