@@ -1,15 +1,21 @@
 package com.hedvig.backoffice.services.claims;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.services.users.UserService;
 import com.hedvig.backoffice.services.users.UserServiceException;
 import com.hedvig.backoffice.web.dto.UserDTO;
 import com.hedvig.backoffice.web.dto.claims.*;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 
 public class ClaimsServiceStub implements ClaimsService {
 
@@ -25,17 +31,15 @@ public class ClaimsServiceStub implements ClaimsService {
         payments = new HashMap<>();
         notes = new HashMap<>();
 
-        Map<String, Boolean> required = new HashMap<>();
-        required.put("required 1", false);
-        required.put("required 2", false);
-
-        Map<String, Boolean> additional = new HashMap<>();
-        additional.put("additional 1", false);
-        additional.put("additional 2", false);
-
-        types = Arrays.asList(new ClaimTypeDTO("THEFT", required, additional),
-                new ClaimTypeDTO("BURN", required, additional),
-                new ClaimTypeDTO("SINK", required, additional));
+        try {
+            val resource = new ClassPathResource("claim_types.json").getInputStream();
+            val mapper = new ObjectMapper();
+            types = mapper.readValue(
+                    resource,
+                    mapper.getTypeFactory().constructCollectionType(List.class, ClaimTypeDTO.class));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
 
         List<UserDTO> users = userService.list();
 

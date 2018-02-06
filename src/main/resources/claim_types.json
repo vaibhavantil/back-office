@@ -1,0 +1,91 @@
+[
+  {
+    "name": "THEFT",
+    "title": "Theft",
+    "required": [
+      {
+        "name": "place",
+        "title": "Place",
+        "type": "TEXT"
+      },
+      {
+        "name": "date",
+        "title": "Date",
+        "type": "DATE"
+      },
+      {
+        "name": "item",
+        "title": "Item",
+        "type": "ASSET"
+      }
+    ],
+    "additional": [
+      {
+        "name": "report",
+        "title": "Police Report",
+        "type": "BOOL"
+      },
+      {
+        "name": "description",
+        "title": "Description",
+        "type": "TEXT"
+      }
+    ]
+  },
+  {
+    "name": "BURN",
+    "title": "Burn",
+    "required": [
+      {
+        "name": "place",
+        "title": "Place",
+        "type": "TEXT"
+      },
+      {
+        "name": "date",
+        "title": "Date",
+        "type": "DATE"
+      },
+      {
+        "name": "item",
+        "title": "Item",
+        "type": "ASSET"
+      }
+    ],
+    "additional": [
+      {
+        "name": "report",
+        "title": "Police Report",
+        "type": "BOOL"
+      }
+    ]
+  },
+  {
+    "name": "SINK",
+    "title": "Sink",
+    "required": [
+      {
+        "name": "place",
+        "title": "Place",
+        "type": "TEXT"
+      },
+      {
+        "name": "date",
+        "title": "Date",
+        "type": "DATE"
+      },
+      {
+        "name": "item",
+        "title": "Item",
+        "type": "ASSET"
+      }
+    ],
+    "additional": [
+      {
+        "name": "found",
+        "title": "Was it found",
+        "type": "BOOL"
+      }
+    ]
+  }
+]
