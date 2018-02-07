@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
-import FileInput from 'components/chat/inputs/FileInput';
+import FileInput from 'components/shared/inputs/FileInput';
 
 export default class NewNote extends React.Component {
     constructor(props) {

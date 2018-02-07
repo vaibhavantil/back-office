@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Dropdown } from 'semantic-ui-react';
 import { claimStatus } from 'app/lib/selectOptions';
+import ClaimTypeFields from './ClaimTypeFields';
+import { fieldsToArray } from 'app/lib/helpers';
 
 const ClaimInfoContainer = styled.div`
     display: flex;
@@ -28,16 +30,26 @@ export default class ClaimInfo extends React.Component {
     }
 
     statusChangeHandler = (e, { value }) => {
-        const { claimUpdate, id } = this.props;
+        const { claimUpdate, match } = this.props;
+        const id = match.params.id;
         this.setState({ status: value });
         claimUpdate(id, { id, status: value }, 'status');
     };
 
     typeChangeHandler = (e, { value }) => {
-        const { claimUpdate, id, types } = this.props;
         this.setState({ type: value });
-        const type = types.filter(item => item.name === value)[0];
-        claimUpdate(id, { id, ...type }, 'type');
+    };
+
+    submitTypeChanges = data => {
+        const { match: { params }, claimUpdate, types } = this.props;
+        const updates = fieldsToArray(data);
+        const type = types.filter(item => item.name === this.state.type)[0];
+        claimUpdate(params.id, { id: params.id, ...type, ...updates }, 'type');
+    };
+
+    getActiveType = () => {
+        const { types } = this.props;
+        return types.filter(item => item.name === this.state.type)[0];
     };
 
     componentDidMount() {
@@ -52,34 +64,41 @@ export default class ClaimInfo extends React.Component {
     render() {
         const { user, types, claimDetails: { data } } = this.props;
         const { type, status } = this.state;
+        const activeType = this.getActiveType();
         return (
-            <ClaimInfoContainer>
-                <Column>
-                    <span>Registration date: {data.registrationDate}</span>
-                    <span>User: {user && user.firstName}</span>
-                    <span>Audio:</span>
-                    <audio src={data.url} controls />
-                </Column>
+            <React.Fragment>
+                <ClaimInfoContainer>
+                    <Column>
+                        <span>Registration date: {data.registrationDate}</span>
+                        <span>User: {user && user.firstName}</span>
+                        <span>Audio:</span>
+                        <audio src={data.url} controls />
+                    </Column>
 
+                    <Column>
+                        Status
+                        <Dropdown
+                            onChange={this.statusChangeHandler}
+                            options={claimStatus}
+                            placeholder="Status"
+                            selection
+                            value={status}
+                        />
+                    </Column>
+                </ClaimInfoContainer>
                 <Column>
-                    Status
-                    <Dropdown
-                        onChange={this.statusChangeHandler}
-                        options={claimStatus}
-                        placeholder="Status"
-                        selection
-                        value={status}
-                    />
-                    Type
-                    <Dropdown
-                        onChange={this.typeChangeHandler}
-                        options={types}
-                        placeholder="Type"
-                        selection
-                        value={type}
-                    />
+                    {type &&
+                        types.length && (
+                            <ClaimTypeFields
+                                typesList={types}
+                                activeType={activeType}
+                                claimType={data.type}
+                                typeChangeHandler={this.typeChangeHandler}
+                                submitTypeChanges={this.submitTypeChanges}
+                            />
+                        )}
                 </Column>
-            </ClaimInfoContainer>
+            </React.Fragment>
         );
     }
 }
@@ -87,7 +106,7 @@ export default class ClaimInfo extends React.Component {
 ClaimInfo.propTypes = {
     user: PropTypes.object,
     claimUpdate: PropTypes.func.isRequired,
-    id: PropTypes.string,
+    match: PropTypes.object.isRequired,
     types: PropTypes.array.isRequired,
     userRequest: PropTypes.func.isRequired,
     claimDetails: PropTypes.object.isRequired

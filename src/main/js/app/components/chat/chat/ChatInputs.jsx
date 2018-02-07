@@ -1,10 +1,9 @@
 import React from 'react';
-import DateInput from '../inputs/DateInput';
-import TextFileInput from '../inputs/TextFileInput';
-import NumberInput from '../inputs/NumberInput';
-import SelectCreator from '../inputs/SelectCreator';
-import TextInput from '../inputs/TextInput';
-
+import DateInput from 'components/shared/inputs/DateInput';
+import TextFileInput from 'components/shared/inputs/TextFileInput';
+import NumberInput from 'components/shared/inputs/NumberInput';
+import SelectCreator from 'components/shared/inputs/SelectCreator';
+import TextInput from 'components/shared/inputs/TextInput';
 import * as types from 'app/lib/messageTypes';
 
 /**
@@ -26,10 +25,16 @@ export default {
 
     [types.DATE](onChangeHandler, cleanupForm) {
         return (
-            <DateInput
-                changeHandler={onChangeHandler}
-                cleanupForm={cleanupForm}
-            />
+            <React.Fragment>
+                <TextInput
+                    changeHandler={onChangeHandler}
+                    cleanupForm={cleanupForm}
+                />
+                <DateInput
+                    changeHandler={onChangeHandler}
+                    cleanupForm={cleanupForm}
+                />
+            </React.Fragment>
         );
     },
 

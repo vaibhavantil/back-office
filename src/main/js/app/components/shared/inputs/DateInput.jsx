@@ -9,7 +9,6 @@ import { SingleDatePicker } from 'react-dates';
 import { OPEN_UP } from 'react-dates/constants';
 import 'react-dates/lib/css/_datepicker';
 import { DATE } from 'app/lib/messageTypes';
-import TextInput from './TextInput';
 
 const WidgetContainer = styled.div`
     display: flex;
@@ -69,13 +68,8 @@ export default class DateInput extends React.Component {
     }
 
     render() {
-        const { changeHandler, cleanupForm } = this.props;
         return (
             <React.Fragment>
-                <TextInput
-                    changeHandler={changeHandler}
-                    cleanupForm={cleanupForm}
-                />
                 <Form.Field>
                     <label>Date</label>
                     <WidgetContainer>

@@ -47,7 +47,7 @@ export default function(state = initialState.claims, action) {
                     ...type,
                     key: id,
                     value: type.name,
-                    text: type.name
+                    text: type.title
                 }))
             };
         default:
