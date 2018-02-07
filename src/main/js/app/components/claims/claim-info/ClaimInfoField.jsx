@@ -1,30 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Checkbox } from 'semantic-ui-react';
-import chatInputs from '../../chat/chat/ChatInputs';
-import * as types from 'app/lib/messageTypes';
+import claimInputs from './ClaimInputs';
+import * as types from 'app/lib/claimFieldsTypes';
 
-const messagesWithFiles = [
-    types.AUDIO,
-    types.VIDEO,
-    types.PHOTO,
-    types.PARAGRAPH,
-    types.HERO,
-    types.BANK_ID_COLLECT
-];
-
+const FieldRow = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 500px;
+    min-height: 60px;
+`;
 export default class ClaimInfoField extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            inputIsVisible: false,
-            messageType: types.TEXT,
-            message: {},
-            cleanupForm: false
+            inputIsVisible: false
         };
     }
-
-    submitHandler = () => {};
 
     toggleInput = () => {
         this.setState({
@@ -32,35 +27,14 @@ export default class ClaimInfoField extends React.Component {
         });
     };
 
-    inputHandler = (type, e, { value }) => {
-        this.setState({
-            message: {
-                ...this.state.message,
-                [type]: value
-            }
-        });
-    };
-
     getInput = (type = 'text') => {
-        const { messageType, cleanupForm } = this.state;
-        const isFileInput = !!(messagesWithFiles.indexOf(type) + 1);
-        const isSelectInput =
-            type === types.MULTIPLE_SELECT || type === types.SINGLE_SELECT;
-
-        let input;
-        if (isFileInput) {
-            input = chatInputs.file(this.inputHandler, type, cleanupForm);
-        } else if (isSelectInput) {
-            input = chatInputs.select(
-                this.inputHandler,
-                messageType,
-                cleanupForm
-            );
-        } else {
-            input = chatInputs[type](this.inputHandler, cleanupForm);
-        }
-
-        return <React.Fragment>{input}</React.Fragment>;
+        const { fieldData } = this.props;
+        const input = claimInputs[type](
+            this.props.inputHandler.bind(this, fieldData.name)
+        );
+        return (
+            <div style={{ width: '300px', marginLeft: 'auto' }}>{input}</div>
+        );
     };
 
     render() {
@@ -69,15 +43,19 @@ export default class ClaimInfoField extends React.Component {
             ? this.getInput(types[fieldData.type])
             : null;
         return (
-            <div>
-                <h3>{fieldData.name}</h3>
-                <Checkbox onChange={this.toggleInput} />
+            <FieldRow>
+                <span>{fieldData.name}</span>
+                <Checkbox
+                    style={{ marginLeft: '10px' }}
+                    onChange={this.toggleInput}
+                />
                 {fieldInput}
-            </div>
+            </FieldRow>
         );
     }
 }
 
 ClaimInfoField.propTypes = {
-    fieldData: PropTypes.object.isRequired
+    fieldData: PropTypes.object.isRequired,
+    inputHandler: PropTypes.func.isRequired
 };

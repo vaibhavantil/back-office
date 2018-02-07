@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Dropdown } from 'semantic-ui-react';
 import { claimStatus } from 'app/lib/selectOptions';
 import ClaimTypeFields from './ClaimTypeFields';
+import { fieldsToArray } from 'app/lib/helpers';
 
 const ClaimInfoContainer = styled.div`
     display: flex;
@@ -36,11 +37,14 @@ export default class ClaimInfo extends React.Component {
     };
 
     typeChangeHandler = (e, { value }) => {
-        const { claimUpdate, match, types } = this.props;
-        const id = match.params.id;
         this.setState({ type: value });
-        const type = types.filter(item => item.name === value)[0];
-        claimUpdate(id, { id, ...type }, 'type');
+    };
+
+    submitTypeChanges = data => {
+        const { match: { params }, claimUpdate, types } = this.props;
+        const updates = fieldsToArray(data);
+        const type = types.filter(item => item.name === this.state.type)[0];
+        claimUpdate(params.id, { id: params.id, ...type, ...updates }, 'type');
     };
 
     getActiveType = () => {
@@ -90,6 +94,7 @@ export default class ClaimInfo extends React.Component {
                                 activeType={activeType}
                                 claimType={data.type}
                                 typeChangeHandler={this.typeChangeHandler}
+                                submitTypeChanges={this.submitTypeChanges}
                             />
                         )}
                 </Column>
