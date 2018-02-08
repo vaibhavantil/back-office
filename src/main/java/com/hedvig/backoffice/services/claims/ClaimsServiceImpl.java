@@ -89,7 +89,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     }
 
     @Override
-    public void addPayout(ClaimPayoutDTO dto) throws ClaimException {
+    public ClaimPayoutDTO addPayout(ClaimPayoutDTO dto) throws ClaimException {
         throw new RuntimeException("Not implemented yet!");
     }
 
@@ -104,7 +104,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     }
 
     @Override
-    public void addNote(ClaimNoteDTO dto) throws ClaimException {
+    public ClaimNoteDTO addNote(ClaimNoteDTO dto) throws ClaimException {
         throw new RuntimeException("Not implemented yet!");
     }
 

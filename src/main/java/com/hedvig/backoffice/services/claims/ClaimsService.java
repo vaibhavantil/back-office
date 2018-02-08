@@ -18,10 +18,10 @@ public interface ClaimsService {
     List<ClaimEventDTO> events(String id) throws ClaimException;
     void addEvent(ClaimEventDTO dto) throws ClaimException;
     List<ClaimPayoutDTO> payouts(String id) throws ClaimException;
-    void addPayout(ClaimPayoutDTO dto) throws ClaimException;
+    ClaimPayoutDTO addPayout(ClaimPayoutDTO dto) throws ClaimException;
     void removePayout(String id, String claimId) throws ClaimException;
     List<ClaimNoteDTO> notes(String id) throws ClaimException;
-    void addNote(ClaimNoteDTO dto) throws ClaimException;
+    ClaimNoteDTO addNote(ClaimNoteDTO dto) throws ClaimException;
     void removeNote(String id, String claimId) throws ClaimException;
     void changeType(String id, ClaimTypeDTO dto) throws ClaimException;
     void changeStatus(String id, ClaimStatus status) throws ClaimException;
