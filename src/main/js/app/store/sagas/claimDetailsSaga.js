@@ -41,8 +41,7 @@ function* createNoteFlow({ data, id }) {
             data,
             `${id}/notes`
         );
-        // TODO remove "|| data"; needs to return created note with Id from server
-        yield put(actions.createNoteSuccess(note.data || data));
+        yield put(actions.createNoteSuccess(note.data));
     } catch (error) {
         yield put(actions.claimRequestError(error));
     }

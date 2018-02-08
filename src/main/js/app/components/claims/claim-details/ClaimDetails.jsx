@@ -30,6 +30,7 @@ export default class ClaimDetails extends React.Component {
             createNote,
             removeNote,
             updateResume,
+            createPayment,
             match
         } = this.props;
         return (
@@ -45,7 +46,9 @@ export default class ClaimDetails extends React.Component {
                 <Payments
                     claimDetails={claimDetails}
                     updateResume={updateResume}
+                    createPayment={createPayment}
                     id={match.params.id}
+                    notes={claimDetails.notes}
                 />
             </React.Fragment>
         );
@@ -61,5 +64,6 @@ ClaimDetails.propTypes = {
     claimRequest: PropTypes.func.isRequired,
     claimTypes: PropTypes.func.isRequired,
     notesRequest: PropTypes.func.isRequired,
-    paymentsRequest: PropTypes.func.isRequired
+    paymentsRequest: PropTypes.func.isRequired,
+    createPayment: PropTypes.func.isRequired
 };

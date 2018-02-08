@@ -30,14 +30,19 @@ export default class ClaimInfo extends React.Component {
     }
 
     statusChangeHandler = (e, { value }) => {
-        const { claimUpdate, match } = this.props;
-        const id = match.params.id;
+        const { match: { params }, claimUpdate } = this.props;
         this.setState({ status: value });
-        claimUpdate(id, { id, status: value }, 'status');
+        claimUpdate(params.id, { status: value }, 'status');
     };
 
     typeChangeHandler = (e, { value }) => {
         this.setState({ type: value });
+    };
+
+    claimTypeChangeHandler = (e, { value }) => {
+        const { match: { params }, claimUpdate } = this.props;
+        this.setState({ type: value });
+        claimUpdate(params.id, { type: value }, 'type');
     };
 
     submitTypeChanges = data => {
@@ -57,7 +62,7 @@ export default class ClaimInfo extends React.Component {
         if (data.userId) userRequest(data.userId);
         this.setState({
             status: data.status,
-            type: data.type.name
+            type: data.type
         });
     }
 
@@ -83,6 +88,14 @@ export default class ClaimInfo extends React.Component {
                             placeholder="Status"
                             selection
                             value={status}
+                        />
+                        Type
+                        <Dropdown
+                            onChange={this.claimTypeChangeHandler}
+                            options={types}
+                            placeholder="Type"
+                            selection
+                            value={type}
                         />
                     </Column>
                 </ClaimInfoContainer>

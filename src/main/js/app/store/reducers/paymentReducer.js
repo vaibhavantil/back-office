@@ -12,7 +12,7 @@ export default function(state = initialState.claimDetails, action) {
         case PAYMENTS_REQUEST_SUCCESS:
             return {
                 ...state,
-                payments: action.payments
+                payments: action.payments.data
             };
         case REMOVE_PAYMENT_SUCCESS:
             return {
@@ -24,7 +24,7 @@ export default function(state = initialState.claimDetails, action) {
         case CREATE_PAYMENT_SUCCESS:
             return {
                 ...state,
-                payments: state.payments.slice().concat(action.payment)
+                payments: [...state.payments, action.payment.data]
             };
 
         case UPDATE_RESUME_SUCCESS:

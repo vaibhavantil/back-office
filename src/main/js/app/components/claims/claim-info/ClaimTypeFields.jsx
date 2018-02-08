@@ -81,7 +81,7 @@ export default class ClaimTypeFields extends React.Component {
 }
 
 ClaimTypeFields.propTypes = {
-    claimType: PropTypes.object.isRequired,
+    claimType: PropTypes.string.isRequired,
     typesList: PropTypes.array.isRequired,
     activeType: PropTypes.object.isRequired,
     typeChangeHandler: PropTypes.func.isRequired,
