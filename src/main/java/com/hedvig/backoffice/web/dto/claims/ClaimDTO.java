@@ -14,7 +14,8 @@ public class ClaimDTO {
     private String id;
     private String userId;
     private ClaimStatus status;
-    private ClaimTypeDTO type;
+    private String type;
+    private ClaimDetailsDTO details;
     private String url;
     private BigDecimal resume;
     private BigDecimal total;
