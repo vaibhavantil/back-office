@@ -109,7 +109,9 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public void addPayout(ClaimPayoutDTO dto) throws ClaimException {
+    public ClaimPayoutDTO addPayout(ClaimPayoutDTO dto) throws ClaimException {
+        dto.setId(UUID.randomUUID().toString());
+
         ClaimDTO claim = find(dto.getClaimId());
         ClaimNoteDTO note = notes(dto.getClaimId())
                 .stream()
@@ -130,6 +132,8 @@ public class ClaimsServiceStub implements ClaimsService {
         ClaimEventDTO event = new ClaimEventDTO(dto.getClaimId(),
                 "new payout: amount = " + dto.getAmount().toString() + ", total = " + claim.getTotal().toString());
         addEvent(event);
+
+        return dto;
     }
 
     @Override
@@ -163,9 +167,13 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public void addNote(ClaimNoteDTO dto) throws ClaimException {
+    public ClaimNoteDTO addNote(ClaimNoteDTO dto) throws ClaimException {
+        dto.setId(UUID.randomUUID().toString());
+
         List<ClaimNoteDTO> list = notes.computeIfAbsent(dto.getClaimId(), k -> new ArrayList<>());
         list.add(dto);
+
+        return dto;
     }
 
     @Override

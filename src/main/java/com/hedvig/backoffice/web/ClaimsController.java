@@ -8,6 +8,7 @@ import com.hedvig.backoffice.services.claims.ClaimStatus;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.web.dto.claims.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/claims")
@@ -84,15 +83,13 @@ public class ClaimsController {
     }
 
     @PutMapping("/{id}/payouts")
-    public ResponseEntity<?> addPayout(@PathVariable String id, @RequestBody @Valid ClaimPayoutDTO dto) throws ClaimException {
-        dto.setId(UUID.randomUUID().toString());
+    public ResponseEntity<ClaimPayoutDTO> addPayout(@PathVariable String id, @RequestBody @Valid ClaimPayoutDTO dto) throws ClaimException {
         dto.setClaimId(id);
         dto.setDate(new Date().toInstant());
 
-        claimsService.addPayout(dto);
+        ClaimPayoutDTO result = claimsService.addPayout(dto);
 
-        return ResponseEntity
-                .noContent().build();
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}/payouts/{payoutId}")
@@ -109,19 +106,17 @@ public class ClaimsController {
     }
 
     @PutMapping("/{id}/notes")
-    public ResponseEntity<?> addNote(@PathVariable String id, @RequestBody @Valid ClaimNoteDTO dto,
+    public ResponseEntity<ClaimNoteDTO> addNote(@PathVariable String id, @RequestBody @Valid ClaimNoteDTO dto,
                                      @AuthenticationPrincipal String principal) throws ClaimException, AuthorizationException {
         Personnel personnel = personnelRepository.findByEmail(principal).orElseThrow(AuthorizationException::new);
 
-        dto.setId(UUID.randomUUID().toString());
         dto.setClaimId(id);
         dto.setAdminId(personnel.getId());
         dto.setDate(new Date().toInstant());
 
-        claimsService.addNote(dto);
+        ClaimNoteDTO result = claimsService.addNote(dto);
 
-        return ResponseEntity
-                .noContent().build();
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}/notes/{noteId}")
