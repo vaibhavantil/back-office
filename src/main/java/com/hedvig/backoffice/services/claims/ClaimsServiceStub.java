@@ -218,7 +218,10 @@ public class ClaimsServiceStub implements ClaimsService {
     @Override
     public void addDetails(String id, ClaimDetailsDTO dto) throws ClaimException {
         ClaimDTO claim = find(id);
-        ClaimTypeDTO type = getType(claim.getType());
+        String typeName = Optional.ofNullable(claim.getType())
+                .orElseThrow(() -> new ClaimNotFoundException("claim type is not defined"));
+
+        ClaimTypeDTO type = getType(typeName);
 
         for (ClaimField f : type.getRequired()) {
             String value = Optional.ofNullable(
