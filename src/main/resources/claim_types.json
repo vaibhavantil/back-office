@@ -1,90 +1,95 @@
 [
   {
     "name": "THEFT",
-    "title": "Theft",
+    "title": "Stöld",
     "required": [
       {
         "name": "place",
-        "title": "Place",
+        "title": "Plats",
         "type": "TEXT"
       },
       {
         "name": "date",
-        "title": "Date",
+        "title": "Datum",
         "type": "DATE"
       },
       {
         "name": "item",
-        "title": "Item",
+        "title": "Pryl",
         "type": "ASSET"
       }
     ],
     "additional": [
       {
         "name": "report",
-        "title": "Police Report",
+        "title": "Polisanmälan",
         "type": "BOOL"
       },
       {
-        "name": "description",
-        "title": "Description",
-        "type": "TEXT"
+        "name": "file",
+        "title": "Kvitto",
+        "type": "FILE"
       }
     ]
   },
   {
-    "name": "BURN",
-    "title": "Burn",
+    "name": "FIRE",
+    "title": "Brand",
     "required": [
       {
         "name": "place",
-        "title": "Place",
+        "title": "Plats",
         "type": "TEXT"
       },
       {
         "name": "date",
-        "title": "Date",
+        "title": "Datum",
         "type": "DATE"
       },
       {
         "name": "item",
-        "title": "Item",
+        "title": "Pryl",
         "type": "ASSET"
       }
     ],
     "additional": [
       {
         "name": "report",
-        "title": "Police Report",
+        "title": "Brandinspektionsrapport",
         "type": "BOOL"
       }
     ]
   },
   {
-    "name": "SINK",
-    "title": "Sink",
+    "name": "DRULLE",
+    "title": "Drulle",
     "required": [
       {
         "name": "place",
-        "title": "Place",
+        "title": "Plats",
         "type": "TEXT"
       },
       {
         "name": "date",
-        "title": "Date",
+        "title": "Datum",
         "type": "DATE"
       },
       {
         "name": "item",
-        "title": "Item",
+        "title": "Pryl",
         "type": "ASSET"
       }
     ],
     "additional": [
       {
-        "name": "found",
-        "title": "Was it found",
+        "name": "report",
+        "title": "Polisanmälan",
         "type": "BOOL"
+      },
+      {
+        "name": "file",
+        "title": "Kvitto",
+        "type": "FILE"
       }
     ]
   }
