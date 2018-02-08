@@ -18,8 +18,7 @@ public class ClaimPayoutDTO {
     @NotNull
     private BigDecimal amount;
 
-    @NotNull
-    private String noteId;
+    private String note;
 
     @NotNull
     private boolean exg;

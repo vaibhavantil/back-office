@@ -1,12 +1,11 @@
 package com.hedvig.backoffice.web.dto.claims;
 
-import lombok.Value;
+import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
-@Value
-public class ClaimTypeDTO {
+@Data
+public class ClaimField {
     @NotNull
     private String name;
 
@@ -14,8 +13,5 @@ public class ClaimTypeDTO {
     private String title;
 
     @NotNull
-    private List<ClaimField> required;
-
-    @NotNull
-    private List<ClaimField> additional;
+    private String type;
 }

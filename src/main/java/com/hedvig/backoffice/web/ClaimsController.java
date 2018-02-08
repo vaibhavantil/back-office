@@ -8,6 +8,7 @@ import com.hedvig.backoffice.services.claims.ClaimStatus;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.web.dto.claims.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -54,10 +55,18 @@ public class ClaimsController {
         return claimsService.types();
     }
 
-    @PostMapping("/{id}/type")
-    public ResponseEntity<?> type(@PathVariable String id, @RequestBody @Valid ClaimTypeDTO dto)
+    @PostMapping("/{id}/type/{type}")
+    public ResponseEntity<?> type(@PathVariable String id, @PathVariable String type)
             throws ClaimException {
-        claimsService.changeType(id, dto);
+        claimsService.changeType(id, type);
+
+        return ResponseEntity
+                .noContent().build();
+    }
+
+    @PostMapping("/{id}/details")
+    public ResponseEntity<?> details(@PathVariable String id, @RequestBody @Valid ClaimDetailsDTO dto) throws ClaimException {
+        claimsService.addDetails(id, dto);
 
         return ResponseEntity
                 .noContent().build();

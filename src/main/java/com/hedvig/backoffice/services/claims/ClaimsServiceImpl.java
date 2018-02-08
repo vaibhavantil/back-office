@@ -114,7 +114,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     }
 
     @Override
-    public void changeType(String id, ClaimTypeDTO dto) throws ClaimException {
+    public void changeType(String id, String type) throws ClaimException {
         throw new RuntimeException("Not implemented yet!");
     }
 
@@ -125,6 +125,11 @@ public class ClaimsServiceImpl implements ClaimsService {
 
     @Override
     public void setResume(String id, BigDecimal resume) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
+    public void addDetails(String id, ClaimDetailsDTO dto) throws ClaimException {
         throw new RuntimeException("Not implemented yet!");
     }
 

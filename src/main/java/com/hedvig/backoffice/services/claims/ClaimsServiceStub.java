@@ -5,7 +5,9 @@ import com.hedvig.backoffice.services.users.UserService;
 import com.hedvig.backoffice.services.users.UserServiceException;
 import com.hedvig.backoffice.web.dto.UserDTO;
 import com.hedvig.backoffice.web.dto.claims.*;
+import com.hedvig.backoffice.web.dto.claims.ClaimField;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 
@@ -50,7 +52,8 @@ public class ClaimsServiceStub implements ClaimsService {
             return new ClaimDTO(id,
                     user.getHid(),
                     ClaimStatus.OPEN,
-                    types.get(0),
+                    null,
+                    null,
                     "http://78.media.tumblr.com/tumblr_ll313eVnI91qjahcpo1_1280.jpg",
                     new BigDecimal(0),
                     new BigDecimal(0),
@@ -113,12 +116,6 @@ public class ClaimsServiceStub implements ClaimsService {
         dto.setId(UUID.randomUUID().toString());
 
         ClaimDTO claim = find(dto.getClaimId());
-        ClaimNoteDTO note = notes(dto.getClaimId())
-                .stream()
-                .filter(n -> n.getId().equals(dto.getNoteId()))
-                .findAny()
-                .orElseThrow(() -> new ClaimNotFoundException("note with id " + dto.getNoteId() + " not found"));
-
         List<ClaimPayoutDTO> list = payments.computeIfAbsent(dto.getClaimId(), k -> new ArrayList<>());
         list.add(dto);
 
@@ -188,12 +185,13 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public void changeType(String id, ClaimTypeDTO dto) throws ClaimException {
+    public void changeType(String id, String type) throws ClaimException {
         ClaimDTO claim = find(id);
-        claim.setType(dto);
+        ClaimTypeDTO typeDTO = getType(type);
+        claim.setType(typeDTO.getName());
         save(claim);
 
-        ClaimEventDTO event = new ClaimEventDTO(id, "type changed to " + dto.getName());
+        ClaimEventDTO event = new ClaimEventDTO(id, "type changed to " + type);
         addEvent(event);
     }
 
@@ -215,6 +213,28 @@ public class ClaimsServiceStub implements ClaimsService {
 
         ClaimEventDTO event = new ClaimEventDTO(id, "resume changed to " + resume.toString());
         addEvent(event);
+    }
+
+    @Override
+    public void addDetails(String id, ClaimDetailsDTO dto) throws ClaimException {
+        ClaimDTO claim = find(id);
+        ClaimTypeDTO type = getType(claim.getType());
+
+        for (ClaimField f : type.getRequired()) {
+            String value = Optional.ofNullable(
+                    StringUtils.trimToNull(dto.getRequired().get(f.getName())))
+                    .orElseThrow(() -> new ClaimNotFoundException("required field " + f.getName() + " is empty"));
+
+            dto.getRequired().replace(f.getName(), value);
+        }
+
+        claim.setDetails(dto);
+        save(claim);
+    }
+
+    private ClaimTypeDTO getType(String type) throws ClaimException {
+        return types.stream().filter(t -> t.getName().equals(type)).findAny()
+                .orElseThrow(() -> new ClaimNotFoundException("claim type " + type + " not found"));
     }
 
 }
