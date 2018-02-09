@@ -1,5 +1,9 @@
 package com.hedvig.backoffice.services.messages;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.BAD_GATEWAY)
 public class BotServiceException extends Exception {
 
     private int code;
