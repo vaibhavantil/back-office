@@ -14,6 +14,8 @@ import com.hedvig.backoffice.services.users.UserNotFoundException;
 import com.hedvig.backoffice.services.users.UserService;
 import com.hedvig.backoffice.services.users.UserServiceException;
 import com.hedvig.backoffice.web.dto.UserDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,8 @@ import java.util.Optional;
 
 @Service
 public class ChatServiceImpl implements ChatService {
+
+    private static Logger logger = LoggerFactory.getLogger(ChatServiceImpl.class);
 
     private final SimpMessagingTemplate template;
     private final BotService botService;
@@ -60,6 +64,7 @@ public class ChatServiceImpl implements ChatService {
         Optional<Subscription> subscriptionOptional = subscriptionRepository.findByHid(hid);
         if (!subscriptionOptional.isPresent()) {
             send(hid, Message.error(400, "User with hid " + hid + " not found"));
+            logger.warn("User with hid " + hid + " not found");
             return;
         }
 
@@ -69,6 +74,7 @@ public class ChatServiceImpl implements ChatService {
             botService.response(hid, msg);
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
+            logger.error("chat not updated hid = " + hid, e);
         }
     }
 
@@ -78,6 +84,7 @@ public class ChatServiceImpl implements ChatService {
             send(hid, Message.chat(botService.messages(hid)));
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
+            logger.error("chat not updated hid = " + hid, e);
         }
     }
 
@@ -87,6 +94,7 @@ public class ChatServiceImpl implements ChatService {
             send(hid, Message.chat(botService.messages(hid, count)));
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
+            logger.error("chat not updated hid = " + hid, e);
         }
     }
 
@@ -108,15 +116,18 @@ public class ChatServiceImpl implements ChatService {
             user = userService.findByHid(hid);
         } catch (UserNotFoundException e) {
             send(hid, Message.error(400, "User with hid " + hid + " not found"));
+            logger.warn("user with hid " + hid + " not found", e);
             return;
         } catch (UserServiceException e) {
             send(hid, Message.error(500, e.getMessage()));
+            logger.error("can't fetch user hid = " + hid, e);
             return;
         }
 
         Optional<Personnel> personnelOptional = personnelRepository.findByEmail(principal);
         if (!personnelOptional.isPresent()) {
             send(hid, Message.error(400, "Not authorized"));
+            logger.warn("User not authorized hid = " + hid);
             return;
         }
 
