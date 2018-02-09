@@ -7,9 +7,6 @@ logging:
       hedvig: DEBUG
 
 spring:
-  application:
-    name: back-office
-
   datasource:
     url: jdbc:postgresql://localhost:5432/back-office
     username: postgres
