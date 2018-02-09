@@ -155,6 +155,12 @@
             <artifactId>back-office-common</artifactId>
             <version>-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>4.9</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -40,11 +40,11 @@ public class BackOfficeStartupApplicationListener implements ApplicationListener
                             try {
                                 logger.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(u));
                             } catch (JsonProcessingException e) {
-                                e.printStackTrace();
+                                logger.error("error during parsing users from service", e);
                             }
                         });
             } catch (UserServiceException e) {
-                e.printStackTrace();
+                logger.error("error during updating users list", e);
             }
         }
     }
