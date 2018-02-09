@@ -22,9 +22,7 @@ function* requestFlow() {
 function* updateFlow({ data, id, reqType }) {
     try {
         const token = yield call(getAuthToken);
-        const path = `${id}/${reqType}${
-            reqType === 'status' ? '/' + data.status : ''
-        }`;
+        const path = `${id}/${reqType}/${data.status || data.type}`;
         yield call(api, token, config.claims.update, data, path);
         yield put(actions.claimUpdateSuccess());
     } catch (error) {

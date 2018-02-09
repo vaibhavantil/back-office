@@ -2,12 +2,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import api from 'app/api';
 import config from 'app/api/config';
 import { getAuthToken } from 'app/lib/checkAuth';
-import {
-    CLAIM_REQUESTING,
-    CREATE_NOTE_REQUESTING,
-    NOTES_REQUESTING,
-    REMOVE_NOTE_REQUESTING
-} from '../constants/claims';
+import { CLAIM_REQUESTING, CLAIM_DETAILS_UPDATING } from '../constants/claims';
 import * as actions from '../actions/claimDetailsActions';
 
 function* requestFlow({ id }) {
@@ -20,45 +15,12 @@ function* requestFlow({ id }) {
     }
 }
 
-function* removeNoteFlow({ claimId, noteId }) {
+function* detailsUpdateFlow({ id, data }) {
     try {
         const token = yield call(getAuthToken);
-        const path = `${claimId}/notes/${noteId}`;
-        yield call(api, token, config.claims.details.remove, null, path);
-        yield put(actions.removeNoteSuccess(noteId));
-    } catch (error) {
-        yield put(actions.claimRequestError(error));
-    }
-}
-
-function* createNoteFlow({ data, id }) {
-    try {
-        const token = yield call(getAuthToken);
-        const note = yield call(
-            api,
-            token,
-            config.claims.details.create,
-            data,
-            `${id}/notes`
-        );
-        // TODO remove "|| data"; needs to return created note with Id from server
-        yield put(actions.createNoteSuccess(note.data || data));
-    } catch (error) {
-        yield put(actions.claimRequestError(error));
-    }
-}
-
-function* notesRequestFlow({ id }) {
-    try {
-        const token = yield call(getAuthToken);
-        const notes = yield call(
-            api,
-            token,
-            config.claims.details.get,
-            null,
-            `${id}/notes`
-        );
-        yield put(actions.notesRequestSuccess(notes));
+        const path = `${id}/details`;
+        yield call(api, token, config.claims.update, data, path);
+        yield put(actions.claimDetailsUpdateSuccess(null));
     } catch (error) {
         yield put(actions.claimRequestError(error));
     }
@@ -67,9 +29,7 @@ function* notesRequestFlow({ id }) {
 function* watcher() {
     yield [
         takeLatest(CLAIM_REQUESTING, requestFlow),
-        takeLatest(CREATE_NOTE_REQUESTING, createNoteFlow),
-        takeLatest(NOTES_REQUESTING, notesRequestFlow),
-        takeLatest(REMOVE_NOTE_REQUESTING, removeNoteFlow)
+        takeLatest(CLAIM_DETAILS_UPDATING, detailsUpdateFlow)
     ];
 }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { ItemContent } from '../../dashboard/Dashboard';
@@ -7,8 +8,8 @@ import PaginatorList from 'components/shared/paginator-list/PaginatorList';
 const ListItem = ({ item }) => (
     <Link to={`claims/${item.id}`}>
         <ItemContent>
-            <div>{item.type.name}</div>
-            <div>{item.registrationDate}</div>
+            <div>{item.id}</div>
+            <div>{moment.unix(item.timestamp).format('DD MM YYYY')}</div>
         </ItemContent>
     </Link>
 );

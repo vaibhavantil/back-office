@@ -30,17 +30,19 @@ export const refreshMessagesList = (list, message, size) => {
 // TODO append field "newMessagesCounter" to each user
 export const setNewMessagesCounter = (users /* counters */) => users;
 
-export const fieldsToArray = fieldsObj => {
-    const required = Object.keys(fieldsObj.required).map(name => ({
-        name,
-        value: fieldsObj.required[name]
-    }));
-    const additional = Object.keys(fieldsObj.additional).map(name => ({
-        name,
-        value: fieldsObj.additional[name]
-    }));
-    return {
-        required,
-        additional
-    };
+export const fieldsToArray = (fields, type) => {
+    const result = {};
+    Object.keys(type).forEach(fieldName => {
+        result[fieldName] = Object.keys(fields[fieldName]).map(key => ({
+            ...type[fieldName].find(el => el.name === key),
+            name: key,
+            value: fields[fieldName][key]
+        }));
+
+        if (result[fieldName].length !== type[fieldName].length) {
+            result[fieldName] = [...type[fieldName], ...result[fieldName]];
+        }
+    });
+
+    return result;
 };

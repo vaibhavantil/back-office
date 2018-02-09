@@ -11,7 +11,13 @@ import {
     REMOVE_NOTE_SUCCESS,
     PAYMENTS_REQUESTING,
     REMOVE_PAYMENT_REQUESTING,
-    CREATE_PAYMENT_REQUESTING
+    CREATE_PAYMENT_REQUESTING,
+    PAYMENTS_REQUEST_SUCCESS,
+    REMOVE_PAYMENT_SUCCESS,
+    UPDATE_RESUME_SUCCESS,
+    CREATE_PAYMENT_SUCCESS,
+    CLAIM_DETAILS_UPDATE_SUCCESS,
+    CLAIM_DETAILS_UPDATING
 } from '../constants/claims';
 
 export default function(state = initialState.claimDetails, action) {
@@ -23,6 +29,7 @@ export default function(state = initialState.claimDetails, action) {
         case REMOVE_NOTE_REQUESTING:
         case CREATE_NOTE_REQUESTING:
         case CLAIM_REQUESTING:
+        case CLAIM_DETAILS_UPDATING:
             return {
                 ...state,
                 requesting: true,
@@ -69,7 +76,37 @@ export default function(state = initialState.claimDetails, action) {
                 ...state,
                 notes: state.notes.filter(el => el.id !== action.noteId)
             };
+        case PAYMENTS_REQUEST_SUCCESS:
+            return {
+                ...state,
+                payments: action.payments.data
+            };
+        case REMOVE_PAYMENT_SUCCESS:
+            return {
+                ...state,
+                payments: state.payments.filter(
+                    el => el.id !== action.paymentId
+                )
+            };
+        case CREATE_PAYMENT_SUCCESS:
+            return {
+                ...state,
+                payments: [...state.payments, action.payment.data]
+            };
 
+        case UPDATE_RESUME_SUCCESS:
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    resume: action.resume
+                }
+            };
+
+        case CLAIM_DETAILS_UPDATE_SUCCESS:
+            return {
+                ...state
+            };
         default:
             return state;
     }
