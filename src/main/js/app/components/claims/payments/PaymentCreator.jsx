@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
+import { Form, Segment } from 'semantic-ui-react';
 
 export default class PaymentCreator extends React.Component {
     constructor(props) {
@@ -32,20 +32,22 @@ export default class PaymentCreator extends React.Component {
 
     render() {
         return (
-            <React.Fragment>
+            <Segment>
                 <Form>
-                    <Form.Input
-                        type="number"
-                        placeholder="Amount"
-                        onChange={this.amountInputHandler}
-                        value={this.state.amount}
-                    />
-                    <Form.Input
-                        type="text"
-                        placeholder="Note"
-                        onChange={this.noteInputhandler}
-                        value={this.state.note}
-                    />
+                    <Form.Group>
+                        <Form.Input
+                            type="number"
+                            placeholder="Amount"
+                            onChange={this.amountInputHandler}
+                            value={this.state.amount}
+                        />
+                        <Form.Input
+                            type="text"
+                            placeholder="Note"
+                            onChange={this.noteInputhandler}
+                            value={this.state.note}
+                        />
+                    </Form.Group>
                     <Form.Group>
                         <label>Ex gratia</label>
                         <Form.Checkbox
@@ -55,11 +57,12 @@ export default class PaymentCreator extends React.Component {
                     </Form.Group>
 
                     <Form.Button
+                        primary
                         onClick={this.createPayment}
                         content="Create"
                     />
                 </Form>
-            </React.Fragment>
+            </Segment>
         );
     }
 }

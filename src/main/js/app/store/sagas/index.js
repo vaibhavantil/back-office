@@ -7,6 +7,7 @@ import DashboardSaga from './dashboardSaga';
 import ClaimsSaga from './claimsSaga';
 import ClaimDetailsSaga from './claimDetailsSaga';
 import PaymentsSaga from './paymentsSaga';
+import NotesSaga from './notesSaga';
 
 export default function* IndexSaga() {
     yield [
@@ -18,6 +19,7 @@ export default function* IndexSaga() {
         DashboardSaga(),
         ClaimsSaga(),
         ClaimDetailsSaga(),
-        PaymentsSaga()
+        PaymentsSaga(),
+        NotesSaga()
     ];
 }

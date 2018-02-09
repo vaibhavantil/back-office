@@ -1,17 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Button, Form } from 'semantic-ui-react';
+import { Button, Form, Segment } from 'semantic-ui-react';
 import PayoutsList from './PayoutsList';
 import PaymentCreator from './PaymentCreator';
-
-const PaymentsContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin: 100px;
-    padding: 30px;
-    border: solid 1px #ccc;
-`;
 
 export default class Payments extends React.Component {
     constructor(props) {
@@ -49,9 +40,10 @@ export default class Payments extends React.Component {
         const { claimDetails, createPayment, notes, id } = this.props;
         const { resume, editDisabled } = this.state;
         return (
-            <PaymentsContainer>
+            <Segment>
                 <Form>
                     <Form.Group>
+                        <label>Resume </label>
                         <Form.Input
                             type="number"
                             value={resume}
@@ -70,7 +62,7 @@ export default class Payments extends React.Component {
                 </Form>
                 <PayoutsList list={claimDetails.payments} />
                 <h2>
-                    Total payed out:{' '}
+                    Total payed out:
                     {claimDetails.data && claimDetails.data.total}
                 </h2>
                 <PaymentCreator
@@ -78,7 +70,7 @@ export default class Payments extends React.Component {
                     notes={notes}
                     claimId={id}
                 />
-            </PaymentsContainer>
+            </Segment>
         );
     }
 }

@@ -9,35 +9,44 @@ const boolOptions = [
     { key: 2, value: 'NO', text: 'No' }
 ];
 export default {
-    [types.TEXT](onChangeHandler, cleanupForm) {
+    [types.TEXT](onChangeHandler, cleanupForm, value) {
         return (
             <TextInput
                 changeHandler={onChangeHandler}
                 cleanupForm={cleanupForm}
+                value={value}
             />
         );
     },
 
-    [types.DATE](onChangeHandler, cleanupForm) {
+    [types.DATE](onChangeHandler, cleanupForm, value) {
         return (
             <DateInput
                 changeHandler={onChangeHandler}
                 cleanupForm={cleanupForm}
+                value={value}
             />
         );
     },
 
-    [types.BOOL](onChangeHandler) {
+    [types.BOOL](onChangeHandler, value) {
         return (
             <Dropdown
                 onChange={onChangeHandler.bind(this, types.BOOL)}
                 options={boolOptions}
+                value={value}
                 selection
             />
         );
     },
 
-    [types.ASSET](onChangeHandler) {
-        return <TextInput changeHandler={onChangeHandler} />;
+    [types.ASSET](onChangeHandler, cleanupForm, value) {
+        return (
+            <TextInput
+                changeHandler={onChangeHandler}
+                cleanupForm={cleanupForm}
+                value={value}
+            />
+        );
     }
 };

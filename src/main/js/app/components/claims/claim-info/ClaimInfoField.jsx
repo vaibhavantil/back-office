@@ -22,15 +22,25 @@ export default class ClaimInfoField extends React.Component {
     }
 
     toggleInput = () => {
-        this.setState({
-            inputIsVisible: !this.state.inputIsVisible
-        });
+        this.setState(
+            {
+                inputIsVisible: !this.state.inputIsVisible
+            },
+            () => {
+                if (!this.state.inputIsVisible) {
+                    const { field: { name }, cleanupField } = this.props;
+                    cleanupField(name);
+                }
+            }
+        );
     };
 
     getInput = (type = 'text') => {
-        const { fieldData } = this.props;
+        const { field, inputHandler } = this.props;
         const input = claimInputs[type](
-            this.props.inputHandler.bind(this, fieldData.name)
+            inputHandler.bind(this, field.name),
+            false,
+            field.value
         );
         return (
             <div style={{ width: '300px', marginLeft: 'auto' }}>{input}</div>
@@ -38,24 +48,30 @@ export default class ClaimInfoField extends React.Component {
     };
 
     render() {
-        const { fieldData } = this.props;
-        const fieldInput = this.state.inputIsVisible
-            ? this.getInput(types[fieldData.type])
-            : null;
+        const { field, required } = this.props;
+        const { inputIsVisible } = this.state;
         return (
-            <FieldRow>
-                <span>{fieldData.name}</span>
-                <Checkbox
-                    style={{ marginLeft: '10px' }}
-                    onChange={this.toggleInput}
-                />
-                {fieldInput}
-            </FieldRow>
+            <React.Fragment>
+                <FieldRow>
+                    <span>{field.name}</span>
+                    {!required && (
+                        <Checkbox
+                            style={{ marginLeft: '10px' }}
+                            onChange={this.toggleInput}
+                        />
+                    )}
+                    {inputIsVisible || required
+                        ? this.getInput(types[field.type])
+                        : null}
+                </FieldRow>
+            </React.Fragment>
         );
     }
 }
 
 ClaimInfoField.propTypes = {
-    fieldData: PropTypes.object.isRequired,
-    inputHandler: PropTypes.func.isRequired
+    field: PropTypes.object.isRequired,
+    inputHandler: PropTypes.func.isRequired,
+    cleanupField: PropTypes.func.isRequired,
+    required: PropTypes.bool
 };

@@ -1,31 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown, Grid, Segment } from 'semantic-ui-react';
+import moment from 'moment';
 import { claimStatus } from 'app/lib/selectOptions';
 import ClaimTypeFields from './ClaimTypeFields';
-import { fieldsToArray } from 'app/lib/helpers';
-
-const ClaimInfoContainer = styled.div`
-    display: flex;
-    justify-content: space-around;
-    margin: 100px;
-    padding: 30px;
-    border: solid 1px #ccc;
-`;
-
-const Column = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
 
 export default class ClaimInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: 'OPEN',
-            type: ''
+            status: 'OPEN'
         };
     }
 
@@ -33,28 +17,6 @@ export default class ClaimInfo extends React.Component {
         const { match: { params }, claimUpdate } = this.props;
         this.setState({ status: value });
         claimUpdate(params.id, { status: value }, 'status');
-    };
-
-    typeChangeHandler = (e, { value }) => {
-        this.setState({ type: value });
-    };
-
-    claimTypeChangeHandler = (e, { value }) => {
-        const { match: { params }, claimUpdate } = this.props;
-        this.setState({ type: value });
-        claimUpdate(params.id, { type: value }, 'type');
-    };
-
-    submitTypeChanges = data => {
-        const { match: { params }, claimUpdate, types } = this.props;
-        const updates = fieldsToArray(data);
-        const type = types.filter(item => item.name === this.state.type)[0];
-        claimUpdate(params.id, { id: params.id, ...type, ...updates }, 'type');
-    };
-
-    getActiveType = () => {
-        const { types } = this.props;
-        return types.filter(item => item.name === this.state.type)[0];
     };
 
     componentDidMount() {
@@ -67,20 +29,30 @@ export default class ClaimInfo extends React.Component {
     }
 
     render() {
-        const { user, types, claimDetails: { data } } = this.props;
-        const { type, status } = this.state;
-        const activeType = this.getActiveType();
+        const {
+            user,
+            types,
+            match,
+            claimDetails: { data },
+            claimUpdate,
+            claimDetailsUpdate
+        } = this.props;
+        const { status } = this.state;
         return (
             <React.Fragment>
-                <ClaimInfoContainer>
-                    <Column>
-                        <span>Registration date: {data.registrationDate}</span>
-                        <span>User: {user && user.firstName}</span>
-                        <span>Audio:</span>
-                        <audio src={data.url} controls />
-                    </Column>
+                <Segment>
+                    <Grid>
+                        <Grid.Row>
+                            Registration date:{' '}
+                            {moment.unix(data.timestamp).format('DD MMMM YYYY')}
+                        </Grid.Row>
+                        <Grid.Row>User: {user && user.firstName}</Grid.Row>
+                        <Grid.Row>
+                            <audio src={data.url} controls />
+                        </Grid.Row>
+                    </Grid>
 
-                    <Column>
+                    <Segment>
                         Status
                         <Dropdown
                             onChange={this.statusChangeHandler}
@@ -89,28 +61,19 @@ export default class ClaimInfo extends React.Component {
                             selection
                             value={status}
                         />
-                        Type
-                        <Dropdown
-                            onChange={this.claimTypeChangeHandler}
-                            options={types}
-                            placeholder="Type"
-                            selection
-                            value={type}
+                    </Segment>
+                </Segment>
+                <Segment>
+                    {types.length && (
+                        <ClaimTypeFields
+                            claimId={match.params.id}
+                            types={types}
+                            claimInfo={data}
+                            claimTypeUpdate={claimUpdate}
+                            claimDetailsUpdate={claimDetailsUpdate}
                         />
-                    </Column>
-                </ClaimInfoContainer>
-                <Column>
-                    {type &&
-                        types.length && (
-                            <ClaimTypeFields
-                                typesList={types}
-                                activeType={activeType}
-                                claimType={data.type}
-                                typeChangeHandler={this.typeChangeHandler}
-                                submitTypeChanges={this.submitTypeChanges}
-                            />
-                        )}
-                </Column>
+                    )}
+                </Segment>
             </React.Fragment>
         );
     }
@@ -122,5 +85,6 @@ ClaimInfo.propTypes = {
     match: PropTypes.object.isRequired,
     types: PropTypes.array.isRequired,
     userRequest: PropTypes.func.isRequired,
-    claimDetails: PropTypes.object.isRequired
+    claimDetails: PropTypes.object.isRequired,
+    claimDetailsUpdate: PropTypes.func.isRequired
 };

@@ -16,6 +16,10 @@ export default class TextInput extends React.Component {
         this.props.changeHandler(TEXT, null, { value });
     };
 
+    componentWillMount() {
+        this.setState({ textValue: this.props.value || '' });
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.cleanupForm) {
             this.setState({ textValue: '' });
@@ -38,5 +42,6 @@ export default class TextInput extends React.Component {
 
 TextInput.propTypes = {
     changeHandler: PropTypes.func.isRequired,
-    cleanupForm: PropTypes.bool
+    cleanupForm: PropTypes.bool,
+    value: PropTypes.string
 };

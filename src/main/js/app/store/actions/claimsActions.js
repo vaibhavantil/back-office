@@ -2,7 +2,6 @@ import {
     CLAIMS_REQUESTING,
     CLAIMS_REQUEST_SUCCESS,
     CLAIMS_REQUEST_ERROR,
-    CLAIM_UPDATING,
     CLAIM_UPDATE_SUCCESS,
     CLAIM_TYPES,
     CLAIM_TYPES_SUCCESS
@@ -19,13 +18,6 @@ export const claimsRequestSuccess = claims => ({
 export const claimsRequestError = error => ({
     type: CLAIMS_REQUEST_ERROR,
     error
-});
-
-export const claimUpdate = (id, data, reqType) => ({
-    type: CLAIM_UPDATING,
-    id,
-    data,
-    reqType
 });
 
 export const claimUpdateSuccess = () => ({
