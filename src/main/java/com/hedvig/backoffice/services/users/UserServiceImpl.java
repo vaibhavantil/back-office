@@ -1,6 +1,9 @@
 package com.hedvig.backoffice.services.users;
 
 import com.hedvig.backoffice.web.dto.UserDTO;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixException;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +41,9 @@ public class UserServiceImpl implements UserService {
         logger.info("id: " + userByIdUrl);
     }
 
+    @HystrixCommand(fallbackMethod = "listFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
     public List<UserDTO> list() throws UserServiceException {
         RestTemplate restTemplate = new RestTemplate();
@@ -48,6 +54,11 @@ public class UserServiceImpl implements UserService {
         } catch (RestClientException e) {
             throw new UserServiceException(e);
         }
+    }
+
+    private List<UserDTO> listFallback(Throwable e) {
+        logger.error("failed user fetching", e);
+        return new ArrayList<>();
     }
 
     @Override
@@ -66,10 +77,7 @@ public class UserServiceImpl implements UserService {
             ResponseEntity<UserDTO> response = restTemplate.getForEntity(baseUrl + userByIdUrl + "/" + hid, UserDTO.class);
             return response.getBody();
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().is4xxClientError()) {
-                throw new UserNotFoundException(hid);
-            }
-            throw new UserServiceException(e);
+            throw new UserNotFoundException(hid);
         } catch (RestClientException e) {
             throw new UserServiceException(e);
         }

@@ -5,7 +5,6 @@ import com.hedvig.backoffice.services.users.UserService;
 import com.hedvig.backoffice.services.users.UserServiceException;
 import com.hedvig.backoffice.web.dto.UserDTO;
 import com.hedvig.backoffice.web.dto.claims.*;
-import com.hedvig.backoffice.web.dto.claims.ClaimField;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class ClaimsServiceStub implements ClaimsService {
     private Map<String, List<ClaimNoteDTO>> notes;
 
     @Autowired
-    public ClaimsServiceStub(UserService userService) throws ClaimException, UserServiceException {
+    public ClaimsServiceStub(UserService userService) throws UserServiceException {
         events = new HashMap<>();
         payments = new HashMap<>();
         notes = new HashMap<>();
@@ -47,10 +46,15 @@ public class ClaimsServiceStub implements ClaimsService {
 
         claims = IntStream.range(0, 10).mapToObj(i -> {
             String id = UUID.randomUUID().toString();
-            UserDTO user = users.size() < i ? users.get(i) : users.get(users.size() - 1);
+            String userId;
+            if (users.size() > 0 && users.size() < i) {
+                userId = users.get(i).getHid();
+            } else {
+                userId = UUID.randomUUID().toString();
+            }
 
             return new ClaimDTO(id,
-                    user.getHid(),
+                    userId,
                     ClaimStatus.OPEN,
                     null,
                     null,
