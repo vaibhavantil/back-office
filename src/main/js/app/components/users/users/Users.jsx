@@ -26,10 +26,8 @@ export default class Users extends React.Component {
     };
 
     searchRequest = () => {
-        if (this.state.searchValue) {
-            this.props.searchUserRequest(this.state.searchValue);
-            this.setState({ searchValue: '' });
-        }
+        this.props.searchUserRequest(this.state.searchValue);
+        this.setState({ searchValue: '' });
     };
 
     filterChangeHandler = (activeFilter, filteredList) => {
