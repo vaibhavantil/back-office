@@ -80,13 +80,13 @@
         </encoder>
     </appender>
 
-    <springProfile name="development">
+    <springProfile name="!kubernetes">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 
-    <springProfile name="!development">
+    <springProfile name="kubernetes">
         <root level="INFO">
             <appender-ref ref="JSON_FILE"/>
         </root>
