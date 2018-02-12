@@ -4,7 +4,8 @@ export const assetStates = [
     { key: 2, text: 'WAITING_FOR_PAYMENT', value: 'WAITING_FOR_PAYMENT' },
     { key: 3, text: 'NOT_COVERED', value: 'NOT_COVERED' },
     { key: 4, text: 'COVERED', value: 'COVERED' },
-    { key: 5, text: 'DELETED', value: 'DELETED' }
+    { key: 5, text: 'DELETED', value: 'DELETED' },
+    { key: 6, text: 'ALL', value: 'ALL' }
 ];
 
 export const messageTypes = [
@@ -48,4 +49,10 @@ export const claimStatus = [
     { key: 1, text: 'Open', value: 'OPEN' },
     { key: 2, text: 'Closed', value: 'CLOSED' },
     { key: 3, text: 'Reopened', value: 'REOPENED' }
+];
+
+export const userStatus = [
+    { key: 0, text: 'ACTIVE', value: 'ACTIVE' },
+    { key: 5, text: 'INACTIVE', value: 'INACTIVE' },
+    { key: 6, text: 'ALL', value: 'ALL' }
 ];

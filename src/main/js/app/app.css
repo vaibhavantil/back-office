@@ -27,21 +27,6 @@ html {
     text-overflow: ellipsis;
 }
 
-.filter {
-    margin-bottom: 30px;
-}
-
-.filter__label {
-    margin-right: 10px;
-}
-
-.filter__message {
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    font-size: 1.5rem;
-}
-
 .pagination {
     display: flex;
     justify-content: center;

@@ -1,16 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Card, Dimmer, Loader, Message } from 'semantic-ui-react';
+import { Button, Card, Dimmer, Loader, Message } from 'semantic-ui-react';
 import AssetCard from '../asset-card/AssetCard';
 import Pagination from 'components/shared/pagination/Pagination';
-import Fliter from '../assets-list-filter/AssetsListFilter';
-import { filterList } from 'app/lib/helpers';
+import Fliter from 'components/shared/filter/Filter';
 import { checkAuthorization } from 'app/lib/checkAuth';
 import BackLink from 'components/shared/link/BackLink';
 import { Header } from 'components/chat/chat/Chat';
 import { ListContainer } from 'components/shared';
+import { assetStates } from 'app/lib/selectOptions';
 
+const FilterMessage = styled.p`
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+`;
 class AssetList extends React.Component {
     constructor(props) {
         super(props);
@@ -28,24 +35,11 @@ class AssetList extends React.Component {
     assetUpdateHandler = (id, value) => {
         const { assetUpdate } = this.props;
         assetUpdate(id, value);
-        this.filterChangeHandler(null, { value: this.state.activeFilter });
+        this.setState({ activeFilter: value });
     };
 
-    filterChangeHandler = (e, { value }) => {
-        this.setState(
-            {
-                activeFilter: value
-            },
-            () => {
-                const filteredList = filterList(
-                    this.state.activeFilter,
-                    this.props.assets.list
-                );
-                this.setState({
-                    filteredList
-                });
-            }
-        );
+    filterChangeHandler = (activeFilter, filteredList) => {
+        this.setState({ activeFilter, filteredList });
     };
 
     pollingHandler = () => {
@@ -54,14 +48,15 @@ class AssetList extends React.Component {
         else pollStart(2000);
     };
 
-    componentDidMount() {
-        checkAuthorization(null, this.props.setClient);
-        this.props.assetRequest();
-    }
-
     componentWillUnmount() {
         const { poll: { polling }, pollStop } = this.props;
         if (polling) pollStop();
+    }
+
+    componentDidMount() {
+        const { setClient, assetRequest, assets } = this.props;
+        checkAuthorization(null, setClient);
+        if (!assets.list.length) assetRequest();
     }
 
     render() {
@@ -86,10 +81,16 @@ class AssetList extends React.Component {
                             list={list}
                             activeFilter={this.state.activeFilter}
                             filterChange={this.filterChangeHandler}
-                            polling={polling}
-                            pollingHandler={this.pollingHandler}
+                            options={assetStates}
+                            fieldName="state"
                         />
-                        <Card.Group itemsPerRow={4}>
+                        <Button onClick={this.pollingHandler} size="mini">
+                            Poll {polling ? 'stop' : 'start'}
+                        </Button>
+                        <Card.Group
+                            itemsPerRow={4}
+                            style={{ margin: '30px 0' }}
+                        >
                             {list && !!activeList.length ? (
                                 activeList.map(asset => (
                                     <AssetCard
@@ -100,9 +101,9 @@ class AssetList extends React.Component {
                                     />
                                 ))
                             ) : (
-                                <p className="filter__message">
+                                <FilterMessage>
                                     No items by this filter. Select other.
-                                </p>
+                                </FilterMessage>
                             )}
                         </Card.Group>
                         <Pagination

@@ -1,5 +1,5 @@
-export const filterList = (filter, list) =>
-    list.filter(item => item.state === filter);
+export const filterList = (filter, list, fieldName) =>
+    list.filter(item => item[fieldName] === filter);
 
 export const sortByKey = key => (a, b) => a[key] - b[key];
 

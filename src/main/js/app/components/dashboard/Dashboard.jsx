@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { List, Label } from 'semantic-ui-react';
-import { history } from 'app/app';
+import { history } from 'app/store';
 import * as sockets from 'sockets';
 import { routesList } from 'app/lib/selectOptions';
 
