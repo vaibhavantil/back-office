@@ -1,6 +1,6 @@
-package com.hedvig.backoffice.services.users;
+package com.hedvig.backoffice.services.members;
 
-import com.hedvig.backoffice.web.dto.UserDTO;
+import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixException;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
@@ -19,23 +19,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class UserServiceImpl implements UserService {
+public class MemberServiceImpl implements MemberService {
 
-    private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
 
     private String baseUrl;
     private String usersUrl;
     private String userByIdUrl;
 
-    public UserServiceImpl(@Value("${userservice.baseUrl}") String baseUrl,
-                           @Value("${userservice.urls.users}") String usersUrl,
-                           @Value("${userservice.urls.userById}") String userByIdUrl) {
+    public MemberServiceImpl(@Value("${memberservice.baseUrl}") String baseUrl,
+                             @Value("${memberservice.urls.users}") String usersUrl,
+                             @Value("${memberservice.urls.userById}") String userByIdUrl) {
         this.baseUrl = baseUrl;
         this.usersUrl = usersUrl;
         this.userByIdUrl = userByIdUrl;
 
-        logger.info("USER SERVICE:");
-        logger.info("class: " + UserServiceImpl.class.getName());
+        logger.info("MEMBER SERVICE:");
+        logger.info("class: " + MemberServiceImpl.class.getName());
         logger.info("base: " + baseUrl);
         logger.info("users: " + usersUrl);
         logger.info("id: " + userByIdUrl);
@@ -45,25 +45,25 @@ public class UserServiceImpl implements UserService {
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
-    public List<UserDTO> list() throws UserServiceException {
+    public List<MemberDTO> list() throws MemberServiceException {
         RestTemplate restTemplate = new RestTemplate();
         try {
             HttpEntity<String> request = new HttpEntity<>("test@email.com");
-            ResponseEntity<UserDTO[]> response = restTemplate.postForEntity(baseUrl + usersUrl, request, UserDTO[].class);
+            ResponseEntity<MemberDTO[]> response = restTemplate.postForEntity(baseUrl + usersUrl, request, MemberDTO[].class);
             return Arrays.asList(response.getBody());
         } catch (RestClientException e) {
-            throw new UserServiceException(e);
+            throw new MemberServiceException(e);
         }
     }
 
-    private List<UserDTO> listFallback(Throwable e) {
-        logger.error("failed user fetching", e);
+    private List<MemberDTO> listFallback(Throwable e) {
+        logger.error("failed members fetching", e);
         return new ArrayList<>();
     }
 
     @Override
-    public List<UserDTO> find(String query) throws UserServiceException {
-        List<UserDTO> users = list();
+    public List<MemberDTO> find(String query) throws MemberServiceException {
+        List<MemberDTO> users = list();
 
         return users.stream()
                 .filter(u -> u.getHid().contains(query) || (u.getFirstName() != null && u.getFirstName().contains(query)))
@@ -71,15 +71,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findByHid(String hid) throws UserNotFoundException, UserServiceException {
+    public MemberDTO findByHid(String hid) throws MemberNotFoundException, MemberServiceException {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            ResponseEntity<UserDTO> response = restTemplate.getForEntity(baseUrl + userByIdUrl + "/" + hid, UserDTO.class);
+            ResponseEntity<MemberDTO> response = restTemplate.getForEntity(baseUrl + userByIdUrl + "/" + hid, MemberDTO.class);
             return response.getBody();
         } catch (HttpClientErrorException e) {
-            throw new UserNotFoundException(hid);
+            throw new MemberNotFoundException(hid);
         } catch (RestClientException e) {
-            throw new UserServiceException(e);
+            throw new MemberServiceException(e);
         }
     }
 

@@ -1,9 +1,9 @@
 package com.hedvig.backoffice.services.claims;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hedvig.backoffice.services.users.UserService;
-import com.hedvig.backoffice.services.users.UserServiceException;
-import com.hedvig.backoffice.web.dto.UserDTO;
+import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.MemberServiceException;
+import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.hedvig.backoffice.web.dto.claims.*;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +27,7 @@ public class ClaimsServiceStub implements ClaimsService {
     private Map<String, List<ClaimNoteDTO>> notes;
 
     @Autowired
-    public ClaimsServiceStub(UserService userService) throws UserServiceException {
+    public ClaimsServiceStub(MemberService memberService) throws MemberServiceException {
         events = new HashMap<>();
         payments = new HashMap<>();
         notes = new HashMap<>();
@@ -42,7 +42,7 @@ public class ClaimsServiceStub implements ClaimsService {
             throw new UncheckedIOException(e);
         }
 
-        List<UserDTO> users = userService.list();
+        List<MemberDTO> users = memberService.list();
 
         claims = IntStream.range(0, 10).mapToObj(i -> {
             String id = UUID.randomUUID().toString();

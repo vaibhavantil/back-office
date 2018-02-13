@@ -1,12 +1,12 @@
-package com.hedvig.backoffice.services.users;
+package com.hedvig.backoffice.services.members;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class UserNotFoundException extends Exception {
+public class MemberNotFoundException extends Exception {
 
-    public UserNotFoundException(String user) {
+    public MemberNotFoundException(String user) {
         super(String.format("user by query string '%s' not found", user));
     }
 

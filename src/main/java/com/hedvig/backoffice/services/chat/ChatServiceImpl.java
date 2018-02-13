@@ -10,10 +10,10 @@ import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
-import com.hedvig.backoffice.services.users.UserNotFoundException;
-import com.hedvig.backoffice.services.users.UserService;
-import com.hedvig.backoffice.services.users.UserServiceException;
-import com.hedvig.backoffice.web.dto.UserDTO;
+import com.hedvig.backoffice.services.members.MemberNotFoundException;
+import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.MemberServiceException;
+import com.hedvig.backoffice.web.dto.MemberDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -31,7 +31,7 @@ public class ChatServiceImpl implements ChatService {
 
     private final SimpMessagingTemplate template;
     private final BotService botService;
-    private final UserService userService;
+    private final MemberService memberService;
     private final ChatContextRepository chatContextRepository;
     private final PersonnelRepository personnelRepository;
     private final SubscriptionRepository subscriptionRepository;
@@ -39,7 +39,7 @@ public class ChatServiceImpl implements ChatService {
 
     public ChatServiceImpl(SimpMessagingTemplate template,
                            BotService botService,
-                           UserService userService,
+                           MemberService memberService,
                            ChatContextRepository chatContextRepository,
                            PersonnelRepository personnelRepository,
                            SubscriptionRepository subscriptionRepository,
@@ -47,7 +47,7 @@ public class ChatServiceImpl implements ChatService {
 
         this.template = template;
         this.botService = botService;
-        this.userService = userService;
+        this.memberService = memberService;
         this.chatContextRepository = chatContextRepository;
         this.personnelRepository = personnelRepository;
         this.subscriptionRepository = subscriptionRepository;
@@ -63,8 +63,8 @@ public class ChatServiceImpl implements ChatService {
     public void append(String hid, String message) {
         Optional<Subscription> subscriptionOptional = subscriptionRepository.findByHid(hid);
         if (!subscriptionOptional.isPresent()) {
-            send(hid, Message.error(400, "User with hid " + hid + " not found"));
-            logger.warn("User with hid " + hid + " not found");
+            send(hid, Message.error(400, "member with hid " + hid + " not found"));
+            logger.warn("member with hid " + hid + " not found");
             return;
         }
 
@@ -111,41 +111,41 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional
     public void subscribe(String hid, String subId, String sessionId, String principal) {
-        UserDTO user;
+        MemberDTO member;
         try {
-            user = userService.findByHid(hid);
-        } catch (UserNotFoundException e) {
-            send(hid, Message.error(400, "User with hid " + hid + " not found"));
-            logger.warn("user with hid " + hid + " not found", e);
+            member = memberService.findByHid(hid);
+        } catch (MemberNotFoundException e) {
+            send(hid, Message.error(400, "member with hid " + hid + " not found"));
+            logger.warn("member with hid " + hid + " not found", e);
             return;
-        } catch (UserServiceException e) {
+        } catch (MemberServiceException e) {
             send(hid, Message.error(500, e.getMessage()));
-            logger.error("can't fetch user hid = " + hid, e);
+            logger.error("can't fetch member hid = " + hid, e);
             return;
         }
 
         Optional<Personnel> personnelOptional = personnelRepository.findByEmail(principal);
         if (!personnelOptional.isPresent()) {
             send(hid, Message.error(400, "Not authorized"));
-            logger.warn("User not authorized hid = " + hid);
+            logger.warn("member not authorized hid = " + hid);
             return;
         }
 
         Personnel personnel = personnelOptional.get();
 
-        Optional<ChatContext> chatOptional = chatContextRepository.findByHidAndPersonnel(user.getHid(), personnel);
+        Optional<ChatContext> chatOptional = chatContextRepository.findByHidAndPersonnel(member.getHid(), personnel);
         ChatContext chat = chatOptional.orElseGet(ChatContext::new);
 
-        chat.setHid(user.getHid());
+        chat.setHid(member.getHid());
         chat.setSubId(subId);
         chat.setSessionId(sessionId);
         chat.setActive(true);
         chat.setTimestamp(new Date().toInstant());
         chat.setPersonnel(personnel);
 
-        Optional<Subscription> subOptional = subscriptionRepository.findByHid(user.getHid());
+        Optional<Subscription> subOptional = subscriptionRepository.findByHid(member.getHid());
         Subscription sub = subOptional.orElseGet(() -> {
-            Subscription newSub = new Subscription(user.getHid());
+            Subscription newSub = new Subscription(member.getHid());
             subscriptionRepository.save(newSub);
             return newSub;
         });

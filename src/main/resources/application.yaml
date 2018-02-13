@@ -57,7 +57,7 @@ botservice:
       fetch: /_/messages
   stub: false
 
-userservice:
+memberservice:
   baseUrl: http://localhost:4084/member
   urls:
     users: /members

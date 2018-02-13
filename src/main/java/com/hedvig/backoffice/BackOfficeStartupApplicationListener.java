@@ -2,8 +2,8 @@ package com.hedvig.backoffice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hedvig.backoffice.services.users.UserService;
-import com.hedvig.backoffice.services.users.UserServiceException;
+import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.MemberServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,34 +17,34 @@ public class BackOfficeStartupApplicationListener implements ApplicationListener
 
     private static Logger logger = LoggerFactory.getLogger(BackOfficeStartupApplicationListener.class);
 
-    private final UserService userService;
-    private boolean userServiceStub;
+    private final MemberService memberService;
+    private boolean memberServiceStub;
 
     @Autowired
-    public BackOfficeStartupApplicationListener(UserService userService,
-                                                @Value("${userservice.stub:false}") boolean userServiceStub) {
-        this.userService = userService;
-        this.userServiceStub = userServiceStub;
+    public BackOfficeStartupApplicationListener(MemberService memberService,
+                                                @Value("${memberservice.stub:false}") boolean memberServiceStub) {
+        this.memberService = memberService;
+        this.memberServiceStub = memberServiceStub;
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        if (!userServiceStub) {
+        if (!memberServiceStub) {
             try {
-                logger.info("TEST USER SERVICE:");
+                logger.info("TEST MEMBER SERVICE:");
                 ObjectMapper mapper = new ObjectMapper();
-                userService.list()
+                memberService.list()
                         .stream()
                         .limit(10)
                         .forEach(u -> {
                             try {
                                 logger.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(u));
                             } catch (JsonProcessingException e) {
-                                logger.error("error during parsing users from service", e);
+                                logger.error("error during parsing members from service", e);
                             }
                         });
-            } catch (UserServiceException e) {
-                logger.error("error during updating users list", e);
+            } catch (MemberServiceException e) {
+                logger.error("error during updating members list", e);
             }
         }
     }
