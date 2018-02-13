@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class UserDTO {
+public class MemberDTO {
 
     private Long memberId;
     private String ssn;
@@ -26,7 +26,7 @@ public class UserDTO {
     private LocalDate birthDate;
     private String apartment;
 
-    public UserDTO(long memberId) {
+    public MemberDTO(long memberId) {
         this.memberId = memberId;
     }
 

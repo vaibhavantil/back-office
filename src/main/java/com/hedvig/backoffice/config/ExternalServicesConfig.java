@@ -9,9 +9,9 @@ import com.hedvig.backoffice.services.claims.ClaimsServiceStub;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceImpl;
 import com.hedvig.backoffice.services.messages.BotServiceStub;
-import com.hedvig.backoffice.services.users.UserService;
-import com.hedvig.backoffice.services.users.UserServiceImpl;
-import com.hedvig.backoffice.services.users.UserServiceStub;
+import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.MemberServiceImpl;
+import com.hedvig.backoffice.services.members.MemberServiceStub;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,12 +48,12 @@ public class ExternalServicesConfig {
     }
 
     @Bean
-    public UserService userService(@Value("${userservice.stub:false}") boolean stub) {
+    public MemberService memberService(@Value("${memberservice.stub:false}") boolean stub) {
         val factory = context.getAutowireCapableBeanFactory();
 
         return stub
-                ? factory.createBean(UserServiceStub.class)
-                : factory.createBean(UserServiceImpl.class);
+                ? factory.createBean(MemberServiceStub.class)
+                : factory.createBean(MemberServiceImpl.class);
     }
 
     @Bean

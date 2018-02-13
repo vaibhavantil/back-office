@@ -9,7 +9,7 @@ tracker:
 botservice:
   stub: true
 
-userservice:
+memberservice:
   stub: true
 
 claims:
