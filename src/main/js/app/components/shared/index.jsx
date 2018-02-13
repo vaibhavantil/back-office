@@ -24,3 +24,9 @@ export const ListContainer = styled.div`
     padding: 20px 10px;
     margin-top: 30px;
 `;
+
+export const ItemContent = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;

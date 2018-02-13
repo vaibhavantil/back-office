@@ -71,7 +71,7 @@ export default class DateInput extends React.Component {
         return (
             <React.Fragment>
                 <Form.Field>
-                    <label>Date</label>
+                    {this.props.label ? <label>Date</label> : null}
                     <WidgetContainer>
                         <DatePickerContainer>
                             <SingleDatePicker
@@ -98,5 +98,6 @@ export default class DateInput extends React.Component {
 DateInput.propTypes = {
     cleanupForm: PropTypes.bool,
     date: PropTypes.object,
-    changeHandler: PropTypes.func.isRequired
+    changeHandler: PropTypes.func.isRequired,
+    label: PropTypes.bool
 };

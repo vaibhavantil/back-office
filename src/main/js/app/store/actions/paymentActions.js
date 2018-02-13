@@ -6,7 +6,9 @@ import {
     CREATE_PAYMENT_REQUESTING,
     CREATE_PAYMENT_SUCCESS,
     UPDATE_RESUME_REQUESTING,
-    UPDATE_RESUME_SUCCESS
+    UPDATE_RESUME_SUCCESS,
+    UPDATE_PAYMENT_REQUESTING,
+    UPDATE_PAYMENT_SUCCESS
 } from '../constants/claims';
 
 export const paymentsRequest = id => ({
@@ -50,4 +52,15 @@ export const updateResume = (id, data) => ({
 export const updateResumeSuccess = resume => ({
     type: UPDATE_RESUME_SUCCESS,
     resume
+});
+
+export const updatePayment = (id, data) => ({
+    type: UPDATE_PAYMENT_REQUESTING,
+    data,
+    id
+});
+
+export const updatePaymentSuccess = payment => ({
+    type: UPDATE_PAYMENT_SUCCESS,
+    payment
 });

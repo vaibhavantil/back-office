@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Label, List } from 'semantic-ui-react';
-import { ItemContent } from '../../dashboard/Dashboard';
+import { ItemContent } from 'components/shared';
 import PaginatorList from 'components/shared/paginator-list/PaginatorList';
 import * as sockets from 'sockets';
 
 const ListItem = ({ item }) => (
-    <Link to={`/users/${item.hid}`} replace>
+    <Link to={`/members/${item.hid}`} replace>
         <ItemContent>
             {item.firstName ? (
                 <List.Header>
@@ -70,6 +70,7 @@ export default class UsersList extends React.Component {
             <PaginatorList
                 list={users}
                 itemContent={item => <ListItem item={item} />}
+                pageSize={10}
             />
         );
     }

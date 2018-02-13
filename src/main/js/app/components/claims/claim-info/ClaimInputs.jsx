@@ -25,6 +25,7 @@ export default {
                 changeHandler={onChangeHandler}
                 cleanupForm={cleanupForm}
                 value={value}
+                label
             />
         );
     },

@@ -18,7 +18,7 @@ export default class PaginatorList extends React.Component {
 
     render() {
         const { activeList } = this.state;
-        const { list, itemContent } = this.props;
+        const { list, itemContent, pageSize } = this.props;
         return (
             <ListContainer>
                 <List selection size="big">
@@ -35,7 +35,7 @@ export default class PaginatorList extends React.Component {
                 <Pagination
                     items={list}
                     onChangePage={this.onChangePage}
-                    pageSize={6}
+                    pageSize={pageSize || 6}
                 />
             </ListContainer>
         );
@@ -44,5 +44,6 @@ export default class PaginatorList extends React.Component {
 
 PaginatorList.propTypes = {
     list: PropTypes.array.isRequired,
-    itemContent: PropTypes.func.isRequired
+    itemContent: PropTypes.func.isRequired,
+    pageSize: PropTypes.number
 };

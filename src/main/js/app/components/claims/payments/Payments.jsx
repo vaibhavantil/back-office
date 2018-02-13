@@ -1,9 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Button, Form, Segment } from 'semantic-ui-react';
 import PayoutsList from './PayoutsList';
-import PaymentCreator from './PaymentCreator';
 
+const Label = styled.label`
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 13px;
+`;
 export default class Payments extends React.Component {
     constructor(props) {
         super(props);
@@ -30,20 +36,25 @@ export default class Payments extends React.Component {
         this.setState({ resume: value });
     };
 
-    componentWillReceiveProps({ claimDetails }) {
-        if (claimDetails.data) {
-            this.setState({ resume: claimDetails.data.resume });
+    updatePayment = data => {
+        const { updatePayment, id } = this.props;
+        updatePayment(id, data);
+    };
+
+    componentWillReceiveProps({ claimDetails: { data } }) {
+        if (data && data.resume) {
+            this.setState({ resume: data.resume });
         }
     }
 
     render() {
-        const { claimDetails, createPayment, notes, id } = this.props;
+        const { claimDetails, createPayment, removePayment, id } = this.props;
         const { resume, editDisabled } = this.state;
         return (
             <Segment>
                 <Form>
                     <Form.Group>
-                        <label>Resume </label>
+                        <Label>Reserves: </Label>
                         <Form.Input
                             type="number"
                             value={resume}
@@ -52,23 +63,26 @@ export default class Payments extends React.Component {
                         />
 
                         {editDisabled ? (
-                            <Button onClick={this.editClickHandler}>
-                                Edit
-                            </Button>
+                            <Button
+                                onClick={this.editClickHandler}
+                                content="Edit"
+                            />
                         ) : (
-                            <Button onClick={this.updateResume}>Save</Button>
+                            <Button
+                                primary
+                                onClick={this.updateResume}
+                                content="Save"
+                            />
                         )}
                     </Form.Group>
                 </Form>
-                <PayoutsList list={claimDetails.payments} />
-                <h2>
-                    Total payed out:
-                    {claimDetails.data && claimDetails.data.total}
-                </h2>
-                <PaymentCreator
+
+                <PayoutsList
+                    list={claimDetails.payments}
+                    updatePayment={this.updatePayment}
                     createPayment={createPayment}
-                    notes={notes}
-                    claimId={id}
+                    removePayment={removePayment}
+                    id={id}
                 />
             </Segment>
         );
@@ -80,5 +94,7 @@ Payments.propTypes = {
     id: PropTypes.string.isRequired,
     updateResume: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
+    updatePayment: PropTypes.func.isRequired,
+    removePayment: PropTypes.func.isRequired,
     notes: PropTypes.array
 };

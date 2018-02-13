@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Header } from 'semantic-ui-react';
 import ClaimsList from '../claims-list/ClaimsList';
 import BackLink from 'components/shared/link/BackLink';
-import { Header } from 'components/chat/chat/Chat';
 export default class Claims extends React.Component {
     constructor(props) {
         super(props);
@@ -16,7 +16,7 @@ export default class Claims extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <Header>Claims List</Header>
+                <Header size="huge">Claims List</Header>
                 <BackLink />
                 <ClaimsList claims={this.props.claims.list} />
             </React.Fragment>

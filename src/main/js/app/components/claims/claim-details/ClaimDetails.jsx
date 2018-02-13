@@ -8,7 +8,7 @@ import Payments from '../payments/Payments';
 
 const ClaimDetailsContainer = styled.div`
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 0 auto 50px;
 `;
 export default class ClaimDetails extends React.Component {
     constructor(props) {
@@ -37,6 +37,8 @@ export default class ClaimDetails extends React.Component {
             removeNote,
             updateResume,
             createPayment,
+            updatePayment,
+            removePayment,
             match
         } = this.props;
         return (
@@ -53,6 +55,8 @@ export default class ClaimDetails extends React.Component {
                     claimDetails={claimDetails}
                     updateResume={updateResume}
                     createPayment={createPayment}
+                    updatePayment={updatePayment}
+                    removePayment={removePayment}
                     id={match.params.id}
                     notes={claimDetails.notes}
                 />
@@ -71,5 +75,7 @@ ClaimDetails.propTypes = {
     claimTypes: PropTypes.func.isRequired,
     notesRequest: PropTypes.func.isRequired,
     paymentsRequest: PropTypes.func.isRequired,
-    createPayment: PropTypes.func.isRequired
+    createPayment: PropTypes.func.isRequired,
+    updatePayment: PropTypes.func.isRequired,
+    removePayment: PropTypes.func.isRequired
 };

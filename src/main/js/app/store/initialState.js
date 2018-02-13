@@ -28,7 +28,8 @@ export default {
         list: [],
         requesting: false,
         successful: false,
-        errors: []
+        errors: [],
+        filter: 'ACTIVE'
     },
     dashboard: {
         data: null,

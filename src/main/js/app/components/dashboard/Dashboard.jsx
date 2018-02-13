@@ -5,6 +5,7 @@ import { List, Label } from 'semantic-ui-react';
 import { history } from 'app/store';
 import * as sockets from 'sockets';
 import { routesList } from 'app/lib/selectOptions';
+import { ItemContent } from 'components/shared';
 
 const DashboardContainer = styled.div`
     display: flex;
@@ -22,12 +23,6 @@ const LinkName = styled.span`
     font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
     font-weight: 700;
     color: rgba(0, 0, 0, 0.87);
-`;
-
-export const ItemContent = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 `;
 
 export default class Dashboard extends React.Component {

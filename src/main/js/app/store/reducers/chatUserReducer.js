@@ -7,7 +7,8 @@ import {
     USER_SEARCH_REQUESTING,
     USER_SEARCH_SUCCESS,
     USER_SEARCH_ERROR,
-    NEW_MESSAGES_RECEIVED
+    NEW_MESSAGES_RECEIVED,
+    SET_USER_FILTER
 } from 'constants/chatUsers';
 
 export default function(state = initialState.users, action) {
@@ -24,7 +25,11 @@ export default function(state = initialState.users, action) {
         case USER_SEARCH_SUCCESS:
         case USERS_REQUEST_SUCCESS:
             return {
-                list: action.users.map((el, id) => ({...el, status: id % 2 ? 'INACTIVE' : 'ACTIVE'})),
+                ...state,
+                list: action.users.map((el, id) => ({
+                    ...el,
+                    status: id % 2 ? 'INACTIVE' : 'ACTIVE'
+                })),
                 requesting: false,
                 successful: true,
                 errors: []
@@ -51,6 +56,12 @@ export default function(state = initialState.users, action) {
                     state.list.slice(),
                     action.messagesCouters
                 )
+            };
+
+        case SET_USER_FILTER:
+            return {
+                ...state,
+                filter: action.filter
             };
         default:
             return state;

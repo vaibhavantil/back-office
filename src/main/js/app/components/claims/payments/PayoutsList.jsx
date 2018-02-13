@@ -1,26 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import { Checkbox, Table } from 'semantic-ui-react';
+import { Table, Header } from 'semantic-ui-react';
+import { getSum } from 'app/lib/helpers';
+import PayoutRow from './PayoutRow';
+import PaymentCreator from './PaymentCreator';
 
-const RowCells = ({ data }) => (
+const PayoutsList = ({
+    list,
+    updatePayment,
+    createPayment,
+    removePayment,
+    id
+}) => (
     <React.Fragment>
-        <Table.Cell>{data.amount}</Table.Cell>
-        <Table.Cell>{data.note}</Table.Cell>
-        <Table.Cell>{moment.unix(data.date).format('DD MM YYYY')}</Table.Cell>
-        <Table.Cell>
-            <Checkbox checked={data.exg} disabled />
-        </Table.Cell>
-    </React.Fragment>
-);
-
-RowCells.propTypes = {
-    data: PropTypes.object.isRequired
-};
-
-const PayoutsList = ({ list }) => (
-    <React.Fragment>
-        <h2>Payouts List:</h2>
+        <Header as="h2" floated="left">
+            Payouts
+        </Header>
+        <Header as="h2" floated="right">
+            <PaymentCreator createPayment={createPayment} claimId={id} />
+        </Header>
         {list.length ? (
             <Table>
                 <Table.Header>
@@ -28,13 +26,19 @@ const PayoutsList = ({ list }) => (
                         <Table.HeaderCell>Amount</Table.HeaderCell>
                         <Table.HeaderCell>Note</Table.HeaderCell>
                         <Table.HeaderCell>Date</Table.HeaderCell>
-                        <Table.HeaderCell>Exg</Table.HeaderCell>
+                        <Table.HeaderCell>Ex Gratia</Table.HeaderCell>
+                        <Table.HeaderCell> </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {list.map((item, id) => (
-                        <Table.Row key={item.id || id}>
-                            <RowCells data={item} />
+                    {list.map(item => (
+                        <Table.Row key={item.id}>
+                            <PayoutRow
+                                data={item}
+                                updatePayment={updatePayment}
+                                id={id}
+                                removePayment={removePayment}
+                            />
                         </Table.Row>
                     ))}
                 </Table.Body>
@@ -42,11 +46,17 @@ const PayoutsList = ({ list }) => (
         ) : (
             <span>----</span>
         )}
+
+        <span>Total payed out: {list.length && getSum(list)} SEK</span>
     </React.Fragment>
 );
 
 PayoutsList.propTypes = {
-    list: PropTypes.array.isRequired
+    list: PropTypes.array.isRequired,
+    updatePayment: PropTypes.func.isRequired,
+    createPayment: PropTypes.func.isRequired,
+    removePayment: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired
 };
 
 export default PayoutsList;
