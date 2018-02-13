@@ -32,7 +32,7 @@ const App = () => (
                     )}
                 />
                 <Route
-                    path="/users"
+                    path="/members"
                     render={routeProps => (
                         <Routes.UsersPageRoute {...routeProps} store={store} />
                     )}

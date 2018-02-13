@@ -5,7 +5,8 @@ import {
     USER_SEARCH_REQUESTING,
     USER_SEARCH_SUCCESS,
     USER_SEARCH_ERROR,
-    NEW_MESSAGES_RECEIVED
+    NEW_MESSAGES_RECEIVED,
+    SET_USER_FILTER
 } from 'constants/chatUsers';
 
 export const usersRequest = client => ({
@@ -42,3 +43,8 @@ export const newMessagesReceived = messagesCounters => ({
     type: NEW_MESSAGES_RECEIVED,
     messagesCounters
 });
+
+export const setFilter = filter => ({
+    type: SET_USER_FILTER,
+    filter
+})

@@ -2,13 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Button, Card, Dimmer, Loader, Message } from 'semantic-ui-react';
+import { Button, Card, Dimmer, Header, Loader, Message } from 'semantic-ui-react';
 import AssetCard from '../asset-card/AssetCard';
 import Pagination from 'components/shared/pagination/Pagination';
 import Fliter from 'components/shared/filter/Filter';
 import { checkAuthorization } from 'app/lib/checkAuth';
 import BackLink from 'components/shared/link/BackLink';
-import { Header } from 'components/chat/chat/Chat';
 import { ListContainer } from 'components/shared';
 import { assetStates } from 'app/lib/selectOptions';
 
@@ -68,7 +67,7 @@ class AssetList extends React.Component {
         const items = activeFilter === 'ALL' ? list : filteredList;
         return (
             <React.Fragment>
-                <Header>Claims List</Header>
+                <Header size="huge">Assets</Header>
                 <BackLink />
                 <Dimmer active={list && !list.length} inverted>
                     <Loader size="large">Loading</Loader>

@@ -33,6 +33,7 @@ export default {
                 <DateInput
                     changeHandler={onChangeHandler}
                     cleanupForm={cleanupForm}
+                    label
                 />
             </React.Fragment>
         );

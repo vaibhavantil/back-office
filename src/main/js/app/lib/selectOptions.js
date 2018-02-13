@@ -29,8 +29,8 @@ export const routesList = [
         type: 'ASSETS'
     },
     {
-        text: 'Users overview',
-        route: '/users',
+        text: 'Members overview',
+        route: '/members',
         type: 'CHATS'
     },
     {

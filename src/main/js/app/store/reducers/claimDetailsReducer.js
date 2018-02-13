@@ -17,7 +17,9 @@ import {
     UPDATE_RESUME_SUCCESS,
     CREATE_PAYMENT_SUCCESS,
     CLAIM_DETAILS_UPDATE_SUCCESS,
-    CLAIM_DETAILS_UPDATING
+    CLAIM_DETAILS_UPDATING,
+    UPDATE_PAYMENT_REQUESTING,
+    UPDATE_PAYMENT_SUCCESS
 } from '../constants/claims';
 
 export default function(state = initialState.claimDetails, action) {
@@ -30,6 +32,7 @@ export default function(state = initialState.claimDetails, action) {
         case CREATE_NOTE_REQUESTING:
         case CLAIM_REQUESTING:
         case CLAIM_DETAILS_UPDATING:
+        case UPDATE_PAYMENT_REQUESTING:
             return {
                 ...state,
                 requesting: true,
@@ -104,6 +107,12 @@ export default function(state = initialState.claimDetails, action) {
             };
 
         case CLAIM_DETAILS_UPDATE_SUCCESS:
+            return {
+                ...state
+            };
+
+        case UPDATE_PAYMENT_SUCCESS:
+            // TODO update store after success payment updating
             return {
                 ...state
             };

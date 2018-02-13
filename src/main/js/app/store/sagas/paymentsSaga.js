@@ -6,7 +6,8 @@ import {
     PAYMENTS_REQUESTING,
     CREATE_PAYMENT_REQUESTING,
     REMOVE_PAYMENT_REQUESTING,
-    UPDATE_RESUME_REQUESTING
+    UPDATE_RESUME_REQUESTING,
+    UPDATE_PAYMENT_REQUESTING
 } from 'constants/claims';
 import * as actions from '../actions/paymentActions';
 import { claimRequestError } from '../actions/claimDetailsActions';
@@ -43,12 +44,12 @@ function* createFlow({ id, data }) {
     }
 }
 
-function* removeFlow({ claimId, payoutId }) {
+function* removeFlow({ claimId, paymentId }) {
     try {
         const token = yield call(getAuthToken);
-        const path = `${claimId}/payouts/${payoutId}`;
+        const path = `${claimId}/payouts/${paymentId}`;
         yield call(api, token, config.claims.details.remove, null, path);
-        yield put(actions.removePaymentSuccess(payoutId));
+        yield put(actions.removePaymentSuccess(paymentId));
     } catch (error) {
         yield put(claimRequestError(error));
     }
@@ -59,7 +60,18 @@ function* updateResumeFlow({ id, data }) {
         const token = yield call(getAuthToken);
         const path = `${id}/resume`;
         yield call(api, token, config.claims.update, data, path);
-        yield put(actions.updateResumeSuccess(data));
+        yield put(actions.updateResumeSuccess(data.resume));
+    } catch (error) {
+        yield put(claimRequestError(error));
+    }
+}
+
+function* updatePaymentFlow({ id, data }) {
+    try {
+        const token = yield call(getAuthToken);
+        const path = `${id}/payout`;
+        yield call(api, token, config.claims.update, data, path);
+        yield put(actions.updatePaymentSuccess(data));
     } catch (error) {
         yield put(claimRequestError(error));
     }
@@ -70,7 +82,8 @@ function* watcher() {
         takeLatest(PAYMENTS_REQUESTING, requestFlow),
         takeLatest(CREATE_PAYMENT_REQUESTING, createFlow),
         takeLatest(REMOVE_PAYMENT_REQUESTING, removeFlow),
-        takeLatest(UPDATE_RESUME_REQUESTING, updateResumeFlow)
+        takeLatest(UPDATE_RESUME_REQUESTING, updateResumeFlow),
+        takeLatest(UPDATE_PAYMENT_REQUESTING, updatePaymentFlow)
     ];
 }
 

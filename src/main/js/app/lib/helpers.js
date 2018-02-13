@@ -46,3 +46,7 @@ export const fieldsToArray = (fields, type) => {
 
     return result;
 };
+
+export const getSum = list => {
+    return list.reduce((sum, payment) => sum + payment.amount, 0);
+};

@@ -9,21 +9,21 @@ const MessagesPageRouter = ({ store }) => (
     <Switch>
         <Route
             exact
-            path="/users"
+            path="/members"
             render={() => (
                 <PrivateRoute
                     component={UsersPage}
-                    path="/users"
+                    path="/members"
                     store={store}
                 />
             )}
         />
         <Route
-            path="/users/:id"
+            path="/members/:id"
             render={() => (
                 <PrivateRoute
                     component={ChatPage}
-                    path="/users/:id"
+                    path="/members/:id"
                     store={store}
                 />
             )}

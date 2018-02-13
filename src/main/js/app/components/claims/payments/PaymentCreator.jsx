@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Segment } from 'semantic-ui-react';
+import { Button, Form, Modal } from 'semantic-ui-react';
 
 export default class PaymentCreator extends React.Component {
     constructor(props) {
@@ -8,61 +8,84 @@ export default class PaymentCreator extends React.Component {
         this.state = {
             note: '',
             amount: '',
-            exg: false
+            exg: false,
+            open: false
         };
     }
 
-    amountInputHandler = (e, { value }) => {
-        this.setState({ amount: value });
-    };
+    amountInputHandler = (e, { value }) => this.setState({ amount: value });
 
-    noteInputhandler = (e, { value }) => {
-        this.setState({ note: value });
-    };
+    noteInputhandler = (e, { value }) => this.setState({ note: value });
 
-    checkboxHandler = () => {
-        this.setState({ exg: !this.state.exg });
-    };
+    checkboxHandler = () => this.setState({ exg: !this.state.exg });
 
     createPayment = () => {
         const { createPayment, claimId } = this.props;
         const { exg, amount, note } = this.state;
         createPayment(claimId, { exg, amount, note });
+        this.setState({
+            note: '',
+            amount: '',
+            exg: false,
+            open: false
+        });
     };
 
-    render() {
-        return (
-            <Segment>
-                <Form>
-                    <Form.Group>
-                        <Form.Input
-                            type="number"
-                            placeholder="Amount"
-                            onChange={this.amountInputHandler}
-                            value={this.state.amount}
-                        />
-                        <Form.Input
-                            type="text"
-                            placeholder="Note"
-                            onChange={this.noteInputhandler}
-                            value={this.state.note}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <label>Ex gratia</label>
-                        <Form.Checkbox
-                            checked={this.state.exg}
-                            onChange={this.checkboxHandler}
-                        />
-                    </Form.Group>
+    toggleModal = () => this.setState({ open: !this.state.open });
 
-                    <Form.Button
-                        primary
-                        onClick={this.createPayment}
-                        content="Create"
-                    />
-                </Form>
-            </Segment>
+    render() {
+        const { open, amount, note, exg } = this.state;
+        return (
+            <React.Fragment>
+                <Button primary onClick={this.toggleModal}>
+                    Create
+                </Button>
+                <Modal
+                    size="tiny"
+                    dimmer="blurring"
+                    open={open}
+                    onClose={this.toggleModal}
+                >
+                    <Modal.Header>Create Payout</Modal.Header>
+                    <Modal.Content>
+                        <Form onSubmit={this.createPayment}>
+                            <Form.Field>
+                                <label>Amount</label>
+                                <Form.Input
+                                    type="number"
+                                    placeholder="Amount"
+                                    onChange={this.amountInputHandler}
+                                    value={amount}
+                                />
+                            </Form.Field>
+
+                            <Form.Field>
+                                <label>Note</label>
+                                <Form.Input
+                                    type="text"
+                                    placeholder="Note"
+                                    onChange={this.noteInputhandler}
+                                    value={note}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <label>Ex gratia</label>
+                                <Form.Checkbox
+                                    checked={exg}
+                                    onChange={this.checkboxHandler}
+                                />
+                            </Form.Field>
+                        </Form>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button
+                            primary
+                            onClick={this.createPayment}
+                            content="Create"
+                        />
+                    </Modal.Actions>
+                </Modal>
+            </React.Fragment>
         );
     }
 }

@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input } from 'semantic-ui-react';
+import { Input, Header } from 'semantic-ui-react';
 import UsersList from '../users-list/UsersList';
 import BackLink from 'components/shared/link/BackLink';
 import Fliter from 'components/shared/filter/Filter';
-import { Header } from 'components/chat/chat/Chat';
 import { userStatus } from 'app/lib/selectOptions';
 export default class Users extends React.Component {
     constructor(props) {
@@ -12,7 +11,6 @@ export default class Users extends React.Component {
         this.state = {
             searchValue: '',
             users: [],
-            activeFilter: 'ACTIVE',
             filteredList: []
         };
     }
@@ -30,8 +28,9 @@ export default class Users extends React.Component {
         this.setState({ searchValue: '' });
     };
 
-    filterChangeHandler = (activeFilter, filteredList) => {
-        this.setState({ activeFilter, filteredList });
+    filterChangeHandler = (filter, filteredList) => {
+        this.setState({ filteredList });
+        this.props.setFilter(filter);
     };
 
     componentDidMount() {
@@ -47,11 +46,11 @@ export default class Users extends React.Component {
             setActiveConnection,
             client
         } = this.props;
-        const { filteredList, activeFilter, searchValue } = this.state;
-        const usersList = activeFilter === 'ALL' ? users.list : filteredList;
+        const { filteredList, searchValue } = this.state;
+        const usersList = users.filter === 'ALL' ? users.list : filteredList;
         return (
             <React.Fragment>
-                <Header>Chats List</Header>
+                <Header size="huge">Members</Header>
                 <BackLink />
                 <div>
                     <Input
@@ -63,15 +62,15 @@ export default class Users extends React.Component {
                         action={{ icon: 'search', onClick: this.searchRequest }}
                         value={searchValue}
                     />
-                    {users.list.length && (
+                    {users.list.length ? (
                         <Fliter
                             list={users.list}
-                            activeFilter={activeFilter}
+                            activeFilter={users.filter}
                             filterChange={this.filterChangeHandler}
                             options={userStatus}
                             fieldName="status"
                         />
-                    )}
+                    ) : null}
                 </div>
 
                 <UsersList
@@ -93,5 +92,6 @@ Users.propTypes = {
     setActiveConnection: PropTypes.func.isRequired,
     client: PropTypes.object.isRequired,
     searchUserRequest: PropTypes.func.isRequired,
-    usersRequest: PropTypes.func.isRequired
+    usersRequest: PropTypes.func.isRequired,
+    setFilter: PropTypes.func
 };

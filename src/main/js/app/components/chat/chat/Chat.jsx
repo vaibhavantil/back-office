@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Message } from 'semantic-ui-react';
+import { Message, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import MessagesList from '../messages/MessagesList';
+import BackLink from 'components/shared/link/BackLink';
 import ChatPanel from './ChatPanel';
 import * as sockets from 'sockets';
 
@@ -11,10 +11,6 @@ const ChatContainer = styled.div`
     width: 700px;
     border: solid 2px #e8e5e5;
     border-radius: 5px;
-`;
-
-export const Header = styled.h2`
-    color: #4c4b4b;
 `;
 
 export const ChatHeader = styled.div`
@@ -98,10 +94,8 @@ export default class Chat extends React.Component {
         return (
             <React.Fragment>
                 <ChatHeader>
-                    <Header>{this.getChatTitle()}</Header>
-                    <Link to="/users">
-                        <Icon name="arrow left" /> Back
-                    </Link>
+                    <Header size="huge">{this.getChatTitle()}</Header>
+                    <BackLink path="members" />
                 </ChatHeader>
 
                 <ChatContainer>
