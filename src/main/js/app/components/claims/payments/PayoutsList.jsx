@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Header } from 'semantic-ui-react';
+import { Table, Header, Segment } from 'semantic-ui-react';
 import { getSum } from 'app/lib/helpers';
 import PayoutRow from './PayoutRow';
 import PaymentCreator from './PaymentCreator';
@@ -13,12 +13,16 @@ const PayoutsList = ({
     id
 }) => (
     <React.Fragment>
-        <Header as="h2" floated="left">
-            Payouts
-        </Header>
-        <Header as="h2" floated="right">
-            <PaymentCreator createPayment={createPayment} claimId={id} />
-        </Header>
+        <Segment clearing>
+            <Header as="h2" floated="left">
+                Payouts
+            </Header>
+            <Header as="h2" floated="right">
+                <PaymentCreator createPayment={createPayment} claimId={id} />
+            </Header>
+        </Segment>
+
+        {!list.length ? <Header>No payouts</Header> : null}
         {list.length ? (
             <Table>
                 <Table.Header>
@@ -43,9 +47,7 @@ const PayoutsList = ({
                     ))}
                 </Table.Body>
             </Table>
-        ) : (
-            <span>----</span>
-        )}
+        ) : null}
 
         <span>Total payed out: {list.length && getSum(list)} SEK</span>
     </React.Fragment>
