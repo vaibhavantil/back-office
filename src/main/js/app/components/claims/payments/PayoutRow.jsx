@@ -114,7 +114,7 @@ export default class PayoutRow extends React.Component {
                                 onClick={this.removePayment}
                                 icon
                                 basic
-                                color="grey"
+                                color="red"
                             >
                                 <Icon name="trash outline" />
                             </Button>
