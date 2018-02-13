@@ -1,19 +1,24 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { routerReducer, routerMiddleware } from 'react-router-redux';
+import createBrowserHistory from 'history/createBrowserHistory';
+import { reducer as reduxFormReducer } from 'redux-form';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './sagas';
 import reducers from './reducers';
-import { reducer as reduxFormReducer } from 'redux-form';
+
+export const history = createBrowserHistory();
 
 const rootReducer = combineReducers({
     ...reducers,
     form: reduxFormReducer,
+    routing: routerReducer
 });
 
 const configureStore = () => {
     const sagaMiddleware = createSagaMiddleware();
-
+    const router = routerMiddleware(history);
     return {
-        ...createStore(rootReducer, applyMiddleware(sagaMiddleware)),
+        ...createStore(rootReducer, applyMiddleware(sagaMiddleware, router)),
         runSaga: sagaMiddleware.run(rootSaga)
     };
 };

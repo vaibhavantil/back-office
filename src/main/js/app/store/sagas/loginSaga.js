@@ -1,5 +1,5 @@
 import { take, fork, cancel, call, put, cancelled } from 'redux-saga/effects';
-import { history } from 'app/app';
+import { history } from 'app/store';
 import api from 'app/api';
 import config from 'app/api/config';
 import { setClient, unsetClient } from '../actions/clientActions';

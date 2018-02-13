@@ -24,7 +24,7 @@ export default function(state = initialState.users, action) {
         case USER_SEARCH_SUCCESS:
         case USERS_REQUEST_SUCCESS:
             return {
-                list: action.users,
+                list: action.users.map((el, id) => ({...el, status: id % 2 ? 'INACTIVE' : 'ACTIVE'})),
                 requesting: false,
                 successful: true,
                 errors: []
