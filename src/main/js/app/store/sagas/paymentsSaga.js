@@ -69,7 +69,7 @@ function* updateResumeFlow({ id, data }) {
 function* updatePaymentFlow({ id, data }) {
     try {
         const token = yield call(getAuthToken);
-        const path = `${id}/payout`;
+        const path = `${id}/payouts/${data.id}`;
         yield call(api, token, config.claims.update, data, path);
         yield put(actions.updatePaymentSuccess(data));
     } catch (error) {
