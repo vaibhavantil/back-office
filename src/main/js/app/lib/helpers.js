@@ -67,3 +67,11 @@ export const getSum = list => {
 
 export const getActiveType = (types, typeName) =>
     types.find(item => item.name === typeName);
+
+export const updatePayments = (list, updatedPayment) =>
+    list.map(
+        el =>
+            el.id === updatedPayment.payment.id
+                ? { ...el, amount: updatedPayment.payment.amount }
+                : el
+    );

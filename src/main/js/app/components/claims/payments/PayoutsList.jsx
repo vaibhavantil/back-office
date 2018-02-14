@@ -1,29 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Header, Segment } from 'semantic-ui-react';
-import { getSum } from 'app/lib/helpers';
 import PayoutRow from './PayoutRow';
 import PaymentCreator from './PaymentCreator';
+import { getSum } from 'app/lib/helpers';
 
-const PayoutsList = ({
-    list,
-    updatePayment,
-    createPayment,
-    removePayment,
-    id
-}) => (
+const PayoutsList = props => (
     <React.Fragment>
         <Segment clearing>
             <Header as="h2" floated="left">
                 Payouts
             </Header>
             <Header as="h2" floated="right">
-                <PaymentCreator createPayment={createPayment} claimId={id} />
+                <PaymentCreator
+                    createPayment={props.createPayment}
+                    id={props.id}
+                />
             </Header>
         </Segment>
 
-        {!list.length ? <Header>No payouts</Header> : null}
-        {list.length ? (
+        {!props.list.length ? <Header>No payouts</Header> : null}
+        {props.list.length ? (
+            <React.Fragment>
             <Table>
                 <Table.Header>
                     <Table.Row>
@@ -35,21 +33,17 @@ const PayoutsList = ({
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {list.map(item => (
+                        {props.list.map(item => (
                         <Table.Row key={item.id}>
-                            <PayoutRow
-                                data={item}
-                                updatePayment={updatePayment}
-                                id={id}
-                                removePayment={removePayment}
-                            />
+                                <PayoutRow {...props} data={item} />
                         </Table.Row>
                     ))}
                 </Table.Body>
             </Table>
+            </React.Fragment>
         ) : null}
 
-        <span>Total payed out: {list.length && getSum(list)} SEK</span>
+        <span>Total payed out: {getSum(props.list)} SEK</span>
     </React.Fragment>
 );
 

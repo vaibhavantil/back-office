@@ -18,8 +18,11 @@ import {
     CREATE_PAYMENT_SUCCESS,
     CLAIM_DETAILS_UPDATING,
     UPDATE_PAYMENT_REQUESTING,
-    CLAIM_UPDATE_SUCCESS
+    CLAIM_UPDATE_SUCCESS,
+    UPDATE_PAYMENT_SUCCESS
 } from '../constants/claims';
+
+import { updatePayments } from 'app/lib/helpers';
 
 export default function(state = initialState.claimDetails, action) {
     switch (action.type) {
@@ -53,12 +56,13 @@ export default function(state = initialState.claimDetails, action) {
                 ...state,
                 requesting: false,
                 successful: false,
-                errors: state.errors.concat([
-                    {
+                errors: [
+                    ...state.errors,
+                    ...{
                         message: action.error.response.statusText,
                         status: action.error.response.status
                     }
-                ])
+                ]
             };
 
         case NOTES_REQUEST_SUCCESS:
@@ -70,7 +74,7 @@ export default function(state = initialState.claimDetails, action) {
         case CREATE_NOTE_SUCCESS:
             return {
                 ...state,
-                notes: state.notes.slice().concat(action.note)
+                notes: [...state.notes, action.note]
             };
 
         case REMOVE_NOTE_SUCCESS:
@@ -116,6 +120,13 @@ export default function(state = initialState.claimDetails, action) {
                     [action.reqType]: action.data[action.reqType]
                 }
             };
+
+        case UPDATE_PAYMENT_SUCCESS: {
+            return {
+                ...state,
+                payments: updatePayments(state.payments, action.payment)
+            };
+        }
 
         default:
             return state;
