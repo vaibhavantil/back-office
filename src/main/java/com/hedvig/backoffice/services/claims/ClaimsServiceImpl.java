@@ -94,6 +94,11 @@ public class ClaimsServiceImpl implements ClaimsService {
     }
 
     @Override
+    public void updatePayout(ClaimPayoutDTO dto) throws ClaimException {
+        throw new RuntimeException("Not implemented yet!");
+    }
+
+    @Override
     public void removePayout(String id, String claimId) throws ClaimException {
         throw new RuntimeException("Not implemented yet!");
     }
