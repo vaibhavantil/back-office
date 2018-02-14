@@ -50,8 +50,8 @@ export default class PaymentCreator extends React.Component {
                     <Modal.Content>
                         <Form onSubmit={this.createPayment}>
                             <Form.Field>
-                                <label>Amount</label>
                                 <Form.Input
+                                    label="Amount"
                                     type="number"
                                     placeholder="Amount"
                                     onChange={this.amountInputHandler}
@@ -60,8 +60,8 @@ export default class PaymentCreator extends React.Component {
                             </Form.Field>
 
                             <Form.Field>
-                                <label>Note</label>
                                 <Form.Input
+                                    label="Note"
                                     type="text"
                                     placeholder="Note"
                                     onChange={this.noteInputhandler}
@@ -69,8 +69,8 @@ export default class PaymentCreator extends React.Component {
                                 />
                             </Form.Field>
                             <Form.Field>
-                                <label>Ex gratia</label>
                                 <Form.Checkbox
+                                    label="Ex gratia"
                                     checked={exg}
                                     onChange={this.checkboxHandler}
                                 />

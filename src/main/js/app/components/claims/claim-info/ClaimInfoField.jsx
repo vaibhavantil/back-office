@@ -13,6 +13,11 @@ const FieldRow = styled.div`
     width: 500px;
     min-height: 60px;
 `;
+
+const InputContainer = styled.div`
+    width: 300px;
+    margin-left: auto;
+`;
 export default class ClaimInfoField extends React.Component {
     constructor(props) {
         super(props);
@@ -42,9 +47,7 @@ export default class ClaimInfoField extends React.Component {
             false,
             field.value
         );
-        return (
-            <div style={{ width: '300px', marginLeft: 'auto' }}>{input}</div>
-        );
+        return <InputContainer>{input}</InputContainer>;
     };
 
     render() {

@@ -16,10 +16,9 @@ import {
     REMOVE_PAYMENT_SUCCESS,
     UPDATE_RESUME_SUCCESS,
     CREATE_PAYMENT_SUCCESS,
-    CLAIM_DETAILS_UPDATE_SUCCESS,
     CLAIM_DETAILS_UPDATING,
     UPDATE_PAYMENT_REQUESTING,
-    UPDATE_PAYMENT_SUCCESS
+    CLAIM_UPDATE_SUCCESS
 } from '../constants/claims';
 
 export default function(state = initialState.claimDetails, action) {
@@ -79,11 +78,13 @@ export default function(state = initialState.claimDetails, action) {
                 ...state,
                 notes: state.notes.filter(el => el.id !== action.noteId)
             };
+
         case PAYMENTS_REQUEST_SUCCESS:
             return {
                 ...state,
                 payments: action.payments.data
             };
+
         case REMOVE_PAYMENT_SUCCESS:
             return {
                 ...state,
@@ -91,6 +92,7 @@ export default function(state = initialState.claimDetails, action) {
                     el => el.id !== action.paymentId
                 )
             };
+
         case CREATE_PAYMENT_SUCCESS:
             return {
                 ...state,
@@ -106,16 +108,15 @@ export default function(state = initialState.claimDetails, action) {
                 }
             };
 
-        case CLAIM_DETAILS_UPDATE_SUCCESS:
+        case CLAIM_UPDATE_SUCCESS:
             return {
-                ...state
+                ...state,
+                data: {
+                    ...state.data,
+                    [action.reqType]: action.data[action.reqType]
+                }
             };
 
-        case UPDATE_PAYMENT_SUCCESS:
-            // TODO update store after success payment updating
-            return {
-                ...state
-            };
         default:
             return state;
     }

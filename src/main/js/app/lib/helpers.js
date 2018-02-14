@@ -47,6 +47,23 @@ export const fieldsToArray = (fields, type) => {
     return result;
 };
 
+export const updateTypesList = (list, info) =>
+    list.map(
+        item =>
+            item.name === info.type
+                ? {
+                      ...item,
+                      ...fieldsToArray(info.details, {
+                          additional: item.additional,
+                          required: item.required
+                      })
+                  }
+                : item
+    );
+
 export const getSum = list => {
     return list.reduce((sum, payment) => sum + payment.amount, 0);
 };
+
+export const getActiveType = (types, typeName) =>
+    types.find(item => item.name === typeName);

@@ -40,18 +40,20 @@ export default class NewNote extends React.Component {
     };
 
     render() {
+        const { cleanupForm, text } = this.state;
         return (
             <Form onSubmit={this.createClickHandler}>
                 <Form.Group>
                     <Form.Input
                         onChange={this.textChangeHandler}
                         placeholder="Note text..."
+                        value={text}
                     />
                     <Form.Button primary content="Add" />
                 </Form.Group>
                 <FileInput
                     changeHandler={this.fileChangeHandler}
-                    cleanupForm={this.state.cleanupForm}
+                    cleanupForm={cleanupForm}
                 />
             </Form>
         );
