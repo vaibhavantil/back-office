@@ -138,6 +138,28 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
+    public void updatePayout(ClaimPayoutDTO dto) throws ClaimException {
+        ClaimDTO claim = find(dto.getClaimId());
+        ClaimPayoutDTO payout = payments
+                .computeIfAbsent(claim.getId(), k -> new ArrayList<>())
+                .stream()
+                .filter(p -> p.getId().equals(dto.getId()))
+                .findAny().orElseThrow(() -> new ClaimNotFoundException("payout with id " + dto.getId() + " not found"));
+
+        if (dto.getAmount() != null) {
+            payout.setAmount(dto.getAmount());
+        }
+
+        if (StringUtils.trimToNull(dto.getNote()) != null) {
+            payout.setNote(dto.getNote());
+        }
+
+        if (dto.getExg() != null) {
+            payout.setExg(dto.getExg());
+        }
+    }
+
+    @Override
     public void removePayout(String id, String claimId) throws ClaimException {
         ClaimDTO claim = find(claimId);
 

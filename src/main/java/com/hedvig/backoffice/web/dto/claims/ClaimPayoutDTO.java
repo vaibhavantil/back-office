@@ -21,6 +21,6 @@ public class ClaimPayoutDTO {
     private String note;
 
     @NotNull
-    private boolean exg;
+    private Boolean exg;
 
 }

@@ -15,6 +15,7 @@ public interface ClaimsService {
     void addEvent(ClaimEventDTO dto) throws ClaimException;
     List<ClaimPayoutDTO> payouts(String id) throws ClaimException;
     ClaimPayoutDTO addPayout(ClaimPayoutDTO dto) throws ClaimException;
+    void updatePayout(ClaimPayoutDTO dto) throws ClaimException;
     void removePayout(String id, String claimId) throws ClaimException;
     List<ClaimNoteDTO> notes(String id) throws ClaimException;
     ClaimNoteDTO addNote(ClaimNoteDTO dto) throws ClaimException;

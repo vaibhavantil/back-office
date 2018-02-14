@@ -101,6 +101,19 @@ public class ClaimsController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    @PostMapping("/{id}/payouts/{payoutId}")
+    public ResponseEntity<?> updatePayout(@PathVariable String id,
+                                                       @PathVariable String payoutId,
+                                                       @RequestBody ClaimPayoutDTO dto) throws ClaimException {
+        dto.setClaimId(id);
+        dto.setId(payoutId);
+
+        claimsService.updatePayout(dto);
+
+        return ResponseEntity
+                .noContent().build();
+    }
+
     @DeleteMapping("/{id}/payouts/{payoutId}")
     public ResponseEntity<?> removePayout(@PathVariable String id, @PathVariable String payoutId) throws ClaimException {
         claimsService.removePayout(payoutId, id);
