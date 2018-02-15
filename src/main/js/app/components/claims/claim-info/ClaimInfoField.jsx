@@ -18,6 +18,7 @@ const InputContainer = styled.div`
     width: 300px;
     margin-left: auto;
 `;
+
 export default class ClaimInfoField extends React.Component {
     constructor(props) {
         super(props);
@@ -62,9 +63,12 @@ export default class ClaimInfoField extends React.Component {
                             onChange={this.toggleInput}
                         />
                     )}
-                    {inputIsVisible || required
-                        ? this.getInput(types[field.type])
-                        : null}
+                    {inputIsVisible || required ? (
+                        <React.Fragment>
+                            <span>{field.name}</span>
+                            {this.getInput(types[field.type])}
+                        </React.Fragment>
+                    ) : null}
                 </FieldRow>
             </React.Fragment>
         );

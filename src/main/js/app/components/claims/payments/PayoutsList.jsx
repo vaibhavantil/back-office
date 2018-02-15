@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Table, Header, Segment } from 'semantic-ui-react';
 import PayoutRow from './PayoutRow';
 import PaymentCreator from './PaymentCreator';
-import { getSum } from 'app/lib/helpers';
 
 const PayoutsList = props => (
     <React.Fragment>
@@ -43,7 +42,7 @@ const PayoutsList = props => (
             </React.Fragment>
         ) : null}
 
-        <span>Total payed out: {getSum(props.list)} SEK</span>
+        <span>Total payed out: {props.sum || 0} SEK</span>
     </React.Fragment>
 );
 
@@ -52,7 +51,8 @@ PayoutsList.propTypes = {
     updatePayment: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
     removePayment: PropTypes.func.isRequired,
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    sum: PropTypes.number
 };
 
 export default PayoutsList;
