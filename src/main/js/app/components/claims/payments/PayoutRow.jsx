@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Button, Checkbox, Table, Icon, Input } from 'semantic-ui-react';
+import { Button, Checkbox, Table, Input } from 'semantic-ui-react';
 import DateInput from 'components/shared/inputs/DateInput';
 
 export default class PayoutRow extends React.Component {
@@ -94,37 +94,24 @@ export default class PayoutRow extends React.Component {
                     {disabled ? (
                         <Button
                             onClick={this.editClickHandler}
-                            icon
-                            basic
-                            color="black"
-                        >
-                            <Icon name="edit" />
-                        </Button>
+                            content="Edit"
+                        />
                     ) : (
                         <React.Fragment>
                             <Button
                                 onClick={this.disableEdit}
-                                icon
-                                basic
-                                color="grey"
-                            >
-                                <Icon name="close" />
-                            </Button>
+                                content="Close"
+                            />
                             <Button
                                 onClick={this.removePayment}
-                                icon
-                                basic
-                                color="red"
-                            >
-                                <Icon name="trash outline" />
-                            </Button>
+                                negative
+                                content="Remove"
+                            />
                             <Button
                                 onClick={this.saveClickHandler}
                                 primary
-                                icon
-                            >
-                                <Icon name="save" />
-                            </Button>
+                                content="Save"
+                            />
                         </React.Fragment>
                     )}
                 </Table.Cell>

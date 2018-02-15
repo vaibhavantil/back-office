@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Form, Segment } from 'semantic-ui-react';
 import PayoutsList from './PayoutsList';
+import { getSum } from 'app/lib/helpers';
 
 const Label = styled.label`
     display: flex;
@@ -45,6 +46,7 @@ export default class Payments extends React.Component {
     render() {
         const { claimDetails } = this.props;
         const { resume, editDisabled } = this.state;
+        const sum = getSum(claimDetails.payments);
         return (
             <Segment>
                 <Form>
@@ -72,7 +74,11 @@ export default class Payments extends React.Component {
                     </Form.Group>
                 </Form>
 
-                <PayoutsList {...this.props} list={claimDetails.payments} />
+                <PayoutsList
+                    {...this.props}
+                    list={claimDetails.payments}
+                    sum={sum}
+                />
             </Segment>
         );
     }
