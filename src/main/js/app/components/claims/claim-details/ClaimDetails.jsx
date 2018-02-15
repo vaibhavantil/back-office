@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Header } from 'semantic-ui-react';
 import BackLink from 'components/shared/link/BackLink';
 import ClaimInfo from '../claim-info/ClaimInfo';
 import Notes from '../notes/Notes';
@@ -43,6 +44,8 @@ export default class ClaimDetails extends React.Component {
         } = this.props;
         return (
             <ClaimDetailsContainer>
+                <Header size="huge">Claim Details</Header>
+
                 <BackLink path="claims" />
                 {claimDetails.data ? <ClaimInfo {...this.props} /> : null}
                 <Notes

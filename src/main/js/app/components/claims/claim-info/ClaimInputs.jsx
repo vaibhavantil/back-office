@@ -30,12 +30,11 @@ export default {
         );
     },
 
-    [types.BOOL](onChangeHandler, value) {
+    [types.BOOL](onChangeHandler) {
         return (
             <Dropdown
                 onChange={onChangeHandler.bind(this, types.BOOL)}
                 options={boolOptions}
-                value={value}
                 selection
             />
         );

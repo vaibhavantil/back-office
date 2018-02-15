@@ -17,7 +17,7 @@ export default class PayoutRow extends React.Component {
 
     saveClickHandler = () => {
         this.setState({ disabled: true });
-        this.props.updatePayment(this.state.data);
+        this.props.updatePayment(this.props.id, this.state.data);
     };
 
     inputChangeHandler = (type, e, { value }) => {

@@ -21,7 +21,21 @@ const ListContainer = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding-top: 30px;
+`;
+
+const OptionTextInput = styled(Input)`
+    &&& {
+        width: 200px;
+        margin-right: 10px;
+    }
+`;
+
+const FormGroup = styled(Form.Group)`
+    &&& {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+    }
 `;
 
 const SelectedOptionsList = ({ options, removeFromList }) => (
@@ -126,13 +140,18 @@ export default class SelectCreator extends React.Component {
                     cleanupForm={cleanupForm}
                 />
                 <Form.Field>
-                    <label>Option text</label>
-                    <Input
-                        onChange={this.setOptionName}
-                        style={{ width: '200px', marginRight: '10px' }}
-                        value={this.state.optionName}
-                    />
-                    <Button onClick={this.createNewOption}>Create</Button>
+                    <FormGroup>
+                        <Form.Field>
+                            <label>Option </label>
+                            <OptionTextInput
+                                onChange={this.setOptionName}
+                                value={this.state.optionName}
+                            />
+                        </Form.Field>
+
+                        <Button onClick={this.createNewOption}>Create</Button>
+                    </FormGroup>
+
                     <SelectedOptionsList
                         options={this.state.choicesList}
                         removeFromList={this.removeFromList}

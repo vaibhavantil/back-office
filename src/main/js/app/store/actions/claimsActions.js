@@ -20,8 +20,10 @@ export const claimsRequestError = error => ({
     error
 });
 
-export const claimUpdateSuccess = () => ({
-    type: CLAIM_UPDATE_SUCCESS
+export const claimUpdateSuccess = (reqType, data) => ({
+    type: CLAIM_UPDATE_SUCCESS,
+    reqType,
+    data
 });
 
 export const claimTypes = () => ({

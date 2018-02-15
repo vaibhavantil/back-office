@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Dropdown, List } from 'semantic-ui-react';
 import ClaimInfoField from './ClaimInfoField';
-import { fieldsToArray } from 'app/lib/helpers';
+import { updateTypesList, getActiveType } from 'app/lib/helpers';
 export default class ClaimTypeFields extends React.Component {
     constructor(props) {
         super(props);
@@ -22,10 +22,6 @@ export default class ClaimTypeFields extends React.Component {
         this.setState({ fieldsData: stateCopy });
     };
 
-    getActiveType = typeName => {
-        return this.state.types.find(item => item.name === typeName);
-    };
-
     submitTypeChanges = () => {
         const { claimId, claimDetailsUpdate, claimTypeUpdate } = this.props;
         const { type, fieldsData } = this.state;
@@ -35,11 +31,11 @@ export default class ClaimTypeFields extends React.Component {
 
     typeChangeHandler = (e, { value }) => {
         const { claimId, claimTypeUpdate } = this.props;
-        const { type } = this.state;
+        const { type, types } = this.state;
         if (!type) {
             claimTypeUpdate(claimId, { type: value }, 'type');
         } else {
-            this.setState({ type: this.getActiveType(value) });
+            this.setState({ type: getActiveType(types, value) });
         }
     };
 
@@ -65,26 +61,23 @@ export default class ClaimTypeFields extends React.Component {
 
     componentWillMount() {
         const { claimInfo, types } = this.props;
-        let updatedTypesList = [...types];
+        let typesList = [...types];
         if (claimInfo.details && claimInfo.type) {
-            updatedTypesList = updatedTypesList.map(
-                item =>
-                    item.name === claimInfo.type
-                        ? {
-                              ...item,
-                              ...fieldsToArray(claimInfo.details, {
-                                  additional: item.additional,
-                                  required: item.required
-                              })
-                          }
-                        : item
-            );
+            typesList = updateTypesList(typesList, claimInfo);
         }
-        this.setState({ types: updatedTypesList }, () => {
-            this.setState({
-                type: this.getActiveType(claimInfo.type)
-            });
+        this.setState({
+            types: typesList,
+            type: getActiveType(typesList, claimInfo.type)
         });
+    }
+
+    componentWillReceiveProps({ types, claimInfo }) {
+        const { claimInfo: { type } } = this.props;
+        if (type !== claimInfo.type) {
+            this.setState({
+                type: getActiveType(types, claimInfo.type)
+            });
+        }
     }
 
     render() {

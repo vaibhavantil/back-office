@@ -36,11 +36,6 @@ export default class Payments extends React.Component {
         this.setState({ resume: value });
     };
 
-    updatePayment = data => {
-        const { updatePayment, id } = this.props;
-        updatePayment(id, data);
-    };
-
     componentWillReceiveProps({ claimDetails: { data } }) {
         if (data && data.resume) {
             this.setState({ resume: data.resume });
@@ -48,7 +43,7 @@ export default class Payments extends React.Component {
     }
 
     render() {
-        const { claimDetails, createPayment, removePayment, id } = this.props;
+        const { claimDetails } = this.props;
         const { resume, editDisabled } = this.state;
         return (
             <Segment>
@@ -77,13 +72,7 @@ export default class Payments extends React.Component {
                     </Form.Group>
                 </Form>
 
-                <PayoutsList
-                    list={claimDetails.payments}
-                    updatePayment={this.updatePayment}
-                    createPayment={createPayment}
-                    removePayment={removePayment}
-                    id={id}
-                />
+                <PayoutsList {...this.props} list={claimDetails.payments} />
             </Segment>
         );
     }
