@@ -32,7 +32,7 @@ public class MemberServiceStub implements MemberService {
     }
 
     @Override
-    public List<MemberDTO> find(String query) throws MemberServiceException {
+    public List<MemberDTO> search(String status, String query) throws MemberServiceException {
         List<MemberDTO> result = users.stream()
                 .filter(u -> u.getHid().contains(query) || u.getFirstName().contains(query))
                 .collect(Collectors.toList());

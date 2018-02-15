@@ -26,13 +26,15 @@ public class MemberController {
     }
 
     @GetMapping("/{hid}")
-    public MemberDTO findOne(@PathVariable String hid) throws MemberServiceException, MemberNotFoundException {
+    public MemberDTO findOne(@PathVariable String hid) throws MemberNotFoundException, MemberServiceException {
         return memberService.findByHid(hid);
     }
 
     @GetMapping("/search")
-    public List<MemberDTO> find(@RequestParam("q") String query) throws MemberNotFoundException, MemberServiceException {
-        return memberService.find(query);
+    public List<MemberDTO> find(@RequestParam(name = "status", defaultValue = "", required = false) String status,
+                                @RequestParam(name = "query", defaultValue = "", required = false) String query)
+            throws MemberServiceException {
+        return memberService.search(status, query);
     }
 
 }

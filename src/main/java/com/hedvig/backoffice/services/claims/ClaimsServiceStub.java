@@ -47,7 +47,7 @@ public class ClaimsServiceStub implements ClaimsService {
         claims = IntStream.range(0, 10).mapToObj(i -> {
             String id = UUID.randomUUID().toString();
             String userId;
-            if (users.size() > 0 && users.size() < i) {
+            if (users.size() > 0 && users.size() > i) {
                 userId = users.get(i).getHid();
             } else {
                 userId = UUID.randomUUID().toString();

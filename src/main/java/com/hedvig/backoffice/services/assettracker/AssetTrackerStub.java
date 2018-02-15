@@ -6,6 +6,7 @@ import com.hedvig.backoffice.services.members.MemberServiceException;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.hedvig.common.constant.AssetState;
 import lombok.val;
+import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -55,7 +57,9 @@ public class AssetTrackerStub implements AssetTracker {
 
             return IntStream.range(0, 15).mapToObj(i -> {
                 val id = UUID.randomUUID().toString();
-                String userId = memberIds.size() > i ? memberIds.get(i) : memberIds.get(0);
+                String userId = memberIds.size() > i
+                        ? memberIds.get(i)
+                        : memberIds.size() > 0 ? memberIds.get(0) : Integer.toString(RandomUtils.nextInt());
 
                 return new Asset(
                         id,

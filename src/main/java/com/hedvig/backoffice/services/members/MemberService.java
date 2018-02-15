@@ -7,7 +7,7 @@ import java.util.List;
 public interface MemberService {
 
     List<MemberDTO> list() throws MemberServiceException;
-    List<MemberDTO> find(String query) throws MemberServiceException;
+    List<MemberDTO> search(String status, String query) throws MemberServiceException;
     MemberDTO findByHid(String hid) throws MemberNotFoundException, MemberServiceException;
 
 }
