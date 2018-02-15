@@ -1,10 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Header } from 'semantic-ui-react';
+import styled from 'styled-components';
+import { Dropdown, Input, Header } from 'semantic-ui-react';
 import UsersList from '../users-list/UsersList';
 import BackLink from 'components/shared/link/BackLink';
-import Fliter from 'components/shared/filter/Filter';
 import { userStatus } from 'app/lib/selectOptions';
+
+const UsersFilter = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+`;
 export default class Users extends React.Component {
     constructor(props) {
         super(props);
@@ -28,9 +36,8 @@ export default class Users extends React.Component {
         this.setState({ searchValue: '' });
     };
 
-    filterChangeHandler = (filter, filteredList) => {
-        this.setState({ filteredList });
-        this.props.setFilter(filter);
+    filterChangeHandler = (e, { value }) => {
+        this.props.setFilter(value);
     };
 
     componentDidMount() {
@@ -46,13 +53,12 @@ export default class Users extends React.Component {
             setActiveConnection,
             client
         } = this.props;
-        const { filteredList, searchValue } = this.state;
-        const usersList = users.filter === 'ALL' ? users.list : filteredList;
+        const { searchValue } = this.state;
         return (
             <React.Fragment>
                 <Header size="huge">Members</Header>
                 <BackLink />
-                <div>
+                <UsersFilter>
                     <Input
                         loading={users.requesting}
                         placeholder="Search..."
@@ -62,19 +68,18 @@ export default class Users extends React.Component {
                         action={{ icon: 'search', onClick: this.searchRequest }}
                         value={searchValue}
                     />
-                    {users.list.length ? (
-                        <Fliter
-                            list={users.list}
-                            activeFilter={users.filter}
-                            filterChange={this.filterChangeHandler}
-                            options={userStatus}
-                            fieldName="status"
-                        />
-                    ) : null}
-                </div>
+
+                    <label>Status: </label>
+                    <Dropdown
+                        onChange={this.filterChangeHandler}
+                        options={userStatus}
+                        selection
+                        value={users.filter}
+                    />
+                </UsersFilter>
 
                 <UsersList
-                    users={usersList}
+                    users={users.list}
                     messages={messages}
                     newMessagesReceived={newMessagesReceived}
                     setActiveConnection={setActiveConnection}

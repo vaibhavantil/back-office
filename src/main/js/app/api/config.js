@@ -29,6 +29,10 @@ export default {
         search: {
             method: 'get',
             url: 'user/search'
+        },
+        filter: {
+            method: 'get',
+            url: 'user/filter'
         }
     },
     claims: {
