@@ -49,6 +49,10 @@ const MessageBox = styled.div`
     }
 `;
 
+const Video = styled.video`
+    width: 350px;
+`;
+
 const Message = ({ left, content }) => (
     <MessageRow left={left}>
         <MessageBox left={left}>
@@ -71,9 +75,7 @@ const MessageContent = ({ content }) => {
         case types.AUDIO:
             return <AudioMessage content={content.URL} />;
         case types.VIDEO:
-            return (
-                <video src={content.URL} controls style={{ width: '350px' }} />
-            );
+            return <Video src={content.URL} controls />;
         case types.PHOTO:
         case types.PARAGRAPH:
         case types.HERO:

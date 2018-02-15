@@ -24,6 +24,26 @@ const MessagesPanelContariner = styled.div`
     border-top: solid 2px #e8e5e5;
 `;
 
+const ChatForm = styled(Form)`
+    z-index: 10000;
+
+    & .selection.dropdown {
+        min-width: 130px;
+
+        & .menu {
+            max-height: 100px;
+        }
+    }
+
+    & .primary.button {
+        margin-top: 23px;
+    }
+`;
+
+const InputContainer = styled.div`
+    width: 400px;
+`;
+
 export default class ChatPanel extends React.Component {
     constructor(props) {
         super(props);
@@ -76,18 +96,19 @@ export default class ChatPanel extends React.Component {
             input = chatInputs[type](this.inputHandler, cleanupForm);
         }
 
-        return <div style={{ width: '400px' }}>{input}</div>;
+        return <InputContainer>{input}</InputContainer>;
     };
 
     render() {
         const { messageType } = this.state;
         const chatInput = this.getChatInput(messageType);
         return (
-            <Form onSubmit={this.submitHandler} className="chat-panel">
+            <ChatForm onSubmit={this.submitHandler}>
                 <MessagesPanelContariner>
                     <Form.Field>
                         <label>Message type</label>
                         <Dropdown
+                            fluid
                             onChange={this.dropdownHander}
                             options={messageTypes}
                             placeholder="Choose asset state"
@@ -98,7 +119,7 @@ export default class ChatPanel extends React.Component {
                     {chatInput}
                     <Form.Button content="Send" primary />
                 </MessagesPanelContariner>
-            </Form>
+            </ChatForm>
         );
     }
 }

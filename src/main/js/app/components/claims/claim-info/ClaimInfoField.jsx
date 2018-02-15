@@ -56,10 +56,9 @@ export default class ClaimInfoField extends React.Component {
         return (
             <React.Fragment>
                 <FieldRow>
-                    <span>{field.name}</span>
                     {!required && (
                         <Checkbox
-                            style={{ marginLeft: '10px' }}
+                            label={field.name}
                             onChange={this.toggleInput}
                         />
                     )}

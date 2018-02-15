@@ -1,8 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Card, Image, Dropdown, Button } from 'semantic-ui-react';
 import moment from 'moment';
 import { assetStates } from 'app/lib/selectOptions';
+
+const CardButtons = styled(Card.Content)`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 120px;
+`;
 
 export default class AssetCard extends React.Component {
     constructor(props) {
@@ -46,23 +54,20 @@ export default class AssetCard extends React.Component {
                     <Card.Meta>{assetDate}</Card.Meta>
                     <Card.Description>{asset.userId}</Card.Description>
                 </Card.Content>
-                <Card.Content extra>
-                    <div>
-                        <Dropdown
-                            className="dropdown--short-text"
-                            onChange={this.dropdownHandler}
-                            options={assetStates}
-                            placeholder="Choose asset state"
-                            selection
-                            style={{ width: '100%' }}
-                            value={this.state.dropdownValue || asset.state}
-                            disabled={this.state.disabled}
-                        />
-                        <Button primary fluid onClick={this.saveClickHandler}>
-                            Save
-                        </Button>
-                    </div>
-                </Card.Content>
+                <CardButtons>
+                    <Dropdown
+                        fluid
+                        onChange={this.dropdownHandler}
+                        options={assetStates}
+                        placeholder="Choose asset state"
+                        selection
+                        value={this.state.dropdownValue || asset.state}
+                        disabled={this.state.disabled}
+                    />
+                    <Button primary fluid onClick={this.saveClickHandler}>
+                        Save
+                    </Button>
+                </CardButtons>
             </Card>
         );
     }

@@ -1,7 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Button } from 'semantic-ui-react';
 import { getPageState } from 'app/lib/paginator';
+
+const Paginator = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+`;
 
 export default class Pagination extends React.Component {
     constructor(props) {
@@ -46,7 +54,7 @@ export default class Pagination extends React.Component {
         const { pageState } = this.state;
 
         return (
-            <div className="pagination">
+            <Paginator>
                 {pageState.pages &&
                     pageState.pages.length > 1 && (
                         <Button.Group>
@@ -83,7 +91,7 @@ export default class Pagination extends React.Component {
                             </Button>
                         </Button.Group>
                     )}
-            </div>
+            </Paginator>
         );
     }
 }

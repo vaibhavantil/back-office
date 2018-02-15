@@ -22,7 +22,7 @@ export const ListContainer = styled.div`
     border: solid 1px #dfe0e0;
     border-radius: 5px;
     padding: 20px 10px;
-    margin-top: 30px;
+    margin: 30px 0;
 `;
 
 export const ItemContent = styled.div`

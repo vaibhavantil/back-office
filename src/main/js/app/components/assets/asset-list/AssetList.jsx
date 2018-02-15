@@ -2,7 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Button, Card, Dimmer, Header, Loader, Message } from 'semantic-ui-react';
+import {
+    Button,
+    Card,
+    Dimmer,
+    Header,
+    Loader,
+    Message
+} from 'semantic-ui-react';
 import AssetCard from '../asset-card/AssetCard';
 import Pagination from 'components/shared/pagination/Pagination';
 import Fliter from 'components/shared/filter/Filter';
@@ -16,6 +23,12 @@ const FilterMessage = styled.p`
     width: 100%;
     text-align: center;
     font-size: 1.5rem;
+`;
+
+const CardGroup = styled(Card.Group)`
+    &&& {
+        margin: 30px 0;
+    }
 `;
 class AssetList extends React.Component {
     constructor(props) {
@@ -86,10 +99,7 @@ class AssetList extends React.Component {
                         <Button onClick={this.pollingHandler} size="mini">
                             Poll {polling ? 'stop' : 'start'}
                         </Button>
-                        <Card.Group
-                            itemsPerRow={4}
-                            style={{ margin: '30px 0' }}
-                        >
+                        <CardGroup itemsPerRow={4}>
                             {list && !!activeList.length ? (
                                 activeList.map(asset => (
                                     <AssetCard
@@ -104,10 +114,11 @@ class AssetList extends React.Component {
                                     No items by this filter. Select other.
                                 </FilterMessage>
                             )}
-                        </Card.Group>
+                        </CardGroup>
                         <Pagination
                             items={items}
                             onChangePage={this.onChangePage}
+                            pageSize={12}
                         />
                     </ListContainer>
                 )}
