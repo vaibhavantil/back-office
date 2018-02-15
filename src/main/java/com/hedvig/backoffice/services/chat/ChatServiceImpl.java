@@ -113,7 +113,7 @@ public class ChatServiceImpl implements ChatService {
     public void subscribe(String hid, String subId, String sessionId, String principal) {
         MemberDTO member;
         try {
-            member = memberService.findByHid(hid);
+            member = memberService.findByHid(hid).orElseThrow(MemberServiceException::new);
         } catch (MemberNotFoundException e) {
             send(hid, Message.error(400, "member with hid " + hid + " not found"));
             logger.warn("member with hid " + hid + " not found", e);

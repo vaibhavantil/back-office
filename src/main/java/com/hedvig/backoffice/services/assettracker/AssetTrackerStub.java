@@ -2,7 +2,6 @@ package com.hedvig.backoffice.services.assettracker;
 
 import com.hedvig.backoffice.domain.Asset;
 import com.hedvig.backoffice.services.members.MemberService;
-import com.hedvig.backoffice.services.members.MemberServiceException;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.hedvig.common.constant.AssetState;
 import lombok.val;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -44,20 +42,14 @@ public class AssetTrackerStub implements AssetTracker {
         if (generation.get() < 10) {
             logger.info("fetch pending assets");
             generation.incrementAndGet();
-            List<MemberDTO> members = null;
-            try {
-                 members = memberService.list();
-            } catch (MemberServiceException e) {
-                logger.error("error during fetch members", e);
-            }
 
-            List<String> memberIds = members != null
-                    ? members.stream().map(MemberDTO::getHid).collect(Collectors.toList())
-                    : IntStream.range(0, 15).mapToObj(i -> "user-id-" + i).collect(Collectors.toList());
+            List<String> memberIds = memberService.search("", "")
+                    .map(members -> members.stream().map(MemberDTO::getHid).collect(Collectors.toList()))
+                    .orElseGet(() -> IntStream.range(0, 15).mapToObj(i -> "user-id-" + i).collect(Collectors.toList()));
 
             return IntStream.range(0, 15).mapToObj(i -> {
                 val id = UUID.randomUUID().toString();
-                String userId = memberIds.size() > i
+                String memberId = memberIds.size() > i
                         ? memberIds.get(i)
                         : memberIds.size() > 0 ? memberIds.get(0) : Integer.toString(RandomUtils.nextInt());
 
@@ -68,7 +60,7 @@ public class AssetTrackerStub implements AssetTracker {
                         "Asset number " + globalId.incrementAndGet(),
                         AssetState.PENDING,
                         i % 2 == 0,
-                        userId,
+                        memberId,
                         LocalDate.now()
                 );
             }).collect(Collectors.toList());

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,12 +28,7 @@ public class MemberServiceStub implements MemberService {
     }
 
     @Override
-    public List<MemberDTO> list() throws MemberServiceException {
-        return users;
-    }
-
-    @Override
-    public List<MemberDTO> search(String status, String query) throws MemberServiceException {
+    public Optional<List<MemberDTO>> search(String status, String query) throws MemberServiceException {
         List<MemberDTO> result = users.stream()
                 .filter(u -> u.getHid().contains(query) || u.getFirstName().contains(query))
                 .collect(Collectors.toList());
@@ -43,15 +39,15 @@ public class MemberServiceStub implements MemberService {
             result.add(dto);
         }
 
-        return result;
+        return Optional.of(result);
     }
 
     @Override
-    public MemberDTO findByHid(String hid) throws MemberNotFoundException, MemberServiceException {
-        return users.stream()
+    public Optional<MemberDTO> findByHid(String hid) throws MemberNotFoundException, MemberServiceException {
+        return Optional.of(users.stream()
                 .filter(u -> u.getHid().equals(hid))
                 .findAny()
-                .orElse(new MemberDTO(Long.parseLong(hid)));
+                .orElse(new MemberDTO(Long.parseLong(hid))));
     }
 
 }

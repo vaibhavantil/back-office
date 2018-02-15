@@ -21,20 +21,19 @@ public class MemberController {
     }
 
     @GetMapping
-    public List<MemberDTO> list() throws MemberServiceException {
-        return memberService.list();
+    public List<MemberDTO> list() {
+        return memberService.search("", "").orElseThrow(MemberServiceException::new);
     }
 
     @GetMapping("/{hid}")
-    public MemberDTO findOne(@PathVariable String hid) throws MemberNotFoundException, MemberServiceException {
-        return memberService.findByHid(hid);
+    public MemberDTO findOne(@PathVariable String hid) throws MemberNotFoundException {
+        return memberService.findByHid(hid).orElseThrow(MemberServiceException::new);
     }
 
     @GetMapping("/search")
     public List<MemberDTO> find(@RequestParam(name = "status", defaultValue = "", required = false) String status,
-                                @RequestParam(name = "query", defaultValue = "", required = false) String query)
-            throws MemberServiceException {
-        return memberService.search(status, query);
+                                @RequestParam(name = "query", defaultValue = "", required = false) String query) {
+        return memberService.search(status, query).orElseThrow(MemberServiceException::new);
     }
 
 }

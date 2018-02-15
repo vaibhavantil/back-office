@@ -3,7 +3,6 @@ package com.hedvig.backoffice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.services.members.MemberService;
-import com.hedvig.backoffice.services.members.MemberServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 @Component
 public class BackOfficeStartupApplicationListener implements ApplicationListener<ContextRefreshedEvent> {
@@ -30,22 +31,19 @@ public class BackOfficeStartupApplicationListener implements ApplicationListener
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (!memberServiceStub) {
-            try {
-                logger.info("TEST MEMBER SERVICE:");
-                ObjectMapper mapper = new ObjectMapper();
-                memberService.list()
-                        .stream()
-                        .limit(10)
-                        .forEach(u -> {
-                            try {
-                                logger.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(u));
-                            } catch (JsonProcessingException e) {
-                                logger.error("error during parsing members from service", e);
-                            }
-                        });
-            } catch (MemberServiceException e) {
-                logger.error("error during updating members list", e);
-            }
+            logger.info("TEST MEMBER SERVICE:");
+            ObjectMapper mapper = new ObjectMapper();
+            memberService.search("", "")
+                    .orElseGet(ArrayList::new)
+                    .stream()
+                    .limit(10)
+                    .forEach(u -> {
+                        try {
+                            logger.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(u));
+                        } catch (JsonProcessingException e) {
+                            logger.error("error during parsing members from service", e);
+                        }
+                    });
         }
     }
 

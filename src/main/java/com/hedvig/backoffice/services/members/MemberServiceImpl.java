@@ -9,12 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 public class MemberServiceImpl implements MemberService {
@@ -39,37 +38,20 @@ public class MemberServiceImpl implements MemberService {
         logger.info("id: " + getByIdUrl);
     }
 
-    @HystrixCommand(fallbackMethod = "listFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
-    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
-    @Override
-    public List<MemberDTO> list() throws MemberServiceException {
-        return search("", "");
-    }
-
-    private List<MemberDTO> listFallback(Throwable e) {
-        logger.error("failed members fetching", e);
-        return new ArrayList<>();
-    }
-
     @HystrixCommand(fallbackMethod = "searchFallback", commandProperties = {
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
-    public List<MemberDTO> search(String status, String query) throws MemberServiceException {
+    public Optional<List<MemberDTO>> search(String status, String query) {
         RestTemplate restTemplate = new RestTemplate();
-        try {
-            ResponseEntity<MemberDTO[]> response
-                    = restTemplate.getForEntity(baseUrl + searchUrl + "?status=" + status + "&query=" + query, MemberDTO[].class);
-            return Arrays.asList(response.getBody());
-        } catch (RestClientException e) {
-            throw new MemberServiceException(e);
-        }
+        ResponseEntity<MemberDTO[]> response
+                = restTemplate.getForEntity(baseUrl + searchUrl + "?status=" + status + "&query=" + query, MemberDTO[].class);
+        return Optional.of(Arrays.asList(response.getBody()));
     }
 
-    private List<MemberDTO> searchFallback(String status, String query, Throwable e) {
+    private Optional<List<MemberDTO>> searchFallback(String status, String query, Throwable e) {
         logger.error("failed members fetching", e);
-        return new ArrayList<>();
+        return Optional.empty();
     }
 
     @HystrixCommand(fallbackMethod = "findByHidFallback", commandProperties = {
@@ -77,21 +59,19 @@ public class MemberServiceImpl implements MemberService {
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
             ignoreExceptions = { MemberNotFoundException.class })
     @Override
-    public MemberDTO findByHid(String hid) throws MemberNotFoundException, MemberServiceException {
+    public Optional<MemberDTO> findByHid(String hid) throws MemberNotFoundException {
         RestTemplate restTemplate = new RestTemplate();
         try {
             ResponseEntity<MemberDTO> response = restTemplate.getForEntity(baseUrl + getByIdUrl + "/" + hid, MemberDTO.class);
-            return response.getBody();
+            return Optional.ofNullable(response.getBody());
         } catch (HttpClientErrorException e) {
             throw new MemberNotFoundException(hid);
-        } catch (RestClientException e) {
-            throw new MemberServiceException(e);
         }
     }
 
-    private MemberDTO findByHidFallback(String hid, Throwable e) throws MemberServiceException {
+    private Optional<MemberDTO> findByHidFallback(String hid, Throwable e) {
         logger.error("failed member fetching", e);
-        throw new MemberServiceException(e);
+        return Optional.empty();
     }
 
 }
