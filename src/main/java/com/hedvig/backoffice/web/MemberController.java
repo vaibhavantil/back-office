@@ -31,7 +31,7 @@ public class MemberController {
     }
 
     @GetMapping("/search")
-    public List<MemberDTO> find(@RequestParam(name = "status", defaultValue = "", required = false) String status,
+    public List<MemberDTO> search(@RequestParam(name = "status", defaultValue = "", required = false) String status,
                                 @RequestParam(name = "query", defaultValue = "", required = false) String query) {
         return memberService.search(status, query).orElseThrow(MemberServiceException::new);
     }
