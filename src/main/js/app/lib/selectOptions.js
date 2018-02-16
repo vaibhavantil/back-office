@@ -52,7 +52,9 @@ export const claimStatus = [
 ];
 
 export const userStatus = [
-    { key: 0, text: 'ACTIVE', value: 'ACTIVE' },
-    { key: 5, text: 'INACTIVE', value: 'INACTIVE' },
+    { key: 0, text: 'INITIATED', value: 'INITIATED' },
+    { key: 1, text: 'ONBOARDING', value: 'ONBOARDING' },
+    { key: 2, text: 'SIGNED', value: 'SIGNED' },
+    { key: 3, text: 'INACTIVATED', value: 'INACTIVATED' },
     { key: 6, text: 'ALL', value: 'ALL' }
 ];

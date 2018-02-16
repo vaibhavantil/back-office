@@ -1,17 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Header } from 'semantic-ui-react';
+import styled from 'styled-components';
+import { Button, Dropdown, Input, Header } from 'semantic-ui-react';
 import UsersList from '../users-list/UsersList';
 import BackLink from 'components/shared/link/BackLink';
-import Fliter from 'components/shared/filter/Filter';
 import { userStatus } from 'app/lib/selectOptions';
+
+const UsersFilter = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+`;
+
+const ResetButton = styled(Button)`
+    &&& {
+        margin-top: 10px;
+    }
+`;
+
 export default class Users extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             searchValue: '',
-            users: [],
-            filteredList: []
+            filter: ''
         };
     }
 
@@ -24,18 +38,29 @@ export default class Users extends React.Component {
     };
 
     searchRequest = () => {
-        this.props.searchUserRequest(this.state.searchValue);
-        this.setState({ searchValue: '' });
+        const { searchValue, filter } = this.state;
+        this.props.searchUserRequest({ query: searchValue, status: filter });
     };
 
-    filterChangeHandler = (filter, filteredList) => {
-        this.setState({ filteredList });
-        this.props.setFilter(filter);
+    filterChangeHandler = (e, { value }) => {
+        const searchValue = this.state.searchValue;
+        this.props.setFilter({ status: value, query: searchValue });
+        if (value === 'ALL') this.resetSearch();
+        this.setState({ filter: value });
+    };
+
+    resetSearch = () => {
+        const { usersRequest, setFilter } = this.props;
+        setFilter({ status: 'ALL' });
+        this.setState({ searchValue: '' }, () => usersRequest());
     };
 
     componentDidMount() {
-        const { users, usersRequest } = this.props;
-        if (!users.list.length) usersRequest();
+        const { users } = this.props;
+        this.setState({ filter: users.filter });
+        if (!users.list.length) {
+            this.resetSearch();
+        }
     }
 
     render() {
@@ -46,13 +71,12 @@ export default class Users extends React.Component {
             setActiveConnection,
             client
         } = this.props;
-        const { filteredList, searchValue } = this.state;
-        const usersList = users.filter === 'ALL' ? users.list : filteredList;
+        const { searchValue } = this.state;
         return (
             <React.Fragment>
                 <Header size="huge">Members</Header>
                 <BackLink />
-                <div>
+                <UsersFilter>
                     <Input
                         loading={users.requesting}
                         placeholder="Search..."
@@ -62,19 +86,18 @@ export default class Users extends React.Component {
                         action={{ icon: 'search', onClick: this.searchRequest }}
                         value={searchValue}
                     />
-                    {users.list.length ? (
-                        <Fliter
-                            list={users.list}
-                            activeFilter={users.filter}
-                            filterChange={this.filterChangeHandler}
-                            options={userStatus}
-                            fieldName="status"
-                        />
-                    ) : null}
-                </div>
 
+                    <label>Status: </label>
+                    <Dropdown
+                        onChange={this.filterChangeHandler}
+                        options={userStatus}
+                        selection
+                        value={users.filter}
+                    />
+                </UsersFilter>
+                <ResetButton onClick={this.resetSearch}>reset</ResetButton>
                 <UsersList
-                    users={usersList}
+                    users={users.list}
                     messages={messages}
                     newMessagesReceived={newMessagesReceived}
                     setActiveConnection={setActiveConnection}

@@ -3,11 +3,9 @@ import {
     USERS_REQUEST_SUCCESS,
     USERS_REQUEST_ERROR,
     USER_SEARCH_REQUESTING,
-    USER_SEARCH_SUCCESS,
-    USER_SEARCH_ERROR,
     NEW_MESSAGES_RECEIVED,
     SET_USER_FILTER
-} from 'constants/chatUsers';
+} from '../constants/chatUsers';
 
 export const usersRequest = client => ({
     type: USERS_REQUESTING,
@@ -24,19 +22,9 @@ export const usersRequestError = error => ({
     error
 });
 
-export const searchUserRequest = queryString => ({
+export const searchUserRequest = query => ({
     type: USER_SEARCH_REQUESTING,
-    queryString
-});
-
-export const searchRequestSuccess = users => ({
-    type: USER_SEARCH_SUCCESS,
-    users
-});
-
-export const searchRequestError = error => ({
-    type: USER_SEARCH_ERROR,
-    error
+    query
 });
 
 export const newMessagesReceived = messagesCounters => ({
@@ -44,7 +32,7 @@ export const newMessagesReceived = messagesCounters => ({
     messagesCounters
 });
 
-export const setFilter = filter => ({
+export const setFilter = query => ({
     type: SET_USER_FILTER,
-    filter
-})
+    query
+});
