@@ -3,11 +3,11 @@ package com.hedvig.backoffice.services.members;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberService {
 
-    List<MemberDTO> list() throws MemberServiceException;
-    List<MemberDTO> find(String query) throws MemberServiceException;
-    MemberDTO findByHid(String hid) throws MemberNotFoundException, MemberServiceException;
+    Optional<List<MemberDTO>> search(String status, String query);
+    Optional<MemberDTO> findByHid(String hid) throws MemberNotFoundException;
 
 }

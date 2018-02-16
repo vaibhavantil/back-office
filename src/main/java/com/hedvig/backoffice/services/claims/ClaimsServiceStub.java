@@ -42,19 +42,18 @@ public class ClaimsServiceStub implements ClaimsService {
             throw new UncheckedIOException(e);
         }
 
-        List<MemberDTO> users = memberService.list();
+        List<String> memberIds = memberService.search("", "")
+                .map(members -> members.stream().map(MemberDTO::getHid).collect(Collectors.toList()))
+                .orElseGet(() -> IntStream.range(0, 15).mapToObj(i -> "user-id-" + i).collect(Collectors.toList()));
 
         claims = IntStream.range(0, 10).mapToObj(i -> {
             String id = UUID.randomUUID().toString();
-            String userId;
-            if (users.size() > 0 && users.size() < i) {
-                userId = users.get(i).getHid();
-            } else {
-                userId = UUID.randomUUID().toString();
-            }
+            String memberId = memberIds.size() > i
+                    ? memberIds.get(i)
+                    : memberIds.size() > 0 ? memberIds.get(0) : UUID.randomUUID().toString();
 
             return new ClaimDTO(id,
-                    userId,
+                    memberId,
                     ClaimStatus.OPEN,
                     null,
                     null,
