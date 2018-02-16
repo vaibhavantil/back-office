@@ -59,10 +59,10 @@ export default class Users extends React.Component {
     };
 
     componentDidMount() {
-        const { users } = this.props;
+        const { users, usersRequest } = this.props;
         this.setState({ filter: users.filter });
         if (!users.list.length) {
-            this.resetSearch();
+            usersRequest();
         }
     }
 

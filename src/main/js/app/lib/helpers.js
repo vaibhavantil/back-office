@@ -73,3 +73,8 @@ export const updatePayments = (list, updated) =>
         item =>
             item.id === updated.id ? { ...item, amount: updated.amount } : item
     );
+
+export const filterUsersList = ({ type, users }) => {
+    if (type !== 'USERS_REQUEST_SUCCESS') return users;
+    return users.filter(item => item.status !== 'INACTIVATED');
+};

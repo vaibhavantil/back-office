@@ -1,12 +1,13 @@
 import initialState from '../initialState';
-import { setNewMessagesCounter } from 'app/lib/helpers';
+import { setNewMessagesCounter, filterUsersList } from 'app/lib/helpers';
 import {
     USERS_REQUESTING,
     USERS_REQUEST_SUCCESS,
     USERS_REQUEST_ERROR,
     USER_SEARCH_REQUESTING,
     NEW_MESSAGES_RECEIVED,
-    SET_USER_FILTER
+    SET_USER_FILTER,
+    USERS_SEARCH_SUCCESS
 } from 'constants/chatUsers';
 
 export default function(state = initialState.users, action) {
@@ -21,9 +22,10 @@ export default function(state = initialState.users, action) {
             };
 
         case USERS_REQUEST_SUCCESS:
+        case USERS_SEARCH_SUCCESS:
             return {
                 ...state,
-                list: action.users,
+                list: filterUsersList(action),
                 requesting: false,
                 successful: true,
                 errors: []

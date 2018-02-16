@@ -4,8 +4,9 @@ import {
     USERS_REQUEST_ERROR,
     USER_SEARCH_REQUESTING,
     NEW_MESSAGES_RECEIVED,
-    SET_USER_FILTER
-} from '../constants/chatUsers';
+    SET_USER_FILTER,
+    USERS_SEARCH_SUCCESS
+} from 'constants/chatUsers';
 
 export const usersRequest = client => ({
     type: USERS_REQUESTING,
@@ -25,6 +26,11 @@ export const usersRequestError = error => ({
 export const searchUserRequest = query => ({
     type: USER_SEARCH_REQUESTING,
     query
+});
+
+export const searchUsersSuccess = users => ({
+    type: USERS_SEARCH_SUCCESS,
+    users
 });
 
 export const newMessagesReceived = messagesCounters => ({

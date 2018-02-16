@@ -9,7 +9,8 @@ import {
 } from 'constants/chatUsers';
 import {
     usersRequestSuccess,
-    usersRequestError
+    usersRequestError,
+    searchUsersSuccess
 } from '../actions/chatUserActions';
 
 function* usersRequestFlow() {
@@ -37,7 +38,7 @@ function* usersSearchFlow({ query }) {
             '',
             queryParams
         );
-        yield put(usersRequestSuccess(searchResult.data));
+        yield put(searchUsersSuccess(searchResult.data));
     } catch (error) {
         yield put(usersRequestError(error));
     }
