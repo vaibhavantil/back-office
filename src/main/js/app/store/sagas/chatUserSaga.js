@@ -25,13 +25,17 @@ function* usersRequestFlow() {
 function* usersSearchFlow({ query }) {
     try {
         const token = getAuthToken();
+        const queryParams = {
+            ...query,
+            status: query.status === 'ALL' ? '' : query.status
+        };
         const searchResult = yield call(
             api,
             token,
             config.users.search,
             null,
             '',
-            query
+            queryParams
         );
         yield put(usersRequestSuccess(searchResult.data));
     } catch (error) {

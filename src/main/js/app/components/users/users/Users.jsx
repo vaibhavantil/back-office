@@ -44,15 +44,18 @@ export default class Users extends React.Component {
 
     filterChangeHandler = (e, { value }) => {
         const searchValue = this.state.searchValue;
-        this.props.setFilter({ status: value, query: searchValue });
-        if (value === 'ALL') this.resetSearch();
+        if (value === 'ALL') {
+            this.resetSearch();
+        } else {
+            this.props.setFilter({ status: value, query: searchValue });
+        }
         this.setState({ filter: value });
     };
 
     resetSearch = () => {
-        const { usersRequest, setFilter } = this.props;
+        const { setFilter } = this.props;
         setFilter({ status: 'ALL' });
-        this.setState({ searchValue: '' }, () => usersRequest());
+        this.setState({ searchValue: '' });
     };
 
     componentDidMount() {
