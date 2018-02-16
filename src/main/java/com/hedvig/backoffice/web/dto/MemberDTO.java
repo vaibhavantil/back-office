@@ -10,21 +10,32 @@ import java.time.LocalDate;
 public class MemberDTO {
 
     private Long memberId;
+
+    private String status;
+
     private String ssn;
 
     private String firstName;
+
     private String lastName;
 
     private String street;
+
+    private Integer floor;
+
+    private String apartment;
+
     private String city;
+
     private String zipCode;
 
-    private String email;
-    private String phoneNumber;
     private String country;
 
+    private String email;
+
+    private String phoneNumber;
+
     private LocalDate birthDate;
-    private String apartment;
 
     public MemberDTO(long memberId) {
         this.memberId = memberId;

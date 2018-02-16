@@ -58,10 +58,10 @@ botservice:
   stub: false
 
 memberservice:
-  baseUrl: http://localhost:4084/member
+  baseUrl: http://localhost:4084
   urls:
-    users: /members
-    userById: /
+    search: /i/member/search
+    getById: /member
   stub: false
 
 claims:
