@@ -45,5 +45,5 @@ export default class PaginatorList extends React.Component {
 PaginatorList.propTypes = {
     list: PropTypes.array.isRequired,
     itemContent: PropTypes.func.isRequired,
-    pageSize: PropTypes.number
+    pageSize: PropTypes.number,
 };

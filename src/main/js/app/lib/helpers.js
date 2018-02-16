@@ -70,5 +70,6 @@ export const getActiveType = (types, typeName) =>
 
 export const updatePayments = (list, updated) =>
     list.map(
-        el => (el.id === updated.id ? { ...el, amount: updated.amount } : el)
+        item =>
+            item.id === updated.id ? { ...item, amount: updated.amount } : item
     );

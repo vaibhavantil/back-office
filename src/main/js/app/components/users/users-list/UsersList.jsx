@@ -67,11 +67,13 @@ export default class UsersList extends React.Component {
     render() {
         const { users } = this.props;
         return (
-            <PaginatorList
-                list={users}
-                itemContent={item => <ListItem item={item} />}
-                pageSize={10}
-            />
+            <React.Fragment>
+                <PaginatorList
+                    list={users}
+                    itemContent={item => <ListItem item={item} />}
+                    pageSize={10}
+                />
+            </React.Fragment>
         );
     }
 }

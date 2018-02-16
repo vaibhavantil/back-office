@@ -22,9 +22,9 @@ export const usersRequestError = error => ({
     error
 });
 
-export const searchUserRequest = queryString => ({
+export const searchUserRequest = query => ({
     type: USER_SEARCH_REQUESTING,
-    queryString
+    query
 });
 
 export const newMessagesReceived = messagesCounters => ({
@@ -32,7 +32,7 @@ export const newMessagesReceived = messagesCounters => ({
     messagesCounters
 });
 
-export const setFilter = filter => ({
+export const setFilter = query => ({
     type: SET_USER_FILTER,
-    filter
+    query
 });

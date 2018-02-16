@@ -29,7 +29,7 @@ export default {
         requesting: false,
         successful: false,
         errors: [],
-        filter: 'ACTIVE'
+        filter: ''
     },
     dashboard: {
         data: null,

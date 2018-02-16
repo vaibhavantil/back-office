@@ -23,10 +23,7 @@ export default function(state = initialState.users, action) {
         case USERS_REQUEST_SUCCESS:
             return {
                 ...state,
-                list: action.users.map((el, id) => ({
-                    ...el,
-                    status: id % 2 ? 'INACTIVE' : 'ACTIVE'
-                })),
+                list: action.users,
                 requesting: false,
                 successful: true,
                 errors: []
@@ -57,7 +54,7 @@ export default function(state = initialState.users, action) {
         case SET_USER_FILTER:
             return {
                 ...state,
-                filter: action.filter,
+                filter: action.query.status,
                 requesting: true,
                 successful: false,
                 errors: []

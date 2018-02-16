@@ -22,7 +22,7 @@ function* usersRequestFlow() {
     }
 }
 
-function* usersSearchFlow({ queryString }) {
+function* usersSearchFlow({ query }) {
     try {
         const token = getAuthToken();
         const searchResult = yield call(
@@ -31,19 +31,9 @@ function* usersSearchFlow({ queryString }) {
             config.users.search,
             null,
             '',
-            { q: queryString }
+            query
         );
         yield put(usersRequestSuccess(searchResult.data));
-    } catch (error) {
-        yield put(usersRequestError(error));
-    }
-}
-
-function* usersFiterFlow({ filter }) {
-    try {
-        const token = getAuthToken();
-        const users = yield call(api, token, config.users.filter, null, filter);
-        yield put(usersRequestSuccess(users.data));
     } catch (error) {
         yield put(usersRequestError(error));
     }
@@ -52,7 +42,7 @@ function* usersFiterFlow({ filter }) {
 function* chatWatcher() {
     yield [
         takeLatest(USERS_REQUESTING, usersRequestFlow),
-        takeLatest(SET_USER_FILTER, usersFiterFlow),
+        takeLatest(SET_USER_FILTER, usersSearchFlow),
         takeLatest(USER_SEARCH_REQUESTING, usersSearchFlow)
     ];
 }
