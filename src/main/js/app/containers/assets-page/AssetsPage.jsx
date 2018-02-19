@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Container } from 'semantic-ui-react';
 import actions from 'app/store/actions';
-import AssetList from 'components/assets/asset-list/AssetList';
+import Assets from 'components/assets/assets/Assets';
 
 const AssetsPage = props => (
     <Container>
-        <AssetList {...props} />
+        <Assets {...props} />
     </Container>
 );
 const mapStateToProps = ({ assets, poll, messages }) => ({
