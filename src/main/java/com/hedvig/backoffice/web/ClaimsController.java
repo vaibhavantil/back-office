@@ -6,6 +6,7 @@ import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.claims.ClaimException;
 import com.hedvig.backoffice.services.claims.ClaimStatus;
 import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.claims.ClaimsServiceException;
 import com.hedvig.backoffice.web.dto.claims.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/claims")
@@ -32,12 +34,14 @@ public class ClaimsController {
 
     @GetMapping
     public List<ClaimDTO> claims() throws ClaimException {
-        return claimsService.list();
+        return Optional.ofNullable(claimsService.list())
+                .orElseThrow(ClaimsServiceException::new);
     }
 
     @GetMapping("/{id}")
     public ClaimDTO claim(@PathVariable String id) throws ClaimException {
-        return claimsService.find(id);
+        return Optional.ofNullable(claimsService.find(id))
+                .orElseThrow(ClaimsServiceException::new);
     }
 
     @PostMapping("/{id}/status/{status}")

@@ -1,18 +1,23 @@
 package com.hedvig.backoffice.services.claims;
 
+import com.hedvig.backoffice.services.claims.data.Claim;
 import com.hedvig.backoffice.web.dto.claims.*;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixException;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClaimsServiceImpl implements ClaimsService {
 
@@ -38,29 +43,54 @@ public class ClaimsServiceImpl implements ClaimsService {
         logger.info("id: " + claimById);
     }
 
+    @HystrixCommand(fallbackMethod = "listFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
-    public List<ClaimDTO> list() throws ClaimException {
+    public List<ClaimDTO> list() {
         RestTemplate template = new RestTemplate();
-
-        try {
-            ResponseEntity<ClaimDTO[]> response = template.getForEntity(baseUrl + claims, ClaimDTO[].class);
-            return Arrays.asList(response.getBody());
-        } catch (RestClientException e) {
-            throw new ClaimsServiceException(e);
-        }
+        ResponseEntity<Claim[]> response = template.getForEntity(baseUrl + claims, Claim[].class);
+        return Arrays.stream(response.getBody())
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
+    public List<ClaimDTO> listFallback(Throwable e) {
+        logger.error("failed claims fetching", e);
+        return null;
+    }
+
+    private ClaimDTO toDTO(Claim claim) {
+        return new ClaimDTO(
+                claim.getId(),
+                claim.getUserId(),
+                claim.getState(),
+                null,
+                null,
+                claim.getAudioURL(),
+                null,
+                null,
+                claim.getRegistrationDate().toInstant(ZoneOffset.UTC));
+    }
+
+    @HystrixCommand(fallbackMethod = "findFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = { ClaimNotFoundException.class })
     @Override
     public ClaimDTO find(String id) throws ClaimException {
         RestTemplate template = new RestTemplate();
         try {
-            ResponseEntity<ClaimDTO> response = template.getForEntity(baseUrl + claimById + "/" + id, ClaimDTO.class);
-            return response.getBody();
+            ResponseEntity<Claim> response = template.getForEntity(baseUrl + claimById + "?claimID=" + id, Claim.class);
+            return toDTO(response.getBody());
         } catch (HttpClientErrorException e) {
             throw new ClaimNotFoundException("claim with id " + id + " not found");
-        } catch (RestClientException e) {
-            throw new ClaimsServiceException(e);
         }
+    }
+
+    private ClaimDTO findFallback(String id, Throwable t) {
+        logger.error("failed claim fetching", t);
+        return null;
     }
 
     @Override

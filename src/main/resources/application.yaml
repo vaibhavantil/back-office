@@ -67,8 +67,8 @@ memberservice:
 claims:
   baseUrl: http://localhost:4083
   urls:
-    claims: /claims
-    claimById: /claim
+    claims: /i/claims/listclaims
+    claimById: /i/claims/claim
   stub: false
 
 jwt:
