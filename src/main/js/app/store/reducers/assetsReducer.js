@@ -21,7 +21,12 @@ export default function(state = initialState.assets, action) {
 
         case ASSET_UPDATE_SUCCESS:
             return {
-                list: action.asset,
+                list: state.list.map(
+                    asset =>
+                        asset.id === action.asset.id
+                            ? { ...asset, state: action.asset.state }
+                            : asset
+                ),
                 requesting: false,
                 successful: true,
                 errors: []
@@ -43,7 +48,12 @@ export default function(state = initialState.assets, action) {
 
         case ASSET_REQUEST_SUCCESS:
             return {
-                list: action.assets.data,
+                // TODO: remove data mock
+                list: action.assets.data.map(el => ({
+                    ...el,
+                    price: 1000,
+                    purchaseDate: `${Math.floor(Math.random() * 10 + 1)}/03/2020`
+                })),
                 requesting: false,
                 successful: true,
                 errors: []

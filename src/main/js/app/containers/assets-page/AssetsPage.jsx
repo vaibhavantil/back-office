@@ -9,13 +9,15 @@ const AssetsPage = props => (
         <AssetList {...props} />
     </Container>
 );
-const mapStateToProps = ({ assets, poll }) => ({
+const mapStateToProps = ({ assets, poll, messages }) => ({
     assets,
-    poll
+    poll,
+    messages
 });
 
 export default connect(mapStateToProps, {
     ...actions.assetsActions,
     ...actions.clientActions,
-    ...actions.pollActions
+    ...actions.pollActions,
+    userRequest: actions.messagesActions.userRequest
 })(AssetsPage);
