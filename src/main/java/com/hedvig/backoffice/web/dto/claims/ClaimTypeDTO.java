@@ -14,8 +14,8 @@ public class ClaimTypeDTO {
     private String title;
 
     @NotNull
-    private List<ClaimField> required;
+    private List<ClaimField> requiredData;
 
     @NotNull
-    private List<ClaimField> additional;
+    private List<ClaimField> optionalData;
 }

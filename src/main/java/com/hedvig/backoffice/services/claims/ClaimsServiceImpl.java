@@ -26,21 +26,28 @@ public class ClaimsServiceImpl implements ClaimsService {
     private final String baseUrl;
     private final String claims;
     private final String claimById;
+    private final String claimTypes;
+    private final RestTemplate template;
 
     @Autowired
     public ClaimsServiceImpl(@Value("${claims.baseUrl}") String baseUrl,
                              @Value("${claims.urls.claims}") String claims,
-                             @Value("${claims.urls.claimById}") String claimById) {
+                             @Value("${claims.urls.claimById}") String claimById,
+                             @Value("${claims.urls.claimTypes}") String claimTypes) {
 
         this.baseUrl = baseUrl;
         this.claims = claims;
         this.claimById = claimById;
+        this.claimTypes = claimTypes;
+
+        this.template = new RestTemplate();
 
         logger.info("CLAIMS SERVICE:");
         logger.info("class: " + ClaimsServiceImpl.class.getName());
         logger.info("base: " + baseUrl);
         logger.info("claims: " + claims);
         logger.info("id: " + claimById);
+        logger.info("types: " + claimTypes);
     }
 
     @HystrixCommand(fallbackMethod = "listFallback", commandProperties = {
@@ -48,15 +55,14 @@ public class ClaimsServiceImpl implements ClaimsService {
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
     public List<ClaimDTO> list() {
-        RestTemplate template = new RestTemplate();
         ResponseEntity<Claim[]> response = template.getForEntity(baseUrl + claims, Claim[].class);
         return Arrays.stream(response.getBody())
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<ClaimDTO> listFallback(Throwable e) {
-        logger.error("failed claims fetching", e);
+    public List<ClaimDTO> listFallback(Throwable t) {
+        logger.error("failed claims fetching", t);
         return null;
     }
 
@@ -79,7 +85,6 @@ public class ClaimsServiceImpl implements ClaimsService {
             ignoreExceptions = { ClaimNotFoundException.class })
     @Override
     public ClaimDTO find(String id) throws ClaimException {
-        RestTemplate template = new RestTemplate();
         try {
             ResponseEntity<Claim> response = template.getForEntity(baseUrl + claimById + "?claimID=" + id, Claim.class);
             return toDTO(response.getBody());
@@ -93,9 +98,18 @@ public class ClaimsServiceImpl implements ClaimsService {
         return null;
     }
 
+    @HystrixCommand(fallbackMethod = "typesFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
-    public List<ClaimTypeDTO> types() throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public List<ClaimTypeDTO> types() {
+        ResponseEntity<ClaimTypeDTO[]> response = template.getForEntity(baseUrl + claimTypes, ClaimTypeDTO[].class);
+        return Arrays.asList(response.getBody());
+    }
+
+    private List<ClaimTypeDTO> typesFallback(Throwable t) {
+        logger.error("failed claim types fetching", t);
+        return null;
     }
 
     @Override

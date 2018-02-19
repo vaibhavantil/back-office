@@ -248,7 +248,7 @@ public class ClaimsServiceStub implements ClaimsService {
 
         ClaimTypeDTO type = getType(typeName);
 
-        for (ClaimField f : type.getRequired()) {
+        for (ClaimField f : type.getRequiredData()) {
             String value = Optional.ofNullable(
                     StringUtils.trimToNull(dto.getRequired().get(f.getName())))
                     .orElseThrow(() -> new ClaimNotFoundException("required field " + f.getName() + " is empty"));

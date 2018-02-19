@@ -69,6 +69,7 @@ claims:
   urls:
     claims: /i/claims/listclaims
     claimById: /i/claims/claim
+    claimTypes: /i/claims/claimTypes
   stub: false
 
 jwt:

@@ -55,7 +55,8 @@ public class ClaimsController {
 
     @GetMapping("/types")
     public List<ClaimTypeDTO> types() throws ClaimException {
-        return claimsService.types();
+        return Optional.ofNullable(claimsService.types())
+                .orElseThrow(ClaimsServiceException::new);
     }
 
     @PostMapping("/{id}/type/{type}")
