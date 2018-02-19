@@ -1,4 +1,4 @@
-import { call, put, takeLatest, select, take } from 'redux-saga/effects';
+import { call, put, takeLatest, take } from 'redux-saga/effects';
 import api from 'app/api';
 import config from 'app/api/config';
 import { getAuthToken } from 'app/lib/checkAuth';
@@ -21,14 +21,7 @@ function* assetUpdateFlow({ assetId, assetState }) {
             { state: assetState },
             assetId
         );
-        const { assets: { list } } = yield select();
-        const updatedList = list.map(asset => {
-            if (asset.id === data.id) {
-                return { ...asset, state: data.state };
-            }
-            return asset;
-        });
-        yield put(assetUpdateSuccess(updatedList));
+        yield put(assetUpdateSuccess(data));
     } catch (error) {
         yield put(assetRequestError(error));
     }

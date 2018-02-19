@@ -47,7 +47,6 @@ class AssetList extends React.Component {
     assetUpdateHandler = (id, value) => {
         const { assetUpdate } = this.props;
         assetUpdate(id, value);
-        this.setState({ activeFilter: value });
     };
 
     filterChangeHandler = (activeFilter, filteredList) => {
@@ -74,7 +73,9 @@ class AssetList extends React.Component {
     render() {
         const {
             assets: { list, errors, requesting },
-            poll: { polling }
+            poll: { polling },
+            messages: { user },
+            userRequest
         } = this.props;
         const { activeList, filteredList, activeFilter } = this.state;
         const items = activeFilter === 'ALL' ? list : filteredList;
@@ -107,6 +108,8 @@ class AssetList extends React.Component {
                                         asset={asset}
                                         assetUpdate={this.assetUpdateHandler}
                                         updateStatus={requesting}
+                                        userRequest={userRequest}
+                                        user={user}
                                     />
                                 ))
                             ) : (
@@ -151,5 +154,7 @@ AssetList.propTypes = {
     pollStart: PropTypes.func,
     pollStop: PropTypes.func,
     setClient: PropTypes.func.isRequired,
-    assetRequest: PropTypes.func.isRequired
+    assetRequest: PropTypes.func.isRequired,
+    userRequest: PropTypes.func.isRequired,
+    messages: PropTypes.object.isRequired
 };

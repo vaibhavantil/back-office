@@ -24,6 +24,7 @@ export default class AssetCard extends React.Component {
     dropdownHandler = (e, { value }) => {
         this.setState(() => ({ dropdownValue: value }));
     };
+
     saveClickHandler = () => {
         this.setState(() => ({ disabled: true }));
         this.props.assetUpdate(
@@ -32,16 +33,19 @@ export default class AssetCard extends React.Component {
         );
     };
 
+    componentDidMount() {
+        const { userRequest, asset } = this.props;
+        userRequest(asset.userId);
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.updateStatus !== this.props.updateStatus) {
-            this.setState({
-                disabled: false
-            });
+            this.setState({ disabled: false });
         }
     }
 
     render() {
-        const { asset } = this.props;
+        const { asset, user } = this.props;
         const assetDate = moment(
             asset.registrationDate,
             'YYYY-MM-DD HH:mm'
@@ -52,7 +56,23 @@ export default class AssetCard extends React.Component {
                 <Card.Content>
                     <Card.Header>{asset.title}</Card.Header>
                     <Card.Meta>{assetDate}</Card.Meta>
-                    <Card.Description>{asset.userId}</Card.Description>
+                    <Card.Description>
+                        Member: {user && user.firstName}
+                    </Card.Description>
+                    <Card.Description>
+                        Price: {asset.price} SEK
+                    </Card.Description>
+                    <Card.Description>
+                        Purchase date:{' '}
+                        {moment(asset.purchaseDate, 'DD/MM/YYYY').format(
+                            'MM.DD.YYYY'
+                        )}
+                    </Card.Description>
+                    <Card.Description>
+                        <a href={asset.receiptUrl} target="_blank">
+                            Receipt
+                        </a>
+                    </Card.Description>
                 </Card.Content>
                 <CardButtons>
                     <Dropdown
@@ -76,5 +96,7 @@ export default class AssetCard extends React.Component {
 AssetCard.propTypes = {
     asset: PropTypes.object.isRequired,
     assetUpdate: PropTypes.func.isRequired,
-    updateStatus: PropTypes.bool
+    updateStatus: PropTypes.bool,
+    user: PropTypes.object,
+    userRequest: PropTypes.func
 };
