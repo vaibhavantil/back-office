@@ -1,45 +1,30 @@
 package com.hedvig.backoffice.services.claims;
 
-/*import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hedvig.backoffice.services.claims.dto.ClaimData;
-import com.hedvig.backoffice.services.claims.dto.ClaimField;
-import com.hedvig.backoffice.services.claims.dto.ClaimType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
-import com.hedvig.backoffice.services.members.MemberServiceException;
 import com.hedvig.backoffice.web.dto.MemberDTO;
-import com.hedvig.backoffice.web.dto.claims.*;
 import lombok.val;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;*/
-
-public class ClaimsServiceStub {
-
-}
-
-/*
+import java.util.stream.IntStream;
 
 public class ClaimsServiceStub implements ClaimsService {
 
-    private List<ClaimDTO> claims;
+    private static Logger logger = LoggerFactory.getLogger(ClaimsServiceStub.class);
+
+    private List<Claim> claims;
     private List<ClaimType> types;
-    private Map<String, List<ClaimEventDTO>> events;
-    private Map<String, List<ClaimPayoutDTO>> payments;
-    private Map<String, List<ClaimNoteDTO>> notes;
 
-    @Autowired
-    public ClaimsServiceStub(MemberService memberService) throws MemberServiceException {
-        events = new HashMap<>();
-        payments = new HashMap<>();
-        notes = new HashMap<>();
-
+    public ClaimsServiceStub(MemberService memberService) {
         try {
             val resource = new ClassPathResource("claim_types.json").getInputStream();
             val mapper = new ObjectMapper();
@@ -60,218 +45,101 @@ public class ClaimsServiceStub implements ClaimsService {
                     ? memberIds.get(i)
                     : memberIds.size() > 0 ? memberIds.get(0) : UUID.randomUUID().toString();
 
-            return new ClaimDTO(id,
-                    memberId,
-                    ClaimState.OPEN,
-                    null,
-                    null,
-                    "http://78.media.tumblr.com/tumblr_ll313eVnI91qjahcpo1_1280.jpg",
-                    new BigDecimal(0),
-                    new BigDecimal(0),
-                    new Date().toInstant());
+            Claim claim = new Claim();
+            claim.setId(id);
+            claim.setUserId(memberId);
+            claim.setState(ClaimState.OPEN);
+            claim.setAudioURL("http://78.media.tumblr.com/tumblr_ll313eVnI91qjahcpo1_1280.jpg");
+            claim.setPayments(new ArrayList<>());
+            claim.setNotes(new ArrayList<>());
+            claim.setEvents(new ArrayList<>());
+            claim.setData(new ArrayList<>());
+            claim.setAssets(new ArrayList<>());
+
+            return claim;
         }).collect(Collectors.toList());
+
+        logger.info("CLAIMS SERVICE:");
+        logger.info("class: " + ClaimsServiceStub.class.getName());
     }
 
     @Override
-    public List<ClaimDTO> list() throws ClaimException {
-        return claims;
+    public List<Claim> list() {
+        return claims.stream()
+                .map(c -> {
+                    Claim claim = new Claim();
+                    claim.setId(c.getId());
+                    claim.setAudioURL(c.getAudioURL());
+                    claim.setRegistrationDate(c.getRegistrationDate());
+                    claim.setUserId(c.getUserId());
+                    return claim;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
-    public ClaimDTO find(String id) throws ClaimException {
-        return claims
-                .stream()
-                .filter(c -> c.getId().contains(id))
-                .findAny()
-                .orElseThrow(() -> new ClaimBadRequestException("claim with id " + id + " not found"));
+    public Claim find(String id) throws ClaimException {
+        return claims.stream().filter(c -> c.getId().equals(id)).findAny()
+                .orElseThrow(() -> new ClaimBadRequestException("claim not found"));
     }
 
     @Override
-    public List<ClaimType> types() throws ClaimException {
+    public List<ClaimType> types() {
         return types;
     }
 
     @Override
-    public void save(ClaimDTO dto) throws ClaimException {
-        for (int i = 0; i < claims.size(); i++) {
-            ClaimDTO claim = claims.get(i);
-            if (claim.getId().equals(dto.getId())) {
-                claims.set(i, dto);
-                break;
-            }
-        }
+    public boolean addPayment(ClaimPayment dto) throws ClaimException {
+        Claim claim = find(dto.getClaimID());
+        claim.getPayments().add(dto);
+        addEvent(claim,"[test] payment added");
+        return true;
     }
 
     @Override
-    public List<ClaimEventDTO> events(String id) throws ClaimException {
-        find(id);
-        return Optional.ofNullable(events.get(id))
-                .orElse(new ArrayList<>());
+    public boolean addNote(ClaimNote dto) throws ClaimException {
+        Claim claim = find(dto.getClaimID());
+        claim.getNotes().add(dto);
+        addEvent(claim,"[test] note added");
+        return true;
     }
 
     @Override
-    public void addEvent(ClaimEventDTO dto) throws ClaimException {
-        List<ClaimEventDTO> claimEvents = events.computeIfAbsent(dto.getClaimId(), k -> new ArrayList<>());
-        claimEvents.add(dto);
+    public boolean addData(ClaimData data) throws ClaimException {
+        Claim claim = find(data.getClaimID());
+        claim.getData().add(data);
+        addEvent(claim,"[test] data added");
+        return true;
     }
 
     @Override
-    public List<ClaimPayoutDTO> payouts(String id) throws ClaimException {
-        find(id);
-        return Optional.ofNullable(payments.get(id))
-                .orElse(new ArrayList<>());
+    public boolean changeState(ClaimStateUpdate state) throws ClaimException {
+        Claim claim = find(state.getClaimID());
+        claim.setState(state.getState());
+        addEvent(claim,"[test] state changed");
+        return true;
     }
 
     @Override
-    public ClaimPayoutDTO addPayment(ClaimPayoutDTO dto) throws ClaimException {
-        dto.setId(UUID.randomUUID().toString());
-
-        ClaimDTO claim = find(dto.getClaimId());
-        List<ClaimPayoutDTO> list = payments.computeIfAbsent(dto.getClaimId(), k -> new ArrayList<>());
-        list.add(dto);
-
-        BigDecimal total = list.stream()
-                .map(ClaimPayoutDTO::getAmount)
-                .reduce(new BigDecimal(0), BigDecimal::add);
-
-        claim.setTotal(total);
-        save(claim);
-
-        ClaimEventDTO event = new ClaimEventDTO(dto.getClaimId(),
-                "new payout: amount = " + dto.getAmount().toString() + ", total = " + claim.getTotal().toString());
-        addEvent(event);
-
-        return dto;
+    public boolean changeReserve(ClaimReserveUpdate reserve) throws ClaimException {
+        Claim claim = find(reserve.getClaimID());
+        claim.setReserve(reserve.getAmount());
+        addEvent(claim,"[test] reserve changed");
+        return true;
     }
 
     @Override
-    public void updatePayout(ClaimPayoutDTO dto) throws ClaimException {
-        ClaimDTO claim = find(dto.getClaimId());
-        ClaimPayoutDTO payout = payments
-                .computeIfAbsent(claim.getId(), k -> new ArrayList<>())
-                .stream()
-                .filter(p -> p.getId().equals(dto.getId()))
-                .findAny().orElseThrow(() -> new ClaimBadRequestException("payout with id " + dto.getId() + " not found"));
-
-        if (dto.getAmount() != null) {
-            payout.setAmount(dto.getAmount());
-        }
-
-        if (StringUtils.trimToNull(dto.getNote()) != null) {
-            payout.setNote(dto.getNote());
-        }
-
-        if (dto.getExg() != null) {
-            payout.setExg(dto.getExg());
-        }
+    public boolean changeType(ClaimTypeUpdate type) throws ClaimException {
+        Claim claim = find(type.getClaimID());
+        claim.setType(type.getType());
+        addEvent(claim,"[test] type changed");
+        return true;
     }
 
-    @Override
-    public void removePayout(String id, String claimId) throws ClaimException {
-        ClaimDTO claim = find(claimId);
+    private void addEvent(Claim claim, String message) {
+        ClaimEvent event = new ClaimEvent();
+        event.setText(message);
 
-        List<ClaimPayoutDTO> list = payments.computeIfAbsent(claimId, k -> new ArrayList<>());
-        int index = IntStream.range(0, list.size())
-                .filter(i -> list.get(i).getId().equals(id))
-                .findFirst().orElseThrow(() -> new ClaimBadRequestException("payment with id " + id + " not found"));
-
-        list.remove(index);
-
-        BigDecimal total = list.stream()
-                .map(ClaimPayoutDTO::getAmount)
-                .reduce(new BigDecimal(0), BigDecimal::add);
-
-        claim.setTotal(total);
-        save(claim);
-
-        ClaimEventDTO event = new ClaimEventDTO(claimId,
-                "delete payout: total = " + claim.getTotal().toString());
-        addEvent(event);
+        claim.getEvents().add(event);
     }
-
-    @Override
-    public List<ClaimNoteDTO> notes(String id) throws ClaimException {
-        find(id);
-        return Optional.ofNullable(notes.get(id))
-                .orElse(new ArrayList<>());
-    }
-
-    @Override
-    public ClaimNoteDTO addNote(ClaimNoteDTO dto) throws ClaimException {
-        dto.setId(UUID.randomUUID().toString());
-
-        List<ClaimNoteDTO> list = notes.computeIfAbsent(dto.getClaimId(), k -> new ArrayList<>());
-        list.add(dto);
-
-        return dto;
-    }
-
-    @Override
-    public void removeNote(String id, String claimId) throws ClaimException {
-        find(claimId);
-        List<ClaimNoteDTO> list = notes.computeIfAbsent(claimId, k -> new ArrayList<>());
-        int index = IntStream.range(0, list.size())
-                .filter(i -> list.get(i).getId().equals(id))
-                .findFirst().orElseThrow(() -> new ClaimBadRequestException("note with id " + id + " not found"));
-
-        list.remove(index);
-    }
-
-    @Override
-    public void changeType(String id, String type) throws ClaimException {
-        ClaimDTO claim = find(id);
-        ClaimType typeDTO = getType(type);
-        claim.setType(typeDTO.getName());
-        save(claim);
-
-        ClaimEventDTO event = new ClaimEventDTO(id, "type changed to " + type);
-        addEvent(event);
-    }
-
-    @Override
-    public void changeStatus(String id, ClaimState status) throws ClaimException {
-        ClaimDTO claim = find(id);
-        claim.setStatus(status);
-        save(claim);
-
-        ClaimEventDTO event = new ClaimEventDTO(id, "status changed to " + status.toString());
-        addEvent(event);
-    }
-
-    @Override
-    public void setResume(String id, BigDecimal resume) throws ClaimException {
-        ClaimDTO claim = find(id);
-        claim.setResume(resume);
-        save(claim);
-
-        ClaimEventDTO event = new ClaimEventDTO(id, "resume changed to " + resume.toString());
-        addEvent(event);
-    }
-
-    @Override
-    public void addDetails(String id, ClaimData dto) throws ClaimException {
-        ClaimDTO claim = find(id);
-        String typeName = Optional.ofNullable(claim.getType())
-                .orElseThrow(() -> new ClaimBadRequestException("claim type is not defined"));
-
-        ClaimType type = getType(typeName);
-
-        for (ClaimField f : type.getRequiredData()) {
-            String value = Optional.ofNullable(
-                    StringUtils.trimToNull(dto.getRequired().get(f.getName())))
-                    .orElseThrow(() -> new ClaimBadRequestException("required field " + f.getName() + " is empty"));
-
-            dto.getRequired().replace(f.getName(), value);
-        }
-
-        claim.setDetails(dto);
-        save(claim);
-    }
-
-    private ClaimType getType(String type) throws ClaimException {
-        return types.stream().filter(t -> t.getName().equals(type)).findAny()
-                .orElseThrow(() -> new ClaimBadRequestException("claim type " + type + " not found"));
-    }
-
 }
-*/

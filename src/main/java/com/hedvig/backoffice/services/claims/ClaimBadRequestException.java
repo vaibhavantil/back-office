@@ -10,4 +10,8 @@ public class ClaimBadRequestException extends ClaimException {
         super(t);
     }
 
+    public ClaimBadRequestException(String msg) {
+        super(msg);
+    }
+
 }
