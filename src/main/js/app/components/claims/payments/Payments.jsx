@@ -86,10 +86,8 @@ export default class Payments extends React.Component {
 
 Payments.propTypes = {
     claimDetails: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired,
     updateResume: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
-    updatePayment: PropTypes.func.isRequired,
-    removePayment: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired,
     notes: PropTypes.array
 };

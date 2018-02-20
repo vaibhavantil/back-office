@@ -21,24 +21,23 @@ const PayoutsList = props => (
         {!props.list.length ? <Header>No payouts</Header> : null}
         {props.list.length ? (
             <React.Fragment>
-            <Table>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Amount</Table.HeaderCell>
-                        <Table.HeaderCell>Note</Table.HeaderCell>
-                        <Table.HeaderCell>Date</Table.HeaderCell>
-                        <Table.HeaderCell>Ex Gratia</Table.HeaderCell>
-                        <Table.HeaderCell> </Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                        {props.list.map(item => (
-                        <Table.Row key={item.id}>
-                                <PayoutRow {...props} data={item} />
+                <Table>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell>Amount</Table.HeaderCell>
+                            <Table.HeaderCell>Note</Table.HeaderCell>
+                            <Table.HeaderCell>Date</Table.HeaderCell>
+                            <Table.HeaderCell>Ex Gratia</Table.HeaderCell>
                         </Table.Row>
-                    ))}
-                </Table.Body>
-            </Table>
+                    </Table.Header>
+                    <Table.Body>
+                        {props.list.map(item => (
+                            <Table.Row key={item.id}>
+                                <PayoutRow {...props} data={item} />
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                </Table>
             </React.Fragment>
         ) : null}
 
@@ -48,9 +47,7 @@ const PayoutsList = props => (
 
 PayoutsList.propTypes = {
     list: PropTypes.array.isRequired,
-    updatePayment: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
-    removePayment: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired,
     sum: PropTypes.number
 };

@@ -65,7 +65,7 @@ export default class ClaimInfoField extends React.Component {
                     )}
                     {inputIsVisible || required ? (
                         <React.Fragment>
-                            <span>{field.name}</span>
+                            {!!required && <span>{field.name}</span>}
                             {this.getInput(types[field.type])}
                         </React.Fragment>
                     ) : null}

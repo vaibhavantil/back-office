@@ -1,128 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Button, Checkbox, Table, Input } from 'semantic-ui-react';
-import DateInput from 'components/shared/inputs/DateInput';
+import { Checkbox, Table } from 'semantic-ui-react';
 
-export default class PayoutRow extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: null,
-            disabled: true
-        };
-    }
-
-    editClickHandler = () => this.setState({ disabled: false });
-
-    saveClickHandler = () => {
-        this.setState({ disabled: true });
-        this.props.updatePayment(this.props.id, this.state.data);
-    };
-
-    inputChangeHandler = (type, e, { value }) => {
-        const field = {};
-        switch (type) {
-            case 'date_picker':
-                field.date = moment(value).unix();
-                break;
-            case 'amount':
-                field.amount = Number(value);
-                break;
-            default:
-                field[type] = value;
-                break;
-        }
-        this.setState({ data: { ...this.state.data, ...field } });
-    };
-
-    exgChangeHandler = (e, { checked }) => {
-        this.setState({ data: { ...this.state.data, exg: checked } });
-    };
-
-    disableEdit = () => {
-        this.setState({
-            data: this.props.data,
-            disabled: true
-        });
-    };
-
-    removePayment = () => {
-        const { removePayment, id, data } = this.props;
-        removePayment(id, data.id);
-    };
-
-    componentDidMount() {
-        this.setState({ data: this.props.data });
-    }
-
-    render() {
-        const { disabled, data } = this.state;
-        return data ? (
-            <React.Fragment>
-                <Table.Cell>
-                    <Input
-                        type="number"
-                        value={data.amount}
-                        disabled={disabled}
-                        onChange={this.inputChangeHandler.bind(this, 'amount')}
-                    />
-                </Table.Cell>
-                <Table.Cell>
-                    <Input
-                        type="text"
-                        value={data.note}
-                        disabled={disabled}
-                        onChange={this.inputChangeHandler.bind(this, 'note')}
-                    />
-                </Table.Cell>
-                <Table.Cell>
-                    {disabled ? (
-                        moment.unix(data.date).format('DD MM YYYY')
-                    ) : (
-                        <DateInput changeHandler={this.inputChangeHandler} />
-                    )}
-                </Table.Cell>
-                <Table.Cell>
-                    <Checkbox
-                        checked={data.exg}
-                        disabled={disabled}
-                        onChange={this.exgChangeHandler}
-                    />
-                </Table.Cell>
-                <Table.Cell textAlign="right">
-                    {disabled ? (
-                        <Button
-                            onClick={this.editClickHandler}
-                            content="Edit"
-                        />
-                    ) : (
-                        <React.Fragment>
-                            <Button
-                                onClick={this.disableEdit}
-                                content="Close"
-                            />
-                            <Button
-                                onClick={this.removePayment}
-                                negative
-                                content="Remove"
-                            />
-                            <Button
-                                onClick={this.saveClickHandler}
-                                primary
-                                content="Save"
-                            />
-                        </React.Fragment>
-                    )}
-                </Table.Cell>
-            </React.Fragment>
-        ) : null;
-    }
-}
+const PayoutRow = ({ data }) => (
+    <React.Fragment>
+        <Table.Cell>{data.amount}</Table.Cell>
+        <Table.Cell>{data.note}</Table.Cell>
+        <Table.Cell>{moment.unix(data.date).format('DD MM YYYY')}</Table.Cell>
+        <Table.Cell>
+            <Checkbox checked={data.exg} disabled />
+        </Table.Cell>
+    </React.Fragment>
+);
 
 PayoutRow.propTypes = {
-    data: PropTypes.object.isRequired,
-    updatePayment: PropTypes.func.isRequired,
-    removePayment: PropTypes.func.isRequired,
-    id: PropTypes.string.isRequired
+    data: PropTypes.object.isRequired
 };
+
+export default PayoutRow;
