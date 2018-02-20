@@ -1,3 +1,4 @@
+/* global require __dirname module */
 'use strict';
 
 const webpack = require('webpack');

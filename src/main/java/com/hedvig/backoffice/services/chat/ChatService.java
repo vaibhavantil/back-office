@@ -2,7 +2,6 @@ package com.hedvig.backoffice.services.chat;
 
 import com.hedvig.backoffice.services.chat.data.Message;
 
-import java.util.List;
 
 public interface ChatService {
 
