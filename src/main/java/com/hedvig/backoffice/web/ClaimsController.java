@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.web;
 
 import com.hedvig.backoffice.services.claims.ClaimException;
-import com.hedvig.backoffice.services.claims.ClaimState;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.ClaimsServiceException;
 import com.hedvig.backoffice.services.claims.dto.*;
@@ -75,10 +74,12 @@ public class ClaimsController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/status/{status}")
-    public ResponseEntity<?> state(@PathVariable String id, @PathVariable ClaimState status)
+    @PostMapping("/{id}/status")
+    public ResponseEntity<?> state(@PathVariable String id, @RequestBody ClaimState state)
             throws ClaimException {
-        if (!claimsService.changeState(id, status)) {
+        state.setClaimID(id);
+
+        if (!claimsService.changeState(state)) {
             throw new ClaimsServiceException();
         }
 
@@ -87,8 +88,10 @@ public class ClaimsController {
     }
 
     @PostMapping("/{id}/reserve")
-    public ResponseEntity<?> reserve(@PathVariable String id, @RequestBody @Valid ClaimReserve resume) throws ClaimException {
-        if (!claimsService.changeReserve(id, resume.getReserve())) {
+    public ResponseEntity<?> reserve(@PathVariable String id, @RequestBody @Valid ClaimReserve reserve) throws ClaimException {
+        reserve.setClaimID(id);
+
+        if (!claimsService.changeReserve(reserve)) {
             throw new ClaimsServiceException();
         }
 

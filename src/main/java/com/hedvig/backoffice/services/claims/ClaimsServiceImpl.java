@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +29,8 @@ public class ClaimsServiceImpl implements ClaimsService {
     private final String paymentUrl;
     private final String noteUrl;
     private final String dataUrl;
-
+    private final String stateUrl;
+    private final String reserveUrl;
 
     private final RestTemplate template;
 
@@ -41,7 +41,9 @@ public class ClaimsServiceImpl implements ClaimsService {
                              @Value("${claims.urls.claimTypes}") String claimTypes,
                              @Value("${claims.urls.payment}") String paymentUrl,
                              @Value("${claims.urls.note}") String noteUrl,
-                             @Value("${claims.urls.data}") String dataUrl) {
+                             @Value("${claims.urls.data}") String dataUrl,
+                             @Value("${claims.urls.state}") String stateUrl,
+                             @Value("${claims.urls.reserve}") String reserveUrl) {
 
         this.baseUrl = baseUrl;
         this.claims = claims;
@@ -50,6 +52,8 @@ public class ClaimsServiceImpl implements ClaimsService {
         this.paymentUrl = paymentUrl;
         this.noteUrl = noteUrl;
         this.dataUrl = dataUrl;
+        this.stateUrl = stateUrl;
+        this.reserveUrl = reserveUrl;
 
         this.template = new RestTemplate();
 
@@ -62,6 +66,8 @@ public class ClaimsServiceImpl implements ClaimsService {
         logger.info("payment: " + paymentUrl);
         logger.info("note: " + noteUrl);
         logger.info("data: " + dataUrl);
+        logger.info("state: " + stateUrl);
+        logger.info("reserve: " + reserveUrl);
     }
 
     @HystrixCommand(fallbackMethod = "listFallback", commandProperties = {
@@ -169,15 +175,44 @@ public class ClaimsServiceImpl implements ClaimsService {
         return false;
     }
 
+    @HystrixCommand(fallbackMethod = "changeStateFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean changeState(String id, ClaimState status) throws ClaimException {
+    public boolean changeState(ClaimState state) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + stateUrl, state, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
+    }
+
+    private boolean changeStateFallback(ClaimState state, Throwable t) {
+        logger.error("failed update state", t);
         return false;
     }
 
+    @HystrixCommand(fallbackMethod = "changeReserveFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean changeReserve(String id, BigDecimal value) throws ClaimException {
+    public boolean changeReserve(ClaimReserve reserve) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + reserveUrl, reserve, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
+    }
+
+    private boolean changeReserveFallback(ClaimReserve reserve, Throwable t) {
+        logger.error("failed update reserve", t);
         return false;
     }
+
 
     @Override
     public boolean changeType(String id, String type) throws ClaimException {

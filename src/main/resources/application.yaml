@@ -73,6 +73,8 @@ claims:
     payment: /_/claims/addpayment
     note: /_/claims/addnote
     data: /_/claims/adddataitem
+    state: /_/claims/updatestate
+    reserve: /_/claims/updatereserve
   stub: false
 
 jwt:
