@@ -1,3 +1,5 @@
+/* eslint-env browser */
+/* global Raven, process*/
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
@@ -15,7 +17,13 @@ const rootReducer = combineReducers({
 });
 
 const configureStore = () => {
-    const sagaMiddleware = createSagaMiddleware();
+    const sagaMiddleware = createSagaMiddleware({
+        onError: e => {
+            if (window.Raven && process.env.NODE_ENV === 'production') {
+                Raven.captureException(e);
+            }
+        }
+    });
     const router = routerMiddleware(history);
     return {
         ...createStore(rootReducer, applyMiddleware(sagaMiddleware, router)),

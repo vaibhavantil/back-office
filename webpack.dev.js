@@ -1,4 +1,4 @@
-/* global require __dirname module */
+/* global require, __dirname, module, process */
 'use strict';
 
 const webpack = require('webpack');
@@ -93,7 +93,10 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            DEV: 'true'
+            DEV: 'true',
+            'process.env': {
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+            }
         }),
         new HtmlWebpackPlugin({
             template: './src/main/js/index.html',
