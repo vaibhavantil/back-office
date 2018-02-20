@@ -75,7 +75,7 @@ public class ClaimsController {
     }
 
     @PostMapping("/{id}/status")
-    public ResponseEntity<?> state(@PathVariable String id, @RequestBody ClaimState state)
+    public ResponseEntity<?> state(@PathVariable String id, @RequestBody @Valid ClaimStateUpdate state)
             throws ClaimException {
         state.setClaimID(id);
 
@@ -88,7 +88,7 @@ public class ClaimsController {
     }
 
     @PostMapping("/{id}/reserve")
-    public ResponseEntity<?> reserve(@PathVariable String id, @RequestBody @Valid ClaimReserve reserve) throws ClaimException {
+    public ResponseEntity<?> reserve(@PathVariable String id, @RequestBody @Valid ClaimReserveUpdate reserve) throws ClaimException {
         reserve.setClaimID(id);
 
         if (!claimsService.changeReserve(reserve)) {
@@ -99,9 +99,11 @@ public class ClaimsController {
                 .noContent().build();
     }
 
-    @PostMapping("/{id}/type/{type}")
-    public ResponseEntity<?> type(@PathVariable String id, @PathVariable String type) throws ClaimException {
-        if (!claimsService.changeType(id, type)) {
+    @PostMapping("/{id}/type")
+    public ResponseEntity<?> type(@PathVariable String id, @RequestBody @Valid ClaimTypeUpdate type) throws ClaimException {
+        type.setClaimID(id);
+
+        if (!claimsService.changeType(type)) {
             throw new ClaimsServiceException();
         }
 

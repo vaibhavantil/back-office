@@ -15,8 +15,8 @@ public interface ClaimsService {
     boolean addNote(ClaimNote dto) throws ClaimException;
     boolean addData(ClaimData data) throws ClaimException;
 
-    boolean changeState(ClaimState state) throws ClaimException;
-    boolean changeReserve(ClaimReserve reserve) throws ClaimException;
-    boolean changeType(String id, String type) throws ClaimException;
+    boolean changeState(ClaimStateUpdate state) throws ClaimException;
+    boolean changeReserve(ClaimReserveUpdate reserve) throws ClaimException;
+    boolean changeType(ClaimTypeUpdate type) throws ClaimException;
 
 }

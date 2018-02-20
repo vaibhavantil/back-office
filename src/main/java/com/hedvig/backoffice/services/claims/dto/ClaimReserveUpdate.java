@@ -6,9 +6,9 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Data
-public class ClaimReserve extends ClaimBackOffice {
+public class ClaimReserveUpdate extends ClaimBackOffice {
 
     @NotNull
-    private BigDecimal reserve;
+    private BigDecimal amount;
 
 }

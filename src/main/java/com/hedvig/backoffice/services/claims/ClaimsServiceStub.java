@@ -62,7 +62,7 @@ public class ClaimsServiceStub implements ClaimsService {
 
             return new ClaimDTO(id,
                     memberId,
-                    ClaimStates.OPEN,
+                    ClaimState.OPEN,
                     null,
                     null,
                     "http://78.media.tumblr.com/tumblr_ll313eVnI91qjahcpo1_1280.jpg",
@@ -229,7 +229,7 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public void changeStatus(String id, ClaimStates status) throws ClaimException {
+    public void changeStatus(String id, ClaimState status) throws ClaimException {
         ClaimDTO claim = find(id);
         claim.setStatus(status);
         save(claim);

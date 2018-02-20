@@ -31,6 +31,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     private final String dataUrl;
     private final String stateUrl;
     private final String reserveUrl;
+    private final String typeUrl;
 
     private final RestTemplate template;
 
@@ -43,7 +44,8 @@ public class ClaimsServiceImpl implements ClaimsService {
                              @Value("${claims.urls.note}") String noteUrl,
                              @Value("${claims.urls.data}") String dataUrl,
                              @Value("${claims.urls.state}") String stateUrl,
-                             @Value("${claims.urls.reserve}") String reserveUrl) {
+                             @Value("${claims.urls.reserve}") String reserveUrl,
+                             @Value("${claims.urls.type}") String typeUrl) {
 
         this.baseUrl = baseUrl;
         this.claims = claims;
@@ -54,6 +56,7 @@ public class ClaimsServiceImpl implements ClaimsService {
         this.dataUrl = dataUrl;
         this.stateUrl = stateUrl;
         this.reserveUrl = reserveUrl;
+        this.typeUrl = typeUrl;
 
         this.template = new RestTemplate();
 
@@ -68,6 +71,7 @@ public class ClaimsServiceImpl implements ClaimsService {
         logger.info("data: " + dataUrl);
         logger.info("state: " + stateUrl);
         logger.info("reserve: " + reserveUrl);
+        logger.info("type: " + typeUrl);
     }
 
     @HystrixCommand(fallbackMethod = "listFallback", commandProperties = {
@@ -180,7 +184,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
             ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean changeState(ClaimState state) throws ClaimException {
+    public boolean changeState(ClaimStateUpdate state) throws ClaimException {
         try {
             template.postForEntity(baseUrl + stateUrl, state, Void.class);
         } catch (HttpClientErrorException e) {
@@ -189,7 +193,7 @@ public class ClaimsServiceImpl implements ClaimsService {
         return true;
     }
 
-    private boolean changeStateFallback(ClaimState state, Throwable t) {
+    private boolean changeStateFallback(ClaimStateUpdate state, Throwable t) {
         logger.error("failed update state", t);
         return false;
     }
@@ -199,7 +203,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
             ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean changeReserve(ClaimReserve reserve) throws ClaimException {
+    public boolean changeReserve(ClaimReserveUpdate reserve) throws ClaimException {
         try {
             template.postForEntity(baseUrl + reserveUrl, reserve, Void.class);
         } catch (HttpClientErrorException e) {
@@ -208,14 +212,27 @@ public class ClaimsServiceImpl implements ClaimsService {
         return true;
     }
 
-    private boolean changeReserveFallback(ClaimReserve reserve, Throwable t) {
+    private boolean changeReserveFallback(ClaimReserveUpdate reserve, Throwable t) {
         logger.error("failed update reserve", t);
         return false;
     }
 
-
+    @HystrixCommand(fallbackMethod = "changeTypeFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean changeType(String id, String type) throws ClaimException {
+    public boolean changeType(ClaimTypeUpdate type) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + typeUrl, type, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
+    }
+
+    private boolean changeTypeFallback(ClaimTypeUpdate type, Throwable t) {
+        logger.error("failed update type", t);
         return false;
     }
 

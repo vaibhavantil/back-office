@@ -75,6 +75,7 @@ claims:
     data: /_/claims/adddataitem
     state: /_/claims/updatestate
     reserve: /_/claims/updatereserve
+    type: /_/claims/updatetype
   stub: false
 
 jwt:
