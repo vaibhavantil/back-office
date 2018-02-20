@@ -12,7 +12,7 @@ public interface ClaimsService {
 
     List<ClaimType> types();
 
-    boolean addPayout(ClaimPayment dto) throws ClaimException;
+    boolean addPayment(ClaimPayment dto) throws ClaimException;
     boolean addNote(ClaimNote dto) throws ClaimException;
     boolean addData(ClaimData data) throws ClaimException;
 

@@ -83,7 +83,7 @@ public class ClaimsServiceStub implements ClaimsService {
                 .stream()
                 .filter(c -> c.getId().contains(id))
                 .findAny()
-                .orElseThrow(() -> new ClaimNotFoundException("claim with id " + id + " not found"));
+                .orElseThrow(() -> new ClaimBadRequestException("claim with id " + id + " not found"));
     }
 
     @Override
@@ -123,7 +123,7 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public ClaimPayoutDTO addPayout(ClaimPayoutDTO dto) throws ClaimException {
+    public ClaimPayoutDTO addPayment(ClaimPayoutDTO dto) throws ClaimException {
         dto.setId(UUID.randomUUID().toString());
 
         ClaimDTO claim = find(dto.getClaimId());
@@ -151,7 +151,7 @@ public class ClaimsServiceStub implements ClaimsService {
                 .computeIfAbsent(claim.getId(), k -> new ArrayList<>())
                 .stream()
                 .filter(p -> p.getId().equals(dto.getId()))
-                .findAny().orElseThrow(() -> new ClaimNotFoundException("payout with id " + dto.getId() + " not found"));
+                .findAny().orElseThrow(() -> new ClaimBadRequestException("payout with id " + dto.getId() + " not found"));
 
         if (dto.getAmount() != null) {
             payout.setAmount(dto.getAmount());
@@ -173,7 +173,7 @@ public class ClaimsServiceStub implements ClaimsService {
         List<ClaimPayoutDTO> list = payments.computeIfAbsent(claimId, k -> new ArrayList<>());
         int index = IntStream.range(0, list.size())
                 .filter(i -> list.get(i).getId().equals(id))
-                .findFirst().orElseThrow(() -> new ClaimNotFoundException("payment with id " + id + " not found"));
+                .findFirst().orElseThrow(() -> new ClaimBadRequestException("payment with id " + id + " not found"));
 
         list.remove(index);
 
@@ -212,7 +212,7 @@ public class ClaimsServiceStub implements ClaimsService {
         List<ClaimNoteDTO> list = notes.computeIfAbsent(claimId, k -> new ArrayList<>());
         int index = IntStream.range(0, list.size())
                 .filter(i -> list.get(i).getId().equals(id))
-                .findFirst().orElseThrow(() -> new ClaimNotFoundException("note with id " + id + " not found"));
+                .findFirst().orElseThrow(() -> new ClaimBadRequestException("note with id " + id + " not found"));
 
         list.remove(index);
     }
@@ -252,14 +252,14 @@ public class ClaimsServiceStub implements ClaimsService {
     public void addDetails(String id, ClaimData dto) throws ClaimException {
         ClaimDTO claim = find(id);
         String typeName = Optional.ofNullable(claim.getType())
-                .orElseThrow(() -> new ClaimNotFoundException("claim type is not defined"));
+                .orElseThrow(() -> new ClaimBadRequestException("claim type is not defined"));
 
         ClaimType type = getType(typeName);
 
         for (ClaimField f : type.getRequiredData()) {
             String value = Optional.ofNullable(
                     StringUtils.trimToNull(dto.getRequired().get(f.getName())))
-                    .orElseThrow(() -> new ClaimNotFoundException("required field " + f.getName() + " is empty"));
+                    .orElseThrow(() -> new ClaimBadRequestException("required field " + f.getName() + " is empty"));
 
             dto.getRequired().replace(f.getName(), value);
         }
@@ -270,7 +270,7 @@ public class ClaimsServiceStub implements ClaimsService {
 
     private ClaimType getType(String type) throws ClaimException {
         return types.stream().filter(t -> t.getName().equals(type)).findAny()
-                .orElseThrow(() -> new ClaimNotFoundException("claim type " + type + " not found"));
+                .orElseThrow(() -> new ClaimBadRequestException("claim type " + type + " not found"));
     }
 
 }

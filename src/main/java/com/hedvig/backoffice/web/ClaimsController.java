@@ -43,10 +43,10 @@ public class ClaimsController {
     }
 
     @PutMapping("/{id}/payments")
-    public ResponseEntity<?> addPayment(@PathVariable String id, @RequestBody ClaimPayment dto) throws ClaimException {
+    public ResponseEntity<?> addPayment(@PathVariable String id, @RequestBody @Valid ClaimPayment dto) throws ClaimException {
         dto.setClaimID(id);
 
-        if (!claimsService.addPayout(dto)) {
+        if (!claimsService.addPayment(dto)) {
             throw new ClaimsServiceException();
         }
 
@@ -89,6 +89,16 @@ public class ClaimsController {
     @PostMapping("/{id}/reserve")
     public ResponseEntity<?> reserve(@PathVariable String id, @RequestBody @Valid ClaimReserve resume) throws ClaimException {
         if (!claimsService.changeReserve(id, resume.getReserve())) {
+            throw new ClaimsServiceException();
+        }
+
+        return ResponseEntity
+                .noContent().build();
+    }
+
+    @PostMapping("/{id}/type/{type}")
+    public ResponseEntity<?> type(@PathVariable String id, @PathVariable String type) throws ClaimException {
+        if (!claimsService.changeType(id, type)) {
             throw new ClaimsServiceException();
         }
 

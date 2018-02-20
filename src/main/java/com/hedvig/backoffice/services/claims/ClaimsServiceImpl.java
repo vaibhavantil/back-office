@@ -82,14 +82,14 @@ public class ClaimsServiceImpl implements ClaimsService {
     @HystrixCommand(fallbackMethod = "findFallback", commandProperties = {
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
-            ignoreExceptions = { ClaimNotFoundException.class })
+            ignoreExceptions = { ClaimBadRequestException.class })
     @Override
     public Claim find(String id) throws ClaimException {
         try {
             ResponseEntity<Claim> response = template.getForEntity(baseUrl + claimById + "?claimID=" + id, Claim.class);
             return response.getBody();
         } catch (HttpClientErrorException e) {
-            throw new ClaimNotFoundException(e);
+            throw new ClaimBadRequestException(e);
         }
     }
 
@@ -112,22 +112,60 @@ public class ClaimsServiceImpl implements ClaimsService {
         return null;
     }
 
+    @HystrixCommand(fallbackMethod = "addPaymentFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean addPayout(ClaimPayment dto) throws ClaimException {
+    public boolean addPayment(ClaimPayment dto) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + paymentUrl, dto, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
+    }
 
-
-
-
+    public boolean addPaymentFallback(ClaimPayment dto, Throwable t) {
+        logger.error("failed add payment", t);
         return false;
     }
 
+    @HystrixCommand(fallbackMethod = "addNoteFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
     public boolean addNote(ClaimNote dto) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + noteUrl, dto, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
+    }
+
+    private boolean addNoteFallback(ClaimNote dto, Throwable t) {
+        logger.error("failed add note", t);
         return false;
     }
 
+    @HystrixCommand(fallbackMethod = "addDataFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
     public boolean addData(ClaimData data) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + dataUrl, data, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
+    }
+
+    private boolean addDataFallback(ClaimData dto, Throwable t) {
+        logger.error("failed add data", t);
         return false;
     }
 
