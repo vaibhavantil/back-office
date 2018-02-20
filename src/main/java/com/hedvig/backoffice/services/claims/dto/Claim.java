@@ -22,6 +22,7 @@ public class Claim extends ClaimBackOffice {
     private List<ClaimPayment> payments;
     private List<ClaimAsset> assets;
     private List<ClaimEvent> events;
+    private List<ClaimData> data;
 
     @JsonDeserialize(using= LocalDateTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
