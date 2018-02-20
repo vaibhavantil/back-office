@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Dropdown, Input, Header } from 'semantic-ui-react';
-import UsersList from '../users-list/UsersList';
+import UsersList from './users-list/UsersList';
 import BackLink from 'components/shared/link/BackLink';
 import { userStatus } from 'app/lib/selectOptions';
 

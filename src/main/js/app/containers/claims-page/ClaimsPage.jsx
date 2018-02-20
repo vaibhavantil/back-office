@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Claims from 'components/claims/claims/Claims';
+import Claims from 'components/claims';
 import { ListPage } from 'components/shared';
 import actions from 'app/store/actions';
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Dimmer, Header, Loader, Message } from 'semantic-ui-react';
 import { checkAuthorization } from 'app/lib/checkAuth';
 import BackLink from 'components/shared/link/BackLink';
-import AssetsList from '../assets-list/AssetsList';
+import AssetsList from './assets-list/AssetsList';
 
 class AssetList extends React.Component {
     constructor(props) {
