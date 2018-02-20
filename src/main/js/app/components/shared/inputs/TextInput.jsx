@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input } from 'semantic-ui-react';
+import { Form, TextArea } from 'semantic-ui-react';
 import { TEXT } from 'app/lib/messageTypes';
 
 export default class TextInput extends React.Component {
@@ -30,8 +30,8 @@ export default class TextInput extends React.Component {
         return (
             <Form.Field>
                 <label>Text</label>
-                <Input
-                    fluid
+                <TextArea
+                    autoHeight
                     onChange={this.textChangeHandler}
                     value={this.state.textValue}
                 />
