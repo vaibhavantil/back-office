@@ -35,7 +35,7 @@ export const routesList = [
     },
     {
         text: 'Questions',
-        route: '',
+        route: '/questions',
         type: 'QUESTIONS'
     },
     {

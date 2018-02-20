@@ -3,6 +3,7 @@ import LoginPageRoute from './LoginPageRoute';
 import UsersPageRoute from './UsersPageRoute';
 import DashboardPageRoute from './DashboardPageRoute';
 import ClaimsPageRoute from './ClaimsPageRoute';
+import QuestionsPageRoute from './QuestionsPageRoute';
 import PrivateRoute from './PrivateRoute';
 
 export default {
@@ -11,5 +12,6 @@ export default {
     UsersPageRoute,
     DashboardPageRoute,
     ClaimsPageRoute,
+    QuestionsPageRoute,
     PrivateRoute
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Container } from 'semantic-ui-react';
 import actions from 'app/store/actions';
-import Assets from 'components/assets/assets/Assets';
+import Assets from 'components/assets';
 
 const AssetsPage = props => (
     <Container>

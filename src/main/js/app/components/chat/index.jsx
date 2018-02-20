@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Message, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
-import MessagesList from '../messages/MessagesList';
+import MessagesList from './messages/MessagesList';
 import BackLink from 'components/shared/link/BackLink';
-import ChatPanel from './ChatPanel';
+import ChatPanel from './chat/ChatPanel';
 import * as sockets from 'sockets';
 
 const ChatContainer = styled.div`

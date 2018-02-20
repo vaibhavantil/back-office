@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import actions from 'app/store/actions';
-import Dashboard from 'components/dashboard/Dashboard';
+import Dashboard from 'components/dashboard';
 
 const DashboardPage = props => <Dashboard {...props} />;
 

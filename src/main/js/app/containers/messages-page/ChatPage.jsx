@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import actions from 'app/store/actions';
-import Chat from 'components/chat/chat/Chat';
+import Chat from 'components/chat';
 import { PageContainer } from 'components/shared';
 
 const ChatPage = props => (

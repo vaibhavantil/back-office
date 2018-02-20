@@ -25,6 +25,11 @@ const App = () => (
                     store={store}
                     component={Routes.DashboardPageRoute}
                 />
+                <Routes.PrivateRoute
+                    path="/questions"
+                    store={store}
+                    component={Routes.QuestionsPageRoute}
+                />
                 <Route
                     path="/claims"
                     render={routeProps => (
