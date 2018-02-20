@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.services.claims;
 
-import com.hedvig.backoffice.services.claims.data.Claim;
-import com.hedvig.backoffice.web.dto.claims.*;
+import com.hedvig.backoffice.services.claims.dto.*;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixException;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
@@ -10,15 +9,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class ClaimsServiceImpl implements ClaimsService {
 
     private static Logger logger = LoggerFactory.getLogger(ClaimsServiceImpl.class);
@@ -27,18 +27,29 @@ public class ClaimsServiceImpl implements ClaimsService {
     private final String claims;
     private final String claimById;
     private final String claimTypes;
+    private final String paymentUrl;
+    private final String noteUrl;
+    private final String dataUrl;
+
+
     private final RestTemplate template;
 
     @Autowired
     public ClaimsServiceImpl(@Value("${claims.baseUrl}") String baseUrl,
                              @Value("${claims.urls.claims}") String claims,
                              @Value("${claims.urls.claimById}") String claimById,
-                             @Value("${claims.urls.claimTypes}") String claimTypes) {
+                             @Value("${claims.urls.claimTypes}") String claimTypes,
+                             @Value("${claims.urls.payment}") String paymentUrl,
+                             @Value("${claims.urls.note}") String noteUrl,
+                             @Value("${claims.urls.data}") String dataUrl) {
 
         this.baseUrl = baseUrl;
         this.claims = claims;
         this.claimById = claimById;
         this.claimTypes = claimTypes;
+        this.paymentUrl = paymentUrl;
+        this.noteUrl = noteUrl;
+        this.dataUrl = dataUrl;
 
         this.template = new RestTemplate();
 
@@ -48,35 +59,24 @@ public class ClaimsServiceImpl implements ClaimsService {
         logger.info("claims: " + claims);
         logger.info("id: " + claimById);
         logger.info("types: " + claimTypes);
+        logger.info("payment: " + paymentUrl);
+        logger.info("note: " + noteUrl);
+        logger.info("data: " + dataUrl);
     }
 
     @HystrixCommand(fallbackMethod = "listFallback", commandProperties = {
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
-    public List<ClaimDTO> list() {
+    public List<Claim> list() {
         ResponseEntity<Claim[]> response = template.getForEntity(baseUrl + claims, Claim[].class);
         return Arrays.stream(response.getBody())
-                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<ClaimDTO> listFallback(Throwable t) {
+    public List<Claim> listFallback(Throwable t) {
         logger.error("failed claims fetching", t);
         return null;
-    }
-
-    private ClaimDTO toDTO(Claim claim) {
-        return new ClaimDTO(
-                claim.getId(),
-                claim.getUserId(),
-                claim.getState(),
-                null,
-                null,
-                claim.getAudioURL(),
-                null,
-                null,
-                claim.getRegistrationDate().toInstant(ZoneOffset.UTC));
     }
 
     @HystrixCommand(fallbackMethod = "findFallback", commandProperties = {
@@ -84,16 +84,16 @@ public class ClaimsServiceImpl implements ClaimsService {
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
             ignoreExceptions = { ClaimNotFoundException.class })
     @Override
-    public ClaimDTO find(String id) throws ClaimException {
+    public Claim find(String id) throws ClaimException {
         try {
             ResponseEntity<Claim> response = template.getForEntity(baseUrl + claimById + "?claimID=" + id, Claim.class);
-            return toDTO(response.getBody());
+            return response.getBody();
         } catch (HttpClientErrorException e) {
-            throw new ClaimNotFoundException("claim with id " + id + " not found");
+            throw new ClaimNotFoundException(e);
         }
     }
 
-    private ClaimDTO findFallback(String id, Throwable t) {
+    private Claim findFallback(String id, Throwable t) {
         logger.error("failed claim fetching", t);
         return null;
     }
@@ -102,84 +102,48 @@ public class ClaimsServiceImpl implements ClaimsService {
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
-    public List<ClaimTypeDTO> types() {
-        ResponseEntity<ClaimTypeDTO[]> response = template.getForEntity(baseUrl + claimTypes, ClaimTypeDTO[].class);
+    public List<ClaimType> types() {
+        ResponseEntity<ClaimType[]> response = template.getForEntity(baseUrl + claimTypes, ClaimType[].class);
         return Arrays.asList(response.getBody());
     }
 
-    private List<ClaimTypeDTO> typesFallback(Throwable t) {
+    private List<ClaimType> typesFallback(Throwable t) {
         logger.error("failed claim types fetching", t);
         return null;
     }
 
     @Override
-    public void save(ClaimDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean addPayout(ClaimPayment dto) throws ClaimException {
+
+
+
+
+        return false;
     }
 
     @Override
-    public List<ClaimEventDTO> events(String id) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean addNote(ClaimNote dto) throws ClaimException {
+        return false;
     }
 
     @Override
-    public void addEvent(ClaimEventDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean addData(ClaimData data) throws ClaimException {
+        return false;
     }
 
     @Override
-    public List<ClaimPayoutDTO> payouts(String id) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean changeState(String id, ClaimState status) throws ClaimException {
+        return false;
     }
 
     @Override
-    public ClaimPayoutDTO addPayout(ClaimPayoutDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean changeReserve(String id, BigDecimal value) throws ClaimException {
+        return false;
     }
 
     @Override
-    public void updatePayout(ClaimPayoutDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
-    }
-
-    @Override
-    public void removePayout(String id, String claimId) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
-    }
-
-    @Override
-    public List<ClaimNoteDTO> notes(String id) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
-    }
-
-    @Override
-    public ClaimNoteDTO addNote(ClaimNoteDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
-    }
-
-    @Override
-    public void removeNote(String id, String claimId) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
-    }
-
-    @Override
-    public void changeType(String id, String type) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
-    }
-
-    @Override
-    public void changeStatus(String id, ClaimStatus status) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
-    }
-
-    @Override
-    public void setResume(String id, BigDecimal resume) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
-    }
-
-    @Override
-    public void addDetails(String id, ClaimDetailsDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean changeType(String id, String type) throws ClaimException {
+        return false;
     }
 
 }

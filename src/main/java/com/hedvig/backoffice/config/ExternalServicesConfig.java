@@ -56,13 +56,13 @@ public class ExternalServicesConfig {
                 : factory.createBean(MemberServiceImpl.class);
     }
 
-    @Bean
+    /*@Bean
     public ClaimsService claimsService(@Value("${claims.stub:false}") boolean stub) {
         val factory = context.getAutowireCapableBeanFactory();
 
         return stub
                 ? factory.createBean(ClaimsServiceStub.class)
                 : factory.createBean(ClaimsServiceImpl.class);
-    }
+    }*/
 
 }

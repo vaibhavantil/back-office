@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.services.claims.data;
+package com.hedvig.backoffice.services.claims.dto;
 
 import lombok.Data;
 

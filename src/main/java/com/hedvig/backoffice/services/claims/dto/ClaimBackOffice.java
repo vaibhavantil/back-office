@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.services.claims.data;
+package com.hedvig.backoffice.services.claims.dto;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class ClaimBackOffice {
 
     protected String id;
-    protected String claimId;
+    protected String claimID;
     protected LocalDateTime date;
     protected String userId;
 

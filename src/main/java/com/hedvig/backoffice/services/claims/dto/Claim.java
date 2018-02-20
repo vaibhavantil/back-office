@@ -1,9 +1,9 @@
-package com.hedvig.backoffice.services.claims.data;
+package com.hedvig.backoffice.services.claims.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.hedvig.backoffice.services.claims.ClaimStatus;
+import com.hedvig.backoffice.services.claims.ClaimState;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import java.util.List;
 public class Claim extends ClaimBackOffice {
 
     private String audioURL;
-    private ClaimStatus state;
+    private ClaimState state;
 
     private List<ClaimNote> notes;
     private List<ClaimPayment> payments;

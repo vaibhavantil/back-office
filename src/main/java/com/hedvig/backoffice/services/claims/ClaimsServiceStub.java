@@ -1,6 +1,9 @@
 package com.hedvig.backoffice.services.claims;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+/*import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hedvig.backoffice.services.claims.dto.ClaimData;
+import com.hedvig.backoffice.services.claims.dto.ClaimField;
+import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.MemberServiceException;
 import com.hedvig.backoffice.web.dto.MemberDTO;
@@ -15,13 +18,18 @@ import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.stream.IntStream;*/
 
+public class ClaimsServiceStub {
+
+}
+
+/*
 
 public class ClaimsServiceStub implements ClaimsService {
 
     private List<ClaimDTO> claims;
-    private List<ClaimTypeDTO> types;
+    private List<ClaimType> types;
     private Map<String, List<ClaimEventDTO>> events;
     private Map<String, List<ClaimPayoutDTO>> payments;
     private Map<String, List<ClaimNoteDTO>> notes;
@@ -37,7 +45,7 @@ public class ClaimsServiceStub implements ClaimsService {
             val mapper = new ObjectMapper();
             types = mapper.readValue(
                     resource,
-                    mapper.getTypeFactory().constructCollectionType(List.class, ClaimTypeDTO.class));
+                    mapper.getTypeFactory().constructCollectionType(List.class, ClaimType.class));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -54,7 +62,7 @@ public class ClaimsServiceStub implements ClaimsService {
 
             return new ClaimDTO(id,
                     memberId,
-                    ClaimStatus.OPEN,
+                    ClaimState.OPEN,
                     null,
                     null,
                     "http://78.media.tumblr.com/tumblr_ll313eVnI91qjahcpo1_1280.jpg",
@@ -79,7 +87,7 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public List<ClaimTypeDTO> types() throws ClaimException {
+    public List<ClaimType> types() throws ClaimException {
         return types;
     }
 
@@ -212,7 +220,7 @@ public class ClaimsServiceStub implements ClaimsService {
     @Override
     public void changeType(String id, String type) throws ClaimException {
         ClaimDTO claim = find(id);
-        ClaimTypeDTO typeDTO = getType(type);
+        ClaimType typeDTO = getType(type);
         claim.setType(typeDTO.getName());
         save(claim);
 
@@ -221,7 +229,7 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public void changeStatus(String id, ClaimStatus status) throws ClaimException {
+    public void changeStatus(String id, ClaimState status) throws ClaimException {
         ClaimDTO claim = find(id);
         claim.setStatus(status);
         save(claim);
@@ -241,12 +249,12 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public void addDetails(String id, ClaimDetailsDTO dto) throws ClaimException {
+    public void addDetails(String id, ClaimData dto) throws ClaimException {
         ClaimDTO claim = find(id);
         String typeName = Optional.ofNullable(claim.getType())
                 .orElseThrow(() -> new ClaimNotFoundException("claim type is not defined"));
 
-        ClaimTypeDTO type = getType(typeName);
+        ClaimType type = getType(typeName);
 
         for (ClaimField f : type.getRequiredData()) {
             String value = Optional.ofNullable(
@@ -260,9 +268,10 @@ public class ClaimsServiceStub implements ClaimsService {
         save(claim);
     }
 
-    private ClaimTypeDTO getType(String type) throws ClaimException {
+    private ClaimType getType(String type) throws ClaimException {
         return types.stream().filter(t -> t.getName().equals(type)).findAny()
                 .orElseThrow(() -> new ClaimNotFoundException("claim type " + type + " not found"));
     }
 
 }
+*/

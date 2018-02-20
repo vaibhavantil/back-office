@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.web.dto.claims;
+package com.hedvig.backoffice.services.claims.dto;
 
 import lombok.Data;
 
@@ -6,9 +6,9 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Data
-public class ClaimResumeDTO {
+public class ClaimReserve {
 
     @NotNull
-    private BigDecimal resume;
+    private BigDecimal reserve;
 
 }

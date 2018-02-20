@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ClaimNotFoundException extends ClaimException {
 
-    public ClaimNotFoundException(String msg) {
-        super(msg);
+    public ClaimNotFoundException(Throwable t) {
+        super(t);
     }
 
 }
