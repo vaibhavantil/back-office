@@ -2,7 +2,7 @@
   {
     "name": "THEFT",
     "title": "Stöld",
-    "required": [
+    "requiredData": [
       {
         "name": "place",
         "title": "Plats",
@@ -19,7 +19,7 @@
         "type": "ASSET"
       }
     ],
-    "additional": [
+    "optionalData": [
       {
         "name": "report",
         "title": "Polisanmälan",
@@ -35,7 +35,7 @@
   {
     "name": "FIRE",
     "title": "Brand",
-    "required": [
+    "requiredData": [
       {
         "name": "place",
         "title": "Plats",
@@ -52,7 +52,7 @@
         "type": "ASSET"
       }
     ],
-    "additional": [
+    "optionalData": [
       {
         "name": "report",
         "title": "Brandinspektionsrapport",
@@ -63,7 +63,7 @@
   {
     "name": "DRULLE",
     "title": "Drulle",
-    "required": [
+    "requiredData": [
       {
         "name": "place",
         "title": "Plats",
@@ -80,7 +80,7 @@
         "type": "ASSET"
       }
     ],
-    "additional": [
+    "optionalData": [
       {
         "name": "report",
         "title": "Polisanmälan",

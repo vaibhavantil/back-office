@@ -1,18 +1,20 @@
 package com.hedvig.backoffice.services.claims;
 
-import com.hedvig.backoffice.web.dto.claims.*;
+import com.hedvig.backoffice.services.claims.dto.*;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixException;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClaimsServiceImpl implements ClaimsService {
 
@@ -21,121 +23,215 @@ public class ClaimsServiceImpl implements ClaimsService {
     private final String baseUrl;
     private final String claims;
     private final String claimById;
+    private final String claimTypes;
+    private final String paymentUrl;
+    private final String noteUrl;
+    private final String dataUrl;
+    private final String stateUrl;
+    private final String reserveUrl;
+    private final String typeUrl;
+
+    private final RestTemplate template;
 
     @Autowired
     public ClaimsServiceImpl(@Value("${claims.baseUrl}") String baseUrl,
                              @Value("${claims.urls.claims}") String claims,
-                             @Value("${claims.urls.claimById}") String claimById) {
+                             @Value("${claims.urls.claimById}") String claimById,
+                             @Value("${claims.urls.claimTypes}") String claimTypes,
+                             @Value("${claims.urls.payment}") String paymentUrl,
+                             @Value("${claims.urls.note}") String noteUrl,
+                             @Value("${claims.urls.data}") String dataUrl,
+                             @Value("${claims.urls.state}") String stateUrl,
+                             @Value("${claims.urls.reserve}") String reserveUrl,
+                             @Value("${claims.urls.type}") String typeUrl) {
 
         this.baseUrl = baseUrl;
         this.claims = claims;
         this.claimById = claimById;
+        this.claimTypes = claimTypes;
+        this.paymentUrl = paymentUrl;
+        this.noteUrl = noteUrl;
+        this.dataUrl = dataUrl;
+        this.stateUrl = stateUrl;
+        this.reserveUrl = reserveUrl;
+        this.typeUrl = typeUrl;
+
+        this.template = new RestTemplate();
 
         logger.info("CLAIMS SERVICE:");
         logger.info("class: " + ClaimsServiceImpl.class.getName());
         logger.info("base: " + baseUrl);
         logger.info("claims: " + claims);
         logger.info("id: " + claimById);
+        logger.info("types: " + claimTypes);
+        logger.info("payment: " + paymentUrl);
+        logger.info("note: " + noteUrl);
+        logger.info("data: " + dataUrl);
+        logger.info("state: " + stateUrl);
+        logger.info("reserve: " + reserveUrl);
+        logger.info("type: " + typeUrl);
     }
 
+    @HystrixCommand(fallbackMethod = "listFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
-    public List<ClaimDTO> list() throws ClaimException {
-        RestTemplate template = new RestTemplate();
-
-        try {
-            ResponseEntity<ClaimDTO[]> response = template.getForEntity(baseUrl + claims, ClaimDTO[].class);
-            return Arrays.asList(response.getBody());
-        } catch (RestClientException e) {
-            throw new ClaimsServiceException(e);
-        }
+    public List<Claim> list() {
+        ResponseEntity<Claim[]> response = template.getForEntity(baseUrl + claims, Claim[].class);
+        return Arrays.stream(response.getBody())
+                .collect(Collectors.toList());
     }
 
+    public List<Claim> listFallback(Throwable t) {
+        logger.error("failed claims fetching", t);
+        return null;
+    }
+
+    @HystrixCommand(fallbackMethod = "findFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = { ClaimBadRequestException.class })
     @Override
-    public ClaimDTO find(String id) throws ClaimException {
-        RestTemplate template = new RestTemplate();
+    public Claim find(String id) throws ClaimException {
         try {
-            ResponseEntity<ClaimDTO> response = template.getForEntity(baseUrl + claimById + "/" + id, ClaimDTO.class);
+            ResponseEntity<Claim> response = template.getForEntity(baseUrl + claimById + "?claimID=" + id, Claim.class);
             return response.getBody();
         } catch (HttpClientErrorException e) {
-            throw new ClaimNotFoundException("claim with id " + id + " not found");
-        } catch (RestClientException e) {
-            throw new ClaimsServiceException(e);
+            throw new ClaimBadRequestException(e);
         }
     }
 
-    @Override
-    public List<ClaimTypeDTO> types() throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    private Claim findFallback(String id, Throwable t) {
+        logger.error("failed claim fetching", t);
+        return null;
     }
 
+    @HystrixCommand(fallbackMethod = "typesFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
-    public void save(ClaimDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public List<ClaimType> types() {
+        ResponseEntity<ClaimType[]> response = template.getForEntity(baseUrl + claimTypes, ClaimType[].class);
+        return Arrays.asList(response.getBody());
     }
 
-    @Override
-    public List<ClaimEventDTO> events(String id) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    private List<ClaimType> typesFallback(Throwable t) {
+        logger.error("failed claim types fetching", t);
+        return null;
     }
 
+    @HystrixCommand(fallbackMethod = "addPaymentFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public void addEvent(ClaimEventDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean addPayment(ClaimPayment dto) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + paymentUrl, dto, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
     }
 
-    @Override
-    public List<ClaimPayoutDTO> payouts(String id) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean addPaymentFallback(ClaimPayment dto, Throwable t) {
+        logger.error("failed add payment", t);
+        return false;
     }
 
+    @HystrixCommand(fallbackMethod = "addNoteFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public ClaimPayoutDTO addPayout(ClaimPayoutDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean addNote(ClaimNote dto) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + noteUrl, dto, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
     }
 
-    @Override
-    public void updatePayout(ClaimPayoutDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    private boolean addNoteFallback(ClaimNote dto, Throwable t) {
+        logger.error("failed add note", t);
+        return false;
     }
 
+    @HystrixCommand(fallbackMethod = "addDataFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public void removePayout(String id, String claimId) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean addData(ClaimData data) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + dataUrl, data, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
     }
 
-    @Override
-    public List<ClaimNoteDTO> notes(String id) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    private boolean addDataFallback(ClaimData dto, Throwable t) {
+        logger.error("failed add data", t);
+        return false;
     }
 
+    @HystrixCommand(fallbackMethod = "changeStateFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public ClaimNoteDTO addNote(ClaimNoteDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean changeState(ClaimStateUpdate state) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + stateUrl, state, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
     }
 
-    @Override
-    public void removeNote(String id, String claimId) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    private boolean changeStateFallback(ClaimStateUpdate state, Throwable t) {
+        logger.error("failed update state", t);
+        return false;
     }
 
+    @HystrixCommand(fallbackMethod = "changeReserveFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public void changeType(String id, String type) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean changeReserve(ClaimReserveUpdate reserve) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + reserveUrl, reserve, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
     }
 
-    @Override
-    public void changeStatus(String id, ClaimStatus status) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    private boolean changeReserveFallback(ClaimReserveUpdate reserve, Throwable t) {
+        logger.error("failed update reserve", t);
+        return false;
     }
 
+    @HystrixCommand(fallbackMethod = "changeTypeFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
+            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public void setResume(String id, BigDecimal resume) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    public boolean changeType(ClaimTypeUpdate type) throws ClaimException {
+        try {
+            template.postForEntity(baseUrl + typeUrl, type, Void.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClaimBadRequestException(e);
+        }
+        return true;
     }
 
-    @Override
-    public void addDetails(String id, ClaimDetailsDTO dto) throws ClaimException {
-        throw new RuntimeException("Not implemented yet!");
+    private boolean changeTypeFallback(ClaimTypeUpdate type, Throwable t) {
+        logger.error("failed update type", t);
+        return false;
     }
 
 }
