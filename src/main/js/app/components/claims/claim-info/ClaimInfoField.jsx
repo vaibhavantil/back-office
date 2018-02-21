@@ -43,32 +43,18 @@ export default class ClaimInfoField extends React.Component {
 
     getInput = (type = 'text') => {
         const { field, inputHandler } = this.props;
-        const input = claimInputs[type](
-            inputHandler.bind(this, field.name),
-            false,
-            field.value
-        );
+        const input = claimInputs[type](inputHandler, false, field.value);
         return <InputContainer>{input}</InputContainer>;
     };
 
     render() {
-        const { field, required } = this.props;
+        const { field } = this.props;
         const { inputIsVisible } = this.state;
         return (
             <React.Fragment>
                 <FieldRow>
-                    {!required && (
-                        <Checkbox
-                            label={field.name}
-                            onChange={this.toggleInput}
-                        />
-                    )}
-                    {inputIsVisible || required ? (
-                        <React.Fragment>
-                            {!!required && <span>{field.name}</span>}
-                            {this.getInput(types[field.type])}
-                        </React.Fragment>
-                    ) : null}
+                    <Checkbox label={field.name} onChange={this.toggleInput} />
+                    {inputIsVisible ? this.getInput(types[field.type]) : null}
                 </FieldRow>
             </React.Fragment>
         );
@@ -78,6 +64,5 @@ export default class ClaimInfoField extends React.Component {
 ClaimInfoField.propTypes = {
     field: PropTypes.object.isRequired,
     inputHandler: PropTypes.func.isRequired,
-    cleanupField: PropTypes.func.isRequired,
-    required: PropTypes.bool
+    cleanupField: PropTypes.func.isRequired
 };

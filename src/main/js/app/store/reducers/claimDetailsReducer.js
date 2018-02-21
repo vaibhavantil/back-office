@@ -3,13 +3,9 @@ import {
     CLAIM_REQUESTING,
     CLAIM_REQUEST_SUCCESS,
     CLAIM_REQUEST_ERROR,
-    NOTES_REQUESTING,
-    NOTES_REQUEST_SUCCESS,
     CREATE_NOTE_REQUESTING,
     CREATE_NOTE_SUCCESS,
-    PAYMENTS_REQUESTING,
     CREATE_PAYMENT_REQUESTING,
-    PAYMENTS_REQUEST_SUCCESS,
     UPDATE_RESUME_SUCCESS,
     CREATE_PAYMENT_SUCCESS,
     CLAIM_DETAILS_UPDATING,
@@ -18,8 +14,6 @@ import {
 
 export default function(state = initialState.claimDetails, action) {
     switch (action.type) {
-        case PAYMENTS_REQUESTING:
-        case NOTES_REQUESTING:
         case CREATE_PAYMENT_REQUESTING:
         case CREATE_NOTE_REQUESTING:
         case CLAIM_REQUESTING:
@@ -54,28 +48,22 @@ export default function(state = initialState.claimDetails, action) {
                 ]
             };
 
-        case NOTES_REQUEST_SUCCESS:
-            return {
-                ...state,
-                notes: action.notes.data
-            };
-
         case CREATE_NOTE_SUCCESS:
             return {
                 ...state,
-                notes: [...state.notes, action.note]
-            };
-
-        case PAYMENTS_REQUEST_SUCCESS:
-            return {
-                ...state,
-                payments: action.payments.data
+                data: {
+                    ...state.data,
+                    notes: [...state.data.notes, action.note]
+                }
             };
 
         case CREATE_PAYMENT_SUCCESS:
             return {
                 ...state,
-                payments: [...state.payments, action.payment.data]
+                data: {
+                    ...state.data,
+                    payments: [...state.data.payments, action.payment]
+                }
             };
 
         case UPDATE_RESUME_SUCCESS:

@@ -17,25 +17,17 @@ export default class ClaimDetails extends React.Component {
     }
 
     componentDidMount() {
-        const {
-            match,
-            claimRequest,
-            claimTypes,
-            notesRequest,
-            paymentsRequest
-        } = this.props;
+        const { match, claimRequest, claimTypes } = this.props;
         const id = match.params.id;
         claimRequest(id);
         claimTypes();
-        notesRequest(id);
-        paymentsRequest(id);
     }
 
     render() {
         const {
             claimDetails,
             createNote,
-            updateResume,
+            updateReserve,
             createPayment,
             match
         } = this.props;
@@ -44,18 +36,22 @@ export default class ClaimDetails extends React.Component {
                 <Header size="huge">Claim Details</Header>
 
                 <BackLink path="claims" />
-                {claimDetails.data ? <ClaimInfo {...this.props} /> : null}
-                <Notes
-                    notes={claimDetails.notes}
-                    createNote={createNote}
-                    id={match.params.id}
-                />
-                <Payments
-                    claimDetails={claimDetails}
-                    updateResume={updateResume}
-                    createPayment={createPayment}
-                    id={match.params.id}
-                />
+                {claimDetails.data ? (
+                    <React.Fragment>
+                        <ClaimInfo {...this.props} />
+                        <Notes
+                            notes={claimDetails.data.notes}
+                            createNote={createNote}
+                            id={match.params.id}
+                        />
+                        <Payments
+                            claimDetails={claimDetails}
+                            updateReserve={updateReserve}
+                            createPayment={createPayment}
+                            id={match.params.id}
+                        />
+                    </React.Fragment>
+                ) : null}
             </ClaimDetailsContainer>
         );
     }
@@ -64,11 +60,9 @@ export default class ClaimDetails extends React.Component {
 ClaimDetails.propTypes = {
     claimDetails: PropTypes.object.isRequired,
     createNote: PropTypes.func.isRequired,
-    updateResume: PropTypes.func.isRequired,
+    updateReserve: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
     claimRequest: PropTypes.func.isRequired,
     claimTypes: PropTypes.func.isRequired,
-    notesRequest: PropTypes.func.isRequired,
-    paymentsRequest: PropTypes.func.isRequired,
-    createPayment: PropTypes.func.isRequired,
+    createPayment: PropTypes.func.isRequired
 };

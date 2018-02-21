@@ -9,7 +9,7 @@ const PayoutRow = ({ data }) => (
         <Table.Cell>{data.note}</Table.Cell>
         <Table.Cell>{moment.unix(data.date).format('DD MM YYYY')}</Table.Cell>
         <Table.Cell>
-            <Checkbox checked={data.exg} disabled />
+            <Checkbox checked={data.exGratia} disabled />
         </Table.Cell>
     </React.Fragment>
 );

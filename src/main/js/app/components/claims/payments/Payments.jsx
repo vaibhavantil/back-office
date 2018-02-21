@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Form, Segment } from 'semantic-ui-react';
-import PayoutsList from './PayoutsList';
+import PaymentsList from './PaymentsList';
 import { getSum } from 'app/lib/helpers';
 
 const Label = styled.label`
@@ -15,7 +15,7 @@ export default class Payments extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            resume: '',
+            reserve: '',
             editDisabled: true
         };
     }
@@ -24,28 +24,28 @@ export default class Payments extends React.Component {
         this.setState({ editDisabled: false });
     };
 
-    updateResume = () => {
-        const { id, updateResume } = this.props;
+    updateReserve = () => {
+        const { id, updateReserve } = this.props;
 
-        updateResume(id, { resume: this.state.resume });
+        updateReserve(id, { amount: this.state.reserve });
         this.setState({
             editDisabled: true
         });
     };
 
-    resumeChangeHandler = (e, { value }) => {
-        this.setState({ resume: value });
+    reserveChangeHandler = (e, { value }) => {
+        this.setState({ reserve: value });
     };
 
     componentWillReceiveProps({ claimDetails: { data } }) {
-        if (data && data.resume) {
-            this.setState({ resume: data.resume });
+        if (data && data.reserve) {
+            this.setState({ reserve: data.reserve });
         }
     }
 
     render() {
         const { claimDetails } = this.props;
-        const { resume, editDisabled } = this.state;
+        const { reserve, editDisabled } = this.state;
         const sum = getSum(claimDetails.payments);
         return (
             <Segment>
@@ -54,9 +54,9 @@ export default class Payments extends React.Component {
                         <Label>Reserves: </Label>
                         <Form.Input
                             type="number"
-                            value={resume}
+                            value={reserve}
                             disabled={editDisabled}
-                            onChange={this.resumeChangeHandler}
+                            onChange={this.reserveChangeHandler}
                         />
 
                         {editDisabled ? (
@@ -67,16 +67,16 @@ export default class Payments extends React.Component {
                         ) : (
                             <Button
                                 primary
-                                onClick={this.updateResume}
+                                onClick={this.updateReserve}
                                 content="Save"
                             />
                         )}
                     </Form.Group>
                 </Form>
 
-                <PayoutsList
+                <PaymentsList
                     {...this.props}
-                    list={claimDetails.payments}
+                    list={claimDetails.data.payments}
                     sum={sum}
                 />
             </Segment>
@@ -86,7 +86,7 @@ export default class Payments extends React.Component {
 
 Payments.propTypes = {
     claimDetails: PropTypes.object.isRequired,
-    updateResume: PropTypes.func.isRequired,
+    updateReserve: PropTypes.func.isRequired,
     createPayment: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired,
     notes: PropTypes.array

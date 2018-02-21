@@ -1,19 +1,7 @@
 import {
-    NOTES_REQUESTING,
-    NOTES_REQUEST_SUCCESS,
     CREATE_NOTE_REQUESTING,
     CREATE_NOTE_SUCCESS
 } from 'constants/claims';
-
-export const notesRequest = id => ({
-    type: NOTES_REQUESTING,
-    id
-});
-
-export const notesRequestSuccess = notes => ({
-    type: NOTES_REQUEST_SUCCESS,
-    notes
-});
 
 export const createNote = (id, data) => ({
     type: CREATE_NOTE_REQUESTING,

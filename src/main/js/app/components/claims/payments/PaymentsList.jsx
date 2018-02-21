@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Header, Segment } from 'semantic-ui-react';
-import PayoutRow from './PayoutRow';
+import PaymentRow from './PaymentRow';
 import PaymentCreator from './PaymentCreator';
 
 const PayoutsList = props => (
     <React.Fragment>
         <Segment clearing>
             <Header as="h2" floated="left">
-                Payouts
+                Payments
             </Header>
             <Header as="h2" floated="right">
                 <PaymentCreator
@@ -18,7 +18,7 @@ const PayoutsList = props => (
             </Header>
         </Segment>
 
-        {!props.list.length ? <Header>No payouts</Header> : null}
+        {!props.list.length ? <Header>No payments</Header> : null}
         {props.list.length ? (
             <React.Fragment>
                 <Table>
@@ -31,9 +31,9 @@ const PayoutsList = props => (
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {props.list.map(item => (
-                            <Table.Row key={item.id}>
-                                <PayoutRow {...props} data={item} />
+                        {props.list.map((item, id) => (
+                            <Table.Row key={item.id || id}>
+                                <PaymentRow {...props} data={item} />
                             </Table.Row>
                         ))}
                     </Table.Body>

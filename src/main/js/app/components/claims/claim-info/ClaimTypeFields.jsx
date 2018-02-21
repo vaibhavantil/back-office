@@ -2,24 +2,37 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Dropdown, List } from 'semantic-ui-react';
 import ClaimInfoField from './ClaimInfoField';
-import { updateTypesList, getActiveType } from 'app/lib/helpers';
+import {
+    updateTypesList,
+    getActiveType,
+    getClaimFieldsData
+} from 'app/lib/helpers';
 export default class ClaimTypeFields extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             fieldsData: {
-                required: {},
-                additional: {}
+                optionalData: [],
+                requiredData: []
             },
-            type: null,
-            types: []
+            type: null
         };
     }
 
-    inputHandler = (fieldType, name, input, e, { value }) => {
-        const stateCopy = { ...this.state.fieldsData };
-        stateCopy[fieldType][name] = value;
-        this.setState({ fieldsData: stateCopy });
+    inputHandler = (fieldType, fieldName, input, e, { value }) => {
+        const { fieldsData, type } = this.state;
+        const newState = getClaimFieldsData(
+            fieldsData[fieldType],
+            type[fieldType],
+            fieldName,
+            value
+        );
+        this.setState({
+            fieldsData: {
+                ...fieldsData,
+                [fieldType]: newState
+            }
+        });
     };
 
     submitTypeChanges = () => {
@@ -40,9 +53,16 @@ export default class ClaimTypeFields extends React.Component {
     };
 
     cleanupField = (fieldType, fieldName) => {
-        const stateCopy = { ...this.state.fieldsData };
-        delete stateCopy[fieldType][fieldName];
-        this.setState({ fieldsData: stateCopy });
+        const { fieldsData } = this.state;
+        const newState = fieldsData[fieldType].filter(
+            item => item.name !== fieldName
+        );
+        this.setState({
+            fieldsData: {
+                ...fieldsData,
+                [fieldType]: newState
+            }
+        });
     };
 
     getFieldsList = fieldType => {
@@ -51,53 +71,56 @@ export default class ClaimTypeFields extends React.Component {
             <List.Item key={id}>
                 <ClaimInfoField
                     field={field}
-                    inputHandler={this.inputHandler.bind(this, fieldType)}
-                    cleanupField={this.cleanupField.bind(this, fieldType)}
-                    required={fieldType === 'required'}
+                    inputHandler={this.inputHandler.bind(
+                        this,
+                        fieldType,
+                        field.name
+                    )}
+                    cleanupField={this.cleanupField.bind(
+                        this,
+                        fieldType,
+                        field.name
+                    )}
                 />
             </List.Item>
         ));
     };
 
+    setActiveType = (types, claimType) => {
+        const activeType = getActiveType(types, claimType);
+        this.setState({ type: activeType });
+    };
+
     componentWillMount() {
-        const { claimInfo, types } = this.props;
-        let typesList = [...types];
-        if (claimInfo.details && claimInfo.type) {
-            typesList = updateTypesList(typesList, claimInfo);
-        }
-        this.setState({
-            types: typesList,
-            type: getActiveType(typesList, claimInfo.type)
-        });
+        const { types, claimInfo } = this.props;
+        this.setActiveType(types, claimInfo.type);
     }
 
     componentWillReceiveProps({ types, claimInfo }) {
-        const { claimInfo: { type } } = this.props;
-        if (type !== claimInfo.type) {
-            this.setState({
-                type: getActiveType(types, claimInfo.type)
-            });
+        if (claimInfo.type) {
+            this.setActiveType(types, claimInfo.type);
         }
     }
 
     render() {
-        const { type, types } = this.state;
+        const { types, claimInfo: { type } } = this.props;
+        const updatedTypes = updateTypesList(types.slice());
         return (
             <React.Fragment>
                 Type
                 <Dropdown
                     onChange={this.typeChangeHandler}
-                    options={types}
+                    options={updatedTypes}
                     placeholder="Type"
                     selection
-                    value={type && type.value}
+                    value={type}
                 />
                 {type && (
                     <React.Fragment>
                         <h3>Required fields:</h3>
-                        {this.getFieldsList('required')}
+                        {this.getFieldsList('requiredData')}
                         <h3>Additional fields:</h3>
-                        {this.getFieldsList('additional')}
+                        {this.getFieldsList('optionalData')}
                         <Button primary onClick={this.submitTypeChanges}>
                             Save
                         </Button>
