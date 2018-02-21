@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.messages;
 import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.messages.data.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.data.PushTokenDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,4 +172,9 @@ public class BotServiceStub implements BotService {
             }
         });
     }
+
+	@Override
+	public String pushTokenId(String hid) {
+		return "";
+	}
 }

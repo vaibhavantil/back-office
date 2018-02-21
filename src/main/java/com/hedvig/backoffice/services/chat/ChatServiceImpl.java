@@ -61,7 +61,6 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void send(String hid, Message message) {
         template.convertAndSend(getTopicPrefix() + hid, message.toJson());
-        expoNotificationService.sendNotification();
     }
 
     @Override
@@ -77,6 +76,7 @@ public class ChatServiceImpl implements ChatService {
             BotServiceMessage msg = new BotServiceMessage(message, true);
             messageUrlResolver.resolveUrls(msg);
             botService.response(hid, msg);
+            expoNotificationService.sendNotification(hid);
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
             logger.error("chat not updated hid = " + hid, e);

@@ -14,14 +14,13 @@ public class ExpoNotificationServiceImpl implements ExpoNotificationService {
     }
 
     @Override
-    public void sendNotification() {
+    public void sendNotification(String hid) {
         // TODO: Get expoId and name from botService
-        val expoId = "lqIPV0KLOaE9M0uqHUIPty";
-        val name = "Oscar";
+        val expoId = botService.pushTokenId(hid);
         val dto = new ExpoPushDTO(
             String.format("ExponentPushToken[%s]", expoId),
             "Hedvig",
-            String.format("Hej %s! Hedvig har svarat på din fråga", name)
+            "Hej! Hedvig har svarat på din fråga"
         );
         expoClient.sendPush(dto);
     }

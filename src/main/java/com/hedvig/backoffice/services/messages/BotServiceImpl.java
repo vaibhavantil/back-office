@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.services.messages.data.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.data.PushTokenDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import lombok.val;
 
 public class BotServiceImpl implements BotService {
 
@@ -30,17 +32,20 @@ public class BotServiceImpl implements BotService {
     private String messagesUrl;
     private String responseUrl;
     private String fetchUrl;
+    private BotServiceClient botServiceClient;
 
     @Autowired
     private BotServiceImpl(@Value("${botservice.baseUrl}") String baseUrl,
                            @Value("${botservice.urls.messages}") String messagesUrl,
                            @Value("${botservice.urls.internal.response}") String responseUrl,
-                           @Value("${botservice.urls.internal.fetch}") String fetchUrl) {
+                           @Value("${botservice.urls.internal.fetch}") String fetchUrl,
+                           BotServiceClient botServiceClient) {
 
         this.baseUrl = baseUrl;
         this.messagesUrl = messagesUrl;
         this.responseUrl = responseUrl;
         this.fetchUrl = fetchUrl;
+        this.botServiceClient = botServiceClient;
 
         logger.info("BOT SERVICE:");
         logger.info("class: " + BotServiceImpl.class.getName());
@@ -134,4 +139,9 @@ public class BotServiceImpl implements BotService {
         return new ArrayList<>();
     }
 
+	@Override
+	public String pushTokenId(String hid) {
+        val pushTokenDto = botServiceClient.getPushTokenByHid(hid);
+        return pushTokenDto.getExponentPushToken();
+	}
 }
