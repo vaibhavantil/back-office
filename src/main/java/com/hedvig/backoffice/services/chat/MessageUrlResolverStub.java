@@ -3,7 +3,7 @@ package com.hedvig.backoffice.services.chat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class MessageUrlResolverStub implements MessageUrlResolver {
 
     @Override
-    public void resolveUrls(BotServiceMessage message) {
+    public void resolveUrls(BotMessage message) {
         replaceByStub("URL", message.getBody());
         replaceByStub("imageUrl", message.getBody());
     }

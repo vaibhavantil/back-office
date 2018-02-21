@@ -2,8 +2,8 @@ package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hedvig.backoffice.services.messages.data.BackOfficeMessage;
-import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
+import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,12 +50,12 @@ public class BotServiceImpl implements BotService {
     }
 
     @Override
-    public List<BotServiceMessage> messages(String hid) throws BotServiceException {
+    public List<BotMessage> messages(String hid) throws BotServiceException {
         return messages(baseUrl + messagesUrl, hid);
     }
 
     @Override
-    public List<BotServiceMessage> messages(String hid, int count) throws BotServiceException {
+    public List<BotMessage> messages(String hid, int count) throws BotServiceException {
         return messages(baseUrl + messagesUrl + "/" + count, hid);
     }
 
@@ -74,7 +74,7 @@ public class BotServiceImpl implements BotService {
     }
 
     @Override
-    public void response(String hid, BotServiceMessage message) throws BotServiceException {
+    public void response(String hid, BotMessage message) throws BotServiceException {
         RestTemplate template = new RestTemplate();
 
         try {
@@ -87,7 +87,7 @@ public class BotServiceImpl implements BotService {
         }
     }
 
-    private List<BotServiceMessage> messages(String url, String hid) throws BotServiceException {
+    private List<BotMessage> messages(String url, String hid) throws BotServiceException {
         RestTemplate template = new RestTemplate();
         String result;
 
@@ -102,7 +102,7 @@ public class BotServiceImpl implements BotService {
         }
 
         ObjectMapper mapper = new ObjectMapper();
-        List<BotServiceMessage> messages = null;
+        List<BotMessage> messages = null;
 
         try {
             if (StringUtils.isNotBlank(result)) {
@@ -114,8 +114,8 @@ public class BotServiceImpl implements BotService {
                         .stream(iterable.spliterator(), false)
                         .map(e -> {
                             try {
-                                return new BotServiceMessage(e.getValue().toString());
-                            } catch (BotServiceException ex) {
+                                return new BotMessage(e.getValue().toString());
+                            } catch (BotMessageException ex) {
                                 logger.error(ex.getMessage(), ex);
                                 return null;
                             }

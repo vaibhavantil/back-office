@@ -1,9 +1,9 @@
-package com.hedvig.backoffice.services.messages.data;
+package com.hedvig.backoffice.services.messages.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.hedvig.backoffice.services.messages.BotServiceException;
+import com.hedvig.backoffice.services.messages.BotMessageException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
-public class BotServiceMessage {
+public class BotMessage {
 
     private JsonNode root;
     private Instant timestamp;
@@ -21,22 +21,22 @@ public class BotServiceMessage {
     private JsonNode header;
     private String type;
 
-    public BotServiceMessage(String message) throws BotServiceException {
+    public BotMessage(String message) throws BotMessageException {
         this(message, false);
     }
 
-    public BotServiceMessage(String message, boolean newMessage) throws BotServiceException {
+    public BotMessage(String message, boolean newMessage) throws BotMessageException {
         ObjectMapper mapper = new ObjectMapper();
         try {
             this.root = mapper.readValue(message, JsonNode.class);
         } catch (IOException e) {
-            throw new BotServiceException(e);
+            throw new BotMessageException(e);
         }
 
         parseFields(newMessage);
     }
 
-    public BotServiceMessage(JsonNode root, boolean newMessage) throws BotServiceException {
+    public BotMessage(JsonNode root, boolean newMessage) throws BotMessageException {
         this.root = root;
         parseFields(newMessage);
     }
@@ -81,39 +81,39 @@ public class BotServiceMessage {
         root.put("globalId", globalId);
     }
 
-    private void parseFields(boolean newMessage) throws BotServiceException {
+    private void parseFields(boolean newMessage) throws BotMessageException {
         header = Optional.ofNullable(root.get("header"))
-                .orElseThrow(() -> new BotServiceException("message must contains header"));
+                .orElseThrow(() -> new BotMessageException("message must contains header"));
 
         body = Optional.ofNullable(root.get("body"))
-                .orElseThrow(() -> new BotServiceException("message must contains body"));
+                .orElseThrow(() -> new BotMessageException("message must contains body"));
 
         type = Optional.ofNullable(body.get("type"))
                 .map(JsonNode::asText)
-                .orElseThrow(() -> new BotServiceException("message must contains type"));
+                .orElseThrow(() -> new BotMessageException("message must contains type"));
 
         if (!newMessage) {
             globalId = Optional.ofNullable(root.get("globalId"))
-                    .orElseThrow(() -> new BotServiceException("message must contains globalId"))
+                    .orElseThrow(() -> new BotMessageException("message must contains globalId"))
                     .asLong();
 
             messageId = Optional.ofNullable(header.get("messageId"))
-                    .orElseThrow(() -> new BotServiceException("message must contains globalId"))
+                    .orElseThrow(() -> new BotMessageException("message must contains globalId"))
                     .asLong();
         }
 
         JsonNode value = Optional.ofNullable(root.get("timestamp"))
-                .orElseThrow(() -> new BotServiceException("message must contains timestamp"));
+                .orElseThrow(() -> new BotMessageException("message must contains timestamp"));
 
         String timeStr = value.asText();
         if (StringUtils.isBlank(timeStr)) {
-            throw new BotServiceException("message must contains timestamp");
+            throw new BotMessageException("message must contains timestamp");
         }
 
         try {
             timestamp = Instant.parse(timeStr);
         } catch (DateTimeParseException e) {
-            throw new BotServiceException(e);
+            throw new BotMessageException(e);
         }
     }
 }
