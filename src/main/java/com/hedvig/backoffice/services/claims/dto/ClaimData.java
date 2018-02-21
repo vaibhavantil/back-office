@@ -9,5 +9,6 @@ public class ClaimData extends ClaimBackOffice {
     private String name;
     private String title;
     private Boolean received;
+    private String value;
 
 }
