@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_GATEWAY)
 public class ClaimsServiceException extends ClaimException {
 
-    public ClaimsServiceException(Throwable t) {
-        super(t);
+    public ClaimsServiceException() {
+        super("claims-service unavailable");
     }
 
 }

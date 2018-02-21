@@ -1,5 +1,5 @@
 package com.hedvig.backoffice.services.claims;
 
-public enum ClaimStatus {
+public enum ClaimState {
     OPEN, CLOSED, REOPENED
 }

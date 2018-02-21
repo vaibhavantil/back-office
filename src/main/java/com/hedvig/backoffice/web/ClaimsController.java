@@ -1,150 +1,114 @@
 package com.hedvig.backoffice.web;
 
-import com.hedvig.backoffice.domain.Personnel;
-import com.hedvig.backoffice.repository.PersonnelRepository;
-import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.claims.ClaimException;
-import com.hedvig.backoffice.services.claims.ClaimStatus;
 import com.hedvig.backoffice.services.claims.ClaimsService;
-import com.hedvig.backoffice.web.dto.claims.*;
+import com.hedvig.backoffice.services.claims.ClaimsServiceException;
+import com.hedvig.backoffice.services.claims.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/claims")
 public class ClaimsController {
 
     private final ClaimsService claimsService;
-    private final PersonnelRepository personnelRepository;
 
     @Autowired
-    public ClaimsController(ClaimsService claimsService, PersonnelRepository personnelRepository) {
+    public ClaimsController(ClaimsService claimsService) {
         this.claimsService = claimsService;
-        this.personnelRepository = personnelRepository;
     }
 
     @GetMapping
-    public List<ClaimDTO> claims() throws ClaimException {
-        return claimsService.list();
+    public List<Claim> claims() throws ClaimException {
+        return Optional.ofNullable(claimsService.list())
+                .orElseThrow(ClaimsServiceException::new);
     }
 
     @GetMapping("/{id}")
-    public ClaimDTO claim(@PathVariable String id) throws ClaimException {
-        return claimsService.find(id);
-    }
-
-    @PostMapping("/{id}/status/{status}")
-    public ResponseEntity<?> status(@PathVariable String id, @PathVariable ClaimStatus status)
-            throws ClaimException {
-        claimsService.changeStatus(id, status);
-
-        return ResponseEntity
-                .noContent().build();
+    public Claim claim(@PathVariable String id) throws ClaimException {
+        return Optional.ofNullable(claimsService.find(id))
+                .orElseThrow(ClaimsServiceException::new);
     }
 
     @GetMapping("/types")
-    public List<ClaimTypeDTO> types() throws ClaimException {
-        return claimsService.types();
+    public List<ClaimType> types() throws ClaimException {
+        return Optional.ofNullable(claimsService.types())
+                .orElseThrow(ClaimsServiceException::new);
     }
 
-    @PostMapping("/{id}/type/{type}")
-    public ResponseEntity<?> type(@PathVariable String id, @PathVariable String type)
-            throws ClaimException {
-        claimsService.changeType(id, type);
+    @PutMapping("/{id}/payments")
+    public ResponseEntity<?> addPayment(@PathVariable String id, @RequestBody @Valid ClaimPayment dto) throws ClaimException {
+        dto.setClaimID(id);
 
-        return ResponseEntity
-                .noContent().build();
-    }
+        if (!claimsService.addPayment(dto)) {
+            throw new ClaimsServiceException();
+        }
 
-    @PostMapping("/{id}/details")
-    public ResponseEntity<?> details(@PathVariable String id, @RequestBody @Valid ClaimDetailsDTO dto) throws ClaimException {
-        claimsService.addDetails(id, dto);
-
-        return ResponseEntity
-                .noContent().build();
-    }
-
-    @GetMapping("/{id}/events")
-    public List<ClaimEventDTO> events(@PathVariable String id) throws ClaimException {
-        return claimsService.events(id);
-    }
-
-    @PostMapping("/{id}/resume")
-    public ResponseEntity<?> resume(@PathVariable String id, @RequestBody @Valid ClaimResumeDTO resume)
-            throws ClaimException {
-        claimsService.setResume(id, resume.getResume());
-
-        return ResponseEntity
-                .noContent().build();
-    }
-
-    @GetMapping("/{id}/payouts")
-    public List<ClaimPayoutDTO> payouts(@PathVariable String id) throws ClaimException {
-        return claimsService.payouts(id);
-    }
-
-    @PutMapping("/{id}/payouts")
-    public ResponseEntity<ClaimPayoutDTO> addPayout(@PathVariable String id, @RequestBody @Valid ClaimPayoutDTO dto) throws ClaimException {
-        dto.setClaimId(id);
-        dto.setDate(new Date().toInstant());
-
-        ClaimPayoutDTO result = claimsService.addPayout(dto);
-
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/{id}/payouts/{payoutId}")
-    public ResponseEntity<?> updatePayout(@PathVariable String id,
-                                                       @PathVariable String payoutId,
-                                                       @RequestBody ClaimPayoutDTO dto) throws ClaimException {
-        dto.setClaimId(id);
-        dto.setId(payoutId);
-
-        claimsService.updatePayout(dto);
-
-        return ResponseEntity
-                .noContent().build();
-    }
-
-    @DeleteMapping("/{id}/payouts/{payoutId}")
-    public ResponseEntity<?> removePayout(@PathVariable String id, @PathVariable String payoutId) throws ClaimException {
-        claimsService.removePayout(payoutId, id);
-
-        return ResponseEntity
-                .noContent().build();
-    }
-
-    @GetMapping("/{id}/notes")
-    public List<ClaimNoteDTO> claims(@PathVariable String id) throws ClaimException {
-        return claimsService.notes(id);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}/notes")
-    public ResponseEntity<ClaimNoteDTO> addNote(@PathVariable String id, @RequestBody @Valid ClaimNoteDTO dto,
-                                     @AuthenticationPrincipal String principal) throws ClaimException, AuthorizationException {
-        Personnel personnel = personnelRepository.findByEmail(principal).orElseThrow(AuthorizationException::new);
+    public ResponseEntity<?> addNote(@PathVariable String id, @RequestBody ClaimNote dto) throws ClaimException {
+        dto.setClaimID(id);
 
-        dto.setClaimId(id);
-        dto.setAdminId(personnel.getId());
-        dto.setDate(new Date().toInstant());
+        if(!claimsService.addNote(dto)) {
+            throw new ClaimsServiceException();
+        }
 
-        ClaimNoteDTO result = claimsService.addNote(dto);
-
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}/notes/{noteId}")
-    public ResponseEntity<?> removeNote(@PathVariable String id, @PathVariable String noteId) throws ClaimException {
-        claimsService.removeNote(noteId, id);
+    @PutMapping("/{id}/data")
+    public ResponseEntity<?> addData(@PathVariable String id, @RequestBody ClaimData dto) throws ClaimException {
+        dto.setClaimID(id);
+
+        if (!claimsService.addData(dto)) {
+            throw new ClaimsServiceException();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/status")
+    public ResponseEntity<?> state(@PathVariable String id, @RequestBody @Valid ClaimStateUpdate state)
+            throws ClaimException {
+        state.setClaimID(id);
+
+        if (!claimsService.changeState(state)) {
+            throw new ClaimsServiceException();
+        }
 
         return ResponseEntity
                 .noContent().build();
     }
+
+    @PostMapping("/{id}/reserve")
+    public ResponseEntity<?> reserve(@PathVariable String id, @RequestBody @Valid ClaimReserveUpdate reserve) throws ClaimException {
+        reserve.setClaimID(id);
+
+        if (!claimsService.changeReserve(reserve)) {
+            throw new ClaimsServiceException();
+        }
+
+        return ResponseEntity
+                .noContent().build();
+    }
+
+    @PostMapping("/{id}/type")
+    public ResponseEntity<?> type(@PathVariable String id, @RequestBody @Valid ClaimTypeUpdate type) throws ClaimException {
+        type.setClaimID(id);
+
+        if (!claimsService.changeType(type)) {
+            throw new ClaimsServiceException();
+        }
+
+        return ResponseEntity
+                .noContent().build();
+    }
+
 }
