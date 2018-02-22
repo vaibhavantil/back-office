@@ -8,9 +8,10 @@ import com.hedvig.backoffice.repository.PersonnelRepository;
 import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
+import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
-import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.members.MemberNotFoundException;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.MemberServiceException;
@@ -73,12 +74,15 @@ public class ChatServiceImpl implements ChatService {
         }
 
         try {
-            BotServiceMessage msg = new BotServiceMessage(message, true);
+            BotMessage msg = new BotMessage(message, true);
             messageUrlResolver.resolveUrls(msg);
             botService.response(hid, msg);
             expoNotificationService.sendNotification(hid);
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
+            logger.error("chat not updated hid = " + hid, e);
+        } catch (BotMessageException e) {
+            send(hid, Message.error(400, e.getMessage()));
             logger.error("chat not updated hid = " + hid, e);
         }
     }

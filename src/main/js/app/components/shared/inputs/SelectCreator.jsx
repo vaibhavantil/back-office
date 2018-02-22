@@ -138,6 +138,7 @@ export default class SelectCreator extends React.Component {
                 <TextInput
                     changeHandler={changeHandler}
                     cleanupForm={cleanupForm}
+                    label
                 />
                 <Form.Field>
                     <FormGroup>

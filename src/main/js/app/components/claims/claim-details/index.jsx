@@ -6,6 +6,7 @@ import BackLink from 'components/shared/link/BackLink';
 import ClaimInfo from '../claim-info/ClaimInfo';
 import Notes from '../notes/Notes';
 import Payments from '../payments/Payments';
+import EventsLog from '../events-log/EventsLog';
 
 const ClaimDetailsContainer = styled.div`
     max-width: 1000px;
@@ -17,29 +18,18 @@ export default class ClaimDetails extends React.Component {
     }
 
     componentDidMount() {
-        const {
-            match,
-            claimRequest,
-            claimTypes,
-            notesRequest,
-            paymentsRequest
-        } = this.props;
+        const { match, claimRequest, claimTypes } = this.props;
         const id = match.params.id;
         claimRequest(id);
         claimTypes();
-        notesRequest(id);
-        paymentsRequest(id);
     }
 
     render() {
         const {
             claimDetails,
             createNote,
-            removeNote,
-            updateResume,
+            updateReserve,
             createPayment,
-            updatePayment,
-            removePayment,
             match
         } = this.props;
         return (
@@ -47,22 +37,23 @@ export default class ClaimDetails extends React.Component {
                 <Header size="huge">Claim Details</Header>
 
                 <BackLink path="claims" />
-                {claimDetails.data ? <ClaimInfo {...this.props} /> : null}
-                <Notes
-                    notes={claimDetails.notes}
-                    removeNote={removeNote}
-                    createNote={createNote}
-                    id={match.params.id}
-                />
-                <Payments
-                    claimDetails={claimDetails}
-                    updateResume={updateResume}
-                    createPayment={createPayment}
-                    updatePayment={updatePayment}
-                    removePayment={removePayment}
-                    id={match.params.id}
-                    notes={claimDetails.notes}
-                />
+                {claimDetails.data ? (
+                    <React.Fragment>
+                        <ClaimInfo {...this.props} />
+                        <Notes
+                            notes={claimDetails.data.notes}
+                            createNote={createNote}
+                            id={match.params.id}
+                        />
+                        <Payments
+                            claimDetails={claimDetails}
+                            updateReserve={updateReserve}
+                            createPayment={createPayment}
+                            id={match.params.id}
+                        />
+                        <EventsLog events={claimDetails.data.events} />
+                    </React.Fragment>
+                ) : null}
             </ClaimDetailsContainer>
         );
     }
@@ -71,14 +62,9 @@ export default class ClaimDetails extends React.Component {
 ClaimDetails.propTypes = {
     claimDetails: PropTypes.object.isRequired,
     createNote: PropTypes.func.isRequired,
-    removeNote: PropTypes.func.isRequired,
-    updateResume: PropTypes.func.isRequired,
+    updateReserve: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
     claimRequest: PropTypes.func.isRequired,
     claimTypes: PropTypes.func.isRequired,
-    notesRequest: PropTypes.func.isRequired,
-    paymentsRequest: PropTypes.func.isRequired,
-    createPayment: PropTypes.func.isRequired,
-    updatePayment: PropTypes.func.isRequired,
-    removePayment: PropTypes.func.isRequired
+    createPayment: PropTypes.func.isRequired
 };

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,12 +42,12 @@ public class Message {
         return new Message(MessageType.ERROR, new Date().toInstant(), new ErrorMessage(code, msg));
     }
 
-    public static Message chat(List<BotServiceMessage> messages) {
+    public static Message chat(List<BotMessage> messages) {
         return new Message(MessageType.MESSAGE,
                 new Date().toInstant(),
                 new ChatMessages(messages.stream()
                         .filter(Objects::nonNull)
-                        .map(BotServiceMessage::getMessage)
+                        .map(BotMessage::getMessage)
                         .collect(Collectors.toList())));
     }
 

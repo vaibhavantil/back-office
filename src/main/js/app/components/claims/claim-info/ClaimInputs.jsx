@@ -14,6 +14,7 @@ export default {
             <TextInput
                 changeHandler={onChangeHandler}
                 cleanupForm={cleanupForm}
+                disabled={!!value}
                 value={value}
             />
         );
@@ -24,17 +25,19 @@ export default {
             <DateInput
                 changeHandler={onChangeHandler}
                 cleanupForm={cleanupForm}
-                value={value}
-                label
+                disabled={!!value}
+                date={value}
             />
         );
     },
 
-    [types.BOOL](onChangeHandler) {
+    [types.BOOL](onChangeHandler, cleanupForm, value) {
         return (
             <Dropdown
                 onChange={onChangeHandler.bind(this, types.BOOL)}
                 options={boolOptions}
+                value={value}
+                disabled={!!value}
                 selection
             />
         );
@@ -46,6 +49,7 @@ export default {
                 changeHandler={onChangeHandler}
                 cleanupForm={cleanupForm}
                 value={value}
+                disabled={!!value}
             />
         );
     }

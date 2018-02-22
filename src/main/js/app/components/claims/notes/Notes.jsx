@@ -4,16 +4,15 @@ import { Segment } from 'semantic-ui-react';
 import NewNote from './NewNote';
 import NotesList from './NotesList';
 
-const Notes = ({ createNote, removeNote, notes, id }) => (
+const Notes = ({ createNote, notes, id }) => (
     <Segment>
         <NewNote createNote={createNote} id={id} />
-        <NotesList notes={notes} removeNote={removeNote} claimId={id} />
+        <NotesList notes={notes} />
     </Segment>
 );
 
 Notes.propTypes = {
     createNote: PropTypes.func.isRequired,
-    removeNote: PropTypes.func.isRequired,
     notes: PropTypes.array.isRequired,
     id: PropTypes.string.isRequired
 };

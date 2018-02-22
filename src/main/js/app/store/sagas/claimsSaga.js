@@ -22,8 +22,14 @@ function* requestFlow() {
 function* updateFlow({ data, id, reqType }) {
     try {
         const token = yield call(getAuthToken);
-        const path = `${id}/${reqType}/${data.status || data.type}`;
-        yield call(api, token, config.claims.update, data, path);
+        const path = `${id}/${reqType}`;
+        yield call(
+            api,
+            token,
+            config.claims.update,
+            { userId: id, ...data },
+            path
+        );
         yield put(actions.claimUpdateSuccess(reqType, data));
     } catch (error) {
         yield put(actions.claimsRequestError(error));
