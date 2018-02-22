@@ -44,6 +44,10 @@ export default {
             url: 'claims',
             method: 'post'
         },
+        updateDetails: {
+            url: 'claims',
+            method: 'put'
+        },
         details: {
             get: {
                 url: 'claims',

@@ -59,18 +59,14 @@ export default class DateInput extends React.Component {
         });
     };
 
-    componentDidMount() {
-        if (!this.state.date && !this.props.date) {
-            this.setState({ date: moment() }, () => {
-                this.dateChangeHandler(this.state.date);
-            });
-        }
+    componentWillMount() {
+        this.setState({ date: moment(this.props.date || moment()) });
     }
 
     render() {
         return (
             <React.Fragment>
-                <Form.Field>
+                <Form.Field disabled={this.props.disabled}>
                     {this.props.label ? <label>Date</label> : null}
                     <WidgetContainer>
                         <DatePickerContainer>
@@ -96,8 +92,9 @@ export default class DateInput extends React.Component {
 }
 
 DateInput.propTypes = {
-    cleanupForm: PropTypes.bool,
-    date: PropTypes.object,
     changeHandler: PropTypes.func.isRequired,
-    label: PropTypes.bool
+    cleanupForm: PropTypes.bool,
+    date: PropTypes.string,
+    label: PropTypes.bool,
+    disabled: PropTypes.bool
 };

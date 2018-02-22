@@ -8,7 +8,7 @@ import ClaimTypeFields from './ClaimTypeFields';
 export default class ClaimInfo extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
+        this.status = {
             status: 'OPEN'
         };
     }
@@ -22,10 +22,7 @@ export default class ClaimInfo extends React.Component {
     componentDidMount() {
         const { userRequest, claimDetails: { data } } = this.props;
         if (data.userId) userRequest(data.userId);
-        this.setState({
-            status: data.status,
-            type: data.type
-        });
+        this.setState({ status: data.state });
     }
 
     render() {
@@ -37,7 +34,7 @@ export default class ClaimInfo extends React.Component {
             claimUpdate,
             claimDetailsUpdate
         } = this.props;
-        const { status } = this.state;
+        const { status } = this.status;
         return (
             <React.Fragment>
                 <Segment>
@@ -48,7 +45,7 @@ export default class ClaimInfo extends React.Component {
                         </Grid.Row>
                         <Grid.Row>User: {user && user.firstName}</Grid.Row>
                         <Grid.Row>
-                            <audio src={data.url} controls />
+                            <a href={data.audioURL} target="_blank">file</a>
                         </Grid.Row>
                     </Grid>
 

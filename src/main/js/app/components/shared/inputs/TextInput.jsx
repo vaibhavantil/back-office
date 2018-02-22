@@ -29,11 +29,12 @@ export default class TextInput extends React.Component {
     render() {
         return (
             <Form.Field>
-                <label>Text</label>
+                {this.props.label ? <label>Text</label> : null}
                 <TextArea
                     autoHeight
                     onChange={this.textChangeHandler}
                     value={this.state.textValue}
+                    disabled={this.props.disabled}
                 />
             </Form.Field>
         );
@@ -43,5 +44,7 @@ export default class TextInput extends React.Component {
 TextInput.propTypes = {
     changeHandler: PropTypes.func.isRequired,
     cleanupForm: PropTypes.bool,
-    value: PropTypes.string
+    disabled: PropTypes.bool,
+    value: PropTypes.string,
+    label: PropTypes.bool
 };

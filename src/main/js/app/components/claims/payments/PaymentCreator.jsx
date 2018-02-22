@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Modal } from 'semantic-ui-react';
+import moment from 'moment';
 
 export default class PaymentCreator extends React.Component {
     constructor(props) {
@@ -8,7 +9,7 @@ export default class PaymentCreator extends React.Component {
         this.state = {
             note: '',
             amount: '',
-            exg: false,
+            exGratia: false,
             open: false
         };
     }
@@ -17,16 +18,21 @@ export default class PaymentCreator extends React.Component {
 
     noteInputhandler = (e, { value }) => this.setState({ note: value });
 
-    checkboxHandler = () => this.setState({ exg: !this.state.exg });
+    checkboxHandler = () => this.setState({ exGratia: !this.state.exg });
 
     createPayment = () => {
         const { createPayment, id } = this.props;
-        const { exg, amount, note } = this.state;
-        createPayment(id, { exg, amount, note });
+        const { exGratia, amount, note } = this.state;
+        createPayment(id, {
+            exGratia,
+            amount,
+            note,
+            date: moment().unix()
+        });
         this.setState({
             note: '',
             amount: '',
-            exg: false,
+            exGratia: false,
             open: false
         });
     };
