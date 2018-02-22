@@ -74,7 +74,7 @@ public class ClaimsController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/status")
+    @PostMapping("/{id}/state")
     public ResponseEntity<?> state(@PathVariable String id, @RequestBody @Valid ClaimStateUpdate state)
             throws ClaimException {
         state.setClaimID(id);
