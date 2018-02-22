@@ -7,12 +7,15 @@ tracker:
   stub: true
 
 botservice:
-  stub: true
+  stub: false
 
 memberservice:
   stub: true
 
 claims:
+  stub: true
+
+expo:
   stub: true
 
 jwt:
