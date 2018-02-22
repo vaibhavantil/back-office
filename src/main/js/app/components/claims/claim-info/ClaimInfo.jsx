@@ -16,7 +16,7 @@ export default class ClaimInfo extends React.Component {
     statusChangeHandler = (e, { value }) => {
         const { match: { params }, claimUpdate } = this.props;
         this.setState({ status: value });
-        claimUpdate(params.id, { status: value }, 'status');
+        claimUpdate(params.id, { state: value }, 'status');
     };
 
     componentDidMount() {
