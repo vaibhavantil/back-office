@@ -7,7 +7,7 @@ tracker:
   stub: true
 
 botservice:
-  stub: false
+  stub: true
 
 memberservice:
   stub: true

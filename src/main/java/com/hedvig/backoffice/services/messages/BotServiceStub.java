@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.services.messages;
 
 import com.hedvig.backoffice.repository.SubscriptionRepository;
-import com.hedvig.backoffice.services.messages.data.PushTokenDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import org.slf4j.Logger;
