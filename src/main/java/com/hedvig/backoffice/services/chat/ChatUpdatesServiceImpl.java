@@ -3,10 +3,11 @@ package com.hedvig.backoffice.services.chat;
 import com.hedvig.backoffice.domain.SystemSetting;
 import com.hedvig.backoffice.domain.SystemSettingType;
 import com.hedvig.backoffice.services.chat.data.Message;
+import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
-import com.hedvig.backoffice.services.messages.data.BackOfficeMessage;
-import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
+import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import com.hedvig.backoffice.services.updates.UpdateType;
 import com.hedvig.backoffice.services.updates.UpdatesService;
@@ -62,11 +63,11 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         logger.info("bot-service: fetched " + messages.size() + " messages");
         updatesService.append(messages.size(), UpdateType.CHATS);
 
-        Map<String, List<BotServiceMessage>> updates = messages.stream()
+        Map<String, List<BotMessage>> updates = messages.stream()
                 .collect(Collectors.groupingBy(BackOfficeMessage::getUserId, Collectors.mapping(m -> {
                     try {
-                        return new BotServiceMessage(m.getMsg(), false);
-                    } catch (BotServiceException e) {
+                        return new BotMessage(m.getMsg(), false);
+                    } catch (BotMessageException e) {
                         logger.error("Error during parsing message from bot-service", e);
                     }
                     return null;
@@ -74,8 +75,8 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
 
         Instant lastTimestamp = updates.values().stream()
                 .flatMap(Collection::stream)
-                .max(Comparator.comparing(BotServiceMessage::getTimestamp))
-                .map(BotServiceMessage::getTimestamp)
+                .max(Comparator.comparing(BotMessage::getTimestamp))
+                .map(BotMessage::getTimestamp)
                 .orElse(new Date().toInstant());
 
         setting.setValue(lastTimestamp.plusMillis(1).toString());

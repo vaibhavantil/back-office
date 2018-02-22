@@ -1,8 +1,8 @@
 package com.hedvig.backoffice.services.messages;
 
 import com.hedvig.backoffice.repository.SubscriptionRepository;
-import com.hedvig.backoffice.services.messages.data.BackOfficeMessage;
-import com.hedvig.backoffice.services.messages.data.BotServiceMessage;
+import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
+import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +83,7 @@ public class BotServiceStub implements BotService {
 
     private final SubscriptionRepository subscriptionRepository;
 
-    private ConcurrentHashMap<String, List<BotServiceMessage>> messages;
+    private ConcurrentHashMap<String, List<BotMessage>> messages;
     private ConcurrentHashMap<String, Instant> timestamps;
     private AtomicLong increment;
 
@@ -102,8 +102,8 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<BotServiceMessage> messages(String hid) throws BotServiceException {
-        List<BotServiceMessage> current = messages.computeIfAbsent(hid, k -> new ArrayList<>());
+    public List<BotMessage> messages(String hid) throws BotServiceException {
+        List<BotMessage> current = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         Instant time = new Date().toInstant();
         Instant timestamp = timestamps.computeIfAbsent(hid, k -> new Date().toInstant());
 
@@ -111,22 +111,26 @@ public class BotServiceStub implements BotService {
             timestamps.put(hid, new Date().toInstant());
             String type = typeNames.get(current.size() % typeNames.size());
 
-            current.add(new BotServiceMessage(String.format(STUB_MESSAGE_TEMPLATE,
-                    increment.addAndGet(1),
-                    current.size(),
-                    hid,
-                    type,
-                    current.size(),
-                    typesTemplates.get(type),
-                    time.toString())));
+            try {
+                current.add(new BotMessage(String.format(STUB_MESSAGE_TEMPLATE,
+                        increment.addAndGet(1),
+                        current.size(),
+                        hid,
+                        type,
+                        current.size(),
+                        typesTemplates.get(type),
+                        time.toString())));
+            } catch (BotMessageException e) {
+                logger.error("error creating message", e);
+            }
         }
 
         return current;
     }
 
     @Override
-    public List<BotServiceMessage> messages(String hid, int count) throws BotServiceException {
-        List<BotServiceMessage> all = messages(hid);
+    public List<BotMessage> messages(String hid, int count) throws BotServiceException {
+        List<BotMessage> all = messages(hid);
         if (all.size() <= count) {
             return all;
         }
@@ -141,7 +145,7 @@ public class BotServiceStub implements BotService {
                 .stream()
                 .flatMap(e -> {
                     String hid = e.getKey();
-                    List<BotServiceMessage> messages = e.getValue();
+                    List<BotMessage> messages = e.getValue();
                     return messages
                             .stream()
                             .filter(Objects::nonNull)
@@ -153,8 +157,8 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public void response(String hid, BotServiceMessage message) throws BotServiceException {
-        List<BotServiceMessage> msg = messages.computeIfAbsent(hid, k -> new ArrayList<>());
+    public void response(String hid, BotMessage message) throws BotServiceException {
+        List<BotMessage> msg = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         message.setGlobalId(increment.addAndGet(1));
         message.setMessageId((long) msg.size());
 
