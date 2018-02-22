@@ -1,22 +1,22 @@
 /**
  * Filter array of objects by obj field
  * @param {string} filter filter name
- * @param {array} list 
- * @param {string} fieldName 
+ * @param {array} list
+ * @param {string} fieldName
  */
 export const filterList = (filter, list, fieldName) =>
     list.filter(item => item[fieldName] === filter);
 
 /**
  * Sort arary by field name
- * @param {string} key 
+ * @param {string} key
  */
 export const sortByKey = key => (a, b) => a[key] - b[key];
 
 /**
  * Updating message in array of messages by global id
- * @param {array} list 
- * @param {array} msg 
+ * @param {array} list
+ * @param {array} msg
  */
 export const updateList = (list, msg) => {
     if (msg.length > 1) {
@@ -34,8 +34,8 @@ export const updateList = (list, msg) => {
 };
 
 /**
- * Slice array 
- * @param {array} list array 
+ * Slice array
+ * @param {array} list array
  * @param {number} size slice size
  */
 export const sliceList = (list, size = 100) =>
@@ -43,8 +43,8 @@ export const sliceList = (list, size = 100) =>
 
 /**
  * Refreshing array of messages in chat
- * @param {array} list 
- * @param {object} message 
+ * @param {array} list
+ * @param {object} message
  * @param {number} size slice size
  */
 export const refreshMessagesList = (list, message, size) => {
@@ -58,7 +58,7 @@ export const setNewMessagesCounter = (users /* counters */) => users;
 
 /**
  * Updating array of claims types
- * @param {array} list 
+ * @param {array} list
  */
 export const updateTypesList = list =>
     list.map(item => {
@@ -70,23 +70,52 @@ export const updateTypesList = list =>
 
 /**
  * Calc sum of claim payments
- * @param {array} list 
+ * @param {array} list
  */
 export const getSum = list =>
     list.reduce((sum, payment) => sum + payment.amount, 0);
 
-export const getActiveType = (types, typeName) =>
-    types.find(item => item.name === typeName);
-
-export const updatePayments = (list, updated) =>
-    list.map(
-        item =>
-            item.id === updated.id ? { ...item, amount: updated.amount } : item
-    );
+const setFieldsValues = (fields, data) =>
+    fields.map(item => {
+        const fieldInClaimData = data.find(data => data.name === item.name);
+        if (fieldInClaimData) {
+            return {
+                ...item,
+                value: fieldInClaimData.value,
+                received: fieldInClaimData.received
+            };
+        } else {
+            return item;
+        }
+    });
 
 /**
- * Hidding inactive users on first render 
- * @param {object} param0 -  
+ * Returns updated type object
+ * @param {array} types
+ * @param {object} claimData
+ */
+export const getActiveType = (types, claimData) => {
+    const activeType = types.find(item => item.name === claimData.type);
+
+    const requiredData = setFieldsValues(
+        activeType.requiredData,
+        claimData.data
+    );
+    const optionalData = setFieldsValues(
+        activeType.optionalData,
+        claimData.data
+    );
+
+    return {
+        ...activeType,
+        requiredData,
+        optionalData
+    };
+};
+
+/**
+ * Hidding inactive users on first render
+ * @param {object} param0 -
  */
 export const filterUsersList = ({ type, users }) =>
     type !== 'USERS_REQUEST_SUCCESS'

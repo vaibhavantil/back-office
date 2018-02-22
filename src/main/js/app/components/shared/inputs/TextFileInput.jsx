@@ -5,7 +5,7 @@ import TextInput from './TextInput';
 
 const TextFileInput = ({ changeHandler, type, cleanupForm }) => (
     <React.Fragment>
-        <TextInput changeHandler={changeHandler} cleanupForm={cleanupForm} />
+        <TextInput changeHandler={changeHandler} cleanupForm={cleanupForm} label />
         <FileInput
             changeHandler={changeHandler}
             type={type}

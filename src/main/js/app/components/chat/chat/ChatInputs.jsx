@@ -15,6 +15,7 @@ export default {
             <TextInput
                 changeHandler={onChangeHandler}
                 cleanupForm={cleanupForm}
+                label
             />
         );
     },
@@ -29,6 +30,7 @@ export default {
                 <TextInput
                     changeHandler={onChangeHandler}
                     cleanupForm={cleanupForm}
+                    label
                 />
                 <DateInput
                     changeHandler={onChangeHandler}

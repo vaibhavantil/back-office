@@ -7,6 +7,7 @@ import {
     getActiveType,
     getClaimFieldsData
 } from 'app/lib/helpers';
+
 export default class ClaimTypeFields extends React.Component {
     constructor(props) {
         super(props);
@@ -27,28 +28,30 @@ export default class ClaimTypeFields extends React.Component {
             fieldName,
             value
         );
+        const cleanedFields = fieldsData[fieldType].filter(
+            item => item.name !== fieldName
+        );
         this.setState({
             fieldsData: {
                 ...fieldsData,
-                [fieldType]: newState
+                [fieldType]: value.length ? newState : cleanedFields
             }
         });
     };
 
     submitTypeChanges = () => {
-        const { claimId, claimDetailsUpdate, claimTypeUpdate } = this.props;
-        const { type, fieldsData } = this.state;
-        claimTypeUpdate(claimId, { type: type.name }, 'type');
+        const { claimId, claimDetailsUpdate } = this.props;
+        const { fieldsData } = this.state;
         claimDetailsUpdate(claimId, fieldsData, 'type');
+        this.setState({
+            fieldsData: { optionalData: [], requiredData: [] }
+        });
     };
 
     typeChangeHandler = (e, { value }) => {
-        const { claimId, claimTypeUpdate } = this.props;
-        const { type, types } = this.state;
-        if (!type) {
+        const { claimId, claimTypeUpdate, claimInfo } = this.props;
+        if (!claimInfo.type) {
             claimTypeUpdate(claimId, { type: value }, 'type');
-        } else {
-            this.setState({ type: getActiveType(types, value) });
         }
     };
 
@@ -86,24 +89,28 @@ export default class ClaimTypeFields extends React.Component {
         ));
     };
 
-    setActiveType = (types, claimType) => {
-        const activeType = getActiveType(types, claimType);
-        this.setState({ type: activeType });
-    };
-
     componentWillMount() {
         const { types, claimInfo } = this.props;
-        this.setActiveType(types, claimInfo.type);
+        const activeType = claimInfo.type
+            ? getActiveType(types, claimInfo)
+            : null;
+        this.setState({ type: activeType });
     }
 
     componentWillReceiveProps({ types, claimInfo }) {
         if (claimInfo.type) {
-            this.setActiveType(types, claimInfo.type);
+            const activeType = claimInfo.type
+                ? getActiveType(types, claimInfo)
+                : null;
+            this.setState({ type: activeType });
         }
     }
 
     render() {
         const { types, claimInfo: { type } } = this.props;
+        const { fieldsData } = this.state;
+        const isDisabled =
+            !fieldsData.requiredData.length && !fieldsData.optionalData.length;
         const updatedTypes = updateTypesList(types.slice());
         return (
             <React.Fragment>
@@ -114,6 +121,7 @@ export default class ClaimTypeFields extends React.Component {
                     placeholder="Type"
                     selection
                     value={type}
+                    disabled={!!type}
                 />
                 {type && (
                     <React.Fragment>
@@ -121,7 +129,11 @@ export default class ClaimTypeFields extends React.Component {
                         {this.getFieldsList('requiredData')}
                         <h3>Additional fields:</h3>
                         {this.getFieldsList('optionalData')}
-                        <Button primary onClick={this.submitTypeChanges}>
+                        <Button
+                            primary
+                            onClick={this.submitTypeChanges}
+                            disabled={isDisabled}
+                        >
                             Save
                         </Button>
                     </React.Fragment>

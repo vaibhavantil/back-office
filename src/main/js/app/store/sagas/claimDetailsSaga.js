@@ -27,6 +27,7 @@ function* detailsUpdateFlow(id, data) {
             { ...data, userId: token },
             path
         );
+        return data;
     } catch (error) {
         yield put(actions.claimRequestError(error));
     }

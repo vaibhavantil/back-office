@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Checkbox } from 'semantic-ui-react';
+import { Checkbox, Form } from 'semantic-ui-react';
 import claimInputs from './ClaimInputs';
 import * as types from 'app/lib/claimFieldsTypes';
 
@@ -14,7 +14,7 @@ const FieldRow = styled.div`
     min-height: 60px;
 `;
 
-const InputContainer = styled.div`
+const InputContainer = styled(Form)`
     width: 300px;
     margin-left: auto;
 `;
@@ -47,13 +47,24 @@ export default class ClaimInfoField extends React.Component {
         return <InputContainer>{input}</InputContainer>;
     };
 
+    componentWillMount() {
+        if (this.props.field.value) {
+            this.setState({ inputIsVisible: true });
+        }
+    }
+
     render() {
         const { field } = this.props;
         const { inputIsVisible } = this.state;
         return (
             <React.Fragment>
                 <FieldRow>
-                    <Checkbox label={field.name} onChange={this.toggleInput} />
+                    <Checkbox
+                        label={field.name}
+                        onChange={this.toggleInput}
+                        disabled={!!field.value}
+                        checked={inputIsVisible}
+                    />
                     {inputIsVisible ? this.getInput(types[field.type]) : null}
                 </FieldRow>
             </React.Fragment>

@@ -9,7 +9,8 @@ import {
     UPDATE_RESUME_SUCCESS,
     CREATE_PAYMENT_SUCCESS,
     CLAIM_DETAILS_UPDATING,
-    CLAIM_UPDATE_SUCCESS
+    CLAIM_UPDATE_SUCCESS,
+    CLAIM_DETAILS_UPDATE_SUCCESS
 } from '../constants/claims';
 
 export default function(state = initialState.claimDetails, action) {
@@ -81,6 +82,15 @@ export default function(state = initialState.claimDetails, action) {
                 data: {
                     ...state.data,
                     [action.reqType]: action.data[action.reqType]
+                }
+            };
+
+        case CLAIM_DETAILS_UPDATE_SUCCESS:
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    data: [...state.data.data, ...action.data]
                 }
             };
 

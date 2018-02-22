@@ -45,7 +45,7 @@ export default class ClaimInfo extends React.Component {
                         </Grid.Row>
                         <Grid.Row>User: {user && user.firstName}</Grid.Row>
                         <Grid.Row>
-                            <audio src={data.url} controls />
+                            <a href={data.audioURL} target="_blank">file</a>
                         </Grid.Row>
                     </Grid>
 

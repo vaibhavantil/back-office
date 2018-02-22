@@ -6,6 +6,7 @@ import BackLink from 'components/shared/link/BackLink';
 import ClaimInfo from '../claim-info/ClaimInfo';
 import Notes from '../notes/Notes';
 import Payments from '../payments/Payments';
+import EventsLog from '../events-log/EventsLog';
 
 const ClaimDetailsContainer = styled.div`
     max-width: 1000px;
@@ -50,6 +51,7 @@ export default class ClaimDetails extends React.Component {
                             createPayment={createPayment}
                             id={match.params.id}
                         />
+                        <EventsLog events={claimDetails.data.events} />
                     </React.Fragment>
                 ) : null}
             </ClaimDetailsContainer>
