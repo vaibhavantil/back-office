@@ -20,56 +20,18 @@ public class ClaimsServiceImpl implements ClaimsService {
 
     private static Logger logger = LoggerFactory.getLogger(ClaimsServiceImpl.class);
 
-    private final String baseUrl;
-    private final String claims;
-    private final String claimById;
-    private final String claimTypes;
-    private final String paymentUrl;
-    private final String noteUrl;
-    private final String dataUrl;
-    private final String stateUrl;
-    private final String reserveUrl;
-    private final String typeUrl;
-
     private final RestTemplate template;
+    private final ClaimsServiceConfig config;
 
     @Autowired
-    public ClaimsServiceImpl(@Value("${claims.baseUrl}") String baseUrl,
-                             @Value("${claims.urls.claims}") String claims,
-                             @Value("${claims.urls.claimById}") String claimById,
-                             @Value("${claims.urls.claimTypes}") String claimTypes,
-                             @Value("${claims.urls.payment}") String paymentUrl,
-                             @Value("${claims.urls.note}") String noteUrl,
-                             @Value("${claims.urls.data}") String dataUrl,
-                             @Value("${claims.urls.state}") String stateUrl,
-                             @Value("${claims.urls.reserve}") String reserveUrl,
-                             @Value("${claims.urls.type}") String typeUrl) {
+    public ClaimsServiceImpl(ClaimsServiceConfig config) {
 
-        this.baseUrl = baseUrl;
-        this.claims = claims;
-        this.claimById = claimById;
-        this.claimTypes = claimTypes;
-        this.paymentUrl = paymentUrl;
-        this.noteUrl = noteUrl;
-        this.dataUrl = dataUrl;
-        this.stateUrl = stateUrl;
-        this.reserveUrl = reserveUrl;
-        this.typeUrl = typeUrl;
-
+        this.config = config;
         this.template = new RestTemplate();
 
         logger.info("CLAIMS SERVICE:");
         logger.info("class: " + ClaimsServiceImpl.class.getName());
-        logger.info("base: " + baseUrl);
-        logger.info("claims: " + claims);
-        logger.info("id: " + claimById);
-        logger.info("types: " + claimTypes);
-        logger.info("payment: " + paymentUrl);
-        logger.info("note: " + noteUrl);
-        logger.info("data: " + dataUrl);
-        logger.info("state: " + stateUrl);
-        logger.info("reserve: " + reserveUrl);
-        logger.info("type: " + typeUrl);
+        logger.info(config.toString());
     }
 
     @HystrixCommand(fallbackMethod = "listFallback", commandProperties = {
@@ -77,7 +39,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
     public List<Claim> list() {
-        ResponseEntity<Claim[]> response = template.getForEntity(baseUrl + claims, Claim[].class);
+        ResponseEntity<Claim[]> response = template.getForEntity(config.getBaseUrl() + config.getUrls().getClaims(), Claim[].class);
         return Arrays.stream(response.getBody())
                 .collect(Collectors.toList());
     }
@@ -94,7 +56,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     @Override
     public Claim find(String id) throws ClaimException {
         try {
-            ResponseEntity<Claim> response = template.getForEntity(baseUrl + claimById + "?claimID=" + id, Claim.class);
+            ResponseEntity<Claim> response = template.getForEntity(config.getBaseUrl() + config.getUrls().getClaimById() + "?claimID=" + id, Claim.class);
             return response.getBody();
         } catch (HttpClientErrorException e) {
             throw new ClaimBadRequestException(e);
@@ -111,7 +73,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
     public List<ClaimType> types() {
-        ResponseEntity<ClaimType[]> response = template.getForEntity(baseUrl + claimTypes, ClaimType[].class);
+        ResponseEntity<ClaimType[]> response = template.getForEntity(config.getBaseUrl() + config.getUrls().getClaimTypes(), ClaimType[].class);
         return Arrays.asList(response.getBody());
     }
 
@@ -127,7 +89,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     @Override
     public boolean addPayment(ClaimPayment dto) throws ClaimException {
         try {
-            template.postForEntity(baseUrl + paymentUrl, dto, Void.class);
+            template.postForEntity(config.getBaseUrl() + config.getUrls().getPayment(), dto, Void.class);
         } catch (HttpClientErrorException e) {
             throw new ClaimBadRequestException(e);
         }
@@ -146,7 +108,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     @Override
     public boolean addNote(ClaimNote dto) throws ClaimException {
         try {
-            template.postForEntity(baseUrl + noteUrl, dto, Void.class);
+            template.postForEntity(config.getBaseUrl() + config.getUrls().getNote(), dto, Void.class);
         } catch (HttpClientErrorException e) {
             throw new ClaimBadRequestException(e);
         }
@@ -165,7 +127,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     @Override
     public boolean addData(ClaimData data) throws ClaimException {
         try {
-            template.postForEntity(baseUrl + dataUrl, data, Void.class);
+            template.postForEntity(config.getBaseUrl() + config.getUrls().getData(), data, Void.class);
         } catch (HttpClientErrorException e) {
             throw new ClaimBadRequestException(e);
         }
@@ -184,7 +146,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     @Override
     public boolean changeState(ClaimStateUpdate state) throws ClaimException {
         try {
-            template.postForEntity(baseUrl + stateUrl, state, Void.class);
+            template.postForEntity(config.getBaseUrl() + config.getUrls().getState(), state, Void.class);
         } catch (HttpClientErrorException e) {
             throw new ClaimBadRequestException(e);
         }
@@ -203,7 +165,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     @Override
     public boolean changeReserve(ClaimReserveUpdate reserve) throws ClaimException {
         try {
-            template.postForEntity(baseUrl + reserveUrl, reserve, Void.class);
+            template.postForEntity(config.getBaseUrl() + config.getUrls().getReserve(), reserve, Void.class);
         } catch (HttpClientErrorException e) {
             throw new ClaimBadRequestException(e);
         }
@@ -222,7 +184,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     @Override
     public boolean changeType(ClaimTypeUpdate type) throws ClaimException {
         try {
-            template.postForEntity(baseUrl + typeUrl, type, Void.class);
+            template.postForEntity(config.getBaseUrl() + config.getUrls().getType(), type, Void.class);
         } catch (HttpClientErrorException e) {
             throw new ClaimBadRequestException(e);
         }
