@@ -63,6 +63,12 @@ export default {
             }
         }
     },
+    questions: {
+        get: {
+            url: 'questions',
+            method: 'get'
+        }
+    },
     ws: {
         // eslint-disable-next-line
         endpoint: DEV ? 'http://localhost:8080/chat' : '/chat',

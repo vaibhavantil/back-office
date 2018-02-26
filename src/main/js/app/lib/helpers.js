@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 /**
  * Filter array of objects by obj field
  * @param {string} filter filter name
@@ -147,3 +149,18 @@ export const getClaimFieldsData = (
           )
         : [...fieldsData, { ...fieldObj, value }];
 };
+
+/**
+ * Sort array of questions by dates and answers
+ * @param {Array} questions array of questions
+ */
+export const sortQuestions = questions =>
+    questions
+        .sort((a, b) => {
+            const firstDate = a.date.slice(0, -1);
+            const secondDate = b.date.slice(0, -1);
+            moment(firstDate)
+                .utc()
+                .diff(moment(secondDate).utc());
+        })
+        .sort((a, b) => a.answer - b.answer);

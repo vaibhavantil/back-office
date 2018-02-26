@@ -6,16 +6,16 @@ import Questions from 'components/questions';
 
 const QuestionsPage = props => <Questions {...props} />;
 
-const mapStateToProps = ({ client, users, messages }) => ({
+const mapStateToProps = ({ client, questions, messages }) => ({
     client,
-    users,
+    questions,
     messages
 });
 
 export default withRouter(
     connect(mapStateToProps, {
         ...actions.clientActions,
-        ...actions.chatUserActions,
+        ...actions.questionsActions,
         ...actions.messagesActions
     })(QuestionsPage)
 );
