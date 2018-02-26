@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -31,7 +31,7 @@ public class Question {
     @NotNull
     private String hid;
 
-    private LocalDateTime timestamp;
+    private Instant timestamp;
 
     public Question(String hid, String message) {
         this.hid = hid;

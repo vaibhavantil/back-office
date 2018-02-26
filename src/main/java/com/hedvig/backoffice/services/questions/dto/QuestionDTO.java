@@ -10,7 +10,7 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 @Data
@@ -24,7 +24,7 @@ public class QuestionDTO {
     private JsonNode answer;
     private PersonnelDTO personnel;
     private String hid;
-    private LocalDateTime date;
+    private Instant date;
 
     public QuestionDTO(String hid, JsonNode message) {
         this.hid = hid;
