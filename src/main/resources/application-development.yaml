@@ -15,6 +15,9 @@ memberservice:
 claims:
   stub: true
 
+expo:
+  stub: true
+
 jwt:
   enabled: true
 

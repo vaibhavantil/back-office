@@ -175,4 +175,9 @@ public class BotServiceStub implements BotService {
             }
         });
     }
+
+	@Override
+	public String pushTokenId(String hid) {
+		return "";
+	}
 }

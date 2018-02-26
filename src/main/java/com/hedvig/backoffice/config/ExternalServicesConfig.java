@@ -7,6 +7,9 @@ import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.ClaimsServiceConfig;
 import com.hedvig.backoffice.services.claims.ClaimsServiceImpl;
 import com.hedvig.backoffice.services.claims.ClaimsServiceStub;
+import com.hedvig.backoffice.services.expo.ExpoNotificationService;
+import com.hedvig.backoffice.services.expo.ExpoNotificationServiceImpl;
+import com.hedvig.backoffice.services.expo.ExpoNotificationServiceStub;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceImpl;
 import com.hedvig.backoffice.services.messages.BotServiceStub;
@@ -64,6 +67,14 @@ public class ExternalServicesConfig {
         return config.isStub()
                 ? factory.createBean(ClaimsServiceStub.class)
                 : factory.createBean(ClaimsServiceImpl.class);
+    }
+
+    @Bean
+    public ExpoNotificationService expoNotificationService(@Value("${expo.stub:false}") boolean stub) {
+        val factory = context.getAutowireCapableBeanFactory();
+        return stub
+                ? factory.createBean(ExpoNotificationServiceStub.class)
+                : factory.createBean(ExpoNotificationServiceImpl.class);
     }
 
 }

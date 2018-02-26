@@ -7,6 +7,7 @@ import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.repository.PersonnelRepository;
 import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
+import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
@@ -37,6 +38,7 @@ public class ChatServiceImpl implements ChatService {
     private final PersonnelRepository personnelRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final MessageUrlResolver messageUrlResolver;
+    private final ExpoNotificationService expoNotificationService;
 
     public ChatServiceImpl(SimpMessagingTemplate template,
                            BotService botService,
@@ -44,7 +46,8 @@ public class ChatServiceImpl implements ChatService {
                            ChatContextRepository chatContextRepository,
                            PersonnelRepository personnelRepository,
                            SubscriptionRepository subscriptionRepository,
-                           MessageUrlResolver messageUrlResolver) {
+                           MessageUrlResolver messageUrlResolver,
+                           ExpoNotificationService expoNotificationService) {
 
         this.template = template;
         this.botService = botService;
@@ -53,6 +56,7 @@ public class ChatServiceImpl implements ChatService {
         this.personnelRepository = personnelRepository;
         this.subscriptionRepository = subscriptionRepository;
         this.messageUrlResolver = messageUrlResolver;
+        this.expoNotificationService = expoNotificationService;
     }
 
     @Override
@@ -73,6 +77,7 @@ public class ChatServiceImpl implements ChatService {
             BotMessage msg = new BotMessage(message, true);
             messageUrlResolver.resolveUrls(msg);
             botService.response(hid, msg);
+            expoNotificationService.sendNotification(hid);
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
             logger.error("chat not updated hid = " + hid, e);
