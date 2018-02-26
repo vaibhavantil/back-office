@@ -3,8 +3,7 @@ package com.hedvig.backoffice.services.questions;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Question;
 import com.hedvig.backoffice.repository.QuestionRepository;
-import com.hedvig.backoffice.services.messages.BotService;
-import com.hedvig.backoffice.services.messages.BotServiceException;
+import com.hedvig.backoffice.services.chat.ChatService;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 import org.slf4j.Logger;
@@ -23,12 +22,12 @@ public class QuestionServiceImpl implements QuestionService {
     private static Logger logger = LoggerFactory.getLogger(QuestionServiceImpl.class);
 
     private final QuestionRepository questionRepository;
-    private final BotService botService;
+    private final ChatService chatService;
 
     @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository, BotService botService) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, ChatService chatService) {
         this.questionRepository = questionRepository;
-        this.botService = botService;
+        this.chatService = chatService;
     }
 
     @Override
@@ -46,18 +45,15 @@ public class QuestionServiceImpl implements QuestionService {
         Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new QuestionNotFoundException("question with id " + id + " not found"));
 
-        try {
-            botService.response(question.getHid(), message);
-        } catch (BotServiceException e) {
-            logger.error("response failed", e);
+        if (!chatService.append(question.getHid(), message)) {
             return false;
         }
 
         question.setAnswer(message.getMessage().toString());
         question.setPersonnel(personnel);
         question.setTimestamp(LocalDateTime.now());
-
         questionRepository.save(question);
+
         return true;
     }
 
