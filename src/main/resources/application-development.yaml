@@ -7,6 +7,7 @@ tracker:
   stub: true
 
 botservice:
+  questionId: mock.id
   stub: true
 
 memberservice:
