@@ -8,6 +8,8 @@ import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.questions.QuestionService;
+import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import com.hedvig.backoffice.services.updates.UpdateType;
 import com.hedvig.backoffice.services.updates.UpdatesService;
@@ -29,17 +31,20 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     private final BotService botService;
     private final UpdatesService updatesService;
     private final SystemSettingsService systemSettingsService;
+    private final QuestionService questionService;
 
     @Autowired
     public ChatUpdatesServiceImpl(ChatService chatService,
                                   BotService botService,
                                   UpdatesService updatesService,
-                                  SystemSettingsService systemSettingsService) {
+                                  SystemSettingsService systemSettingsService,
+                                  QuestionService questionService) {
 
         this.chatService = chatService;
         this.botService = botService;
         this.updatesService = updatesService;
         this.systemSettingsService = systemSettingsService;
+        this.questionService = questionService;
     }
 
     @Override
@@ -83,5 +88,9 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         systemSettingsService.saveSetting(setting);
 
         updates.forEach((k, v) -> chatService.send(k, Message.chat(v)));
+
+        questionService.save(messages.stream()
+                .map(m -> new QuestionDTO(m.getUserId(), m.getMsg()))
+                .collect(Collectors.toList()));
     }
 }
