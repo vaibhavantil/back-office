@@ -39,6 +39,24 @@ public class QuestionServiceImpl implements QuestionService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<QuestionDTO> answered() {
+        return questionRepository
+                .answered()
+                .stream()
+                .map(QuestionDTO::fromDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<QuestionDTO> notAnswered() {
+        return questionRepository
+                .notAnswered()
+                .stream()
+                .map(QuestionDTO::fromDomain)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     @Override
     public boolean answer(Long id, BotMessage message, Personnel personnel) throws QuestionNotFoundException {

@@ -9,6 +9,8 @@ import java.util.List;
 public interface QuestionService {
 
     List<QuestionDTO> list();
+    List<QuestionDTO> answered();
+    List<QuestionDTO> notAnswered();
     boolean answer(Long id, BotMessage message, Personnel personnel) throws QuestionNotFoundException;
     void save(List<QuestionDTO> questions);
 

@@ -35,6 +35,16 @@ public class QuestionController {
         return questionService.list();
     }
 
+    @GetMapping("/answered")
+    public List<QuestionDTO> answered() {
+        return questionService.answered();
+    }
+
+    @GetMapping("/not-answered")
+    public List<QuestionDTO> notAnswered() {
+        return questionService.notAnswered();
+    }
+
     @PutMapping("/answer/{id}")
     public ResponseEntity<?> answer(@PathVariable Long id, @AuthenticationPrincipal String principal, @RequestBody JsonNode node)
             throws BotMessageException, QuestionNotFoundException, BotServiceException, AuthorizationException {
