@@ -11,7 +11,8 @@ public interface QuestionService {
     List<QuestionDTO> list();
     List<QuestionDTO> answered();
     List<QuestionDTO> notAnswered();
-    boolean answer(Long id, BotMessage message, Personnel personnel) throws QuestionNotFoundException;
-    void save(List<QuestionDTO> questions);
+    void answer(Long id, BotMessage message, Personnel personnel) throws QuestionNotFoundException;
+    void answer(String hid, BotMessage message, Personnel personnel);
+    void addNewQuestions(List<QuestionDTO> questions);
 
 }

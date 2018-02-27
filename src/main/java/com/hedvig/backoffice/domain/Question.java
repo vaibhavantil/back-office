@@ -28,15 +28,14 @@ public class Question {
     @ManyToOne
     private Personnel personnel;
 
-    @NotNull
-    private String hid;
-
     private Instant date;
 
     private Instant answerDate;
 
-    public Question(String hid, String message, Instant date) {
-        this.hid = hid;
+    @ManyToOne
+    private Subscription subscription;
+
+    public Question(String message, Instant date) {
         this.message = message;
         this.date = date;
     }

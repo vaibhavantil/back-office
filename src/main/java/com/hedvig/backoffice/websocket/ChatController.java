@@ -4,7 +4,9 @@ import com.hedvig.backoffice.services.chat.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -20,8 +22,8 @@ public class ChatController {
     }
 
     @SubscribeMapping("/send/{hid}")
-    public void send(@DestinationVariable String hid, @RequestBody String body) {
-        chatService.append(hid, body);
+    public void send(@DestinationVariable String hid, @RequestBody String body, @AuthenticationPrincipal String principal) {
+        chatService.append(hid, body, principal);
     }
 
     @SubscribeMapping("/history/{hid}")

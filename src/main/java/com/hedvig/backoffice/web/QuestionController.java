@@ -1,19 +1,11 @@
 package com.hedvig.backoffice.web;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.hedvig.backoffice.domain.Personnel;
-import com.hedvig.backoffice.repository.PersonnelRepository;
-import com.hedvig.backoffice.security.AuthorizationException;
-import com.hedvig.backoffice.services.messages.BotMessageException;
-import com.hedvig.backoffice.services.messages.BotServiceException;
-import com.hedvig.backoffice.services.messages.dto.BotMessage;
-import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -22,12 +14,10 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final PersonnelRepository personnelRepository;
 
     @Autowired
-    public QuestionController(QuestionService questionService, PersonnelRepository personnelRepository) {
+    public QuestionController(QuestionService questionService) {
         this.questionService = questionService;
-        this.personnelRepository = personnelRepository;
     }
 
     @GetMapping
@@ -43,19 +33,6 @@ public class QuestionController {
     @GetMapping("/not-answered")
     public List<QuestionDTO> notAnswered() {
         return questionService.notAnswered();
-    }
-
-    @PutMapping("/answer/{id}")
-    public ResponseEntity<?> answer(@PathVariable Long id, @AuthenticationPrincipal String principal, @RequestBody JsonNode node)
-            throws BotMessageException, QuestionNotFoundException, BotServiceException, AuthorizationException {
-
-        Personnel personnel = personnelRepository.findByEmail(principal).orElseThrow(AuthorizationException::new);
-
-        if (!questionService.answer(id, new BotMessage(node,true), personnel)) {
-            throw new BotServiceException("response failed");
-        }
-
-        return ResponseEntity.noContent().build();
     }
 
 }
