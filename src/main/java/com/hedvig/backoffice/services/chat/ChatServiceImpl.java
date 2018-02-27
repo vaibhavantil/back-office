@@ -8,13 +8,13 @@ import com.hedvig.backoffice.repository.PersonnelRepository;
 import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
+import com.hedvig.backoffice.services.members.MemberNotFoundException;
+import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.MemberServiceException;
 import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
-import com.hedvig.backoffice.services.members.MemberNotFoundException;
-import com.hedvig.backoffice.services.members.MemberService;
-import com.hedvig.backoffice.services.members.MemberServiceException;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,26 +65,30 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void append(String hid, String message) {
-        Optional<Subscription> subscriptionOptional = subscriptionRepository.findByHid(hid);
-        if (!subscriptionOptional.isPresent()) {
-            send(hid, Message.error(400, "member with hid " + hid + " not found"));
-            logger.warn("member with hid " + hid + " not found");
-            return;
-        }
-
+    public boolean append(String hid, String message) {
         try {
             BotMessage msg = new BotMessage(message, true);
-            messageUrlResolver.resolveUrls(msg);
-            botService.response(hid, msg);
-            expoNotificationService.sendNotification(hid);
-        } catch (BotServiceException e) {
-            send(hid, Message.error(e.getCode(), e.getMessage()));
-            logger.error("chat not updated hid = " + hid, e);
+            return append(hid, msg);
         } catch (BotMessageException e) {
             send(hid, Message.error(400, e.getMessage()));
             logger.error("chat not updated hid = " + hid, e);
+            return false;
         }
+    }
+
+    @Override
+    public boolean append(String hid, BotMessage message) {
+        messageUrlResolver.resolveUrls(message);
+        try {
+            botService.response(hid, message);
+        } catch (BotServiceException e) {
+            send(hid, Message.error(e.getCode(), e.getMessage()));
+            logger.error("chat not updated hid = " + hid, e);
+            return false;
+        }
+        expoNotificationService.sendNotification(hid);
+
+        return true;
     }
 
     @Override

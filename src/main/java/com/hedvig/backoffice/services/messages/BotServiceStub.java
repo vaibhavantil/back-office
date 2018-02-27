@@ -20,6 +20,7 @@ public class BotServiceStub implements BotService {
 
     private static final String STUB_MESSAGE_TEMPLATE = "{" +
             "\"globalId\": %s," +
+            "\"id\": \"mock.id\"," +
             "\"header\": { " +
             "   \"messageId\": %s," +
             "   \"fromId\": %s" +

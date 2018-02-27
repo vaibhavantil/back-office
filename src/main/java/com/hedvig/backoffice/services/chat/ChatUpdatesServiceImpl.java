@@ -8,12 +8,15 @@ import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.questions.QuestionService;
+import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import com.hedvig.backoffice.services.updates.UpdateType;
 import com.hedvig.backoffice.services.updates.UpdatesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -29,52 +32,60 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     private final BotService botService;
     private final UpdatesService updatesService;
     private final SystemSettingsService systemSettingsService;
+    private final QuestionService questionService;
+
+    private final String questionId;
 
     @Autowired
     public ChatUpdatesServiceImpl(ChatService chatService,
                                   BotService botService,
                                   UpdatesService updatesService,
-                                  SystemSettingsService systemSettingsService) {
+                                  SystemSettingsService systemSettingsService,
+                                  QuestionService questionService,
+                                  @Value("${botservice.questionId}") String questionId) {
 
         this.chatService = chatService;
         this.botService = botService;
         this.updatesService = updatesService;
         this.systemSettingsService = systemSettingsService;
+        this.questionService = questionService;
+        this.questionId = questionId;
     }
 
     @Override
     public void update() throws ChatUpdateException {
-        List<BackOfficeMessage> messages;
+        List<BackOfficeMessage> fetched;
         SystemSetting setting = systemSettingsService.getSetting(
                 SystemSettingType.BOT_SERVICE_LAST_TIMESTAMP,
                 new Date().toInstant().toString());
 
         try {
             Instant timestamp = Instant.parse(setting.getValue());
-            messages = botService.fetch(timestamp);
+            fetched = botService.fetch(timestamp);
         } catch (BotServiceException e) {
             throw new ChatUpdateException(e);
         }
 
-        if (messages.size() == 0) {
+        if (fetched.size() == 0) {
             return;
         }
 
-        logger.info("bot-service: fetched " + messages.size() + " messages");
-        updatesService.append(messages.size(), UpdateType.CHATS);
+        logger.info("bot-service: fetched " + fetched.size() + " messages");
+        updatesService.append(fetched.size(), UpdateType.CHATS);
+
+        List<BotMessage> messages = fetched.stream().map(f -> {
+            try {
+                return f.toBotMessage();
+            } catch (BotMessageException e) {
+                logger.error("Error during parsing message from bot-service", e);
+            }
+            return null;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
 
         Map<String, List<BotMessage>> updates = messages.stream()
-                .collect(Collectors.groupingBy(BackOfficeMessage::getUserId, Collectors.mapping(m -> {
-                    try {
-                        return new BotMessage(m.getMsg(), false);
-                    } catch (BotMessageException e) {
-                        logger.error("Error during parsing message from bot-service", e);
-                    }
-                    return null;
-                }, Collectors.toList())));
+                .collect(Collectors.groupingBy(BotMessage::getHid));
 
-        Instant lastTimestamp = updates.values().stream()
-                .flatMap(Collection::stream)
+        Instant lastTimestamp = messages.stream()
                 .max(Comparator.comparing(BotMessage::getTimestamp))
                 .map(BotMessage::getTimestamp)
                 .orElse(new Date().toInstant());
@@ -83,5 +94,10 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         systemSettingsService.saveSetting(setting);
 
         updates.forEach((k, v) -> chatService.send(k, Message.chat(v)));
+
+        questionService.save(messages.stream()
+                .filter(m -> m.getId().equals(questionId))
+                .map(m -> new QuestionDTO(m.getHid(), m.getMessage(), m.getTimestamp()))
+                .collect(Collectors.toList()));
     }
 }

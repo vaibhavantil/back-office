@@ -1,14 +1,17 @@
 package com.hedvig.backoffice.services.questions;
 
-import com.hedvig.backoffice.services.messages.BotServiceException;
+import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
-import com.hedvig.backoffice.services.questions.dto.Question;
+import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 
 import java.util.List;
 
 public interface QuestionService {
 
-    List<Question> list();
-    boolean answer(String id, BotMessage message) throws BotServiceException;
+    List<QuestionDTO> list();
+    List<QuestionDTO> answered();
+    List<QuestionDTO> notAnswered();
+    boolean answer(Long id, BotMessage message, Personnel personnel) throws QuestionNotFoundException;
+    void save(List<QuestionDTO> questions);
 
 }

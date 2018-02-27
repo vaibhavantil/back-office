@@ -20,6 +20,8 @@ public class BotMessage {
     private JsonNode body;
     private JsonNode header;
     private String type;
+    private String id;
+    private String hid;
 
     public BotMessage(String message) throws BotMessageException {
         this(message, false);
@@ -34,6 +36,10 @@ public class BotMessage {
         }
 
         parseFields(newMessage);
+    }
+
+    public BotMessage(JsonNode root) throws BotMessageException {
+        this(root, false);
     }
 
     public BotMessage(JsonNode root, boolean newMessage) throws BotMessageException {
@@ -81,6 +87,18 @@ public class BotMessage {
         root.put("globalId", globalId);
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public String getHid() {
+        return hid;
+    }
+
+    public void setHid(String hid) {
+        this.hid = hid;
+    }
+
     private void parseFields(boolean newMessage) throws BotMessageException {
         header = Optional.ofNullable(root.get("header"))
                 .orElseThrow(() -> new BotMessageException("message must contains header"));
@@ -100,6 +118,10 @@ public class BotMessage {
             messageId = Optional.ofNullable(header.get("messageId"))
                     .orElseThrow(() -> new BotMessageException("message must contains globalId"))
                     .asLong();
+
+            id = Optional.ofNullable(root.get("id"))
+                    .map(JsonNode::asText)
+                    .orElse("");
         }
 
         JsonNode value = Optional.ofNullable(root.get("timestamp"))
