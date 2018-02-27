@@ -12,13 +12,13 @@ import java.util.Optional;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    @Query("select q from Question q where q.id = :id")
+    @Query("select q from Question q where q.id = :id order by q.date")
     Optional<Question> findById(@Param("id") Long id);
 
-    @Query("select q from Question q where q.answer is not null")
+    @Query("select q from Question q where q.answer is not null order by q.date")
     List<Question> answered();
 
-    @Query("select q from Question q where q.answer is null")
+    @Query("select q from Question q where q.answer is null order by q.date")
     List<Question> notAnswered();
 
     @Query("select q from Question q where q.subscription.hid = :hid and q.answer is null")
