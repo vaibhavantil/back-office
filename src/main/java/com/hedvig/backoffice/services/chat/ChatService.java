@@ -7,8 +7,8 @@ import com.hedvig.backoffice.services.messages.dto.BotMessage;
 public interface ChatService {
 
     void send(String hid, Message message);
-    boolean append(String hid, String message);
-    boolean append(String hid, BotMessage message);
+    void append(String hid, String message, String personnel);
+    void append(String hid, BotMessage message, String personnel);
     void messages(String hid);
     void messages(String hid, int count);
     void close(String sessionId);

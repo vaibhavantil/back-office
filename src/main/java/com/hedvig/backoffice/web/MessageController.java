@@ -1,12 +1,14 @@
 package com.hedvig.backoffice.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hedvig.backoffice.services.chat.ChatService;
 import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,10 +19,12 @@ import java.util.stream.Collectors;
 public class MessageController {
 
     private final BotService botService;
+    private final ChatService chatService;
 
     @Autowired
-    public MessageController(BotService botService) {
+    public MessageController(BotService botService, ChatService chatService) {
         this.botService = botService;
+        this.chatService = chatService;
     }
 
     @GetMapping("/{hid}")
@@ -34,9 +38,11 @@ public class MessageController {
     }
 
     @PostMapping("/response/{hid}")
-    public ResponseEntity<?> response(@PathVariable String hid, @RequestBody JsonNode body)
-            throws BotServiceException, BotMessageException {
-        botService.response(hid, new BotMessage(body, true));
+    public ResponseEntity<?> response(@PathVariable String hid,
+                                      @RequestBody JsonNode body,
+                                      @AuthenticationPrincipal String principal)
+            throws BotMessageException {
+        chatService.append(hid, new BotMessage(body, true), principal);
         return ResponseEntity.noContent().build();
     }
 

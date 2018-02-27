@@ -5,7 +5,6 @@ import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Subscription;
 import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.repository.PersonnelRepository;
-import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.members.MemberNotFoundException;
@@ -15,6 +14,7 @@ import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,27 +36,29 @@ public class ChatServiceImpl implements ChatService {
     private final MemberService memberService;
     private final ChatContextRepository chatContextRepository;
     private final PersonnelRepository personnelRepository;
-    private final SubscriptionRepository subscriptionRepository;
     private final MessageUrlResolver messageUrlResolver;
     private final ExpoNotificationService expoNotificationService;
+    private final QuestionService questionService;
+    private final SubscriptionService subscriptionService;
 
     public ChatServiceImpl(SimpMessagingTemplate template,
                            BotService botService,
                            MemberService memberService,
                            ChatContextRepository chatContextRepository,
                            PersonnelRepository personnelRepository,
-                           SubscriptionRepository subscriptionRepository,
                            MessageUrlResolver messageUrlResolver,
-                           ExpoNotificationService expoNotificationService) {
+                           ExpoNotificationService expoNotificationService,
+                           QuestionService questionService, SubscriptionService subscriptionService) {
 
         this.template = template;
         this.botService = botService;
         this.memberService = memberService;
         this.chatContextRepository = chatContextRepository;
         this.personnelRepository = personnelRepository;
-        this.subscriptionRepository = subscriptionRepository;
         this.messageUrlResolver = messageUrlResolver;
         this.expoNotificationService = expoNotificationService;
+        this.questionService = questionService;
+        this.subscriptionService = subscriptionService;
     }
 
     @Override
@@ -65,30 +67,35 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public boolean append(String hid, String message) {
+    public void append(String hid, String message, String personnel) {
         try {
             BotMessage msg = new BotMessage(message, true);
-            return append(hid, msg);
+            append(hid, msg, personnel);
         } catch (BotMessageException e) {
             send(hid, Message.error(400, e.getMessage()));
             logger.error("chat not updated hid = " + hid, e);
-            return false;
         }
     }
 
     @Override
-    public boolean append(String hid, BotMessage message) {
-        messageUrlResolver.resolveUrls(message);
+    public void append(String hid, BotMessage message, String personnel) {
+        Optional<Personnel> p = personnelRepository.findByEmail(personnel);
+        if (!p.isPresent()) {
+            send(hid, Message.error(500, "personnel not authorized"));
+            logger.error("personnel not authorized");
+            return;
+        }
+
         try {
+            messageUrlResolver.resolveUrls(message);
             botService.response(hid, message);
+            expoNotificationService.sendNotification(hid);
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
             logger.error("chat not updated hid = " + hid, e);
-            return false;
         }
-        expoNotificationService.sendNotification(hid);
 
-        return true;
+        questionService.answer(hid, message, p.get());
     }
 
     @Override
@@ -156,12 +163,7 @@ public class ChatServiceImpl implements ChatService {
         chat.setTimestamp(new Date().toInstant());
         chat.setPersonnel(personnel);
 
-        Optional<Subscription> subOptional = subscriptionRepository.findByHid(member.getHid());
-        Subscription sub = subOptional.orElseGet(() -> {
-            Subscription newSub = new Subscription(member.getHid());
-            subscriptionRepository.save(newSub);
-            return newSub;
-        });
+        Subscription sub = subscriptionService.getOrCreateSubscription(member.getHid());
 
         chat.setSubscription(sub);
         chatContextRepository.save(chat);

@@ -57,13 +57,13 @@ public class QuestionDTO {
                 Optional.ofNullable(message).map(BotMessage::getMessage).orElse(null),
                 Optional.ofNullable(answer).map(BotMessage::getMessage).orElse(null),
                 Optional.ofNullable(question.getPersonnel()).map(PersonnelDTO::fromDomain).orElse(null),
-                question.getHid(),
+                question.getSubscription().getHid(),
                 question.getDate(),
                 question.getAnswerDate());
     }
 
     public static Question toDomain(QuestionDTO dto) {
-        return new Question(dto.getHid(), dto.getMessage().toString(), dto.getDate());
+        return new Question(dto.getMessage().toString(), dto.getDate());
     }
 
 }
