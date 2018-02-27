@@ -95,7 +95,7 @@ export default class Chat extends React.Component {
             <React.Fragment>
                 <ChatHeader>
                     <Header size="huge">{this.getChatTitle()}</Header>
-                    <BackLink path="members" />
+                    <BackLink />
                 </ChatHeader>
 
                 <ChatContainer>

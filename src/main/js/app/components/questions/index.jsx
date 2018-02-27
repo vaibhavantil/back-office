@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Header } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react';
 import BackLink from 'components/shared/link/BackLink';
+import QuestionsList from './QuestionsList';
 
 export default class Questions extends React.Component {
     constructor(props) {
@@ -9,7 +10,7 @@ export default class Questions extends React.Component {
     }
 
     componentDidMount() {
-        this.props.usersRequest();
+        this.props.questionsRequest();
     }
 
     render() {
@@ -17,18 +18,13 @@ export default class Questions extends React.Component {
             <React.Fragment>
                 <Header size="huge">Questions</Header>
                 <BackLink />
-                <List>
-                    {this.props.users.list.map((item, id) => (
-                        <List.Item key={id}>{JSON.stringify(item)}</List.Item>
-                    ))}
-                </List>
-                <div>{JSON.stringify(this.props.users.list)}</div>
+                <QuestionsList questions={this.props.questions.list} />
             </React.Fragment>
         );
     }
 }
 
 Questions.propTypes = {
-    users: PropTypes.object.isRequired,
-    usersRequest: PropTypes.func.isRequired
+    questions: PropTypes.object.isRequired,
+    questionsRequest: PropTypes.func.isRequired
 };

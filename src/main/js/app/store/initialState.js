@@ -46,5 +46,11 @@ export default {
         data: null,
         notes: [],
         payments: []
+    },
+    questions: {
+        list: [],
+        requesting: false,
+        successful: false,
+        errors: []
     }
 };

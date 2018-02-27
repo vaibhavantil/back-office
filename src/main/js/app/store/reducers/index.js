@@ -7,6 +7,7 @@ import users from './chatUserReducer';
 import dashboard from './dashboardReducer';
 import claims from './claimsReducer';
 import claimDetails from './claimDetailsReducer';
+import questions from './questionsReducer';
 
 export default {
     login,
@@ -18,4 +19,5 @@ export default {
     dashboard,
     claims,
     claimDetails,
+    questions
 };

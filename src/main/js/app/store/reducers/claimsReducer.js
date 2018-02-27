@@ -13,8 +13,8 @@ export default function(state = initialState.claims, action) {
         case CLAIMS_REQUESTING:
             return {
                 ...state,
-                requesting: false,
-                successful: true,
+                requesting: true,
+                successful: false,
                 errors: []
             };
 
