@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import styled from 'styled-components';
-import { Button, Checkbox, Grid, Segment } from 'semantic-ui-react';
+import { Button, Checkbox, Grid } from 'semantic-ui-react';
+import Message from 'components/chat/messages/Message';
 import { history } from 'app/store';
 
 const List = styled.div`
@@ -27,28 +28,40 @@ const GridColumn = styled(Grid.Column)`
     }
 `;
 
+const GridSelection = styled(Grid)`
+    &&& {
+        border-bottom: solid 1px #ccc;
+    }
+`
+
 const answerClick = id => {
     history.push(`/members/${id}`);
 };
 
-const QuestionsList = ({ questions }) => (
+const getUserInfo = (users, id) => {
+    const user = users.find(user => user.hid === id);
+    return user ? (
+        <span>User: {`${user.firstName} ${user.lastName || ''}`}</span>
+    ) : (
+        <span>User</span>
+    );
+};
+
+const QuestionsList = ({ questions, users }) => (
     <List>
         {questions.map(data => (
-            <Grid key={data.id}>
+            <GridSelection key={data.id}>
                 <Grid.Row columns={1}>
                     <Grid.Column>
                         <QuestionContent>
                             <span>
-                                {moment(data.date.slice(0, -1)).format(
-                                    'DD MM YYYY HH:mm'
-                                )}
+                                {moment(data.date).format('DD/MM/YYYY HH:mm')}
                             </span>
+                            {users.length && getUserInfo(users, data.hid)}
                             <span>
-                                User:{' '}
-                                {`${data.member.firstName} ${data.member
-                                    .lastName || ''}`}
+                                Admin:{' '}
+                                {`${data.personnel && data.personnel.email}`}
                             </span>
-                            <span>Admin: {`${data.personnel.email}`}</span>
                             <span>
                                 <Checkbox disabled checked={!!data.answer} />
                             </span>
@@ -57,21 +70,22 @@ const QuestionsList = ({ questions }) => (
                 </Grid.Row>
                 <Grid.Row columns={1}>
                     <GridColumn>
-                        <Segment>Question: {data.message.body.text}</Segment>
+                        <Message content={data.message.body} left={true} isQuestionMessage={true}/>
                         <Button
                             content="Answer"
-                            onClick={answerClick.bind(this, data.member.hid)}
+                            onClick={answerClick.bind(this, data.hid)}
                             primary
                         />
                     </GridColumn>
                 </Grid.Row>
-            </Grid>
+            </GridSelection>
         ))}
     </List>
 );
 
 QuestionsList.propTypes = {
-    questions: PropTypes.array.isRequired
+    questions: PropTypes.array.isRequired,
+    users: PropTypes.array
 };
 
 export default QuestionsList;

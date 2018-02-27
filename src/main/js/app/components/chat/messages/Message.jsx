@@ -11,7 +11,7 @@ import * as types from 'app/lib/messageTypes';
 const MessageRow = styled.div`
     display: flex;
     justify-content: ${props => (props.left ? 'flex-start' : 'flex-end')};
-    margin: 20px 0;
+    margin: ${props => (props.isQuestion ? '0px' : '20px 0')};
     width: 100%;
     box-sizing: border-box;
 `;
@@ -31,31 +31,34 @@ const MessageBox = styled.div`
     box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
         0 2px 10px 0 rgba(34, 36, 38, 0.15);
 
-    &:before {
-        position: absolute;
-        content: '';
-        width: 0.7em;
-        height: 0.7em;
-        background: #fff;
-        -webkit-transform: rotate(45deg);
-        transform: rotate(45deg);
-        z-index: 2;
-        box-shadow: 1px 1px 0 0 #bababc;
-        bottom: -0.3em;
-        left: ${props => (props.left ? '1em' : 'auto')};
-        top: auto;
-        right: ${props => (!props.left ? '1em' : 'auto')};
-        margin-left: 0;
-    }
+    ${props =>
+        !props.isQuestion
+            ? `&:before {
+                    position: absolute;
+                    content: '';
+                    width: 0.7em;
+                    height: 0.7em;
+                    background: #fff;
+                    -webkit-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    z-index: 2;
+                    box-shadow: 1px 1px 0 0 #bababc;
+                    bottom: -0.3em;
+                    left: ${props => (props.left ? '1em' : 'auto')};
+                    top: auto;
+                    right: ${props => (!props.left ? '1em' : 'auto')};
+                    margin-left: 0;
+                }`
+            : ''};
 `;
 
 const Video = styled.video`
     width: 350px;
 `;
 
-const Message = ({ left, content }) => (
-    <MessageRow left={left}>
-        <MessageBox left={left}>
+const Message = ({ left, content, isQuestionMessage }) => (
+    <MessageRow left={left} isQuestion={isQuestionMessage}>
+        <MessageBox left={left} isQuestion={isQuestionMessage}>
             {content.text}
             <br />
             <MessageContent content={content} />
@@ -65,7 +68,8 @@ const Message = ({ left, content }) => (
 
 Message.propTypes = {
     left: PropTypes.bool.isRequired,
-    content: PropTypes.object.isRequired
+    content: PropTypes.object.isRequired,
+    isQuestionMessage: PropTypes.bool
 };
 
 const MessageContent = ({ content }) => {
