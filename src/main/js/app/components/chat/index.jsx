@@ -104,6 +104,7 @@ export default class Chat extends React.Component {
                         messages={messages.list}
                         error={!!this.state.socket}
                         userId={match.params.id}
+                        messageId={match.params.msgId}
                     />
                     <ChatPanel
                         addMessage={this.addMessageHandler}

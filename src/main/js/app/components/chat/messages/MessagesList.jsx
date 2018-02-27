@@ -20,10 +20,16 @@ export default class MessagesList extends React.Component {
     }
 
     componentWillReceiveProps() {
-        // eslint-disable-next-line
+        /* eslint-disable */
         setTimeout(() => {
             this.messagesList.scrollTop = this.messagesList.scrollHeight;
+            const id = this.props.messageId;
+            const element = document.getElementById(`msg-${id}`)
+            if (id && element) {
+                element.scrollIntoView();
+            }
         });
+        /* eslint-enable */
     }
 
     render() {
@@ -37,6 +43,7 @@ export default class MessagesList extends React.Component {
                             key={id}
                             content={item.body}
                             left={item.header.fromId !== userId}
+                            msgId={item.globalId}
                         />
                     ))
                 ) : (
@@ -52,7 +59,8 @@ export default class MessagesList extends React.Component {
 }
 
 MessagesList.propTypes = {
+    userId: PropTypes.string.isRequired,
+    messageId: PropTypes.string,
     messages: PropTypes.array,
-    error: PropTypes.bool,
-    userId: PropTypes.string.isRequired
+    error: PropTypes.bool
 };
