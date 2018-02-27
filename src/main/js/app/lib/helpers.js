@@ -156,11 +156,5 @@ export const getClaimFieldsData = (
  */
 export const sortQuestions = questions =>
     questions
-        .sort((a, b) => {
-            const firstDate = a.date.slice(0, -1);
-            const secondDate = b.date.slice(0, -1);
-            moment(firstDate)
-                .utc()
-                .diff(moment(secondDate).utc());
-        })
+        .sort((a, b) => moment(a.date).diff(moment(b.date)))
         .sort((a, b) => a.answer - b.answer);

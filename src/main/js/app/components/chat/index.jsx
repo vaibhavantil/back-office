@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import MessagesList from './messages/MessagesList';
 import BackLink from 'components/shared/link/BackLink';
 import ChatPanel from './chat/ChatPanel';
-import * as sockets from 'sockets';
+import { subscribe, reconnect } from 'app/lib/sockets/chat';
+import { disconnect } from 'sockets';
 
 const ChatContainer = styled.div`
     width: 700px;
@@ -38,7 +39,7 @@ export default class Chat extends React.Component {
     subscribeSocket = () => {
         const { messageReceived, match, messages, errorReceived } = this.props;
 
-        const { stompClient, subscription } = sockets.chatSubscribe(
+        const { stompClient, subscription } = subscribe(
             { messageReceived, errorReceived },
             match.params.id,
             messages.activeConnection
@@ -54,13 +55,13 @@ export default class Chat extends React.Component {
             errorReceived
         } = this.props;
 
-        sockets
-            .chatReconnect({ messageReceived, errorReceived }, match.params.id)
-            .then(reslut => {
+        reconnect({ messageReceived, errorReceived }, match.params.id).then(
+            reslut => {
                 const { stompClient, subscription } = reslut;
                 this.setState({ socket: stompClient, subscription });
                 setActiveConnection(stompClient);
-            });
+            }
+        );
     };
 
     getChatTitle = () => {
@@ -85,7 +86,7 @@ export default class Chat extends React.Component {
 
     componentWillUnmount() {
         const { subscription } = this.state;
-        sockets.disconnect(null, subscription);
+        disconnect(null, subscription);
         this.props.clearMessagesList();
     }
 

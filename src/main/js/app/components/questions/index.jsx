@@ -11,20 +11,24 @@ export default class Questions extends React.Component {
 
     componentDidMount() {
         this.props.questionsRequest();
+        this.props.usersRequest();
     }
 
     render() {
+        const { questions, users: { list } } = this.props;
         return (
             <React.Fragment>
                 <Header size="huge">Questions</Header>
                 <BackLink />
-                <QuestionsList questions={this.props.questions.list} />
+                <QuestionsList questions={questions.list} users={list} />
             </React.Fragment>
         );
     }
 }
 
 Questions.propTypes = {
+    users: PropTypes.object.isRequired,
     questions: PropTypes.object.isRequired,
+    usersRequest: PropTypes.func.isRequired,
     questionsRequest: PropTypes.func.isRequired
 };
