@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,7 +68,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         question.setAnswer(message.getMessage().toString());
         question.setPersonnel(personnel);
-        question.setTimestamp(new Date().toInstant());
+        question.setAnswerDate(message.getTimestamp());
         questionRepository.save(question);
 
         return true;

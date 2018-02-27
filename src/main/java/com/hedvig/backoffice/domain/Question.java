@@ -31,11 +31,14 @@ public class Question {
     @NotNull
     private String hid;
 
-    private Instant timestamp;
+    private Instant date;
 
-    public Question(String hid, String message) {
+    private Instant answerDate;
+
+    public Question(String hid, String message, Instant date) {
         this.hid = hid;
         this.message = message;
+        this.date = date;
     }
 
 }

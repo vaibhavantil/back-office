@@ -25,10 +25,12 @@ public class QuestionDTO {
     private PersonnelDTO personnel;
     private String hid;
     private Instant date;
+    private Instant answerDate;
 
-    public QuestionDTO(String hid, JsonNode message) {
+    public QuestionDTO(String hid, JsonNode message, Instant date) {
         this.hid = hid;
         this.message = message;
+        this.date = date;
     }
 
     public static QuestionDTO fromDomain(Question question) {
@@ -56,11 +58,12 @@ public class QuestionDTO {
                 Optional.ofNullable(answer).map(BotMessage::getMessage).orElse(null),
                 Optional.ofNullable(question.getPersonnel()).map(PersonnelDTO::fromDomain).orElse(null),
                 question.getHid(),
-                question.getTimestamp());
+                question.getDate(),
+                question.getAnswerDate());
     }
 
     public static Question toDomain(QuestionDTO dto) {
-        return new Question(dto.getHid(), dto.getMessage().toString());
+        return new Question(dto.getHid(), dto.getMessage().toString(), dto.getDate());
     }
 
 }

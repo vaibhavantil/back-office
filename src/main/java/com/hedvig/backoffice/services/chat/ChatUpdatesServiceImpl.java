@@ -97,7 +97,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
 
         questionService.save(messages.stream()
                 .filter(m -> m.getId().equals(questionId))
-                .map(m -> new QuestionDTO(m.getHid(), m.getMessage()))
+                .map(m -> new QuestionDTO(m.getHid(), m.getMessage(), m.getTimestamp()))
                 .collect(Collectors.toList()));
     }
 }
