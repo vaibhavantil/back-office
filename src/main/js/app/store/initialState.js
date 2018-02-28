@@ -48,7 +48,10 @@ export default {
         payments: []
     },
     questions: {
-        list: [],
+        list: {
+            answered: [],
+            notAnswered: []
+        },
         requesting: false,
         successful: false,
         errors: []

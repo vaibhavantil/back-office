@@ -19,7 +19,7 @@ export default function(state = initialState.questions, action) {
                 requesting: false,
                 successful: true,
                 errors: [],
-                list: sortQuestions([...action.questions])
+                list: sortQuestions({ ...action.questions })
             };
         default:
             return state;

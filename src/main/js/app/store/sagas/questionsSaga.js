@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import api from 'app/api';
-import config from 'app/api/config';
+import config from '../../api/config';
 import { getAuthToken } from 'app/lib/checkAuth';
 import { QUESTIONS_REQUESTING } from 'constants/questions';
 import {
@@ -11,8 +11,18 @@ import {
 function* requestFlow() {
     try {
         const token = yield call(getAuthToken);
-        const { data } = yield call(api, token, config.questions.get);
-        yield put(questionsReqSuccess(data));
+        const answered = yield call(api, token, config.questions.answered);
+        const notAnswered = yield call(
+            api,
+            token,
+            config.questions.notAnsewred
+        );
+        yield put(
+            questionsReqSuccess({
+                answered: answered.data,
+                notAnswered: notAnswered.data
+            })
+        );
     } catch (error) {
         yield put(questionsReqError(error));
     }
