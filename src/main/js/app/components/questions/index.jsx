@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Header } from 'semantic-ui-react';
 import BackLink from 'components/shared/link/BackLink';
-import QuestionsList from './QuestionsList';
+import QuestionsList from './questions-list/QuestionsList';
 
 export default class Questions extends React.Component {
     constructor(props) {

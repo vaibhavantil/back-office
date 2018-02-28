@@ -67,6 +67,14 @@ export default {
         get: {
             url: 'questions',
             method: 'get'
+        },
+        answered: {
+            url: 'questions/answered',
+            method: 'get'
+        },
+        notAnsewred: {
+            url: 'questions/not-answered',
+            method: 'get'
         }
     },
     ws: {

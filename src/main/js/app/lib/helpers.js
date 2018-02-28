@@ -154,7 +154,11 @@ export const getClaimFieldsData = (
  * Sort array of questions by dates and answers
  * @param {Array} questions array of questions
  */
-export const sortQuestions = questions =>
-    questions
-        .sort((a, b) => moment(a.date).diff(moment(b.date)))
-        .sort((a, b) => a.answer - b.answer);
+export const sortQuestions = questions => ({
+    answered: questions.answered.sort((a, b) =>
+        moment(a.date).diff(moment(b.date))
+    ),
+    notAnswered: questions.notAnswered.sort((a, b) =>
+        moment(a.date).diff(moment(b.date))
+    )
+});
