@@ -90,8 +90,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
                 .map(BotMessage::getTimestamp)
                 .orElse(new Date().toInstant());
 
-        setting.setValue(lastTimestamp.plusMillis(1).toString());
-        systemSettingsService.saveSetting(setting);
+        systemSettingsService.update(SystemSettingType.BOT_SERVICE_LAST_TIMESTAMP, lastTimestamp.plusMillis(1).toString());
 
         updates.forEach((k, v) -> chatService.send(k, Message.chat(v)));
 
