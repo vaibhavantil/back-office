@@ -34,8 +34,8 @@ const GridSelection = styled(Grid)`
     }
 `
 
-const answerClick = id => {
-    history.push(`/members/${id}`);
+const answerClick = (id, msgId) => {
+    history.push(`/members/${id}/${msgId}`);
 };
 
 const getUserInfo = (users, id) => {
@@ -73,7 +73,7 @@ const QuestionsList = ({ questions, users }) => (
                         <Message content={data.message.body} left={true} isQuestionMessage={true}/>
                         <Button
                             content="Answer"
-                            onClick={answerClick.bind(this, data.hid)}
+                            onClick={answerClick.bind(this, data.hid, data.message.globalId)}
                             primary
                         />
                     </GridColumn>

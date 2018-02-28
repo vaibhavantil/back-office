@@ -56,8 +56,8 @@ const Video = styled.video`
     width: 350px;
 `;
 
-const Message = ({ left, content, isQuestionMessage }) => (
-    <MessageRow left={left} isQuestion={isQuestionMessage}>
+const Message = ({ left, content, isQuestionMessage, msgId }) => (
+    <MessageRow left={left} isQuestion={isQuestionMessage} id={`msg-${msgId}`}>
         <MessageBox left={left} isQuestion={isQuestionMessage}>
             {content.text}
             <br />
@@ -69,7 +69,8 @@ const Message = ({ left, content, isQuestionMessage }) => (
 Message.propTypes = {
     left: PropTypes.bool.isRequired,
     content: PropTypes.object.isRequired,
-    isQuestionMessage: PropTypes.bool
+    isQuestionMessage: PropTypes.bool,
+    msgId: PropTypes.number
 };
 
 const MessageContent = ({ content }) => {
