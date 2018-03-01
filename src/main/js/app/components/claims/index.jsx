@@ -17,7 +17,7 @@ export default class Claims extends React.Component {
         return (
             <React.Fragment>
                 <Header size="huge">Claims List</Header>
-                <BackLink />
+                <BackLink path="dashboard" />
                 <ClaimsList claims={this.props.claims.list} />
             </React.Fragment>
         );
