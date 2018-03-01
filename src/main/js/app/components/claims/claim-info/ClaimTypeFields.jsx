@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Dropdown, List } from 'semantic-ui-react';
+import { Button, Form, List } from 'semantic-ui-react';
 import ClaimInfoField from './ClaimInfoField';
+import { FormSelect } from '../claim-info/ClaimInfo';
 import {
     updateTypesList,
     getActiveType,
@@ -114,15 +115,18 @@ export default class ClaimTypeFields extends React.Component {
         const updatedTypes = updateTypesList(types.slice());
         return (
             <React.Fragment>
-                Type
-                <Dropdown
-                    onChange={this.typeChangeHandler}
-                    options={updatedTypes}
-                    placeholder="Type"
-                    selection
-                    value={type}
-                    disabled={!!type}
-                />
+                <Form>
+                    <FormSelect
+                        onChange={this.typeChangeHandler}
+                        options={updatedTypes}
+                        placeholder="Type"
+                        label="Type"
+                        selection
+                        value={type}
+                        disabled={!!type}
+                    />
+                </Form>
+
                 {type && (
                     <React.Fragment>
                         <h3>Required fields:</h3>

@@ -1,14 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Grid, Segment } from 'semantic-ui-react';
+import styled from 'styled-components';
+import { Grid, Segment, Form } from 'semantic-ui-react';
 import moment from 'moment';
 import { claimStatus } from 'app/lib/selectOptions';
 import ClaimTypeFields from './ClaimTypeFields';
 
+const DetailsSegment = styled(Segment)`
+    &&& {
+        padding: 30px;
+    }
+`;
+
+export const FormSelect = styled(Form.Select)`
+    &&& {
+        width: 196px;
+    }
+`;
+
 export default class ClaimInfo extends React.Component {
     constructor(props) {
         super(props);
-        this.status = {
+        this.state = {
             status: 'OPEN'
         };
     }
@@ -34,10 +47,10 @@ export default class ClaimInfo extends React.Component {
             claimUpdate,
             claimDetailsUpdate
         } = this.props;
-        const { status } = this.status;
+        const { status } = this.state;
         return (
             <React.Fragment>
-                <Segment>
+                <DetailsSegment>
                     <Grid>
                         <Grid.Row>
                             Registration date:{' '}
@@ -45,21 +58,24 @@ export default class ClaimInfo extends React.Component {
                         </Grid.Row>
                         <Grid.Row>User: {user && user.firstName}</Grid.Row>
                         <Grid.Row>
-                            <a href={data.audioURL} target="_blank">file</a>
+                            <a href={data.audioURL} target="_blank">
+                                file
+                            </a>
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Form>
+                                <FormSelect
+                                    onChange={this.statusChangeHandler}
+                                    options={claimStatus}
+                                    placeholder="Status"
+                                    label="Status"
+                                    value={status}
+                                    selection
+                                />
+                            </Form>
                         </Grid.Row>
                     </Grid>
-
-                    <Segment>
-                        Status
-                        <Dropdown
-                            onChange={this.statusChangeHandler}
-                            options={claimStatus}
-                            placeholder="Status"
-                            selection
-                            value={status}
-                        />
-                    </Segment>
-                </Segment>
+                </DetailsSegment>
                 <Segment>
                     {types.length && (
                         <ClaimTypeFields

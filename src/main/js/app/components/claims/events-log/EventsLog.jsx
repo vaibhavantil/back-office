@@ -6,7 +6,7 @@ import moment from 'moment';
 const EventsLog = ({ events }) => (
     <Segment>
         <Header>Events log</Header>
-        <List>
+        <List selection>
             {events.map((event, id) => (
                 <List.Item key={event.id || id}>
                     <List.Content floated="left">
