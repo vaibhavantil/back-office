@@ -86,6 +86,14 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
             return null;
         }).filter(Objects::nonNull).collect(Collectors.toList());
 
+        HashMap<String, Long> idStatistics = new HashMap<>();
+        for (BotMessage m : messages) {
+            Long count = idStatistics.getOrDefault(m.getId(), 0L) + 1;
+            idStatistics.put(m.getId(), count);
+        }
+
+        logger.info(idStatistics.toString());
+
         Map<String, List<BotMessage>> updates = messages.stream()
                 .collect(Collectors.groupingBy(BotMessage::getHid));
 

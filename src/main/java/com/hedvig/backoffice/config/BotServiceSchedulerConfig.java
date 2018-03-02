@@ -15,6 +15,9 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 @Configuration
 public class BotServiceSchedulerConfig {
 
@@ -31,7 +34,7 @@ public class BotServiceSchedulerConfig {
     }
 
     @Bean
-    public JobDetailFactoryBean chatTrackerJob() {
+    public JobDetailFactoryBean chatUpdatesJob() {
         JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
         jobDetailFactory.setJobClass(ChatServiceJob.class);
         jobDetailFactory.setDurability(true);
@@ -45,20 +48,25 @@ public class BotServiceSchedulerConfig {
     }
 
     @Bean
-    public SimpleTriggerFactoryBean chatTrackerTrigger(JobDetail chatTrackerJob) {
+    public SimpleTriggerFactoryBean chatUpdatesTrigger(JobDetail chatUpdatesJob) {
         SimpleTriggerFactoryBean trigger = new SimpleTriggerFactoryBean();
-        trigger.setJobDetail(chatTrackerJob);
+        trigger.setJobDetail(chatUpdatesJob);
         trigger.setRepeatInterval(interval);
         trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
         return trigger;
     }
 
     @Bean
-    public SchedulerFactoryBean botServiceScheduler(Trigger chatTrackerTrigger, JobDetail chatTrackerJob) {
+    public Executor chatUpdatesExecutor() {
+        return Executors.newSingleThreadExecutor();
+    }
+
+    @Bean
+    public SchedulerFactoryBean botServiceScheduler(Trigger chatUpdatesTrigger, Executor chatUpdatesExecutor) {
         SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
         schedulerFactory.setJobFactory(new SpringBeanJobFactory());
-        schedulerFactory.setJobDetails(chatTrackerJob);
-        schedulerFactory.setTriggers(chatTrackerTrigger);
+        schedulerFactory.setTriggers(chatUpdatesTrigger);
+        schedulerFactory.setTaskExecutor(chatUpdatesExecutor);
         return schedulerFactory;
     }
 
