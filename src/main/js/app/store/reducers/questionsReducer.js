@@ -2,8 +2,8 @@ import initialState from '../initialState';
 import {
     QUESTIONS_REQUESTING,
     QUESTIONS_REQUEST_SUCCESS
-} from 'constants/questions';
-import { sortQuestions } from 'app/lib/helpers';
+} from '../constants/questions';
+import { sortQuestions } from '../../lib/helpers';
 
 export default function(state = initialState.questions, action) {
     switch (action.type) {

@@ -12,8 +12,8 @@ import * as actions from '../actions/claimsActions';
 function* requestFlow() {
     try {
         const token = yield call(getAuthToken);
-        const claims = yield call(api, token, config.claims.getList);
-        yield put(actions.claimsRequestSuccess(claims));
+        const { data } = yield call(api, token, config.claims.getList);
+        yield put(actions.claimsRequestSuccess(data));
     } catch (error) {
         yield put(actions.claimsRequestError(error));
     }
@@ -39,8 +39,8 @@ function* updateFlow({ data, id, reqType }) {
 function* claimTypesFlow() {
     try {
         const token = yield call(getAuthToken);
-        const typesList = yield call(api, token, config.claims.types);
-        yield put(actions.claimsTypesSuccess(typesList));
+        const { data } = yield call(api, token, config.claims.types);
+        yield put(actions.claimsTypesSuccess(data));
     } catch (error) {
         yield put(actions.claimsRequestError(error));
     }
