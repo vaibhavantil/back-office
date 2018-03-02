@@ -39,8 +39,8 @@ function* updateFlow({ data, id, reqType }) {
 function* claimTypesFlow() {
     try {
         const token = yield call(getAuthToken);
-        const typesList = yield call(api, token, config.claims.types);
-        yield put(actions.claimsTypesSuccess(typesList));
+        const { data } = yield call(api, token, config.claims.types);
+        yield put(actions.claimsTypesSuccess(data));
     } catch (error) {
         yield put(actions.claimsRequestError(error));
     }

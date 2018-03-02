@@ -30,8 +30,8 @@ function* assetUpdateFlow({ assetId, assetState }) {
 function* assetRequestFlow() {
     try {
         const token = yield call(getAuthToken);
-        const assets = yield call(api, token, config.asset.get);
-        yield put(assetRequestSuccess(assets));
+        const { data } = yield call(api, token, config.asset.get);
+        yield put(assetRequestSuccess(data));
     } catch (error) {
         yield put(assetRequestError(error));
     }

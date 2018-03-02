@@ -1,5 +1,5 @@
 import initialState from '../initialState';
-import { setNewMessagesCounter, filterUsersList } from 'app/lib/helpers';
+import { setNewMessagesCounter, filterUsersList } from '../../lib/helpers';
 import {
     USERS_REQUESTING,
     USERS_REQUEST_SUCCESS,
@@ -8,7 +8,7 @@ import {
     NEW_MESSAGES_RECEIVED,
     SET_USER_FILTER,
     USERS_SEARCH_SUCCESS
-} from 'constants/chatUsers';
+} from '../constants/chatUsers';
 
 export default function(state = initialState.users, action) {
     switch (action.type) {

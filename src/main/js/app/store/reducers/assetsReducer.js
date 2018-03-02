@@ -6,7 +6,7 @@ import {
     ASSET_REQUESTING,
     ASSET_REQUEST_SUCCESS,
     ASSET_REQUEST_ERROR
-} from 'constants/assets';
+} from '../constants/assets';
 
 export default function(state = initialState.assets, action) {
     switch (action.type) {
@@ -49,10 +49,12 @@ export default function(state = initialState.assets, action) {
         case ASSET_REQUEST_SUCCESS:
             return {
                 // TODO: remove data mock
-                list: action.assets.data.map(el => ({
+                list: action.assets.map(el => ({
                     ...el,
                     price: 1000,
-                    purchaseDate: `${Math.floor(Math.random() * 10 + 1)}/03/2020`
+                    purchaseDate: `${Math.floor(
+                        Math.random() * 10 + 1
+                    )}/03/2020`
                 })),
                 requesting: false,
                 successful: true,

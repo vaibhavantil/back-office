@@ -5,7 +5,7 @@ import {
     CLAIMS_REQUEST_ERROR,
     CLAIM_TYPES,
     CLAIM_TYPES_SUCCESS
-} from 'constants/claims';
+} from '../constants/claims';
 
 export default function(state = initialState.claims, action) {
     switch (action.type) {
@@ -21,7 +21,7 @@ export default function(state = initialState.claims, action) {
         case CLAIMS_REQUEST_SUCCESS:
             return {
                 ...state,
-                list: action.claims.data,
+                list: action.claims,
                 requesting: false,
                 successful: true,
                 errors: []
@@ -43,7 +43,7 @@ export default function(state = initialState.claims, action) {
         case CLAIM_TYPES_SUCCESS:
             return {
                 ...state,
-                types: action.types.data.map((type, id) => ({
+                types: action.types.map((type, id) => ({
                     ...type,
                     key: id,
                     value: type.name,
