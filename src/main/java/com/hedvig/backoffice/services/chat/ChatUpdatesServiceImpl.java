@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.chat;
 
+import com.google.common.collect.Sets;
 import com.hedvig.backoffice.domain.SystemSetting;
 import com.hedvig.backoffice.domain.SystemSettingType;
 import com.hedvig.backoffice.services.chat.data.Message;
@@ -34,7 +35,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     private final SystemSettingsService systemSettingsService;
     private final QuestionService questionService;
 
-    private final String questionId;
+    private final Set<String> questionId;
 
     @Autowired
     public ChatUpdatesServiceImpl(ChatService chatService,
@@ -42,14 +43,17 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
                                   UpdatesService updatesService,
                                   SystemSettingsService systemSettingsService,
                                   QuestionService questionService,
-                                  @Value("${botservice.questionId}") String questionId) {
+                                  @Value("${botservice.questionId}") String[] questionId) {
 
         this.chatService = chatService;
         this.botService = botService;
         this.updatesService = updatesService;
         this.systemSettingsService = systemSettingsService;
         this.questionService = questionService;
-        this.questionId = questionId;
+        this.questionId = Sets.newHashSet(questionId);
+
+        logger.info("CHAT UPDATE SERVICE: ");
+        logger.info("question ids: " + Arrays.toString(questionId));
     }
 
     @Override
@@ -95,7 +99,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         updates.forEach((k, v) -> chatService.send(k, Message.chat(v)));
 
         questionService.addNewQuestions(messages.stream()
-                .filter(m -> m.getId().equals(questionId))
+                .filter(m -> questionId.contains(m.getId()))
                 .map(m -> new QuestionDTO(m.getHid(), m.getMessage(), m.getTimestamp()))
                 .collect(Collectors.toList()));
     }
