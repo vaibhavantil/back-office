@@ -50,7 +50,7 @@ tracker:
 
 botservice:
   baseUrl: http://localhost:4081
-  questionId: member.question
+  questionId: main.question
   urls:
     messages: /messages
     internal:
