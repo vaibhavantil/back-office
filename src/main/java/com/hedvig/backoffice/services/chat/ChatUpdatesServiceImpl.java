@@ -106,9 +106,12 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
 
         updates.forEach((k, v) -> chatService.send(k, Message.chat(v)));
 
-        questionService.addNewQuestions(messages.stream()
+        List<QuestionDTO> questions = messages.stream()
                 .filter(m -> questionId.contains(m.getId()))
                 .map(m -> new QuestionDTO(m.getHid(), m.getMessage(), m.getTimestamp()))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+
+        logger.info("fetched questions: " + questions.size());
+        questionService.addNewQuestions(questions);
     }
 }
