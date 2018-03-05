@@ -10,7 +10,7 @@ import lombok.Value;
 public class UpdatesDTO {
 
     private UpdateType type;
-    private int count;
+    private long count;
 
     public static UpdatesDTO fromDomain(Updates updates) {
         return new UpdatesDTO(updates.getType(), updates.getCount());

@@ -49,7 +49,7 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
                     .collect(Collectors.toList());
 
             List<Asset> exists = assetRepository.findAssetsById(ids);
-            updatesService.append(assets.size() - exists.size(), UpdateType.ASSETS);
+            updatesService.change(assets.size() - exists.size(), UpdateType.ASSETS);
 
             assetRepository.save(assets);
             logger.info("Pending assets added");

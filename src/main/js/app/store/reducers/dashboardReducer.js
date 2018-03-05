@@ -9,12 +9,12 @@ export default function(state = initialState.dashboard, action) {
     switch (action.type) {
         case DASHBOARD_UPDATED:
             return {
-                data: action.status,
+                data: {...state.data, ...action.status},
                 error: null
             };
         case UPDATES_REQUEST_SUCCESS:
             return {
-                data: {...state, ...action.status},
+                data: {...state.data, ...action.status},
                 error: null
             };
         case DASHBOARD_ERROR_RECEIVED:

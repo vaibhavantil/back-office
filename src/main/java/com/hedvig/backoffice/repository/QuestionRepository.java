@@ -21,6 +21,9 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query("select q from Question q where q.answer is null order by q.date")
     List<Question> notAnswered();
 
+    @Query("select count(q) from Question q where q.answer is null")
+    Long notAnsweredCount();
+
     @Query("select q from Question q where q.subscription.hid = :hid and q.answer is null")
     List<Question> findUnasweredByHid(@Param("hid") String hid);
 

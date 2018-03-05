@@ -31,7 +31,6 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
 
     private final ChatService chatService;
     private final BotService botService;
-    private final UpdatesService updatesService;
     private final SystemSettingsService systemSettingsService;
     private final QuestionService questionService;
 
@@ -40,14 +39,12 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     @Autowired
     public ChatUpdatesServiceImpl(ChatService chatService,
                                   BotService botService,
-                                  UpdatesService updatesService,
                                   SystemSettingsService systemSettingsService,
                                   QuestionService questionService,
                                   @Value("${botservice.questionId}") String[] questionId) {
 
         this.chatService = chatService;
         this.botService = botService;
-        this.updatesService = updatesService;
         this.systemSettingsService = systemSettingsService;
         this.questionService = questionService;
         this.questionId = Sets.newHashSet(questionId);
@@ -75,7 +72,6 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         }
 
         logger.info("bot-service: fetched " + fetched.size() + " messages");
-        updatesService.append(fetched.size(), UpdateType.CHATS);
 
         List<BotMessage> messages = fetched.stream().map(f -> {
             try {

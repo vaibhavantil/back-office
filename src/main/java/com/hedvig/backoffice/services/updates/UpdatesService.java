@@ -1,10 +1,12 @@
 package com.hedvig.backoffice.services.updates;
 
+import com.hedvig.backoffice.security.AuthorizationException;
+
 public interface UpdatesService {
 
-    void append(int count, UpdateType type);
-    void subscribe(String email);
-    void unsubscribe(String email);
+    void change(long count, UpdateType type);
+    void set(long count, UpdateType type);
+    void init(String email) throws AuthorizationException;
     void clear(String email, UpdateType type);
     void updates(String email);
 

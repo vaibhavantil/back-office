@@ -7,6 +7,8 @@ import com.hedvig.backoffice.repository.QuestionRepository;
 import com.hedvig.backoffice.services.chat.SubscriptionService;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
+import com.hedvig.backoffice.services.updates.UpdateType;
+import com.hedvig.backoffice.services.updates.UpdatesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,11 +26,14 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final SubscriptionService subscriptionService;
+    private final UpdatesService updatesService;
 
     @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository, SubscriptionService subscriptionService) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, SubscriptionService subscriptionService,
+                               UpdatesService updatesService) {
         this.questionRepository = questionRepository;
         this.subscriptionService = subscriptionService;
+        this.updatesService = updatesService;
     }
 
     @Override
@@ -81,18 +87,24 @@ public class QuestionServiceImpl implements QuestionService {
                 q.setPersonnel(personnel);
             });
             questionRepository.save(questions);
+            updatesService.change(-questions.size(), UpdateType.QUESTIONS);
         }
     }
 
     @Transactional
     @Override
     public void addNewQuestions(List<QuestionDTO> questions) {
+        if (questions.size() == 0) return;
+
         for (QuestionDTO dto : questions) {
             Subscription sub = subscriptionService.getOrCreateSubscription(dto.getHid());
             Question question = QuestionDTO.toDomain(dto);
             question.setSubscription(sub);
             questionRepository.save(question);
         }
+
+        long count = Optional.ofNullable(questionRepository.notAnsweredCount()).orElse(0L);
+        updatesService.set(count, UpdateType.QUESTIONS);
     }
 
 }
