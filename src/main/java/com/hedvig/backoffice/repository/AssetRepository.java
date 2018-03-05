@@ -18,5 +18,5 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
     @Query("select a from Asset a where a.id in (:ids)")
     List<Asset> findAssetsById(@Param("ids") List<String> ids);
 
-    Integer countAllByState(@Param("state") AssetState state);
+    Long countAllByState(@Param("state") AssetState state);
 }

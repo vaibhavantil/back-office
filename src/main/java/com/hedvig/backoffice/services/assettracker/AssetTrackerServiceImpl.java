@@ -58,7 +58,7 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
 
             if (changedAssets.size() > 0) {
                 assetRepository.save(changedAssets);
-                final int pendingCount = assetRepository.countAllByState(AssetState.PENDING);
+                final Long pendingCount = assetRepository.countAllByState(AssetState.PENDING);
                 updatesService.change(pendingCount, UpdateType.ASSETS);
                 log.info("Synchronized assets, added/updated {} assets, new pending count {}", changedAssets.size(), pendingCount);
             }

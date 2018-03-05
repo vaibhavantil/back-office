@@ -9,6 +9,7 @@ import com.hedvig.backoffice.repository.UpdatesRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.updates.data.UpdatesDTO;
+import com.hedvig.common.constant.AssetState;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,7 +84,7 @@ public class UpdatesServiceImpl implements UpdatesService {
                             Optional.ofNullable(questionRepository.notAnsweredCount()).orElse(0L)));
                     break;
                 case ASSETS:
-                    updates.add(new Updates(UpdateType.ASSETS, personnel, assetRepository.count()));
+                    updates.add(new Updates(UpdateType.ASSETS, personnel, assetRepository.countAllByState(AssetState.PENDING)));
                     break;
                 case CLAIMS:
                     updates.add(new Updates(UpdateType.CLAIMS, personnel, (long) claimsService.list().size()));
