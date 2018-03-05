@@ -31,7 +31,7 @@ export const routesList = [
     {
         text: 'Members overview',
         route: '/members',
-        type: 'CHATS'
+        type: 'MEMBERS'
     },
     {
         text: 'Questions',
