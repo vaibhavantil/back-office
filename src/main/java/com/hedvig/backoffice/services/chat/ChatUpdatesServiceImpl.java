@@ -104,7 +104,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
 
         List<QuestionDTO> questions = messages.stream()
                 .filter(m -> questionId.contains(m.getId()))
-                .map(m -> new QuestionDTO(m.getHid(), m.getMessage(), m.getTimestamp()))
+                .map(m -> new QuestionDTO(m.getHid(), m.getMessage(), m.getTimestamp().toEpochMilli()))
                 .collect(Collectors.toList());
 
         logger.info("fetched questions: " + questions.size());
