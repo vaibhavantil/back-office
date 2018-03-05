@@ -29,9 +29,9 @@ public class Updates {
     private Personnel personnel;
 
     @NotNull
-    private Integer count;
+    private Long count;
 
-    public Updates(UpdateType type, Personnel personnel, Integer count) {
+    public Updates(UpdateType type, Personnel personnel, Long count) {
         this.type = type;
         this.personnel = personnel;
         this.count = count;

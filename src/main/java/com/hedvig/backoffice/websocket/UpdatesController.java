@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
@@ -22,8 +23,8 @@ public class UpdatesController {
     }
 
     @SubscribeMapping("/clear/{type}")
-    public void clear(@DestinationVariable UpdateType type, Principal principal) {
-        updatesService.clear(principal.getName(), type);
+    public void clear(@DestinationVariable UpdateType type, @AuthenticationPrincipal String principal) {
+        //updatesService.clear(principal, type);
     }
 
     @SubscribeMapping("/")
