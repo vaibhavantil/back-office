@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +59,7 @@ public class UpdatesServiceImpl implements UpdatesService {
     }
 
     @Override
+    @Transactional
     public void set(long count, UpdateType type) {
         List<Updates> updates = updatesRepository.findByType(type);
         updates.forEach(u -> u.setCount(count));
@@ -71,15 +73,28 @@ public class UpdatesServiceImpl implements UpdatesService {
     @Transactional
     public void init(String email) throws AuthorizationException {
         Personnel personnel = personnelRepository.findByEmail(email).orElseThrow(AuthorizationException::new);
-        List<Updates> updates = updatesRepository.findByPersonnel(personnel);
-        if (updates.size() == 0) {
-            updates.add(new Updates(UpdateType.ASSETS, personnel, assetRepository.count()));
-            updates.add(new Updates(UpdateType.QUESTIONS, personnel,
-                    Optional.ofNullable(questionRepository.notAnsweredCount()).orElse(0L)));
-            updates.add(new Updates(UpdateType.CLAIMS, personnel, (long) claimsService.list().size()));
+        updatesRepository.deleteByPersonnel(personnel);
 
-            updatesRepository.save(updates);
+        List<Updates> updates = new ArrayList<>();
+        for (UpdateType type : UpdateType.values()) {
+            switch (type) {
+                case QUESTIONS:
+                    updates.add(new Updates(UpdateType.QUESTIONS, personnel,
+                            Optional.ofNullable(questionRepository.notAnsweredCount()).orElse(0L)));
+                    break;
+                case ASSETS:
+                    updates.add(new Updates(UpdateType.ASSETS, personnel, assetRepository.count()));
+                    break;
+                case CLAIMS:
+                    updates.add(new Updates(UpdateType.CLAIMS, personnel, (long) claimsService.list().size()));
+                    break;
+                default:
+                    updates.add(new Updates(type, personnel,0L));
+                    break;
+            }
         }
+
+        updatesRepository.save(updates);
     }
 
     @Override
