@@ -24,10 +24,10 @@ public class QuestionDTO {
     private JsonNode answer;
     private PersonnelDTO personnel;
     private String hid;
-    private Instant date;
-    private Instant answerDate;
+    private Long date;
+    private Long answerDate;
 
-    public QuestionDTO(String hid, JsonNode message, Instant date) {
+    public QuestionDTO(String hid, JsonNode message, long date) {
         this.hid = hid;
         this.message = message;
         this.date = date;
@@ -58,12 +58,12 @@ public class QuestionDTO {
                 Optional.ofNullable(answer).map(BotMessage::getMessage).orElse(null),
                 Optional.ofNullable(question.getPersonnel()).map(PersonnelDTO::fromDomain).orElse(null),
                 question.getSubscription().getHid(),
-                question.getDate(),
-                question.getAnswerDate());
+                Optional.ofNullable(question.getDate()).map(Instant::toEpochMilli).orElse(null),
+                Optional.ofNullable(question.getAnswerDate()).map(Instant::toEpochMilli).orElse(null));
     }
 
     public static Question toDomain(QuestionDTO dto) {
-        return new Question(dto.getMessage().toString(), dto.getDate());
+        return new Question(dto.getMessage().toString(), Instant.ofEpochMilli(dto.getDate()));
     }
 
 }
