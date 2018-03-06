@@ -6,20 +6,19 @@ import com.hedvig.backoffice.services.updates.UpdateType;
 import com.hedvig.backoffice.services.updates.UpdatesService;
 import com.hedvig.backoffice.web.dto.assets.AssetDTO;
 import com.hedvig.common.constant.AssetState;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AssetTrackerServiceImpl implements AssetTrackerService {
-
-    private static Logger logger = LoggerFactory.getLogger(AssetTrackerServiceImpl.class);
 
     private final AssetRepository assetRepository;
     private final AssetTracker tracker;
@@ -41,18 +40,28 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
     @Transactional
     @Override
     public void loadPendingAssetsFromTracker() {
-        List<Asset> assets = tracker.findPendingAssets();
-        if (assets.size() > 0) {
-            List<String> ids = assets
+        final List<Asset> importedAssets = tracker.findPendingAssets();
+        if (importedAssets.size() > 0) {
+            final List<String> importedIds = importedAssets
                     .stream()
                     .map(Asset::getId)
                     .collect(Collectors.toList());
+            final Map<String, Asset> existingAssets = assetRepository
+                    .findAssetsById(importedIds)
+                    .stream()
+                    .collect(Collectors.toMap(Asset::getId, a -> a));
 
-            List<Asset> exists = assetRepository.findAssetsById(ids);
-            updatesService.change(assets.size() - exists.size(), UpdateType.ASSETS);
+            final List<Asset> changedAssets = importedAssets
+                    .stream()
+                    .filter(a -> !a.equals(existingAssets.get(a.getId())))
+                    .collect(Collectors.toList());
 
-            assetRepository.save(assets);
-            logger.info("Pending assets added");
+            if (changedAssets.size() > 0) {
+                assetRepository.save(changedAssets);
+                final Long pendingCount = assetRepository.countAllByState(AssetState.PENDING);
+                updatesService.change(pendingCount, UpdateType.ASSETS);
+                log.info("Synchronized assets, added/updated {} assets, new pending count {}", changedAssets.size(), pendingCount);
+            }
         }
     }
 
@@ -83,7 +92,7 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
             asset.setState(state);
             tracker.updateAsset(asset);
             assetRepository.save(asset);
-            logger.info(String.format("state for asset with id %s changed to %s", assetId, state.name()));
+            log.info("state for asset with id {} changed to {}", assetId, state.name());
         } else {
             throw new AssetNotFoundException(String.format("asset with id %s not found", assetId));
         }
