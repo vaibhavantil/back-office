@@ -74,6 +74,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.setAnswerDate(message.getTimestamp());
 
         questionRepository.save(question);
+        updatesService.changeOn(-1, UpdateType.QUESTIONS);
     }
 
     @Transactional
@@ -87,7 +88,7 @@ public class QuestionServiceImpl implements QuestionService {
                 q.setPersonnel(personnel);
             });
             questionRepository.save(questions);
-            updatesService.change(-questions.size(), UpdateType.QUESTIONS);
+            updatesService.changeOn(-questions.size(), UpdateType.QUESTIONS);
         }
     }
 
@@ -97,6 +98,9 @@ public class QuestionServiceImpl implements QuestionService {
         if (questions.size() == 0) return;
 
         for (QuestionDTO dto : questions) {
+            Optional<Question> optional = questionRepository.findById(dto.getId());
+            if (optional.isPresent()) continue;
+
             Subscription sub = subscriptionService.getOrCreateSubscription(dto.getHid());
             Question question = QuestionDTO.toDomain(dto);
             question.setSubscription(sub);

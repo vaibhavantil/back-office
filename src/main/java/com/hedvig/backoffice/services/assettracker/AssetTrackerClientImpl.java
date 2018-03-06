@@ -15,24 +15,24 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AssetTrackerImpl implements AssetTracker {
+public class AssetTrackerClientImpl implements AssetTrackerClient {
 
-    private static Logger logger = LoggerFactory.getLogger(AssetTrackerImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(AssetTrackerClientImpl.class);
 
     private String trackerUrl;
     private String assetsPath;
     private String updatePath;
 
     @Autowired
-    public AssetTrackerImpl(@Value("${tracker.baseUrl}") String trackerUrl,
-                            @Value("${tracker.urls.assets}") String assetsPath,
-                            @Value("${tracker.urls.update}") String updatePath) {
+    public AssetTrackerClientImpl(@Value("${tracker.baseUrl}") String trackerUrl,
+                                  @Value("${tracker.urls.assets}") String assetsPath,
+                                  @Value("${tracker.urls.update}") String updatePath) {
         this.trackerUrl = trackerUrl;
         this.assetsPath = assetsPath;
         this.updatePath = updatePath;
 
         logger.info("ASSET TRACKER SERVICE:");
-        logger.info("class: " + AssetTrackerImpl.class.getName());
+        logger.info("class: " + AssetTrackerClientImpl.class.getName());
         logger.info("base: " + trackerUrl);
         logger.info("assets: " + assetsPath);
     }
@@ -58,7 +58,7 @@ public class AssetTrackerImpl implements AssetTracker {
     public void updateAsset(Asset asset) throws AssetTrackerException {
         RestTemplate template = new RestTemplate();
         try {
-            template.put(trackerUrl + updatePath + "/" +  asset.getId(), asset);
+            template.put(trackerUrl + updatePath + "/" + asset.getId(), asset);
         } catch (Exception e) {
             throw new AssetTrackerException(e);
         }

@@ -19,7 +19,7 @@ export default class Questions extends React.Component {
         return (
             <React.Fragment>
                 <Header size="huge">Questions</Header>
-                <BackLink />
+                <BackLink path="dashboard" />
                 <QuestionsList questions={questions.list} users={list} />
             </React.Fragment>
         );

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { Button, Checkbox, Grid, Header, Segment } from 'semantic-ui-react';
+import { Button, Grid, Header, Segment } from 'semantic-ui-react';
 import Message from 'components/chat/messages/Message';
 import Pagination from 'components/shared/pagination/Pagination';
 
@@ -41,7 +41,7 @@ const getUserInfo = (users, id) => {
     return user ? (
         <span>User: {`${user.firstName} ${user.lastName || ''}`}</span>
     ) : (
-        <span>User</span>
+        <span>User Id: {`${id}`}</span>
     );
 };
 
@@ -77,15 +77,11 @@ export default class SortedList extends React.Component {
                                             {users.length &&
                                                 getUserInfo(users, data.hid)}
                                             <span>
-                                                Admin:{' '}
-                                                {`${data.personnel &&
-                                                    data.personnel.email}`}
-                                            </span>
-                                            <span>
-                                                <Checkbox
-                                                    disabled
-                                                    checked={!!data.answer}
-                                                />
+                                                {
+                                                    data.personnel && data.personnel.email
+                                                        ? `Admin: ${data.personnel.email}`
+                                                        : null
+                                                }
                                             </span>
                                         </QuestionContent>
                                     </Grid.Column>
@@ -94,7 +90,7 @@ export default class SortedList extends React.Component {
                                     <GridColumn>
                                         <Message
                                             content={data.message.body}
-                                            left={true}
+                                            left={!data.answer}
                                             isQuestionMessage={true}
                                         />
                                         {!data.answer ? (
@@ -110,12 +106,25 @@ export default class SortedList extends React.Component {
                                         ) : null}
                                     </GridColumn>
                                 </Grid.Row>
+                                {
+                                    data.answer ?
+                                        <Grid.Row columns={1}>
+                                            <GridColumn>
+                                                <Message
+                                                    content={data.answer.body}
+                                                    left={true}
+                                                    isQuestionMessage={true}
+                                                />
+                                            </GridColumn>
+                                        </Grid.Row>
+                                    : null
+                                }
                             </GridSelection>
                         ))}
                         <Pagination
                             items={list}
                             onChangePage={this.onChangePage}
-                            pageSize={4}
+                            pageSize={10}
                         />
                     </React.Fragment>
                 ) : (

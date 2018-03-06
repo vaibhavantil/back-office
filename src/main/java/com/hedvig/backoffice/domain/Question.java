@@ -16,8 +16,7 @@ import java.time.Instant;
 public class Question {
 
     @Id
-    @GeneratedValue
-    private Long Id;
+    private Long id;
 
     @NotNull
     @Lob
@@ -38,7 +37,8 @@ public class Question {
     @ManyToOne
     private Subscription subscription;
 
-    public Question(String message, Instant date) {
+    public Question(long id, String message, Instant date) {
+        this.id = id;
         this.message = message;
         this.date = date;
     }

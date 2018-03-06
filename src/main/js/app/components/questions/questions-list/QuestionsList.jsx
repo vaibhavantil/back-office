@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import SortedList from './SortedList';
 import { history } from 'app/store';
-import { Header } from 'semantic-ui-react';
+import { Tab } from 'semantic-ui-react';
 
 const ListContainer = styled.div`
     display: flex;
@@ -16,25 +16,36 @@ const answerClick = (id, msgId) => {
     history.push(`/members/${id}/${msgId}`);
 };
 
-const QuestionsList = ({ questions, users }) => (
-    <ListContainer>
-       
-        <Header>Not answered</Header>
+const QuestionsList = ({ questions, users }) => {
+    const notAnswered = () =>
+        <Tab.Pane>
+            <SortedList
+                list={questions.notAnswered}
+                users={users}
+                clickHandler={answerClick}
+            />
+        </Tab.Pane>;
 
-        <SortedList
-            list={questions.notAnswered}
-            users={users}
-            clickHandler={answerClick}
-        />
+    const answered = () =>
+        <Tab.Pane>
+            <SortedList
+                list={questions.answered}
+                users={users}
+                clickHandler={answerClick}
+            />
+        </Tab.Pane>;
 
-         <Header>Answered</Header>
-        <SortedList
-            list={questions.answered}
-            users={users}
-            clickHandler={answerClick}
-        />
-    </ListContainer>
-);
+    const panes = [
+        { menuItem: 'Not Answered', render: notAnswered },
+        { menuItem: 'Answered', render: answered }
+    ];
+
+    return (
+        <ListContainer>
+            <Tab renderActiveOnly={true} panes={panes} />
+        </ListContainer>
+    )
+};
 
 QuestionsList.propTypes = {
     questions: PropTypes.object.isRequired,

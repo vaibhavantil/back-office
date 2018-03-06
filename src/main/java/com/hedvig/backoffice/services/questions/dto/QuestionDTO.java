@@ -1,15 +1,15 @@
 package com.hedvig.backoffice.services.questions.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.domain.Question;
-import com.hedvig.backoffice.services.messages.BotMessageException;
-import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.web.dto.PersonnelDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -27,35 +27,24 @@ public class QuestionDTO {
     private Long date;
     private Long answerDate;
 
-    public QuestionDTO(String hid, JsonNode message, long date) {
+    public QuestionDTO(long id, String hid, JsonNode message, long date) {
+        this.id = id;
         this.hid = hid;
         this.message = message;
         this.date = date;
     }
 
     public static QuestionDTO fromDomain(Question question) {
-        BotMessage message = null;
-        try {
-            message = question.getMessage() != null
-                    ? new BotMessage(question.getMessage())
-                    : null;
-        } catch (BotMessageException e) {
-            logger.error("Conversion failed", e);
-        }
+        JsonNode message = Optional.ofNullable(question.getMessage())
+                .map(QuestionDTO::parseMessage).orElse(null);
 
-        BotMessage answer = null;
-        try {
-            answer = question.getAnswer() != null
-                    ? new BotMessage(question.getAnswer())
-                    : null;
-        } catch (BotMessageException e) {
-            logger.error("Conversion failed", e);
-        }
+        JsonNode answer = Optional.ofNullable(question.getAnswer())
+                .map(QuestionDTO::parseMessage).orElse(null);
 
         return new QuestionDTO(
                 question.getId(),
-                Optional.ofNullable(message).map(BotMessage::getMessage).orElse(null),
-                Optional.ofNullable(answer).map(BotMessage::getMessage).orElse(null),
+                message,
+                answer,
                 Optional.ofNullable(question.getPersonnel()).map(PersonnelDTO::fromDomain).orElse(null),
                 question.getSubscription().getHid(),
                 Optional.ofNullable(question.getDate()).map(Instant::toEpochMilli).orElse(null),
@@ -63,7 +52,17 @@ public class QuestionDTO {
     }
 
     public static Question toDomain(QuestionDTO dto) {
-        return new Question(dto.getMessage().toString(), Instant.ofEpochMilli(dto.getDate()));
+        return new Question(dto.getId(), dto.getMessage().toString(), Instant.ofEpochMilli(dto.getDate()));
+    }
+
+    private static JsonNode parseMessage(String message) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(message, JsonNode.class);
+        } catch (IOException e) {
+            logger.error("conversion failed");
+        }
+        return null;
     }
 
 }
