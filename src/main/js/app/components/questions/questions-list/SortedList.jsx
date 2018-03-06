@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { Button, Checkbox, Grid, Header, Segment } from 'semantic-ui-react';
+import { Button, Grid, Header, Segment } from 'semantic-ui-react';
 import Message from 'components/chat/messages/Message';
 import Pagination from 'components/shared/pagination/Pagination';
 
@@ -82,12 +82,6 @@ export default class SortedList extends React.Component {
                                                         ? `Admin: ${data.personnel.email}`
                                                         : null
                                                 }
-                                            </span>
-                                            <span>
-                                                <Checkbox
-                                                    disabled
-                                                    checked={!!data.answer}
-                                                />
                                             </span>
                                         </QuestionContent>
                                     </Grid.Column>
