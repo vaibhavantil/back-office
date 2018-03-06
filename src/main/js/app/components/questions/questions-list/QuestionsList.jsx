@@ -17,23 +17,27 @@ const answerClick = (id, msgId) => {
 };
 
 const QuestionsList = ({ questions, users }) => {
+    const notAnswered = () =>
+        <Tab.Pane>
+            <SortedList
+                list={questions.notAnswered}
+                users={users}
+                clickHandler={answerClick}
+            />
+        </Tab.Pane>;
+
+    const answered = () =>
+        <Tab.Pane>
+            <SortedList
+                list={questions.answered}
+                users={users}
+                clickHandler={answerClick}
+            />
+        </Tab.Pane>;
+
     const panes = [
-        { menuItem: 'Not Answered', render: () =>
-            <Tab.Pane>
-                <SortedList
-                    list={questions.notAnswered}
-                    users={users}
-                    clickHandler={answerClick}
-                />
-            </Tab.Pane> },
-        { menuItem: 'Answered', render: () =>
-            <Tab.Pane>
-                <SortedList
-                    list={questions.answered}
-                    users={users}
-                    clickHandler={answerClick}
-                />
-            </Tab.Pane> }
+        { menuItem: 'Not Answered', render: notAnswered },
+        { menuItem: 'Answered', render: answered }
     ];
 
     return (
