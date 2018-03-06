@@ -50,7 +50,7 @@ public class UpdatesServiceImpl implements UpdatesService {
     @Override
     @Transactional
     public void changeOn(long count, UpdateType type) {
-        if (count > 0) {
+        if (count != 0) {
             List<Updates> updates = updatesRepository.findByType(type);
             updates.forEach(u -> u.setCount(u.getCount() + count));
             updatesRepository.save(updates);

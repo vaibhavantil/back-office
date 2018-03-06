@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    @Query("select q from Question q where q.id = :id order by q.date")
+    @Query("select q from Question q where q.id = :id")
     Optional<Question> findById(@Param("id") Long id);
 
     @Query("select q from Question q where q.answer is not null order by q.date")

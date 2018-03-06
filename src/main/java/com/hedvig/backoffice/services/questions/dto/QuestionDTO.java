@@ -27,7 +27,8 @@ public class QuestionDTO {
     private Long date;
     private Long answerDate;
 
-    public QuestionDTO(String hid, JsonNode message, long date) {
+    public QuestionDTO(long id, String hid, JsonNode message, long date) {
+        this.id = id;
         this.hid = hid;
         this.message = message;
         this.date = date;
@@ -51,7 +52,7 @@ public class QuestionDTO {
     }
 
     public static Question toDomain(QuestionDTO dto) {
-        return new Question(dto.getMessage().toString(), Instant.ofEpochMilli(dto.getDate()));
+        return new Question(dto.getId(), dto.getMessage().toString(), Instant.ofEpochMilli(dto.getDate()));
     }
 
     private static JsonNode parseMessage(String message) {
