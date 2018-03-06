@@ -87,7 +87,7 @@ public class QuestionServiceImpl implements QuestionService {
                 q.setPersonnel(personnel);
             });
             questionRepository.save(questions);
-            updatesService.change(-questions.size(), UpdateType.QUESTIONS);
+            updatesService.changeOn(-questions.size(), UpdateType.QUESTIONS);
         }
     }
 

@@ -59,7 +59,7 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
             if (changedAssets.size() > 0) {
                 assetRepository.save(changedAssets);
                 final Long pendingCount = assetRepository.countAllByState(AssetState.PENDING);
-                updatesService.change(pendingCount, UpdateType.ASSETS);
+                updatesService.set(pendingCount, UpdateType.ASSETS);
                 log.info("Synchronized assets, added/updated {} assets, new pending count {}", changedAssets.size(), pendingCount);
             }
         }
@@ -92,6 +92,8 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
             asset.setState(state);
             tracker.updateAsset(asset);
             assetRepository.save(asset);
+            final Long pendingCount = assetRepository.countAllByState(AssetState.PENDING);
+            updatesService.set(pendingCount, UpdateType.ASSETS);
             log.info("state for asset with id {} changed to {}", assetId, state.name());
         } else {
             throw new AssetNotFoundException(String.format("asset with id %s not found", assetId));
