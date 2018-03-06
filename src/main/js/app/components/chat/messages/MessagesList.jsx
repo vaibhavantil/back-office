@@ -44,6 +44,8 @@ export default class MessagesList extends React.Component {
                             content={item.body}
                             left={item.header.fromId !== userId}
                             msgId={item.globalId}
+                            timestamp={item.timestamp}
+                            from={item.header.fromId !== userId ? "bot" : "member"}
                         />
                     ))
                 ) : (

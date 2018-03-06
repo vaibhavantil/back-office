@@ -39,9 +39,9 @@ const GridSelection = styled(Grid)`
 const getUserInfo = (users, id) => {
     const user = users.find(user => user.hid === id);
     return user ? (
-        <span>User: {`${user.firstName} ${user.lastName || ''}`}</span>
+        <span>Member: {`${user.firstName} ${user.lastName || ''}`}</span>
     ) : (
-        <span>User Id: {`${id}`}</span>
+        <span>Member Id: {`${id}`}</span>
     );
 };
 
@@ -92,6 +92,8 @@ export default class SortedList extends React.Component {
                                             content={data.message.body}
                                             left={!data.answer}
                                             isQuestionMessage={true}
+                                            timestamp={data.date}
+                                            from="member"
                                         />
                                         {!data.answer ? (
                                             <Button
@@ -113,7 +115,9 @@ export default class SortedList extends React.Component {
                                                 <Message
                                                     content={data.answer.body}
                                                     left={true}
-                                                    isQuestionMessage={true}
+                                                    isQuestionMessage={false}
+                                                    timestamp={data.answerDate}
+                                                    from="admin"
                                                 />
                                             </GridColumn>
                                         </Grid.Row>
