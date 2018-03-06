@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,26 +20,25 @@ import java.util.stream.Collectors;
 public class AssetTrackerServiceImpl implements AssetTrackerService {
 
     private final AssetRepository assetRepository;
-    private final AssetTracker tracker;
+
+    private final AssetTrackerClient trackerClient;
+
     private final UpdatesService updatesService;
 
     @Autowired
-    public AssetTrackerServiceImpl(AssetRepository assetRepository, AssetTracker tracker, UpdatesService updatesService) {
+    public AssetTrackerServiceImpl(
+            AssetRepository assetRepository,
+            AssetTrackerClient trackerClient,
+            UpdatesService updatesService) {
         this.assetRepository = assetRepository;
-        this.tracker = tracker;
+        this.trackerClient = trackerClient;
         this.updatesService = updatesService;
-    }
-
-    @PostConstruct
-    @Transactional
-    public void setup() {
-        assetRepository.deleteAll();
     }
 
     @Transactional
     @Override
     public void loadPendingAssetsFromTracker() {
-        final List<Asset> importedAssets = tracker.findPendingAssets();
+        final List<Asset> importedAssets = trackerClient.findPendingAssets();
         if (importedAssets.size() > 0) {
             final List<String> importedIds = importedAssets
                     .stream()
@@ -90,7 +88,7 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
         Asset asset = assetRepository.findOne(assetId);
         if (asset != null) {
             asset.setState(state);
-            tracker.updateAsset(asset);
+            trackerClient.updateAsset(asset);
             assetRepository.save(asset);
             final Long pendingCount = assetRepository.countAllByState(AssetState.PENDING);
             updatesService.set(pendingCount, UpdateType.ASSETS);

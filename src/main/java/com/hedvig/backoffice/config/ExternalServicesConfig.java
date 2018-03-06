@@ -1,8 +1,8 @@
 package com.hedvig.backoffice.config;
 
-import com.hedvig.backoffice.services.assettracker.AssetTracker;
-import com.hedvig.backoffice.services.assettracker.AssetTrackerStub;
-import com.hedvig.backoffice.services.assettracker.AssetTrackerImpl;
+import com.hedvig.backoffice.services.assettracker.AssetTrackerClient;
+import com.hedvig.backoffice.services.assettracker.AssetTrackerClientStub;
+import com.hedvig.backoffice.services.assettracker.AssetTrackerClientImpl;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.ClaimsServiceConfig;
 import com.hedvig.backoffice.services.claims.ClaimsServiceImpl;
@@ -34,12 +34,12 @@ public class ExternalServicesConfig {
     }
 
     @Bean
-    public AssetTracker assetTracker(@Value("${tracker.stub:false}") boolean stub) {
+    public AssetTrackerClient assetTracker(@Value("${tracker.stub:false}") boolean stub) {
         val factory = context.getAutowireCapableBeanFactory();
 
         return stub
-                ? factory.createBean(AssetTrackerStub.class)
-                : factory.createBean(AssetTrackerImpl.class);
+                ? factory.createBean(AssetTrackerClientStub.class)
+                : factory.createBean(AssetTrackerClientImpl.class);
     }
 
     @Bean

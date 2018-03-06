@@ -18,9 +18,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class AssetTrackerStub implements AssetTracker {
+public class AssetTrackerClientStub implements AssetTrackerClient {
 
-    private static Logger logger = LoggerFactory.getLogger(AssetTrackerStub.class);
+    private static Logger logger = LoggerFactory.getLogger(AssetTrackerClientStub.class);
 
     private AtomicInteger generation;
     private AtomicInteger globalId;
@@ -28,11 +28,11 @@ public class AssetTrackerStub implements AssetTracker {
     private final MemberService memberService;
 
     @Autowired
-    public AssetTrackerStub(MemberService memberService) {
+    public AssetTrackerClientStub(MemberService memberService) {
         this.memberService = memberService;
 
         logger.info("ASSET TRACKER SERVICE:");
-        logger.info("class: " + AssetTrackerStub.class.getName());
+        logger.info("class: " + AssetTrackerClientStub.class.getName());
         generation = new AtomicInteger(0);
         globalId = new AtomicInteger(0);
     }
