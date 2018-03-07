@@ -54,7 +54,7 @@ export default class ClaimInfo extends React.Component {
                     <Grid>
                         <Grid.Row>
                             Registration date:{' '}
-                            {moment.unix(data.timestamp).format('DD MMMM YYYY')}
+                            {moment(data.date).format('HH:mm DD MMMM YYYY')}
                         </Grid.Row>
                         <Grid.Row>User: {user && user.firstName}</Grid.Row>
                         <Grid.Row>
