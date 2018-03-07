@@ -10,7 +10,7 @@ const EventsLog = ({ events }) => (
             {events.map((event, id) => (
                 <List.Item key={event.id || id}>
                     <List.Content floated="left">
-                        {moment(event.date).format('DD MM YYYY')}
+                        {moment(event.date).format('HH:mm DD MMMM YYYY')}
                     </List.Content>
                     <List.Content floated="right">{event.text}</List.Content>
                 </List.Item>

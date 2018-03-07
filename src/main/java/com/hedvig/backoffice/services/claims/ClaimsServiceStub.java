@@ -11,6 +11,7 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -139,6 +140,7 @@ public class ClaimsServiceStub implements ClaimsService {
     private void addEvent(Claim claim, String message) {
         ClaimEvent event = new ClaimEvent();
         event.setText(message);
+        event.setDate(LocalDateTime.now());
 
         claim.getEvents().add(event);
     }

@@ -7,6 +7,7 @@ import SelectMessage from './SelectMessage';
 import AudioMessage from './AudioMessage';
 import ImageMessage from './ImageMessage';
 import * as types from 'app/lib/messageTypes';
+import { Label } from 'semantic-ui-react';
 
 const MessageRow = styled.div`
     display: flex;
@@ -17,52 +18,69 @@ const MessageRow = styled.div`
 `;
 
 const MessageBox = styled.div`
-    position: relative;
     max-width: 400px;
-    padding: 0.8em 1em;
+`;
+
+const MessageBody = styled.div`
     white-space: pre-wrap;
     word-wrap: break-word;
     z-index: 2000;
+    position: relative;
     border: 1px solid #d4d4d5;
     color: #4b4b4b;
     line-height: 1.4em;
     background: #fff;
     border-radius: 0.3rem;
+    padding: 0.8em 1em;
     box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
         0 2px 10px 0 rgba(34, 36, 38, 0.15);
 
-    ${props =>
-        !props.isQuestion
-            ? `&:before {
-                    position: absolute;
-                    content: '';
-                    width: 0.7em;
-                    height: 0.7em;
-                    background: #fff;
-                    -webkit-transform: rotate(45deg);
-                    transform: rotate(45deg);
-                    z-index: 2;
-                    box-shadow: 1px 1px 0 0 #bababc;
-                    bottom: -0.3em;
-                    left: ${props => (props.left ? '1em' : 'auto')};
-                    top: auto;
-                    right: ${props => (!props.left ? '1em' : 'auto')};
-                    margin-left: 0;
-                }`
-            : ''};
+    &:before {
+        position: absolute;
+        content: '';
+        width: 0.7em;
+        height: 0.7em;
+        background: #fff;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        z-index: 2;
+        box-shadow: 1px 1px 0 0 #bababc;
+        bottom: -0.3em;
+        left: 1em;
+        top: auto;
+        right: auto;
+        margin-left: 0;
+    }
+`;
+
+const MessageInfo = styled.div`
+    margin: 0.5em 0;
 `;
 
 const Video = styled.video`
     width: 350px;
 `;
 
-const Message = ({ left, content, isQuestionMessage, msgId }) => (
+const Message = ({ left, content, isQuestionMessage, msgId, timestamp, from }) => (
     <MessageRow left={left} isQuestion={isQuestionMessage} id={`msg-${msgId}`}>
-        <MessageBox left={left} isQuestion={isQuestionMessage}>
-            {content.text}
-            <br />
-            <MessageContent content={content} />
-        </MessageBox>
+        { content.type == types.PARAGRAPH
+            ? ""
+            : <MessageBox>
+                <MessageBody left={left}>
+                    {content.text}
+                    <br />
+                    <MessageContent content={content} />
+                </MessageBody>
+                {timestamp ?
+                    <MessageInfo>
+                        <Label>
+                            {from}
+                            <Label.Detail>{moment(timestamp).format('HH:mm:ss DD MMMM YYYY')}</Label.Detail>
+                        </Label>
+                    </MessageInfo>
+                    : null}
+            </MessageBox>
+        }
     </MessageRow>
 );
 
@@ -70,7 +88,9 @@ Message.propTypes = {
     left: PropTypes.bool.isRequired,
     content: PropTypes.object.isRequired,
     isQuestionMessage: PropTypes.bool,
-    msgId: PropTypes.number
+    msgId: PropTypes.number,
+    timestamp: PropTypes.string,
+    from: PropTypes.string
 };
 
 const MessageContent = ({ content }) => {

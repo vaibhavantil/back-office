@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import moment from 'moment';
-import { Button, Grid, Header, Segment } from 'semantic-ui-react';
+import { Button, Header, Segment } from 'semantic-ui-react';
 import Message from 'components/chat/messages/Message';
 import Pagination from 'components/shared/pagination/Pagination';
 
@@ -15,34 +14,19 @@ const List = styled(Segment)`
     }
 `;
 
-const QuestionContent = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+const MessageList = styled.div`
+    border-bottom: solid 1px #22242626;
+    padding: 10px 0;
 `;
 
-const GridColumn = styled(Grid.Column)`
-    &&& {
-        display: flex !important;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: flex-start;
-    }
+const ChatControlsContainer = styled.div`
+    text-align: right;
 `;
 
-const GridSelection = styled(Grid)`
-    &&& {
-        border-bottom: solid 1px #22242626;
-    }
-`;
 
 const getUserInfo = (users, id) => {
     const user = users.find(user => user.hid === id);
-    return user ? (
-        <span>User: {`${user.firstName} ${user.lastName || ''}`}</span>
-    ) : (
-        <span>User Id: {`${id}`}</span>
-    );
+    return user ? `${user.firstName} ${user.lastName || ''}` : `id: ${id}`;
 };
 
 export default class SortedList extends React.Component {
@@ -65,61 +49,41 @@ export default class SortedList extends React.Component {
                 {list.length ? (
                     <React.Fragment>
                         {activeList.map(data => (
-                            <GridSelection key={data.id}>
-                                <Grid.Row columns={1}>
-                                    <Grid.Column>
-                                        <QuestionContent>
-                                            <span>
-                                                {moment(data.date).format(
-                                                    'DD/MM/YYYY HH:mm'
-                                                )}
-                                            </span>
-                                            {users.length &&
-                                                getUserInfo(users, data.hid)}
-                                            <span>
-                                                {
-                                                    data.personnel && data.personnel.email
-                                                        ? `Admin: ${data.personnel.email}`
-                                                        : null
-                                                }
-                                            </span>
-                                        </QuestionContent>
-                                    </Grid.Column>
-                                </Grid.Row>
-                                <Grid.Row columns={1}>
-                                    <GridColumn>
-                                        <Message
-                                            content={data.message.body}
-                                            left={!data.answer}
-                                            isQuestionMessage={true}
-                                        />
-                                        {!data.answer ? (
-                                            <Button
-                                                content="Answer"
-                                                onClick={clickHandler.bind(
-                                                    this,
-                                                    data.hid,
-                                                    data.message.globalId
-                                                )}
-                                                primary
-                                            />
-                                        ) : null}
-                                    </GridColumn>
-                                </Grid.Row>
+                            <MessageList key={data.id}>
+                                <Message
+                                    content={data.message.body}
+                                    left={!data.answer}
+                                    isQuestionMessage={true}
+                                    timestamp={data.date}
+                                    from={users.length && getUserInfo(users, data.hid)}
+                                />
                                 {
                                     data.answer ?
-                                        <Grid.Row columns={1}>
-                                            <GridColumn>
-                                                <Message
-                                                    content={data.answer.body}
-                                                    left={true}
-                                                    isQuestionMessage={true}
-                                                />
-                                            </GridColumn>
-                                        </Grid.Row>
-                                    : null
+                                        <Message
+                                            content={data.answer.body}
+                                            left={true}
+                                            isQuestionMessage={false}
+                                            timestamp={data.answerDate}
+                                            from={
+                                                data.personnel && data.personnel.email
+                                                    ? `${data.personnel.email}`
+                                                    : 'admin'
+                                            }
+                                        />
+                                        : null
                                 }
-                            </GridSelection>
+                                <ChatControlsContainer>
+                                    <Button
+                                        content="Open Chat"
+                                        onClick={clickHandler.bind(
+                                            this,
+                                            data.hid,
+                                            data.message.globalId
+                                        )}
+                                        primary
+                                    />
+                                </ChatControlsContainer>
+                            </MessageList>
                         ))}
                         <Pagination
                             items={list}
