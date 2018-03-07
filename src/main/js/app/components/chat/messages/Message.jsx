@@ -75,7 +75,7 @@ const Message = ({ left, content, isQuestionMessage, msgId, timestamp, from }) =
                     <MessageInfo>
                         <Label>
                             {from}
-                            <Label.Detail>{moment(timestamp).format('DD/MM/YYYY HH:mm:ss')}</Label.Detail>
+                            <Label.Detail>{moment(timestamp).format('HH:mm:ss DD/MM/YYYY')}</Label.Detail>
                         </Label>
                     </MessageInfo>
                     : null}
