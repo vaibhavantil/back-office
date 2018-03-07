@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -33,6 +34,11 @@ public class ClaimsController {
     public Claim claim(@PathVariable String id) throws ClaimException {
         return Optional.ofNullable(claimsService.find(id))
                 .orElseThrow(ClaimsServiceException::new);
+    }
+
+    @GetMapping("/user/{id}")
+    public List<Claim> listByUserId(@PathVariable String id) {
+        return claimsService.listByUserId(id);
     }
 
     @GetMapping("/types")
@@ -109,6 +115,11 @@ public class ClaimsController {
 
         return ResponseEntity
                 .noContent().build();
+    }
+
+    @GetMapping("/stat")
+    public Map<String, Long> statistics() {
+        return claimsService.statistics();
     }
 
 }

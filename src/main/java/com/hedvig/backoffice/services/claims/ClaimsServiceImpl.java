@@ -7,13 +7,13 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ClaimsServiceImpl implements ClaimsService {
@@ -22,12 +22,14 @@ public class ClaimsServiceImpl implements ClaimsService {
 
     private final RestTemplate template;
     private final ClaimsServiceConfig config;
+    private final ClaimsServiceClient client;
 
     @Autowired
-    public ClaimsServiceImpl(ClaimsServiceConfig config) {
+    public ClaimsServiceImpl(ClaimsServiceConfig config, ClaimsServiceClient client) {
 
         this.config = config;
         this.template = new RestTemplate();
+        this.client = client;
 
         logger.info("CLAIMS SERVICE:");
         logger.info("class: " + ClaimsServiceImpl.class.getName());
@@ -42,6 +44,11 @@ public class ClaimsServiceImpl implements ClaimsService {
         ResponseEntity<Claim[]> response = template.getForEntity(config.getBaseUrl() + config.getUrls().getClaims(), Claim[].class);
         return Arrays.stream(response.getBody())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Claim> listByUserId(String userId) {
+        return client.listBuUserId(userId);
     }
 
     public List<Claim> listFallback(Throwable t) {
@@ -194,6 +201,11 @@ public class ClaimsServiceImpl implements ClaimsService {
     private boolean changeTypeFallback(ClaimTypeUpdate type, Throwable t) {
         logger.error("failed update type", t);
         return false;
+    }
+
+    @Override
+    public Map<String, Long> statistics() {
+        return client.statistics();
     }
 
 }
