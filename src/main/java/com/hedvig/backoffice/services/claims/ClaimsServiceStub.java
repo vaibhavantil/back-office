@@ -12,10 +12,7 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -81,7 +78,7 @@ public class ClaimsServiceStub implements ClaimsService {
 
     @Override
     public List<Claim> listByUserId(String userId) {
-        return null;
+        return claims.stream().filter(c -> c.getUserId().equals(userId)).collect(Collectors.toList());
     }
 
     @Override
@@ -145,7 +142,12 @@ public class ClaimsServiceStub implements ClaimsService {
 
     @Override
     public Map<String, Long> statistics() {
-        return null;
+        Map<String, Long> stat = new HashMap<>();
+        for (ClaimState state : ClaimState.values()) {
+            stat.put(state.name(), 10L);
+        }
+
+        return stat;
     }
 
     private void addEvent(Claim claim, String message) {
