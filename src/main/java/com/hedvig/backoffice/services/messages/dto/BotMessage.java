@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
+import java.util.Objects;
 import java.util.Optional;
 
 @Getter
@@ -22,6 +23,8 @@ public class BotMessage {
     private Long globalId;
 
     private Long messageId;
+
+    private Long fromId;
 
     private JsonNode body;
 
@@ -57,6 +60,10 @@ public class BotMessage {
         parseFields(newMessage);
     }
 
+    public boolean isBotMessage() {
+        return Objects.equals(fromId, 1L);
+    }
+
     public void setGlobalId(Long globalId) {
         this.globalId = globalId;
         ObjectNode root = (ObjectNode) this.message;
@@ -90,7 +97,11 @@ public class BotMessage {
                     .asLong();
 
             messageId = Optional.ofNullable(header.get("messageId"))
-                    .orElseThrow(() -> new BotMessageException("message must contains globalId"))
+                    .orElseThrow(() -> new BotMessageException("message header must contains globalId"))
+                    .asLong();
+
+            fromId = Optional.ofNullable(header.get("fromId"))
+                    .orElseThrow(() -> new BotMessageException("message header must contains fromId"))
                     .asLong();
 
             id = Optional.ofNullable(message.get("id"))
