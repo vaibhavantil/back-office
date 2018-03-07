@@ -9,8 +9,7 @@ import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 import com.hedvig.backoffice.services.updates.UpdateType;
 import com.hedvig.backoffice.services.updates.UpdatesService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +19,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class QuestionServiceImpl implements QuestionService {
 
-    private static Logger logger = LoggerFactory.getLogger(QuestionServiceImpl.class);
-
     private final QuestionRepository questionRepository;
+
     private final SubscriptionService subscriptionService;
+
     private final UpdatesService updatesService;
 
     @Autowired
@@ -61,20 +61,6 @@ public class QuestionServiceImpl implements QuestionService {
                 .stream()
                 .map(QuestionDTO::fromDomain)
                 .collect(Collectors.toList());
-    }
-
-    @Transactional
-    @Override
-    public void answer(Long id, BotMessage message, Personnel personnel) throws QuestionNotFoundException {
-        Question question = questionRepository.findById(id)
-                .orElseThrow(() -> new QuestionNotFoundException("question with id " + id + " not found"));
-
-        question.setAnswer(message.getMessage().toString());
-        question.setPersonnel(personnel);
-        question.setAnswerDate(message.getTimestamp());
-
-        questionRepository.save(question);
-        updatesService.changeOn(-1, UpdateType.QUESTIONS);
     }
 
     @Transactional

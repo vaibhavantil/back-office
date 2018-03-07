@@ -16,8 +16,7 @@ import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,28 +26,38 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class ChatServiceImpl implements ChatService {
 
-    private static Logger logger = LoggerFactory.getLogger(ChatServiceImpl.class);
-
     private final SimpMessagingTemplate template;
+
     private final BotService botService;
+
     private final MemberService memberService;
+
     private final ChatContextRepository chatContextRepository;
+
     private final PersonnelRepository personnelRepository;
+
     private final MessageUrlResolver messageUrlResolver;
+
     private final ExpoNotificationService expoNotificationService;
+
     private final QuestionService questionService;
+
     private final SubscriptionService subscriptionService;
 
-    public ChatServiceImpl(SimpMessagingTemplate template,
-                           BotService botService,
-                           MemberService memberService,
-                           ChatContextRepository chatContextRepository,
-                           PersonnelRepository personnelRepository,
-                           MessageUrlResolver messageUrlResolver,
-                           ExpoNotificationService expoNotificationService,
-                           QuestionService questionService, SubscriptionService subscriptionService) {
+    public ChatServiceImpl(
+            SimpMessagingTemplate template,
+            BotService botService,
+            MemberService memberService,
+            ChatContextRepository chatContextRepository,
+            PersonnelRepository personnelRepository,
+            MessageUrlResolver messageUrlResolver,
+            ExpoNotificationService expoNotificationService,
+            QuestionService questionService,
+            SubscriptionService subscriptionService
+    ) {
 
         this.template = template;
         this.botService = botService;
@@ -69,33 +78,23 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void append(String hid, String message, String personnel) {
         try {
-            BotMessage msg = new BotMessage(message, true);
-            append(hid, msg, personnel);
-        } catch (BotMessageException e) {
-            send(hid, Message.error(400, e.getMessage()));
-            logger.error("chat not updated hid = " + hid, e);
-        }
-    }
+            final BotMessage botMessage = new BotMessage(message, true);
 
-    @Override
-    public void append(String hid, BotMessage message, String personnel) {
-        Optional<Personnel> p = personnelRepository.findByEmail(personnel);
-        if (!p.isPresent()) {
-            send(hid, Message.error(500, "personnel not authorized"));
-            logger.error("personnel not authorized");
-            return;
-        }
+            Optional<Personnel> admin = personnelRepository.findByEmail(personnel);
+            if (!admin.isPresent()) {
+                send(hid, Message.error(500, "personnel not authorized"));
+                log.error("personnel not authorized");
+                return;
+            }
 
-        try {
-            messageUrlResolver.resolveUrls(message);
-            botService.response(hid, message);
+            messageUrlResolver.resolveUrls(botMessage);
+            botService.response(hid, botMessage);
             expoNotificationService.sendNotification(hid);
-        } catch (BotServiceException e) {
-            send(hid, Message.error(e.getCode(), e.getMessage()));
-            logger.error("chat not updated hid = " + hid, e);
+            questionService.answer(hid, botMessage, admin.get());
+        } catch (BotMessageException | BotServiceException e) {
+            send(hid, Message.error(400, e.getMessage()));
+            log.error("chat not updated hid = " + hid, e);
         }
-
-        questionService.answer(hid, message, p.get());
     }
 
     @Override
@@ -104,7 +103,7 @@ public class ChatServiceImpl implements ChatService {
             send(hid, Message.chat(botService.messages(hid)));
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
-            logger.error("chat not updated hid = " + hid, e);
+            log.error("chat not updated hid = " + hid, e);
         }
     }
 
@@ -114,7 +113,7 @@ public class ChatServiceImpl implements ChatService {
             send(hid, Message.chat(botService.messages(hid, count)));
         } catch (BotServiceException e) {
             send(hid, Message.error(e.getCode(), e.getMessage()));
-            logger.error("chat not updated hid = " + hid, e);
+            log.error("chat not updated hid = " + hid, e);
         }
     }
 
@@ -136,18 +135,18 @@ public class ChatServiceImpl implements ChatService {
             member = memberService.findByHid(hid).orElseThrow(MemberServiceException::new);
         } catch (MemberNotFoundException e) {
             send(hid, Message.error(400, "member with hid " + hid + " not found"));
-            logger.warn("member with hid " + hid + " not found", e);
+            log.warn("member with hid " + hid + " not found", e);
             return;
         } catch (MemberServiceException e) {
             send(hid, Message.error(500, e.getMessage()));
-            logger.error("can't fetch member hid = " + hid, e);
+            log.error("can't fetch member hid = " + hid, e);
             return;
         }
 
         Optional<Personnel> personnelOptional = personnelRepository.findByEmail(principal);
         if (!personnelOptional.isPresent()) {
             send(hid, Message.error(400, "Not authorized"));
-            logger.warn("member not authorized hid = " + hid);
+            log.warn("member not authorized hid = " + hid);
             return;
         }
 

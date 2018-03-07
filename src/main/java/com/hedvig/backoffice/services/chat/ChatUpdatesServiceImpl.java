@@ -12,8 +12,6 @@ import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
-import com.hedvig.backoffice.services.updates.UpdateType;
-import com.hedvig.backoffice.services.updates.UpdatesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,13 +54,9 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     @Override
     public void update() throws ChatUpdateException {
         List<BackOfficeMessage> fetched;
-        SystemSetting setting = systemSettingsService.getSetting(
-                SystemSettingType.BOT_SERVICE_LAST_TIMESTAMP,
-                new Date().toInstant().toString());
 
         try {
-            Instant timestamp = Instant.parse(setting.getValue());
-            fetched = botService.fetch(timestamp);
+            fetched = botService.fetch(lastTimestamp());
         } catch (BotServiceException e) {
             throw new ChatUpdateException(e);
         }
@@ -103,11 +97,19 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         updates.forEach((k, v) -> chatService.send(k, Message.chat(v)));
 
         List<QuestionDTO> questions = messages.stream()
-                .filter(m -> questionId.contains(m.getId()))
+                .filter(m -> questionId.contains(m.getId())&& !m.isBotMessage())
                 .map(m -> new QuestionDTO(m.getGlobalId(), m.getHid(), m.getMessage(), m.getTimestamp().toEpochMilli()))
                 .collect(Collectors.toList());
 
         logger.info("fetched questions: " + questions.size());
         questionService.addNewQuestions(questions);
+    }
+
+    private Instant lastTimestamp() {
+        SystemSetting setting = systemSettingsService.getSetting(
+                SystemSettingType.BOT_SERVICE_LAST_TIMESTAMP,
+                new Date().toInstant().toString());
+
+        return Instant.parse(setting.getValue());
     }
 }
