@@ -11,7 +11,7 @@ const ListItem = ({ item }) => (
         <ItemContent>
             <List.Header>{item.id}</List.Header>
             <List.Description>
-                {moment.unix(item.timestamp).format('DD MM YYYY')}
+                {moment(item.date).format('HH:mm DD MMMM YYYY')}
             </List.Description>
         </ItemContent>
     </Link>
