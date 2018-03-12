@@ -35,22 +35,26 @@ const MessageBody = styled.div`
     box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
         0 2px 10px 0 rgba(34, 36, 38, 0.15);
 
-    &:before {
-        position: absolute;
-        content: '';
-        width: 0.7em;
-        height: 0.7em;
-        background: #fff;
-        -webkit-transform: rotate(45deg);
-        transform: rotate(45deg);
-        z-index: 2;
-        box-shadow: 1px 1px 0 0 #bababc;
-        bottom: -0.3em;
-        left: 1em;
-        top: auto;
-        right: auto;
-        margin-left: 0;
-    }
+    ${props =>
+        props.isQuestion
+            ? `&:before {
+                    position: absolute;
+                    content: '';
+                    width: 0.7em;
+                    height: 0.7em;
+                    background: #fff;
+                    -webkit-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    z-index: 2;
+                    box-shadow: 1px 1px 0 0 #bababc;
+                    bottom: -0.3em;
+                    left: 1em;
+                    top: auto;
+                    right: auto;
+                    margin-left: 0;
+                }
+                `
+            : ''};
 `;
 
 const MessageInfo = styled.div`
@@ -61,26 +65,38 @@ const Video = styled.video`
     width: 350px;
 `;
 
-const Message = ({ left, content, isQuestionMessage, msgId, timestamp, from }) => (
+const Message = ({
+    left,
+    content,
+    isQuestionMessage,
+    msgId,
+    timestamp,
+    from
+}) => (
     <MessageRow left={left} isQuestion={isQuestionMessage} id={`msg-${msgId}`}>
-        { content.type == types.PARAGRAPH
-            ? ""
-            : <MessageBox>
+        {content.type == types.PARAGRAPH ? (
+            ''
+        ) : (
+            <MessageBox>
                 <MessageBody left={left}>
                     {content.text}
                     <br />
                     <MessageContent content={content} />
                 </MessageBody>
-                {timestamp ?
+                {timestamp ? (
                     <MessageInfo>
                         <Label>
                             {from}
-                            <Label.Detail>{moment(timestamp).format('HH:mm:ss DD MMMM YYYY')}</Label.Detail>
+                            <Label.Detail>
+                                {moment(timestamp).format(
+                                    'HH:mm:ss DD MMMM YYYY'
+                                )}
+                            </Label.Detail>
                         </Label>
                     </MessageInfo>
-                    : null}
+                ) : null}
             </MessageBox>
-        }
+        )}
     </MessageRow>
 );
 

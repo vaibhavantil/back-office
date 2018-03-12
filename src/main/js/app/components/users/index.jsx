@@ -74,7 +74,7 @@ export default class Users extends React.Component {
         return (
             <React.Fragment>
                 <Header size="huge">Members</Header>
-                <BackLink />
+                <BackLink path="dashboard" />
                 <UsersFilter>
                     <Input
                         loading={users.requesting}
