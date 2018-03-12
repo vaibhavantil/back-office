@@ -71,8 +71,8 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Transactional
     @Override
-    public void answer(String hid, BotMessage message, Personnel personnel) {
-        QuestionGroup group = questionGroupRepository.findUnasweredByHid(hid).orElseThrow(() -> new RuntimeException());
+    public void answer(String hid, BotMessage message, Personnel personnel) throws QuestionNotFoundException {
+        QuestionGroup group = questionGroupRepository.findUnasweredByHid(hid).orElseThrow(() -> new QuestionNotFoundException(hid));
         group.setAnswerDate(message.getTimestamp());
         group.setAnswer(message.getMessage().toString());
         group.setPersonnel(personnel);

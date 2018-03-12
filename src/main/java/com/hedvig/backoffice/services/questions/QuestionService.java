@@ -12,7 +12,7 @@ public interface QuestionService {
     List<QuestionGroupDTO> list();
     List<QuestionGroupDTO> answered();
     List<QuestionGroupDTO> notAnswered();
-    void answer(String hid, BotMessage message, Personnel personnel);
+    void answer(String hid, BotMessage message, Personnel personnel) throws QuestionNotFoundException;
     void addNewQuestions(List<BotMessage> questions);
 
 }

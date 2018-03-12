@@ -1,10 +1,17 @@
 package com.hedvig.backoffice.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hedvig.backoffice.domain.Personnel;
+import com.hedvig.backoffice.repository.PersonnelRepository;
+import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.services.messages.BotMessageException;
+import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,10 +21,12 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final PersonnelRepository personnelRepository;
 
     @Autowired
-    public QuestionController(QuestionService questionService) {
+    public QuestionController(QuestionService questionService, PersonnelRepository personnelRepository) {
         this.questionService = questionService;
+        this.personnelRepository = personnelRepository;
     }
 
     @GetMapping
@@ -35,9 +44,13 @@ public class QuestionController {
         return questionService.notAnswered();
     }
 
-    @PostMapping("/answer/{id}")
-    public ResponseEntity<?> answer(@PathVariable Long id, @RequestBody JsonNode message) {
-
+    @PostMapping("/answer/{hid}")
+    public ResponseEntity<?> answer(@PathVariable String hid,
+                                    @RequestBody JsonNode message,
+                                    @AuthenticationPrincipal String principal)
+            throws AuthorizationException, BotMessageException, QuestionNotFoundException {
+        Personnel personnel = personnelRepository.findByEmail(principal).orElseThrow(AuthorizationException::new);
+        questionService.answer(hid, new BotMessage(message, true), personnel);
 
         return ResponseEntity.noContent().build();
     }

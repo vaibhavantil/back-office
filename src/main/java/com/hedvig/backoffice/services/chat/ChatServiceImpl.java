@@ -14,6 +14,7 @@ import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +44,6 @@ public class ChatServiceImpl implements ChatService {
 
     private final ExpoNotificationService expoNotificationService;
 
-    private final QuestionService questionService;
-
     private final SubscriptionService subscriptionService;
 
     public ChatServiceImpl(
@@ -55,7 +54,6 @@ public class ChatServiceImpl implements ChatService {
             PersonnelRepository personnelRepository,
             MessageUrlResolver messageUrlResolver,
             ExpoNotificationService expoNotificationService,
-            QuestionService questionService,
             SubscriptionService subscriptionService
     ) {
 
@@ -66,7 +64,6 @@ public class ChatServiceImpl implements ChatService {
         this.personnelRepository = personnelRepository;
         this.messageUrlResolver = messageUrlResolver;
         this.expoNotificationService = expoNotificationService;
-        this.questionService = questionService;
         this.subscriptionService = subscriptionService;
     }
 
@@ -90,7 +87,6 @@ public class ChatServiceImpl implements ChatService {
             messageUrlResolver.resolveUrls(botMessage);
             botService.response(hid, botMessage);
             expoNotificationService.sendNotification(hid);
-            questionService.answer(hid, botMessage, admin.get());
         } catch (BotMessageException | BotServiceException e) {
             send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
