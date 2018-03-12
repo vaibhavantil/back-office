@@ -7,6 +7,7 @@ import com.hedvig.backoffice.domain.Subscription;
 import com.hedvig.backoffice.repository.QuestionGroupRepository;
 import com.hedvig.backoffice.repository.QuestionRepository;
 import com.hedvig.backoffice.services.chat.SubscriptionService;
+import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.updates.UpdateType;
@@ -32,14 +33,20 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final UpdatesService updatesService;
 
+    private final BotService botService;
+
     @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository, QuestionGroupRepository questionGroupRepository,
+    public QuestionServiceImpl(QuestionRepository questionRepository,
+                               QuestionGroupRepository questionGroupRepository,
                                SubscriptionService subscriptionService,
-                               UpdatesService updatesService) {
+                               UpdatesService updatesService,
+                               BotService botService) {
+
         this.questionRepository = questionRepository;
         this.questionGroupRepository = questionGroupRepository;
         this.subscriptionService = subscriptionService;
         this.updatesService = updatesService;
+        this.botService = botService;
     }
 
     @Override
@@ -76,8 +83,9 @@ public class QuestionServiceImpl implements QuestionService {
         group.setAnswerDate(message.getTimestamp());
         group.setAnswer(message.getMessage().toString());
         group.setPersonnel(personnel);
-        questionGroupRepository.save(group);
 
+        botService.answerQuestion(hid, message);
+        questionGroupRepository.save(group);
         updatesService.changeOn(-1, UpdateType.QUESTIONS);
     }
 

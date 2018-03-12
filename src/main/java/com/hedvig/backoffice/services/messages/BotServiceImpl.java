@@ -29,20 +29,17 @@ public class BotServiceImpl implements BotService {
 
     private String baseUrl;
     private String messagesUrl;
-    private String responseUrl;
     private String fetchUrl;
     private BotServiceClient botServiceClient;
 
     @Autowired
     private BotServiceImpl(@Value("${botservice.baseUrl}") String baseUrl,
                            @Value("${botservice.urls.messages}") String messagesUrl,
-                           @Value("${botservice.urls.internal.response}") String responseUrl,
                            @Value("${botservice.urls.internal.fetch}") String fetchUrl,
                            BotServiceClient botServiceClient) {
 
         this.baseUrl = baseUrl;
         this.messagesUrl = messagesUrl;
-        this.responseUrl = responseUrl;
         this.fetchUrl = fetchUrl;
         this.botServiceClient = botServiceClient;
 
@@ -50,7 +47,6 @@ public class BotServiceImpl implements BotService {
         logger.info("class: " + BotServiceImpl.class.getName());
         logger.info("base: " + baseUrl);
         logger.info("messages: " + messagesUrl);
-        logger.info("response: " + responseUrl);
     }
 
     @Override
@@ -78,17 +74,13 @@ public class BotServiceImpl implements BotService {
     }
 
     @Override
-    public void response(String hid, BotMessage message) throws BotServiceException {
-        RestTemplate template = new RestTemplate();
+    public void response(String hid, BotMessage message) {
+        botServiceClient.response(new BackOfficeMessage(hid, message.getMessage()));
+    }
 
-        try {
-            HttpEntity<BackOfficeMessage> request
-                    = new org.springframework.http.HttpEntity<>(new BackOfficeMessage(hid, message.getMessage()));
-
-            template.postForEntity(baseUrl + responseUrl, request, Void.class);
-        } catch (RestClientException e) {
-            throw new BotServiceException(e);
-        }
+    @Override
+    public void answerQuestion(String hid, BotMessage message) {
+        botServiceClient.answer(new BackOfficeMessage(hid, message.getMessage()));
     }
 
     private List<BotMessage> messages(String url, String hid) throws BotServiceException {

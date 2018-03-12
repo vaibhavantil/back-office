@@ -1,5 +1,7 @@
 package com.hedvig.backoffice.services.chat;
 
+import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
+import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Subscription;
@@ -14,8 +16,6 @@ import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
-import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
-import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -87,7 +87,7 @@ public class ChatServiceImpl implements ChatService {
             messageUrlResolver.resolveUrls(botMessage);
             botService.response(hid, botMessage);
             expoNotificationService.sendNotification(hid);
-        } catch (BotMessageException | BotServiceException e) {
+        } catch (BotMessageException | ExternalServiceBadRequestException e) {
             send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
         }

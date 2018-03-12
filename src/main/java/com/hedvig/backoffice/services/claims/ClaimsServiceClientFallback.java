@@ -22,7 +22,7 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
     }
 
     @Override
-    public List<Claim> listBuUserId(String userId) {
+    public List<Claim> listByUserId(String userId) {
         return new ArrayList<>();
     }
 

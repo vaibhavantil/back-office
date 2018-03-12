@@ -11,5 +11,7 @@ public interface BotService {
     List<BotMessage> messages(String hid, int count) throws BotServiceException;
     List<BackOfficeMessage> fetch(Instant timestamp) throws BotServiceException;
     String pushTokenId(String hid);
-    void response(String hid, BotMessage message) throws BotServiceException;
+    void response(String hid, BotMessage message);
+    void answerQuestion(String hid, BotMessage message);
+
 }
