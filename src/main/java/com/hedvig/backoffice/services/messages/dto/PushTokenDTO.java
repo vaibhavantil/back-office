@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.services.messages.data;
+package com.hedvig.backoffice.services.messages.dto;
 
 import lombok.Value;
 

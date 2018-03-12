@@ -5,9 +5,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
 
 @Entity
 @Getter
@@ -23,24 +25,12 @@ public class Question {
     @Type(type="org.hibernate.type.TextType")
     private String message;
 
-    @Lob
-    @Type(type="org.hibernate.type.TextType")
-    private String answer;
-
     @ManyToOne
-    private Personnel personnel;
+    private QuestionGroup group;
 
-    private Instant date;
-
-    private Instant answerDate;
-
-    @ManyToOne
-    private Subscription subscription;
-
-    public Question(long id, String message, Instant date) {
+    public Question(long id, String message) {
         this.id = id;
         this.message = message;
-        this.date = date;
     }
 
 }

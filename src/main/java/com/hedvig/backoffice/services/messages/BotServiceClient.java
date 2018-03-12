@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.services.messages;
 
-import com.hedvig.backoffice.services.messages.data.PushTokenDTO;
+import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
