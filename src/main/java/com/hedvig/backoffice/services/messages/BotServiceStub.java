@@ -167,8 +167,12 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public void answerQuestion(String hid, BotMessage message) {
-        response(hid, message);
+    public void answerQuestion(String hid, String answer) {
+        try {
+            response(hid, new BotMessage(answer));
+        } catch (BotMessageException e) {
+            logger.error("message not created", e);
+        }
     }
 
     @Scheduled(fixedDelay = 1000)

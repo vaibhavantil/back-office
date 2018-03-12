@@ -1,11 +1,9 @@
 package com.hedvig.backoffice.web;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.repository.PersonnelRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
-import com.hedvig.backoffice.services.messages.BotMessageException;
-import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.messages.dto.BackOfficeAnswerDTO;
 import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
@@ -14,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -46,11 +45,11 @@ public class QuestionController {
 
     @PostMapping("/answer/{hid}")
     public ResponseEntity<?> answer(@PathVariable String hid,
-                                    @RequestBody JsonNode message,
+                                    @Valid @RequestBody BackOfficeAnswerDTO message,
                                     @AuthenticationPrincipal String principal)
-            throws AuthorizationException, BotMessageException, QuestionNotFoundException {
+            throws AuthorizationException, QuestionNotFoundException {
         Personnel personnel = personnelRepository.findByEmail(principal).orElseThrow(AuthorizationException::new);
-        questionService.answer(hid, new BotMessage(message, true), personnel);
+        questionService.answer(hid, message.getMsg(), personnel);
 
         return ResponseEntity.noContent().build();
     }

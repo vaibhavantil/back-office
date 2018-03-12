@@ -20,14 +20,6 @@ public class FeignConfig {
         return (methodKey, response) -> {
             HttpStatus status = HttpStatus.valueOf(response.status());
 
-            if (status == HttpStatus.NOT_FOUND) {
-                return new ExternalServiceNotFoundException("entity not found");
-            }
-
-            if (status.is4xxClientError()) {
-                return new ExternalServiceBadRequestException("bad request");
-            }
-
             StringBuilder buff = new StringBuilder();
             buff.append("request to ").append(response.request().url()).append(" failed ");
 
@@ -37,6 +29,14 @@ public class FeignConfig {
                 }
             } catch (IOException e) {
                 log.error("request body can't parsed", e);
+            }
+
+            if (status == HttpStatus.NOT_FOUND) {
+                return new ExternalServiceNotFoundException("entity not found", buff.toString());
+            }
+
+            if (status.is4xxClientError()) {
+                return new ExternalServiceBadRequestException("bad request", buff.toString());
             }
 
             log.error(buff.toString());

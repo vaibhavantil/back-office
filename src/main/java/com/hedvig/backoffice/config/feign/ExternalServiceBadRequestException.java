@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class ExternalServiceBadRequestException extends HystrixBadRequestException {
 
-    public ExternalServiceBadRequestException(String message) {
-        super(message);
+    public ExternalServiceBadRequestException(String message, String cause) {
+        super(message + " cause: " + cause);
     }
 
 }
