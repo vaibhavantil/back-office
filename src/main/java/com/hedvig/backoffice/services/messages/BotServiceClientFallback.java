@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.messages;
 
+import com.hedvig.backoffice.services.messages.dto.BackOfficeAnswerDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class BotServiceClientFallback implements BotServiceClient {
     }
 
     @Override
-    public void answer(BackOfficeMessage message) {
+    public void answer(BackOfficeAnswerDTO answer) {
         log.error("bot-service unavailable");
     }
 

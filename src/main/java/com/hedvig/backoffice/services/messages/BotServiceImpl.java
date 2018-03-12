@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hedvig.backoffice.services.messages.dto.BackOfficeAnswerDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import org.apache.commons.lang3.StringUtils;
@@ -79,8 +80,8 @@ public class BotServiceImpl implements BotService {
     }
 
     @Override
-    public void answerQuestion(String hid, BotMessage message) {
-        botServiceClient.answer(new BackOfficeMessage(hid, message.getMessage()));
+    public void answerQuestion(String hid, String answer) {
+        botServiceClient.answer(new BackOfficeAnswerDTO(hid, answer));
     }
 
     private List<BotMessage> messages(String url, String hid) throws BotServiceException {

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,10 +79,10 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Transactional
     @Override
-    public void answer(String hid, BotMessage message, Personnel personnel) throws QuestionNotFoundException {
+    public void answer(String hid, String message, Personnel personnel) throws QuestionNotFoundException {
         QuestionGroup group = questionGroupRepository.findUnasweredByHid(hid).orElseThrow(() -> new QuestionNotFoundException(hid));
-        group.setAnswerDate(message.getTimestamp());
-        group.setAnswer(message.getMessage().toString());
+        group.setAnswerDate(Instant.now());
+        group.setAnswer(message);
         group.setPersonnel(personnel);
 
         botService.answerQuestion(hid, message);

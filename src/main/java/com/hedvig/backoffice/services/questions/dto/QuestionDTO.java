@@ -32,7 +32,7 @@ public class QuestionDTO {
                 Optional.ofNullable(question.getDate()).map(Instant::toEpochMilli).orElse(null));
     }
 
-    public static JsonNode parseMessage(String message) {
+    private static JsonNode parseMessage(String message) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(message, JsonNode.class);

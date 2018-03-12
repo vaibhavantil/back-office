@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.messages;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
+import com.hedvig.backoffice.services.messages.dto.BackOfficeAnswerDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -22,6 +23,6 @@ public interface BotServiceClient {
     @RequestMapping(method = RequestMethod.POST, value = "/_/messages/addmessage")
     void response(@RequestBody BackOfficeMessage message);
 
-    @RequestMapping(method = RequestMethod.POST, value = "/_/messages/addmessage")
-    void answer(@RequestBody BackOfficeMessage message);
+    @RequestMapping(method = RequestMethod.POST, value = "/_/messages/addanswer")
+    void answer(@RequestBody BackOfficeAnswerDTO answer);
 }

@@ -58,7 +58,6 @@ botservice:
   urls:
     messages: /messages
     internal:
-      response: /_/messages/addmessage
       fetch: /_/messages
   stub: false
 
