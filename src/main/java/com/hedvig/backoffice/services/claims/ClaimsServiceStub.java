@@ -12,9 +12,7 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -79,6 +77,11 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
+    public List<Claim> listByUserId(String userId) {
+        return claims.stream().filter(c -> c.getUserId().equals(userId)).collect(Collectors.toList());
+    }
+
+    @Override
     public Claim find(String id) throws ClaimException {
         return claims.stream().filter(c -> c.getId().equals(id)).findAny()
                 .orElseThrow(() -> new ClaimBadRequestException("claim not found"));
@@ -135,6 +138,16 @@ public class ClaimsServiceStub implements ClaimsService {
         claim.setType(type.getType());
         addEvent(claim,"[test] type changed");
         return true;
+    }
+
+    @Override
+    public Map<String, Long> statistics() {
+        Map<String, Long> stat = new HashMap<>();
+        for (ClaimState state : ClaimState.values()) {
+            stat.put(state.name(), 10L);
+        }
+
+        return stat;
     }
 
     private void addEvent(Claim claim, String message) {

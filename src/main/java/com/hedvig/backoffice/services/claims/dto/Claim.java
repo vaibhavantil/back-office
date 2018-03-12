@@ -1,8 +1,5 @@
 package com.hedvig.backoffice.services.claims.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.hedvig.backoffice.services.claims.ClaimState;
 import lombok.Data;
 
@@ -24,8 +21,6 @@ public class Claim extends ClaimBackOffice {
     private List<ClaimEvent> events;
     private List<ClaimData> data;
 
-    @JsonDeserialize(using= LocalDateTimeDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registrationDate;
 
 }
