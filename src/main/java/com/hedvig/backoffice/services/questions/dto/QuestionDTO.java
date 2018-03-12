@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Optional;
 
 @Data
@@ -19,6 +20,7 @@ public class QuestionDTO {
 
     private Long id;
     private JsonNode message;
+    private Long date;
 
     public static QuestionDTO fromDomain(Question question) {
         JsonNode message = Optional.ofNullable(question.getMessage())
@@ -26,11 +28,8 @@ public class QuestionDTO {
 
         return new QuestionDTO(
                 question.getId(),
-                message);
-    }
-
-    public static Question toDomain(QuestionDTO dto) {
-        return new Question(dto.getId(), dto.getMessage().toString());
+                message,
+                Optional.ofNullable(question.getDate()).map(Instant::toEpochMilli).orElse(null));
     }
 
     public static JsonNode parseMessage(String message) {

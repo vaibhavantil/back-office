@@ -35,6 +35,7 @@ public class QuestionGroup {
     private Subscription subscription;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "group")
+    @OrderBy("date")
     private Set<Question> questions = new HashSet<>();
 
     public QuestionGroup(Subscription subscription) {

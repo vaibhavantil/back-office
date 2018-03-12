@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -25,10 +26,12 @@ public class Question {
     @Type(type="org.hibernate.type.TextType")
     private String message;
 
+    private Instant date;
+
     @ManyToOne
     private QuestionGroup group;
 
-    public Question(long id, String message) {
+    public Question(long id, String message, Instant date) {
         this.id = id;
         this.message = message;
     }

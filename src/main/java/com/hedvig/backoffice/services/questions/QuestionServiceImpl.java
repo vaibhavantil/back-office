@@ -93,7 +93,8 @@ public class QuestionServiceImpl implements QuestionService {
             Subscription sub = subscriptionService.getOrCreateSubscription(message.getHid());
             QuestionGroup group = questionGroupRepository.findUnasweredBySub(sub).orElseGet(() -> new QuestionGroup(sub));
 
-            group.addQuestion(question.orElseGet(() -> new Question(message.getGlobalId(), message.getMessage().toString())));
+            group.addQuestion(question
+                    .orElseGet(() -> new Question(message.getGlobalId(), message.getMessage().toString(), message.getTimestamp())));
             group.correctDate(message.getTimestamp());
             questionGroupRepository.save(group);
         }
