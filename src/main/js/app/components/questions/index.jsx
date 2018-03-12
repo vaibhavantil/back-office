@@ -15,12 +15,16 @@ export default class Questions extends React.Component {
     }
 
     render() {
-        const { questions, users: { list } } = this.props;
+        const { questions, users: { list }, sendAnswer } = this.props;
         return (
             <React.Fragment>
                 <Header size="huge">Questions</Header>
                 <BackLink path="dashboard" />
-                <QuestionsList questions={questions.list} users={list} />
+                <QuestionsList
+                    questions={questions.list}
+                    users={list}
+                    sendAnswer={sendAnswer}
+                />
             </React.Fragment>
         );
     }
@@ -30,5 +34,6 @@ Questions.propTypes = {
     users: PropTypes.object.isRequired,
     questions: PropTypes.object.isRequired,
     usersRequest: PropTypes.func.isRequired,
-    questionsRequest: PropTypes.func.isRequired
+    questionsRequest: PropTypes.func.isRequired,
+    sendAnswer: PropTypes.func.isRequired
 };

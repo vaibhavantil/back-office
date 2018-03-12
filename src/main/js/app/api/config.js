@@ -75,6 +75,10 @@ export default {
         notAnsewred: {
             url: 'questions/not-answered',
             method: 'get'
+        },
+        sendAnswer: {
+            url: 'questions/answer',
+            method: 'post'
         }
     },
     ws: {

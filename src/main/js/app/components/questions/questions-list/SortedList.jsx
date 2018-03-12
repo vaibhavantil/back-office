@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Header, Segment } from 'semantic-ui-react';
+import { Header, Segment } from 'semantic-ui-react';
 import Message from 'components/chat/messages/Message';
+import AnswerForm from './AnswerForm';
 import Pagination from 'components/shared/pagination/Pagination';
+import { getUserInfo } from 'app/lib/helpers';
 
 const List = styled(Segment)`
     &&& {
@@ -14,82 +16,100 @@ const List = styled(Segment)`
     }
 `;
 
-const MessageList = styled.div`
+const UserQuestionItem = styled.div`
     border-bottom: solid 1px #22242626;
     padding: 10px 0;
 `;
-
-const ChatControlsContainer = styled.div`
-    text-align: right;
-`;
-
-
-const getUserInfo = (users, id) => {
-    const user = users.find(user => user.hid === id);
-    return user ? `${user.firstName} ${user.lastName || ''}` : `id: ${id}`;
-};
 
 export default class SortedList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeList: []
+            activeList: {},
+            answer: ''
         };
     }
 
-    onChangePage = activeList => {
-        this.setState({ activeList });
+    onChangePage = (listId, list) => {
+        // eslint-disable-next-line no-undef
+        setTimeout(() => {
+            this.setState({
+                activeList: {
+                    ...this.state.activeList,
+                    [listId]: list
+                }
+            });
+        });
+    };
+
+    getSender = data =>
+        data.personnel && data.personnel.email
+            ? `${data.personnel.email}`
+            : 'admin';
+
+    getListContent = (data, user) => {
+        const users = this.props.users;
+        return (
+            <React.Fragment>
+                <Message
+                    content={data.message.body}
+                    left={!data.answer}
+                    isQuestionMessage={true}
+                    timestamp={data.date}
+                    from={users.length && getUserInfo(users, user.hid)}
+                />
+                {data.answer ? (
+                    <Message
+                        content={data.answer.body}
+                        left={true}
+                        isQuestionMessage={false}
+                        timestamp={data.answerDate}
+                        from={this.getSender(data)}
+                    />
+                ) : null}
+            </React.Fragment>
+        );
     };
 
     render() {
-        const { list, users, clickHandler } = this.props;
+        const { list, users, sendAnswer } = this.props;
         const { activeList } = this.state;
         return (
             <List>
                 {list.length ? (
                     <React.Fragment>
-                        {activeList.map(data => (
-                            <MessageList key={data.id}>
-                                <Message
-                                    content={data.message.body}
-                                    left={!data.answer}
-                                    isQuestionMessage={true}
-                                    timestamp={data.date}
-                                    from={users.length && getUserInfo(users, data.hid)}
-                                />
-                                {
-                                    data.answer ?
-                                        <Message
-                                            content={data.answer.body}
-                                            left={true}
-                                            isQuestionMessage={false}
-                                            timestamp={data.answerDate}
-                                            from={
-                                                data.personnel && data.personnel.email
-                                                    ? `${data.personnel.email}`
-                                                    : 'admin'
-                                            }
-                                        />
-                                        : null
-                                }
-                                <ChatControlsContainer>
-                                    <Button
-                                        content="Open Chat"
-                                        onClick={clickHandler.bind(
-                                            this,
-                                            data.hid,
-                                            data.message.globalId
-                                        )}
-                                        primary
+                        {list.map(user => (
+                            <UserQuestionItem key={user.id}>
+                                <Header>
+                                    Questions from:{' '}
+                                    {getUserInfo(users, user.hid)}
+                                </Header>
+                                {activeList[user.hid] &&
+                                    activeList[user.hid].map(data => (
+                                        <div key={data.id}>
+                                            {this.getListContent(data, user)}
+                                        </div>
+                                    ))}
+                                {!user.answer ? (
+                                    <AnswerForm
+                                        hid={user.hid}
+                                        sendAnswer={sendAnswer}
                                     />
-                                </ChatControlsContainer>
-                            </MessageList>
+                                ) : (
+                                    <Header size="medium">
+                                        Admin answer: {user.answer}
+                                    </Header>
+                                )}
+                                <Pagination
+                                    items={user.questions}
+                                    onChangePage={this.onChangePage.bind(
+                                        this,
+                                        user.hid
+                                    )}
+                                    pageSize={10}
+                                />
+                            </UserQuestionItem>
                         ))}
-                        <Pagination
-                            items={list}
-                            onChangePage={this.onChangePage}
-                            pageSize={10}
-                        />
                     </React.Fragment>
                 ) : (
                     <Header>List is empty</Header>
@@ -100,7 +120,7 @@ export default class SortedList extends React.Component {
 }
 
 SortedList.propTypes = {
-    clickHandler: PropTypes.func.isRequired,
     list: PropTypes.array.isRequired,
+    sendAnswer: PropTypes.func.isRequired,
     users: PropTypes.array
 };

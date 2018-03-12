@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import SortedList from './SortedList';
-import { history } from 'app/store';
 import { Tab } from 'semantic-ui-react';
 
 const ListContainer = styled.div`
@@ -12,28 +11,26 @@ const ListContainer = styled.div`
     margin: 50px auto;
 `;
 
-const answerClick = (id, msgId) => {
-    history.push(`/members/${id}/${msgId}`);
-};
-
-const QuestionsList = ({ questions, users }) => {
-    const notAnswered = () =>
+const QuestionsList = ({ questions, users, sendAnswer }) => {
+    const notAnswered = () => (
         <Tab.Pane>
             <SortedList
                 list={questions.notAnswered}
                 users={users}
-                clickHandler={answerClick}
+                sendAnswer={sendAnswer}
             />
-        </Tab.Pane>;
+        </Tab.Pane>
+    );
 
-    const answered = () =>
+    const answered = () => (
         <Tab.Pane>
             <SortedList
                 list={questions.answered}
                 users={users}
-                clickHandler={answerClick}
+                sendAnswer={sendAnswer}
             />
-        </Tab.Pane>;
+        </Tab.Pane>
+    );
 
     const panes = [
         { menuItem: 'Not Answered', render: notAnswered },
@@ -44,11 +41,12 @@ const QuestionsList = ({ questions, users }) => {
         <ListContainer>
             <Tab renderActiveOnly={true} panes={panes} />
         </ListContainer>
-    )
+    );
 };
 
 QuestionsList.propTypes = {
     questions: PropTypes.object.isRequired,
+    sendAnswer: PropTypes.func.isRequired,
     users: PropTypes.array
 };
 

@@ -152,7 +152,7 @@ export const getClaimFieldsData = (
 
 /**
  * Sort array of questions by dates and answers
- * @param {Array} questions array of questions
+ * @param {object} questions arrays of answered/not answered questions
  */
 export const sortQuestions = questions => ({
     answered: questions.answered.sort((a, b) =>
@@ -162,3 +162,36 @@ export const sortQuestions = questions => ({
         moment(a.date).diff(moment(b.date))
     )
 });
+
+/**
+ * Replacing question from not answered to answered array
+ * @param {object} questions arrays of answered/not answered questions
+ * @param {object} data answered question
+ */
+export const replaceAnswer = (questions, data) => {
+    let newAnswered;
+    const notAnswered = questions.notAnswered.filter(item => {
+        if (item.hid !== data.userId) {
+            return true;
+        } else {
+            newAnswered = { ...item, answer: data.msg };
+            return false;
+        }
+    });
+    return {
+        notAnswered,
+        answered: newAnswered
+            ? [...questions.answered, newAnswered]
+            : questions.answered
+    };
+};
+
+/**
+ * Returns string with user first+last name || user Id
+ * @param {array} users
+ * @param {string} id
+ */
+export const getUserInfo = (users, id) => {
+    const user = users.find(user => user.hid === id);
+    return user ? `${user.firstName} ${user.lastName || ''}` : `id: ${id}`;
+};
