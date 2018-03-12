@@ -48,7 +48,7 @@ public class ClaimsServiceImpl implements ClaimsService {
 
     @Override
     public List<Claim> listByUserId(String userId) {
-        return client.listBuUserId(userId);
+        return client.listByUserId(userId);
     }
 
     public List<Claim> listFallback(Throwable t) {

@@ -20,6 +20,6 @@ public interface ClaimsServiceClient {
     Map<String, Long> statistics();
 
     @GetMapping("/_/claims/listclaims/{userId}")
-    List<Claim> listBuUserId(@PathVariable("userId") String userId);
+    List<Claim> listByUserId(@PathVariable("userId") String userId);
 
 }

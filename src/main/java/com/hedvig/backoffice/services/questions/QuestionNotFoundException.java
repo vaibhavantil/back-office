@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class QuestionNotFoundException extends Exception {
 
-    public QuestionNotFoundException(String message) {
-        super(message);
+    public QuestionNotFoundException(String hid) {
+        super("question for user with hid = " + hid + " not found");
     }
 
 }

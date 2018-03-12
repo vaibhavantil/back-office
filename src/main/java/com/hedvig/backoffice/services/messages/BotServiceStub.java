@@ -158,12 +158,17 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public void response(String hid, BotMessage message) throws BotServiceException {
+    public void response(String hid, BotMessage message) {
         List<BotMessage> msg = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         message.setGlobalId(increment.addAndGet(1));
         message.setMessageId((long) msg.size());
 
         msg.add(message);
+    }
+
+    @Override
+    public void answerQuestion(String hid, BotMessage message) {
+        response(hid, message);
     }
 
     @Scheduled(fixedDelay = 1000)

@@ -2,11 +2,14 @@ package com.hedvig.backoffice.services.questions;
 
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Question;
+import com.hedvig.backoffice.domain.QuestionGroup;
 import com.hedvig.backoffice.domain.Subscription;
+import com.hedvig.backoffice.repository.QuestionGroupRepository;
 import com.hedvig.backoffice.repository.QuestionRepository;
 import com.hedvig.backoffice.services.chat.SubscriptionService;
+import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
-import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
+import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.updates.UpdateType;
 import com.hedvig.backoffice.services.updates.UpdatesService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,76 +27,87 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
 
+    private final QuestionGroupRepository questionGroupRepository;
+
     private final SubscriptionService subscriptionService;
 
     private final UpdatesService updatesService;
 
+    private final BotService botService;
+
     @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository, SubscriptionService subscriptionService,
-                               UpdatesService updatesService) {
+    public QuestionServiceImpl(QuestionRepository questionRepository,
+                               QuestionGroupRepository questionGroupRepository,
+                               SubscriptionService subscriptionService,
+                               UpdatesService updatesService,
+                               BotService botService) {
+
         this.questionRepository = questionRepository;
+        this.questionGroupRepository = questionGroupRepository;
         this.subscriptionService = subscriptionService;
         this.updatesService = updatesService;
+        this.botService = botService;
     }
 
     @Override
-    public List<QuestionDTO> list() {
-        return questionRepository
+    public List<QuestionGroupDTO> list() {
+        return questionGroupRepository
                 .findAll()
                 .stream()
-                .map(QuestionDTO::fromDomain)
+                .map(QuestionGroupDTO::fromDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<QuestionDTO> answered() {
-        return questionRepository
+    public List<QuestionGroupDTO> answered() {
+        return questionGroupRepository
                 .answered()
                 .stream()
-                .map(QuestionDTO::fromDomain)
+                .map(QuestionGroupDTO::fromDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<QuestionDTO> notAnswered() {
-        return questionRepository
+    public List<QuestionGroupDTO> notAnswered() {
+        return questionGroupRepository
                 .notAnswered()
                 .stream()
-                .map(QuestionDTO::fromDomain)
+                .map(QuestionGroupDTO::fromDomain)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public void answer(String hid, BotMessage message, Personnel personnel) {
-        List<Question> questions = questionRepository.findUnasweredByHid(hid);
-        if (questions.size() > 0) {
-            questions.forEach(q -> {
-                q.setAnswerDate(message.getTimestamp());
-                q.setAnswer(message.getMessage().toString());
-                q.setPersonnel(personnel);
-            });
-            questionRepository.save(questions);
-            updatesService.changeOn(-questions.size(), UpdateType.QUESTIONS);
-        }
+    public void answer(String hid, BotMessage message, Personnel personnel) throws QuestionNotFoundException {
+        QuestionGroup group = questionGroupRepository.findUnasweredByHid(hid).orElseThrow(() -> new QuestionNotFoundException(hid));
+        group.setAnswerDate(message.getTimestamp());
+        group.setAnswer(message.getMessage().toString());
+        group.setPersonnel(personnel);
+
+        botService.answerQuestion(hid, message);
+        questionGroupRepository.save(group);
+        updatesService.changeOn(-1, UpdateType.QUESTIONS);
     }
 
     @Transactional
     @Override
-    public void addNewQuestions(List<QuestionDTO> questions) {
+    public void addNewQuestions(List<BotMessage> questions) {
         if (questions.size() == 0) return;
 
-        for (QuestionDTO dto : questions) {
-            Optional<Question> optional = questionRepository.findById(dto.getId());
-            if (optional.isPresent()) continue;
+        for (BotMessage message : questions) {
+            Optional<Question> question = questionRepository.findById(message.getGlobalId());
+            if (question.isPresent()) continue;
 
-            Subscription sub = subscriptionService.getOrCreateSubscription(dto.getHid());
-            Question question = QuestionDTO.toDomain(dto);
-            question.setSubscription(sub);
-            questionRepository.save(question);
+            Subscription sub = subscriptionService.getOrCreateSubscription(message.getHid());
+            QuestionGroup group = questionGroupRepository.findUnasweredBySub(sub).orElseGet(() -> new QuestionGroup(sub));
+
+            group.addQuestion(question
+                    .orElseGet(() -> new Question(message.getGlobalId(), message.getMessage().toString(), message.getTimestamp())));
+            group.correctDate(message.getTimestamp());
+            questionGroupRepository.save(group);
         }
 
-        long count = Optional.ofNullable(questionRepository.notAnsweredCount()).orElse(0L);
+        long count = Optional.ofNullable(questionGroupRepository.notAnsweredCount()).orElse(0L);
         updatesService.set(count, UpdateType.QUESTIONS);
     }
 

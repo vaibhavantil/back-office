@@ -2,10 +2,7 @@ package com.hedvig.backoffice.services.updates;
 
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Updates;
-import com.hedvig.backoffice.repository.AssetRepository;
-import com.hedvig.backoffice.repository.PersonnelRepository;
-import com.hedvig.backoffice.repository.QuestionRepository;
-import com.hedvig.backoffice.repository.UpdatesRepository;
+import com.hedvig.backoffice.repository.*;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.updates.data.UpdatesDTO;
@@ -26,7 +23,7 @@ public class UpdatesServiceImpl implements UpdatesService {
     private final UpdatesRepository updatesRepository;
     private final PersonnelRepository personnelRepository;
     private final AssetRepository assetRepository;
-    private final QuestionRepository questionRepository;
+    private final QuestionGroupRepository questionRepository;
     private final ClaimsService claimsService;
 
     private final SimpMessagingTemplate template;
@@ -34,7 +31,7 @@ public class UpdatesServiceImpl implements UpdatesService {
     public UpdatesServiceImpl(UpdatesRepository updatesRepository,
                               PersonnelRepository personnelRepository,
                               AssetRepository assetRepository,
-                              QuestionRepository questionRepository,
+                              QuestionGroupRepository questionRepository,
                               ClaimsService claimsService,
                               SimpMessagingTemplate template) {
 

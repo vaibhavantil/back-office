@@ -5,7 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
@@ -23,24 +26,14 @@ public class Question {
     @Type(type="org.hibernate.type.TextType")
     private String message;
 
-    @Lob
-    @Type(type="org.hibernate.type.TextType")
-    private String answer;
-
-    @ManyToOne
-    private Personnel personnel;
-
     private Instant date;
 
-    private Instant answerDate;
-
     @ManyToOne
-    private Subscription subscription;
+    private QuestionGroup group;
 
     public Question(long id, String message, Instant date) {
         this.id = id;
         this.message = message;
-        this.date = date;
     }
 
 }
