@@ -55,6 +55,8 @@ public class ClaimsServiceStub implements ClaimsService {
             claim.setEvents(new ArrayList<>());
             claim.setData(new ArrayList<>());
             claim.setAssets(new ArrayList<>());
+            claim.setDate(LocalDateTime.now());
+            claim.setRegistrationDate(LocalDateTime.now());
 
             return claim;
         }).collect(Collectors.toList());
