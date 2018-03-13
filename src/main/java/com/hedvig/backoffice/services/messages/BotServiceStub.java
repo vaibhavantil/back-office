@@ -27,7 +27,7 @@ public class BotServiceStub implements BotService {
             "}," +
             "\"body\": {" +
             "   \"type\": \"%s\"," +
-            "   \"text\": \"Test message %s\"" +
+            "   \"text\": \"%s\"" +
             "   %s" +
             "}," +
             "\"timestamp\":\"%s\"" +
@@ -118,7 +118,7 @@ public class BotServiceStub implements BotService {
                         current.size(),
                         hid,
                         type,
-                        current.size(),
+                        "Test message " + current.size(),
                         typesTemplates.get(type),
                         time.toString())));
             } catch (BotMessageException e) {
@@ -168,8 +168,16 @@ public class BotServiceStub implements BotService {
 
     @Override
     public void answerQuestion(String hid, String answer) {
+        List<BotMessage> current = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         try {
-            response(hid, new BotMessage(answer));
+            response(hid, new BotMessage(String.format(STUB_MESSAGE_TEMPLATE,
+                    increment.addAndGet(1),
+                    current.size(),
+                    hid,
+                    "text",
+                    answer,
+                    typesTemplates.get("text"),
+                    new Date().toInstant())));
         } catch (BotMessageException e) {
             logger.error("message not created", e);
         }
