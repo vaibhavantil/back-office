@@ -55,10 +55,6 @@ tracker:
 botservice:
   baseUrl: http://localhost:4081
   questionId: main.question
-  urls:
-    messages: /messages
-    internal:
-      fetch: /_/messages
   stub: false
 
 memberservice:

@@ -1,14 +1,14 @@
 package com.hedvig.backoffice.services.messages;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeAnswerDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @FeignClient(
         name = "bot-service",
@@ -17,12 +17,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
         fallback = BotServiceClientFallback.class)
 public interface BotServiceClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/_/member/{hid}/push-token")
+    @GetMapping("/_/member/{hid}/push-token")
     PushTokenDTO getPushTokenByHid(@PathVariable("hid") String hid);
 
-    @RequestMapping(method = RequestMethod.POST, value = "/_/messages/addmessage")
+    @GetMapping("/messages")
+    JsonNode messages(@RequestHeader("hedvig.token") String hid);
+
+    @GetMapping("/messages/{count}")
+    JsonNode messages(@RequestHeader("hedvig.token") String hid, @PathVariable("count") int count);
+
+    @GetMapping("/_/messages/{time}")
+    List<BackOfficeMessage> fetch(@PathVariable("time") long time);
+
+    @PostMapping("/_/messages/addmessage")
     void response(@RequestBody BackOfficeMessage message);
 
-    @RequestMapping(method = RequestMethod.POST, value = "/_/messages/addanswer")
+    @PostMapping("/_/messages/addanswer")
     void answer(@RequestBody BackOfficeAnswerDTO answer);
 }
