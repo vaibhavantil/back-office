@@ -4,7 +4,6 @@ import com.hedvig.backoffice.services.assettracker.AssetTrackerClient;
 import com.hedvig.backoffice.services.assettracker.AssetTrackerClientStub;
 import com.hedvig.backoffice.services.assettracker.AssetTrackerClientImpl;
 import com.hedvig.backoffice.services.claims.ClaimsService;
-import com.hedvig.backoffice.services.claims.ClaimsServiceConfig;
 import com.hedvig.backoffice.services.claims.ClaimsServiceImpl;
 import com.hedvig.backoffice.services.claims.ClaimsServiceStub;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
@@ -61,10 +60,10 @@ public class ExternalServicesConfig {
     }
 
     @Bean
-    public ClaimsService claimsService(ClaimsServiceConfig config) {
+    public ClaimsService claimsService(@Value("${claims.stub:false}") boolean stub) {
         val factory = context.getAutowireCapableBeanFactory();
 
-        return config.isStub()
+        return stub
                 ? factory.createBean(ClaimsServiceStub.class)
                 : factory.createBean(ClaimsServiceImpl.class);
     }

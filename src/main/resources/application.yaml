@@ -48,6 +48,7 @@ hystrix:
 intervals:
   tracker: 5000
   chat: 1000
+  claims: 5000
 
 websocket:
   max-sile-size: 5242880
@@ -73,16 +74,6 @@ memberservice:
 
 claims:
   baseUrl: http://localhost:4083
-  urls:
-    claims: /_/claims/listclaims
-    claimById: /_/claims/claim
-    claimTypes: /_/claims/claimTypes
-    payment: /_/claims/addpayment
-    note: /_/claims/addnote
-    data: /_/claims/adddataitem
-    state: /_/claims/updatestate
-    reserve: /_/claims/updatereserve
-    type: /_/claims/updatetype
   stub: false
 
 jwt:

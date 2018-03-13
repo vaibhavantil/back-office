@@ -1,49 +1,33 @@
 package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.services.claims.dto.*;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixException;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ClaimsServiceImpl implements ClaimsService {
 
     private static Logger logger = LoggerFactory.getLogger(ClaimsServiceImpl.class);
 
-    private final RestTemplate template;
-    private final ClaimsServiceConfig config;
     private final ClaimsServiceClient client;
 
     @Autowired
-    public ClaimsServiceImpl(ClaimsServiceConfig config, ClaimsServiceClient client) {
-
-        this.config = config;
-        this.template = new RestTemplate();
+    public ClaimsServiceImpl(@Value("${claims.baseUrl}") String baseUrl, ClaimsServiceClient client) {
         this.client = client;
 
         logger.info("CLAIMS SERVICE:");
         logger.info("class: " + ClaimsServiceImpl.class.getName());
-        logger.info(config.toString());
+        logger.info("base url: " + baseUrl);
     }
 
-    @HystrixCommand(fallbackMethod = "listFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
-    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
     public List<Claim> list() {
-        ResponseEntity<Claim[]> response = template.getForEntity(config.getBaseUrl() + config.getUrls().getClaims(), Claim[].class);
-        return Arrays.stream(response.getBody())
-                .collect(Collectors.toList());
+        return client.list();
     }
 
     @Override
@@ -51,161 +35,57 @@ public class ClaimsServiceImpl implements ClaimsService {
         return client.listByUserId(userId);
     }
 
-    public List<Claim> listFallback(Throwable t) {
-        logger.error("failed claims fetching", t);
-        return null;
-    }
-
-    @HystrixCommand(fallbackMethod = "findFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
-    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
-            ignoreExceptions = { ClaimBadRequestException.class })
     @Override
-    public Claim find(String id) throws ClaimException {
-        try {
-            ResponseEntity<Claim> response = template.getForEntity(config.getBaseUrl() + config.getUrls().getClaimById() + "?claimID=" + id, Claim.class);
-            return response.getBody();
-        } catch (HttpClientErrorException e) {
-            throw new ClaimBadRequestException(e);
-        }
+    public Claim find(String id) {
+        return client.find(id);
     }
 
-    private Claim findFallback(String id, Throwable t) {
-        logger.error("failed claim fetching", t);
-        return null;
-    }
-
-    @HystrixCommand(fallbackMethod = "typesFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
-    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION)
     @Override
     public List<ClaimType> types() {
-        ResponseEntity<ClaimType[]> response = template.getForEntity(config.getBaseUrl() + config.getUrls().getClaimTypes(), ClaimType[].class);
-        return Arrays.asList(response.getBody());
+        return client.types();
     }
 
-    private List<ClaimType> typesFallback(Throwable t) {
-        logger.error("failed claim types fetching", t);
-        return null;
-    }
-
-    @HystrixCommand(fallbackMethod = "addPaymentFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
-    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
-            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean addPayment(ClaimPayment dto) throws ClaimException {
-        try {
-            template.postForEntity(config.getBaseUrl() + config.getUrls().getPayment(), dto, Void.class);
-        } catch (HttpClientErrorException e) {
-            throw new ClaimBadRequestException(e);
-        }
-        return true;
+    public void addPayment(ClaimPayment dto) {
+        client.addPayment(dto);
     }
 
-    public boolean addPaymentFallback(ClaimPayment dto, Throwable t) {
-        logger.error("failed add payment", t);
-        return false;
-    }
-
-    @HystrixCommand(fallbackMethod = "addNoteFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
-    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
-            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean addNote(ClaimNote dto) throws ClaimException {
-        try {
-            template.postForEntity(config.getBaseUrl() + config.getUrls().getNote(), dto, Void.class);
-        } catch (HttpClientErrorException e) {
-            throw new ClaimBadRequestException(e);
-        }
-        return true;
+    public void addNote(ClaimNote dto) {
+        client.addNote(dto);
     }
 
-    private boolean addNoteFallback(ClaimNote dto, Throwable t) {
-        logger.error("failed add note", t);
-        return false;
-    }
-
-    @HystrixCommand(fallbackMethod = "addDataFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
-    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
-            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean addData(ClaimData data) throws ClaimException {
-        try {
-            template.postForEntity(config.getBaseUrl() + config.getUrls().getData(), data, Void.class);
-        } catch (HttpClientErrorException e) {
-            throw new ClaimBadRequestException(e);
-        }
-        return true;
+    public void addData(ClaimData data) {
+       client.addDataItem(data);
     }
 
-    private boolean addDataFallback(ClaimData dto, Throwable t) {
-        logger.error("failed add data", t);
-        return false;
-    }
-
-    @HystrixCommand(fallbackMethod = "changeStateFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
-    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
-            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean changeState(ClaimStateUpdate state) throws ClaimException {
-        try {
-            template.postForEntity(config.getBaseUrl() + config.getUrls().getState(), state, Void.class);
-        } catch (HttpClientErrorException e) {
-            throw new ClaimBadRequestException(e);
-        }
-        return true;
+    public void changeState(ClaimStateUpdate state) {
+        client.updateState(state);
     }
 
-    private boolean changeStateFallback(ClaimStateUpdate state, Throwable t) {
-        logger.error("failed update state", t);
-        return false;
-    }
-
-    @HystrixCommand(fallbackMethod = "changeReserveFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
-    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
-            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean changeReserve(ClaimReserveUpdate reserve) throws ClaimException {
-        try {
-            template.postForEntity(config.getBaseUrl() + config.getUrls().getReserve(), reserve, Void.class);
-        } catch (HttpClientErrorException e) {
-            throw new ClaimBadRequestException(e);
-        }
-        return true;
+    public void changeReserve(ClaimReserveUpdate reserve) {
+        client.updateReserve(reserve);
     }
 
-    private boolean changeReserveFallback(ClaimReserveUpdate reserve, Throwable t) {
-        logger.error("failed update reserve", t);
-        return false;
-    }
-
-    @HystrixCommand(fallbackMethod = "changeTypeFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
-    }, raiseHystrixExceptions = HystrixException.RUNTIME_EXCEPTION,
-            ignoreExceptions = ClaimBadRequestException.class)
     @Override
-    public boolean changeType(ClaimTypeUpdate type) throws ClaimException {
-        try {
-            template.postForEntity(config.getBaseUrl() + config.getUrls().getType(), type, Void.class);
-        } catch (HttpClientErrorException e) {
-            throw new ClaimBadRequestException(e);
-        }
-        return true;
-    }
-
-    private boolean changeTypeFallback(ClaimTypeUpdate type, Throwable t) {
-        logger.error("failed update type", t);
-        return false;
+    public void changeType(ClaimTypeUpdate type) {
+        client.updateType(type);
     }
 
     @Override
     public Map<String, Long> statistics() {
         return client.statistics();
+    }
+
+    @Override
+    public long totalClaims() {
+        val stat = statistics();
+
+        return stat.getOrDefault(ClaimState.OPEN.name(), 0L)
+                + stat.getOrDefault(ClaimState.REOPENED.name(), 0L);
     }
 
 }
