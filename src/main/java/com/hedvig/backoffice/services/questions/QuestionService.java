@@ -11,7 +11,7 @@ public interface QuestionService {
     List<QuestionGroupDTO> list();
     List<QuestionGroupDTO> answered();
     List<QuestionGroupDTO> notAnswered();
-    void answer(String hid, String message, Personnel personnel) throws QuestionNotFoundException;
+    QuestionGroupDTO answer(String hid, String message, Personnel personnel) throws QuestionNotFoundException;
     void addNewQuestions(List<BotMessage> questions);
 
 }

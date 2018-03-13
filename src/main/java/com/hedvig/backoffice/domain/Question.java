@@ -34,6 +34,7 @@ public class Question {
     public Question(long id, String message, Instant date) {
         this.id = id;
         this.message = message;
+        this.date = date;
     }
 
 }

@@ -44,14 +44,13 @@ public class QuestionController {
     }
 
     @PostMapping("/answer/{hid}")
-    public ResponseEntity<?> answer(@PathVariable String hid,
+    public QuestionGroupDTO answer(@PathVariable String hid,
                                     @Valid @RequestBody BackOfficeAnswerDTO message,
                                     @AuthenticationPrincipal String principal)
             throws AuthorizationException, QuestionNotFoundException {
-        Personnel personnel = personnelRepository.findByEmail(principal).orElseThrow(AuthorizationException::new);
-        questionService.answer(hid, message.getMsg(), personnel);
 
-        return ResponseEntity.noContent().build();
+        Personnel personnel = personnelRepository.findByEmail(principal).orElseThrow(AuthorizationException::new);
+        return questionService.answer(hid, message.getMsg(), personnel);
     }
 
 }

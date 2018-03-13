@@ -79,7 +79,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Transactional
     @Override
-    public void answer(String hid, String message, Personnel personnel) throws QuestionNotFoundException {
+    public QuestionGroupDTO answer(String hid, String message, Personnel personnel) throws QuestionNotFoundException {
         QuestionGroup group = questionGroupRepository.findUnasweredByHid(hid).orElseThrow(() -> new QuestionNotFoundException(hid));
         group.setAnswerDate(Instant.now());
         group.setAnswer(message);
@@ -88,6 +88,8 @@ public class QuestionServiceImpl implements QuestionService {
         botService.answerQuestion(hid, message);
         questionGroupRepository.save(group);
         updatesService.changeOn(-1, UpdateType.QUESTIONS);
+
+        return QuestionGroupDTO.fromDomain(group);
     }
 
     @Transactional
