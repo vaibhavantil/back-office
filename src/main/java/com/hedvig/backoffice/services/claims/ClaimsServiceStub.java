@@ -69,9 +69,14 @@ public class ClaimsServiceStub implements ClaimsService {
                 .map(c -> {
                     Claim claim = new Claim();
                     claim.setId(c.getId());
+                    claim.setUserId(c.getUserId());
+                    claim.setState(c.getState());
+                    claim.setReserve(c.getReserve());
+                    claim.setType(c.getType());
+                    claim.setDate(c.getDate());
                     claim.setAudioURL(c.getAudioURL());
                     claim.setRegistrationDate(c.getRegistrationDate());
-                    claim.setUserId(c.getUserId());
+
                     return claim;
                 })
                 .collect(Collectors.toList());
