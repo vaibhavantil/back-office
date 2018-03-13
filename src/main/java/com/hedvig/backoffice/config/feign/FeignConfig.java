@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.config.feign;
 
+import feign.Request;
 import feign.codec.ErrorDecoder;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -42,6 +43,11 @@ public class FeignConfig {
             log.error(buff.toString());
             return new RuntimeException();
         };
+    }
+
+    @Bean
+    public Request.Options options() {
+        return new Request.Options(10 * 1000, 300 * 1000);
     }
 
 }
