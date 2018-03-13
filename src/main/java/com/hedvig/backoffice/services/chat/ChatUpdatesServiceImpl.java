@@ -6,11 +6,9 @@ import com.hedvig.backoffice.domain.SystemSettingType;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
-import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.questions.QuestionService;
-import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,14 +50,8 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     }
 
     @Override
-    public void update() throws ChatUpdateException {
-        List<BackOfficeMessage> fetched;
-
-        try {
-            fetched = botService.fetch(lastTimestamp());
-        } catch (BotServiceException e) {
-            throw new ChatUpdateException(e);
-        }
+    public void update() {
+        List<BackOfficeMessage> fetched = botService.fetch(lastTimestamp());
 
         if (fetched.size() == 0) {
             return;

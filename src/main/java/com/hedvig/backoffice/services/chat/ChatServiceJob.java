@@ -13,12 +13,8 @@ public class ChatServiceJob extends QuartzJobBean {
     private ChatUpdatesService service;
 
     @Override
-    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        try {
-            service.update();
-        } catch (ChatUpdateException e) {
-            logger.error("error during update chats", e);
-        }
+    protected void executeInternal(JobExecutionContext context) {
+        service.update();
     }
 
     public void setService(ChatUpdatesService service) {

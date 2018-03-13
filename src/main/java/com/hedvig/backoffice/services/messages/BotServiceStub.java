@@ -103,7 +103,7 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<BotMessage> messages(String hid) throws BotServiceException {
+    public List<BotMessage> messages(String hid) {
         List<BotMessage> current = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         Instant time = new Date().toInstant();
         Instant timestamp = timestamps.computeIfAbsent(hid, k -> new Date().toInstant());
@@ -130,7 +130,7 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<BotMessage> messages(String hid, int count) throws BotServiceException {
+    public List<BotMessage> messages(String hid, int count) {
         List<BotMessage> all = messages(hid);
         if (all.size() <= count) {
             return all;
@@ -140,7 +140,7 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<BackOfficeMessage> fetch(Instant timestamp) throws BotServiceException {
+    public List<BackOfficeMessage> fetch(Instant timestamp) {
         return messages
                 .entrySet()
                 .stream()
@@ -177,13 +177,7 @@ public class BotServiceStub implements BotService {
 
     @Scheduled(fixedDelay = 1000)
     public void addMessage() {
-        subscriptionRepository.findActiveSubscriptions().forEach(s -> {
-            try {
-                messages(s.getHid());
-            } catch (BotServiceException e) {
-                logger.error("stub bot-service error", e);
-            }
-        });
+        subscriptionRepository.findActiveSubscriptions().forEach(s -> messages(s.getHid()));
     }
 
 	@Override

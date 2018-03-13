@@ -14,7 +14,6 @@ import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.MemberServiceException;
 import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
-import com.hedvig.backoffice.services.messages.BotServiceException;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -97,8 +96,8 @@ public class ChatServiceImpl implements ChatService {
     public void messages(String hid) {
         try {
             send(hid, Message.chat(botService.messages(hid)));
-        } catch (BotServiceException e) {
-            send(hid, Message.error(e.getCode(), e.getMessage()));
+        } catch (ExternalServiceBadRequestException e) {
+            send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
         }
     }
@@ -107,8 +106,8 @@ public class ChatServiceImpl implements ChatService {
     public void messages(String hid, int count) {
         try {
             send(hid, Message.chat(botService.messages(hid, count)));
-        } catch (BotServiceException e) {
-            send(hid, Message.error(e.getCode(), e.getMessage()));
+        } catch (ExternalServiceBadRequestException e) {
+            send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
         }
     }

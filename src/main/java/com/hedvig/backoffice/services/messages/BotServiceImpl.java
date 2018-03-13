@@ -28,50 +28,31 @@ public class BotServiceImpl implements BotService {
 
     private static Logger logger = LoggerFactory.getLogger(BotServiceImpl.class);
 
-    private String baseUrl;
-    private String messagesUrl;
-    private String fetchUrl;
     private BotServiceClient botServiceClient;
 
     @Autowired
-    private BotServiceImpl(@Value("${botservice.baseUrl}") String baseUrl,
-                           @Value("${botservice.urls.messages}") String messagesUrl,
-                           @Value("${botservice.urls.internal.fetch}") String fetchUrl,
-                           BotServiceClient botServiceClient) {
-
-        this.baseUrl = baseUrl;
-        this.messagesUrl = messagesUrl;
-        this.fetchUrl = fetchUrl;
+    private BotServiceImpl(BotServiceClient botServiceClient) {
         this.botServiceClient = botServiceClient;
 
         logger.info("BOT SERVICE:");
         logger.info("class: " + BotServiceImpl.class.getName());
-        logger.info("base: " + baseUrl);
-        logger.info("messages: " + messagesUrl);
     }
 
     @Override
-    public List<BotMessage> messages(String hid) throws BotServiceException {
-        return messages(baseUrl + messagesUrl, hid);
+    public List<BotMessage> messages(String hid) {
+        JsonNode root = botServiceClient.messages(hid);
+        return parseMessages(root);
     }
 
     @Override
-    public List<BotMessage> messages(String hid, int count) throws BotServiceException {
-        return messages(baseUrl + messagesUrl + "/" + count, hid);
+    public List<BotMessage> messages(String hid, int count) {
+        JsonNode root = botServiceClient.messages(hid, count);
+        return parseMessages(root);
     }
 
     @Override
-    public List<BackOfficeMessage> fetch(Instant timestamp) throws BotServiceException {
-        RestTemplate template = new RestTemplate();
-        try {
-            String time = Long.toString(timestamp.toEpochMilli());
-            ResponseEntity<BackOfficeMessage[]> messages
-                    = template.getForEntity(baseUrl + fetchUrl + "/" + time, BackOfficeMessage[].class);
-
-            return Arrays.asList(messages.getBody());
-        } catch (RestClientException e) {
-            throw new BotServiceException(e);
-        }
+    public List<BackOfficeMessage> fetch(Instant timestamp) {
+        return botServiceClient.fetch(timestamp.toEpochMilli());
     }
 
     @Override
@@ -84,51 +65,21 @@ public class BotServiceImpl implements BotService {
         botServiceClient.answer(new BackOfficeAnswerDTO(hid, answer));
     }
 
-    private List<BotMessage> messages(String url, String hid) throws BotServiceException {
-        RestTemplate template = new RestTemplate();
-        String result;
+    private List<BotMessage> parseMessages(JsonNode root) {
+        Iterable<Map.Entry<String, JsonNode>> iterable = root::fields;
 
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("hedvig.token", hid);
-            HttpEntity<Void> request = new HttpEntity<>(headers);
-            ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, request, String.class);
-            result = response.getBody();
-        } catch (RestClientException e) {
-            throw new BotServiceException(e);
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        List<BotMessage> messages = null;
-
-        try {
-            if (StringUtils.isNotBlank(result)) {
-
-                JsonNode root = mapper.readValue(result, JsonNode.class);
-                Iterable<Map.Entry<String, JsonNode>> iterable = root::fields;
-
-                messages = StreamSupport
-                        .stream(iterable.spliterator(), false)
-                        .map(e -> {
-                            try {
-                                return new BotMessage(e.getValue().toString());
-                            } catch (BotMessageException ex) {
-                                logger.error(ex.getMessage(), ex);
-                                return null;
-                            }
-                        })
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
-            }
-        } catch (IOException e) {
-            throw new BotServiceException(e);
-        }
-
-        if (messages != null) {
-            return messages;
-        }
-
-        return new ArrayList<>();
+        return StreamSupport
+                .stream(iterable.spliterator(), false)
+                .map(e -> {
+                        try {
+                            return new BotMessage(e.getValue().toString());
+                        } catch (BotMessageException ex) {
+                            logger.error(ex.getMessage(), ex);
+                            return null;
+                        }
+                    })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
 	@Override
