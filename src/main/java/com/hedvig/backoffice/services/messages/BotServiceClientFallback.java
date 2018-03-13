@@ -27,36 +27,36 @@ public class BotServiceClientFallback implements BotServiceClient {
 
     @Override
     public PushTokenDTO getPushTokenByHid(String hid) {
-        log.error("bot-service unavailable");
+        log.error("request to bot-service failed");
         return new PushTokenDTO("");
     }
 
     @Override
     public JsonNode messages(String hid) {
-        log.error("bot-service unavailable");
+        log.error("request to bot-service failed");
         return mapper.createArrayNode();
     }
 
     @Override
     public JsonNode messages(String hid, int count) {
-        log.error("bot-service unavailable");
+        log.error("request to bot-service failed");
         return mapper.createArrayNode();
     }
 
     @Override
     public List<BackOfficeMessage> fetch(long time) {
-        log.error("bot-service unavailable");
+        log.error("request to bot-service failed");
         return new ArrayList<>();
     }
 
     @Override
     public void response(BackOfficeMessage message) {
-        log.error("bot-service unavailable");
+        log.error("request to bot-service failed");
     }
 
     @Override
     public void answer(BackOfficeAnswerDTO answer) {
-        log.error("bot-service unavailable");
+        log.error("request to bot-service failed");
     }
 
 }

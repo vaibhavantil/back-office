@@ -41,7 +41,7 @@ public class FeignConfig {
             }
 
             log.error(buff.toString());
-            return new RuntimeException();
+            return new ExternalServiceException(buff.toString());
         };
     }
 

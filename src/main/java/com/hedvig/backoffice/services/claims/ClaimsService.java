@@ -9,17 +9,17 @@ public interface ClaimsService {
 
     List<Claim> list();
     List<Claim> listByUserId(String userId);
-    Claim find(String id) throws ClaimException;
+    Claim find(String id);
 
     List<ClaimType> types();
 
-    boolean addPayment(ClaimPayment dto) throws ClaimException;
-    boolean addNote(ClaimNote dto) throws ClaimException;
-    boolean addData(ClaimData data) throws ClaimException;
+    void addPayment(ClaimPayment dto);
+    void addNote(ClaimNote dto);
+    void addData(ClaimData data);
 
-    boolean changeState(ClaimStateUpdate state) throws ClaimException;
-    boolean changeReserve(ClaimReserveUpdate reserve) throws ClaimException;
-    boolean changeType(ClaimTypeUpdate type) throws ClaimException;
+    void changeState(ClaimStateUpdate state);
+    void changeReserve(ClaimReserveUpdate reserve);
+    void changeType(ClaimTypeUpdate type);
 
     Map<String, Long> statistics();
 

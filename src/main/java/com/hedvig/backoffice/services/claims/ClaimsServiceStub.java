@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.claims;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
@@ -82,9 +83,9 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public Claim find(String id) throws ClaimException {
+    public Claim find(String id) {
         return claims.stream().filter(c -> c.getId().equals(id)).findAny()
-                .orElseThrow(() -> new ClaimBadRequestException("claim not found"));
+                .orElseThrow(() -> new ExternalServiceNotFoundException("claim not found", "mock"));
     }
 
     @Override
@@ -93,51 +94,45 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public boolean addPayment(ClaimPayment dto) throws ClaimException {
+    public void addPayment(ClaimPayment dto) {
         Claim claim = find(dto.getClaimID());
         claim.getPayments().add(dto);
         addEvent(claim,"[test] payment added");
-        return true;
     }
 
     @Override
-    public boolean addNote(ClaimNote dto) throws ClaimException {
+    public void addNote(ClaimNote dto) {
         Claim claim = find(dto.getClaimID());
         claim.getNotes().add(dto);
         addEvent(claim,"[test] note added");
-        return true;
     }
 
     @Override
-    public boolean addData(ClaimData data) throws ClaimException {
+    public void addData(ClaimData data) {
         Claim claim = find(data.getClaimID());
         claim.getData().add(data);
         addEvent(claim,"[test] data added");
-        return true;
     }
 
     @Override
-    public boolean changeState(ClaimStateUpdate state) throws ClaimException {
+    public void changeState(ClaimStateUpdate state) {
         Claim claim = find(state.getClaimID());
         claim.setState(state.getState());
         addEvent(claim,"[test] state changed");
-        return true;
     }
 
     @Override
-    public boolean changeReserve(ClaimReserveUpdate reserve) throws ClaimException {
+    public void changeReserve(ClaimReserveUpdate reserve) {
         Claim claim = find(reserve.getClaimID());
         claim.setReserve(reserve.getAmount());
         addEvent(claim,"[test] reserve changed");
-        return true;
     }
 
     @Override
-    public boolean changeType(ClaimTypeUpdate type) throws ClaimException {
+    public void changeType(ClaimTypeUpdate type) {
         Claim claim = find(type.getClaimID());
         claim.setType(type.getType());
         addEvent(claim,"[test] type changed");
-        return true;
     }
 
     @Override
