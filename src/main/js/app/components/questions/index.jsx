@@ -9,6 +9,10 @@ export default class Questions extends React.Component {
         super(props);
     }
 
+    tabChange = () => {
+        this.props.questionsRequest();
+    };
+
     componentDidMount() {
         this.props.questionsRequest();
         this.props.usersRequest();
@@ -22,8 +26,9 @@ export default class Questions extends React.Component {
                 <BackLink path="dashboard" />
                 <QuestionsList
                     questions={questions.list}
-                    users={list}
                     sendAnswer={sendAnswer}
+                    tabChange={this.tabChange}
+                    users={list}
                 />
             </React.Fragment>
         );

@@ -36,6 +36,10 @@ export default {
             url: 'claims',
             method: 'get'
         },
+        getListByUserId: {
+            url: 'claims/user',
+            method: 'get'
+        },
         types: {
             url: 'claims/types',
             method: 'get'

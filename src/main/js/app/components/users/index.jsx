@@ -66,8 +66,8 @@ export default class Users extends React.Component {
         const {
             users,
             messages,
-            newMessagesReceived,
             setActiveConnection,
+            newMessagesReceived,
             client
         } = this.props;
         const { searchValue } = this.state;

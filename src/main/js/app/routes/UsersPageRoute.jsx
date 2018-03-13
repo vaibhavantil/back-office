@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ChatPage from 'containers/messages-page/ChatPage';
+import ChatPage from 'containers/chat-page/ChatPage';
 import UsersPage from 'containers/users-page/UsersPage';
 import { Switch, Route } from 'react-router';
 import PrivateRoute from './PrivateRoute';

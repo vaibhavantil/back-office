@@ -11,7 +11,7 @@ const ListContainer = styled.div`
     margin: 50px auto;
 `;
 
-const QuestionsList = ({ questions, users, sendAnswer }) => {
+const QuestionsList = ({ questions, users, sendAnswer, tabChange }) => {
     const notAnswered = () => (
         <Tab.Pane>
             <SortedList
@@ -39,7 +39,11 @@ const QuestionsList = ({ questions, users, sendAnswer }) => {
 
     return (
         <ListContainer>
-            <Tab renderActiveOnly={true} panes={panes} />
+            <Tab
+                renderActiveOnly={true}
+                panes={panes}
+                onTabChange={tabChange}
+            />
         </ListContainer>
     );
 };
@@ -47,6 +51,7 @@ const QuestionsList = ({ questions, users, sendAnswer }) => {
 QuestionsList.propTypes = {
     questions: PropTypes.object.isRequired,
     sendAnswer: PropTypes.func.isRequired,
+    tabChange: PropTypes.func.isRequired,
     users: PropTypes.array
 };
 
