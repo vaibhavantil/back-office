@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.services.claims.dto.*;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,14 @@ public class ClaimsServiceImpl implements ClaimsService {
     @Override
     public Map<String, Long> statistics() {
         return client.statistics();
+    }
+
+    @Override
+    public long totalClaims() {
+        val stat = statistics();
+
+        return stat.getOrDefault(ClaimState.OPEN.name(), 0L)
+                + stat.getOrDefault(ClaimState.REOPENED.name(), 0L);
     }
 
 }

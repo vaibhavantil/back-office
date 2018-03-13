@@ -22,5 +22,6 @@ public interface ClaimsService {
     void changeType(ClaimTypeUpdate type);
 
     Map<String, Long> statistics();
+    long totalClaims();
 
 }

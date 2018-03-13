@@ -84,7 +84,7 @@ public class UpdatesServiceImpl implements UpdatesService {
                     updates.add(new Updates(UpdateType.ASSETS, personnel, assetRepository.countAllByState(AssetState.PENDING)));
                     break;
                 case CLAIMS:
-                    updates.add(new Updates(UpdateType.CLAIMS, personnel, (long) claimsService.list().size()));
+                    updates.add(new Updates(UpdateType.CLAIMS, personnel, claimsService.totalClaims()));
                     break;
                 default:
                     updates.add(new Updates(type, personnel,0L));

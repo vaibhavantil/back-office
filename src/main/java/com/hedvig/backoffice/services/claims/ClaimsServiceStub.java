@@ -145,6 +145,14 @@ public class ClaimsServiceStub implements ClaimsService {
         return stat;
     }
 
+    @Override
+    public long totalClaims() {
+        val stat = statistics();
+
+        return stat.getOrDefault(ClaimState.OPEN.name(), 0L)
+                + stat.getOrDefault(ClaimState.REOPENED.name(), 0L);
+    }
+
     private void addEvent(Claim claim, String message) {
         ClaimEvent event = new ClaimEvent();
         event.setText(message);
