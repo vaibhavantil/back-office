@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.services.chat;
 
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
-import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Subscription;
@@ -86,6 +85,7 @@ public class ChatServiceImpl implements ChatService {
             messageUrlResolver.resolveUrls(botMessage);
             botService.response(hid, botMessage);
             expoNotificationService.sendNotification(hid);
+            memberService.sendNotificationMail(hid);
         } catch (BotMessageException | ExternalServiceBadRequestException e) {
             send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);

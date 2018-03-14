@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.members;
 
+import com.hedvig.backoffice.services.members.dto.ChatResponseMailDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixException;
@@ -23,13 +24,16 @@ public class MemberServiceImpl implements MemberService {
     private String baseUrl;
     private String searchUrl;
     private String getByIdUrl;
+    private MemberServiceClient memberServiceClient;
 
     public MemberServiceImpl(@Value("${memberservice.baseUrl}") String baseUrl,
                              @Value("${memberservice.urls.search}") String searchUrl,
-                             @Value("${memberservice.urls.getById}") String getByIdUrl) {
+                             @Value("${memberservice.urls.getById}") String getByIdUrl,
+                             MemberServiceClient memberServiceClient) {
         this.baseUrl = baseUrl;
         this.searchUrl = searchUrl;
         this.getByIdUrl = getByIdUrl;
+        this.memberServiceClient = memberServiceClient;
 
         logger.info("MEMBER SERVICE:");
         logger.info("class: " + MemberServiceImpl.class.getName());
@@ -73,5 +77,10 @@ public class MemberServiceImpl implements MemberService {
         logger.error("failed member fetching", e);
         return Optional.empty();
     }
+
+	@Override
+	public void sendNotificationMail(String hid) {
+        memberServiceClient.sendChatResponseEmail(new ChatResponseMailDTO(hid));
+	}
 
 }

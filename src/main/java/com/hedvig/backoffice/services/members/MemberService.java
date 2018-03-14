@@ -9,5 +9,5 @@ public interface MemberService {
 
     Optional<List<MemberDTO>> search(String status, String query);
     Optional<MemberDTO> findByHid(String hid) throws MemberNotFoundException;
-
+    void sendNotificationMail(String hid);
 }

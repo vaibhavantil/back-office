@@ -53,4 +53,9 @@ public class MemberServiceStub implements MemberService {
                 .orElse(new MemberDTO(Long.parseLong(hid))));
     }
 
+	@Override
+	public void sendNotificationMail(String hid) {
+        logger.info("Sending email to customer with hid: {}", hid);
+	}
+
 }
