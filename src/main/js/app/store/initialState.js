@@ -40,7 +40,8 @@ export default {
         requesting: false,
         successful: false,
         errors: [],
-        types: []
+        types: [],
+        userClaims: []
     },
     claimDetails: {
         data: null,

@@ -4,7 +4,9 @@ import {
     CLAIMS_REQUEST_ERROR,
     CLAIM_UPDATE_SUCCESS,
     CLAIM_TYPES,
-    CLAIM_TYPES_SUCCESS
+    CLAIM_TYPES_SUCCESS,
+    CLAIMS_BY_USER,
+    CLAIMS_BY_USER_SUCCESS
 } from 'constants/claims';
 
 export const claimsRequest = () => ({
@@ -33,4 +35,14 @@ export const claimTypes = () => ({
 export const claimsTypesSuccess = types => ({
     type: CLAIM_TYPES_SUCCESS,
     types
+});
+
+export const claimsByUser = id => ({
+    type: CLAIMS_BY_USER,
+    id
+});
+
+export const claimsByUserSuccess = claims => ({
+    type: CLAIMS_BY_USER_SUCCESS,
+    claims
 });

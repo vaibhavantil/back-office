@@ -4,8 +4,10 @@ import styled from 'styled-components';
 import { Header, Segment } from 'semantic-ui-react';
 import Message from 'components/chat/messages/Message';
 import AnswerForm from './AnswerForm';
+import AnswerInfo from './AnswerInfo';
 import Pagination from 'components/shared/pagination/Pagination';
 import { getUserInfo } from 'app/lib/helpers';
+import { history } from 'app/store';
 
 const List = styled(Segment)`
     &&& {
@@ -46,6 +48,10 @@ export default class SortedList extends React.Component {
         data.personnel && data.personnel.email
             ? `${data.personnel.email}`
             : 'admin';
+
+    chatRedirectClick = id => {
+        history.push(`/members/${id}`);
+    };
 
     getListContent = (data, user) => {
         const users = this.props.users;
@@ -94,11 +100,13 @@ export default class SortedList extends React.Component {
                                     <AnswerForm
                                         hid={user.hid}
                                         sendAnswer={sendAnswer}
+                                        redirectClick={this.chatRedirectClick}
                                     />
                                 ) : (
-                                    <Header size="medium">
-                                        Admin answer: {user.answer}
-                                    </Header>
+                                    <AnswerInfo
+                                        user={user}
+                                        redirectClick={this.chatRedirectClick}
+                                    />
                                 )}
                                 <Pagination
                                     items={user.questions}

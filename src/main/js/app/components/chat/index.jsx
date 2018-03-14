@@ -1,20 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Message, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
-import MessagesList from './messages/MessagesList';
-import BackLink from 'components/shared/link/BackLink';
-import ChatPanel from './chat/ChatPanel';
+import { Tab, Header } from 'semantic-ui-react';
 import { subscribe, reconnect } from 'app/lib/sockets/chat';
 import { disconnect } from 'sockets';
+import { memberPagePanes } from './panes';
+import BackLink from 'components/shared/link/BackLink';
 
-const ChatContainer = styled.div`
-    width: 700px;
-    border: solid 2px #e8e5e5;
-    border-radius: 5px;
-`;
-
-export const ChatHeader = styled.div`
+const UserDetailsHeader = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -64,19 +57,17 @@ export default class Chat extends React.Component {
         );
     };
 
-    getChatTitle = () => {
-        const { messages: { user } } = this.props;
-
-        return `Chat with ${
+    getChatTitle = user =>
+        `Member: ${
             user && (user.firstName || user.lastName)
                 ? user.firstName + ' ' + (user.lastName || '')
-                : 'User'
+                : ''
         }`;
-    };
 
     componentDidMount() {
         const { match, userRequest } = this.props;
         const { stompClient, subscription } = this.subscribeSocket();
+
         if (!stompClient) {
             this.reconnectSocket();
         }
@@ -91,27 +82,25 @@ export default class Chat extends React.Component {
     }
 
     render() {
-        const { messages, error, match } = this.props;
+        const { props, addMessageHandler } = this;
+        const panes = memberPagePanes(
+            props,
+            { addMessageHandler, claimsByUser: props.claimsByUser },
+            this.state.socket
+        );
+        // eslint-disable-next-line no-undef
+        const showChatTab = !!document.referrer.indexOf('questions') + 1;
         return (
             <React.Fragment>
-                <ChatHeader>
-                    <Header size="huge">{this.getChatTitle()}</Header>
-                    <BackLink path="members"/>
-                </ChatHeader>
-
-                <ChatContainer>
-                    <MessagesList
-                        messages={messages.list}
-                        error={!!this.state.socket}
-                        userId={match.params.id}
-                        messageId={match.params.msgId}
-                    />
-                    <ChatPanel
-                        addMessage={this.addMessageHandler}
-                        select={messages.select}
-                    />
-                    {error && <Message negative>{error.message}</Message>}
-                </ChatContainer>
+                <UserDetailsHeader>
+                    <Header size="huge">{this.getChatTitle(props.messages.user)}</Header>
+                    <BackLink path="members" />
+                </UserDetailsHeader>
+                <Tab
+                    panes={panes}
+                    renderActiveOnly={true}
+                    defaultActiveIndex={showChatTab ? 1 : 0}
+                />
             </React.Fragment>
         );
     }
@@ -126,5 +115,7 @@ Chat.propTypes = {
     setActiveConnection: PropTypes.func.isRequired,
     userRequest: PropTypes.func.isRequired,
     error: PropTypes.object,
-    clearMessagesList: PropTypes.func.isRequired
+    clearMessagesList: PropTypes.func.isRequired,
+    claimsByUser: PropTypes.func.isRequired,
+    userClaims: PropTypes.array
 };

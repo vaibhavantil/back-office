@@ -1,8 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List } from 'semantic-ui-react';
+import { Table } from 'semantic-ui-react';
+import styled from 'styled-components';
 import Pagination from '../pagination/Pagination';
-import { ListContainer } from 'components/shared';
+
+const PaginatorContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    width: 100%;
+`;
 
 export default class PaginatorList extends React.Component {
     constructor(props) {
@@ -18,26 +24,29 @@ export default class PaginatorList extends React.Component {
 
     render() {
         const { activeList } = this.state;
-        const { list, itemContent, pageSize } = this.props;
+        const { list, itemContent, pageSize, tableHeader } = this.props;
         return (
-            <ListContainer>
-                <List selection size="big">
+            <React.Fragment>
+                <Table celled selectable>
+                    {tableHeader && tableHeader}
                     {activeList.length ? (
-                        activeList.map(item => (
-                            <List.Item key={item.hid || item.id}>
-                                {itemContent(item)}
-                            </List.Item>
-                        ))
-                    ) : (
-                        <h2>Not found</h2>
-                    )}
-                </List>
-                <Pagination
-                    items={list}
-                    onChangePage={this.onChangePage}
-                    pageSize={pageSize || 6}
-                />
-            </ListContainer>
+                        <Table.Body>
+                            {activeList.map(item => (
+                                <React.Fragment key={item.hid || item.id}>
+                                    {itemContent(item)}
+                                </React.Fragment>
+                            ))}
+                        </Table.Body>
+                    ) : null}
+                </Table>
+                <PaginatorContainer>
+                    <Pagination
+                        items={list}
+                        onChangePage={this.onChangePage}
+                        pageSize={pageSize || 6}
+                    />
+                </PaginatorContainer>
+            </React.Fragment>
         );
     }
 }
@@ -45,5 +54,6 @@ export default class PaginatorList extends React.Component {
 PaginatorList.propTypes = {
     list: PropTypes.array.isRequired,
     itemContent: PropTypes.func.isRequired,
+    tableHeader: PropTypes.object,
     pageSize: PropTypes.number
 };

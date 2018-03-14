@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Form, TextArea } from 'semantic-ui-react';
-import { history } from 'app/store';
 
 const FormGroup = styled(Form.Group)`
     &&& {
@@ -33,12 +32,8 @@ export default class AnswerForm extends React.Component {
         this.props.sendAnswer({ msg: this.state.answer, userId });
     };
 
-    chatRedirectClick = (id, msgId) => {
-        history.push(`/members/${id}/${msgId}`);
-    };
-
     render() {
-        const id = this.props.hid;
+        const { hid, redirectClick } = this.props;
         return (
             <Form>
                 <FormGroup>
@@ -52,11 +47,11 @@ export default class AnswerForm extends React.Component {
                         <Button
                             style={{ marginBottom: '3px' }}
                             content="Open Chat"
-                            onClick={this.chatRedirectClick.bind(this, id)}
+                            onClick={redirectClick.bind(this, hid)}
                         />
                         <Button
                             content="Send"
-                            onClick={this.answerClick.bind(this, id)}
+                            onClick={this.answerClick.bind(this, hid)}
                             primary
                         />
                     </div>
@@ -68,5 +63,6 @@ export default class AnswerForm extends React.Component {
 
 AnswerForm.propTypes = {
     hid: PropTypes.string.isRequired,
-    sendAnswer: PropTypes.func.isRequired
+    sendAnswer: PropTypes.func.isRequired,
+    redirectClick: PropTypes.func.isRequired
 };

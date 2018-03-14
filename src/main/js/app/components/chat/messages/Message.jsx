@@ -35,26 +35,22 @@ const MessageBody = styled.div`
     box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
         0 2px 10px 0 rgba(34, 36, 38, 0.15);
 
-    ${props =>
-        props.isQuestion
-            ? `&:before {
-                    position: absolute;
-                    content: '';
-                    width: 0.7em;
-                    height: 0.7em;
-                    background: #fff;
-                    -webkit-transform: rotate(45deg);
-                    transform: rotate(45deg);
-                    z-index: 2;
-                    box-shadow: 1px 1px 0 0 #bababc;
-                    bottom: -0.3em;
-                    left: 1em;
-                    top: auto;
-                    right: auto;
-                    margin-left: 0;
-                }
-                `
-            : ''};
+    &:before {
+        position: absolute;
+        content: '';
+        width: 0.7em;
+        height: 0.7em;
+        background: #fff;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        z-index: 2;
+        box-shadow: 1px 1px 0 0 #bababc;
+        bottom: -0.3em;
+        left: 1em;
+        top: auto;
+        right: auto;
+        margin-left: 0;
+    }
 `;
 
 const MessageInfo = styled.div`
@@ -105,7 +101,7 @@ Message.propTypes = {
     content: PropTypes.object.isRequired,
     isQuestionMessage: PropTypes.bool,
     msgId: PropTypes.number,
-    timestamp: PropTypes.string,
+    timestamp: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     from: PropTypes.string
 };
 

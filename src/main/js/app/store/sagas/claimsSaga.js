@@ -5,8 +5,9 @@ import { getAuthToken } from 'app/lib/checkAuth';
 import {
     CLAIMS_REQUESTING,
     CLAIM_UPDATING,
-    CLAIM_TYPES
-} from 'constants/claims';
+    CLAIM_TYPES,
+    CLAIMS_BY_USER
+} from '../constants/claims';
 import * as actions from '../actions/claimsActions';
 
 function* requestFlow() {
@@ -14,6 +15,22 @@ function* requestFlow() {
         const token = yield call(getAuthToken);
         const { data } = yield call(api, token, config.claims.getList);
         yield put(actions.claimsRequestSuccess(data));
+    } catch (error) {
+        yield put(actions.claimsRequestError(error));
+    }
+}
+
+function* requestByUserFlow({ id }) {
+    try {
+        const token = yield call(getAuthToken);
+        const { data } = yield call(
+            api,
+            token,
+            config.claims.getListByUserId,
+            null,
+            id
+        );
+        yield put(actions.claimsByUserSuccess(data));
     } catch (error) {
         yield put(actions.claimsRequestError(error));
     }
@@ -50,7 +67,8 @@ function* claimsWatcher() {
     yield [
         takeLatest(CLAIMS_REQUESTING, requestFlow),
         takeLatest(CLAIM_UPDATING, updateFlow),
-        takeLatest(CLAIM_TYPES, claimTypesFlow)
+        takeLatest(CLAIM_TYPES, claimTypesFlow),
+        takeLatest(CLAIMS_BY_USER, requestByUserFlow)
     ];
 }
 

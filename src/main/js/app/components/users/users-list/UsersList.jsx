@@ -1,33 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { Label, List } from 'semantic-ui-react';
-import { ItemContent } from 'components/shared';
+import moment from 'moment';
+import { Table } from 'semantic-ui-react';
 import PaginatorList from 'components/shared/paginator-list/PaginatorList';
 import * as sockets from 'sockets';
-
-const ListItem = ({ item }) => (
-    <Link to={`/members/${item.hid}`} replace>
-        <ItemContent>
-            {item.firstName ? (
-                <List.Header>
-                    {`${item.firstName} ${item.lastName || ''}`}
-                </List.Header>
-            ) : (
-                <List.Header>User-{item.hid}</List.Header>
-            )}
-            {item.newMessages && (
-                <Label color="blue" horizontal circular>
-                    {item.newMessages}
-                </Label>
-            )}
-        </ItemContent>
-    </Link>
-);
-
-ListItem.propTypes = {
-    item: PropTypes.object.isRequired
-};
+import { history } from 'app/store';
+import {LinkRow} from 'components/shared'
 
 export default class UsersList extends React.Component {
     constructor(props) {
@@ -37,6 +15,35 @@ export default class UsersList extends React.Component {
             subscription: null
         };
     }
+
+    getUserName = user =>
+        user.firstName
+            ? `${user.firstName} ${user.lastName || ''}`
+            : `User-${user.hid}`;
+
+    linkClickHandler = id => history.push(`/members/${id}`);
+
+    getTableRow = item => {
+        const date = moment(item.birthDate);
+        const formattedDate = date.isValid()
+            ? date.format('DD MMMM YYYY')
+            : '-';
+        return (
+            <LinkRow onClick={this.linkClickHandler.bind(this, item.hid)}>
+                <Table.Cell>{this.getUserName(item)}</Table.Cell>
+                <Table.Cell>{formattedDate}</Table.Cell>
+            </LinkRow>
+        );
+    };
+
+    getTableHeader = () => (
+        <Table.Header>
+            <Table.Row>
+                <Table.HeaderCell>Name</Table.HeaderCell>
+                <Table.HeaderCell>Birthday</Table.HeaderCell>
+            </Table.Row>
+        </Table.Header>
+    );
 
     subscribeSocket = connection => {
         const { newMessagesReceived, client: { name } } = this.props;
@@ -69,7 +76,8 @@ export default class UsersList extends React.Component {
         return (
             <PaginatorList
                 list={users}
-                itemContent={item => <ListItem item={item} />}
+                itemContent={item => this.getTableRow(item)}
+                tableHeader={this.getTableHeader()}
                 pageSize={10}
             />
         );
