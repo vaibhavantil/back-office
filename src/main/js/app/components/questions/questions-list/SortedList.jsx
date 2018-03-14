@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Header, Segment } from 'semantic-ui-react';
-import Message from 'components/chat/messages/Message';
+import Pagination from 'components/shared/pagination/Pagination';
 import AnswerForm from './AnswerForm';
 import AnswerInfo from './AnswerInfo';
-import Pagination from 'components/shared/pagination/Pagination';
-import { getUserInfo } from 'app/lib/helpers';
+import Question from './Question';
 import { history } from 'app/store';
 
 const List = styled(Segment)`
@@ -53,30 +52,6 @@ export default class SortedList extends React.Component {
         history.push(`/members/${id}`);
     };
 
-    getListContent = (data, user) => {
-        const users = this.props.users;
-        return (
-            <React.Fragment>
-                <Message
-                    content={data.message.body}
-                    left={!data.answer}
-                    isQuestionMessage={true}
-                    timestamp={data.date}
-                    from={users.length && getUserInfo(users, user.hid)}
-                />
-                {data.answer ? (
-                    <Message
-                        content={data.answer.body}
-                        left={true}
-                        isQuestionMessage={false}
-                        timestamp={data.answerDate}
-                        from={this.getSender(data)}
-                    />
-                ) : null}
-            </React.Fragment>
-        );
-    };
-
     render() {
         const { list, users, sendAnswer } = this.props;
         const { activeList } = this.state;
@@ -84,35 +59,30 @@ export default class SortedList extends React.Component {
             <List>
                 {list.length ? (
                     <React.Fragment>
-                        {list.map(user => (
-                            <UserQuestionItem key={user.id}>
-                                <Header>
-                                    Questions from:{' '}
-                                    {getUserInfo(users, user.hid)}
-                                </Header>
-                                {activeList[user.hid] &&
-                                    activeList[user.hid].map(data => (
-                                        <div key={data.id}>
-                                            {this.getListContent(data, user)}
-                                        </div>
-                                    ))}
-                                {!user.answer ? (
+                        {list.map(question => (
+                            <UserQuestionItem key={question.id}>
+                                <Question
+                                    activeList={activeList}
+                                    question={question}
+                                    usersList={users}
+                                />
+                                {!question.answer ? (
                                     <AnswerForm
-                                        hid={user.hid}
+                                        hid={question.hid}
                                         sendAnswer={sendAnswer}
                                         redirectClick={this.chatRedirectClick}
                                     />
                                 ) : (
                                     <AnswerInfo
-                                        user={user}
+                                        user={question}
                                         redirectClick={this.chatRedirectClick}
                                     />
                                 )}
                                 <Pagination
-                                    items={user.questions}
+                                    items={question.questions}
                                     onChangePage={this.onChangePage.bind(
                                         this,
-                                        user.hid
+                                        question.hid
                                     )}
                                     pageSize={10}
                                 />
