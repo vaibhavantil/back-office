@@ -1,37 +1,33 @@
 package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeAnswerDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
-import org.apache.commons.lang3.StringUtils;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import lombok.val;
 
 public class BotServiceImpl implements BotService {
 
     private static Logger logger = LoggerFactory.getLogger(BotServiceImpl.class);
 
     private BotServiceClient botServiceClient;
+    private String baseUrl;
 
     @Autowired
-    private BotServiceImpl(BotServiceClient botServiceClient) {
+    private BotServiceImpl(@Value("${botservice.baseUrl}") String baseUrl, BotServiceClient botServiceClient) {
+        this.baseUrl = baseUrl;
         this.botServiceClient = botServiceClient;
 
         logger.info("BOT SERVICE:");
@@ -52,7 +48,17 @@ public class BotServiceImpl implements BotService {
 
     @Override
     public List<BackOfficeMessage> fetch(Instant timestamp) {
-        return botServiceClient.fetch(timestamp.toEpochMilli());
+        RestTemplate template = new RestTemplate();
+        try {
+            String time = Long.toString(timestamp.toEpochMilli());
+            ResponseEntity<BackOfficeMessage[]> messages
+                    = template.getForEntity(baseUrl + "/_/messages/" + time, BackOfficeMessage[].class);
+
+            return Arrays.asList(messages.getBody());
+        } catch (RestClientException e) {
+            logger.error("request to bot-service failed", e);
+            return new ArrayList<>();
+        }
     }
 
     @Override
