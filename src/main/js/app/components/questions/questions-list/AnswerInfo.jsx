@@ -1,20 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import moment from 'moment';
-import { Button, Header } from 'semantic-ui-react';
+import { Button, Header, Label, Segment } from 'semantic-ui-react';
+
+const ChatLinkButton = styled(Button)`
+    &&& {
+        float: right;
+    }
+`;
 
 const AnswerInfo = ({ user, redirectClick }) => (
-    <React.Fragment>
-        <Header size="medium">Admin answer: {user.answer}</Header>
-        <Header size="medium">
-            Date: {moment(user.date).format('Do MMMM YYYY HH:mm')}
-        </Header>
-        <Button
-            style={{ marginBottom: '3px' }}
+    <Segment>
+        <Label ribbon>
+            <Label.Detail>
+                {moment(user.date).format('Do MM YYYY HH:mm')}
+            </Label.Detail>
+        </Label>
+        <ChatLinkButton
             content="Open Chat"
             onClick={redirectClick.bind(this, user.hid)}
         />
-    </React.Fragment>
+        <Header size="medium">Admin answer:</Header>
+        <Header size="small">{user.answer}</Header>
+    </Segment>
 );
 
 AnswerInfo.propTypes = {
