@@ -50,4 +50,9 @@ public class FeignConfig {
         return new Request.Options(10 * 1000, 300 * 1000);
     }
 
+    @Bean
+    public feign.Logger.Level feignLogger() {
+        return feign.Logger.Level.NONE;
+    }
+
 }

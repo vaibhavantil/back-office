@@ -8,13 +8,11 @@ import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -23,11 +21,9 @@ public class BotServiceImpl implements BotService {
     private static Logger logger = LoggerFactory.getLogger(BotServiceImpl.class);
 
     private BotServiceClient botServiceClient;
-    private String baseUrl;
 
     @Autowired
-    private BotServiceImpl(@Value("${botservice.baseUrl}") String baseUrl, BotServiceClient botServiceClient) {
-        this.baseUrl = baseUrl;
+    private BotServiceImpl(BotServiceClient botServiceClient) {
         this.botServiceClient = botServiceClient;
 
         logger.info("BOT SERVICE:");
@@ -48,17 +44,7 @@ public class BotServiceImpl implements BotService {
 
     @Override
     public List<BackOfficeMessage> fetch(Instant timestamp) {
-        RestTemplate template = new RestTemplate();
-        try {
-            String time = Long.toString(timestamp.toEpochMilli());
-            ResponseEntity<BackOfficeMessage[]> messages
-                    = template.getForEntity(baseUrl + "/_/messages/" + time, BackOfficeMessage[].class);
-
-            return Arrays.asList(messages.getBody());
-        } catch (RestClientException e) {
-            logger.error("request to bot-service failed", e);
-            return new ArrayList<>();
-        }
+        return botServiceClient.fetch(timestamp.toEpochMilli());
     }
 
     @Override
