@@ -5,7 +5,6 @@ import { Tab, Header } from 'semantic-ui-react';
 import { subscribe, reconnect } from 'app/lib/sockets/chat';
 import { disconnect } from 'sockets';
 import { memberPagePanes } from './panes';
-import BackLink from 'components/shared/link/BackLink';
 
 const UserDetailsHeader = styled.div`
     display: flex;
@@ -94,7 +93,6 @@ export default class Chat extends React.Component {
             <React.Fragment>
                 <UserDetailsHeader>
                     <Header size="huge">{this.getChatTitle(props.messages.user)}</Header>
-                    <BackLink path="members" />
                 </UserDetailsHeader>
                 <Tab
                     panes={panes}

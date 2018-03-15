@@ -2,16 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Header, Table } from 'semantic-ui-react';
 
-const DetailsTab = ({ user, token }) =>
-    user ? (
+const DetailsTab = ({ user, token }) => {
+    const downloadClick = () => {
+        //eslint-disable-next-line
+        window.open(`/api/member/mandate/${user.hid}?token=${token}`);
+    };
+
+    return user ? (
         <Table selectable>
             <Table.Body>
                 <Table.Row>
                     <Table.Cell>Insurance Mandate</Table.Cell>
                     <Table.Cell>
-                        <Button onClick={() => window.open(`/api/member/mandate/${user.hid}?token=${token}`)}>
-                            Download
-                        </Button>
+                        <Button onClick={downloadClick}>Download</Button>
                     </Table.Cell>
                 </Table.Row>
                 {Object.keys(user).map((field, id) => (
@@ -25,6 +28,7 @@ const DetailsTab = ({ user, token }) =>
     ) : (
         <Header>No member info </Header>
     );
+};
 
 DetailsTab.propTypes = {
     user: PropTypes.object,

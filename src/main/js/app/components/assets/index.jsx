@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Dimmer, Header, Loader, Message } from 'semantic-ui-react';
 import { checkAuthorization } from 'app/lib/checkAuth';
-import BackLink from 'components/shared/link/BackLink';
 import AssetsList from './assets-list/AssetsList';
 
 class AssetList extends React.Component {
@@ -43,7 +42,6 @@ class AssetList extends React.Component {
         return (
             <React.Fragment>
                 <Header size="huge">Assets</Header>
-                <BackLink />
                 <Dimmer active={list && !list.length} inverted>
                     <Loader size="large">Loading</Loader>
                 </Dimmer>

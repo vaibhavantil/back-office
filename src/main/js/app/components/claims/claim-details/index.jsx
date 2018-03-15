@@ -2,14 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Header } from 'semantic-ui-react';
-import BackLink from 'components/shared/link/BackLink';
 import ClaimInfo from '../claim-info/ClaimInfo';
 import Notes from '../notes/Notes';
 import Payments from '../payments/Payments';
 import EventsLog from '../events-log/EventsLog';
 
 const ClaimDetailsContainer = styled.div`
-    max-width: 1000px;
+    max-width: 600px;
     margin: 0 auto 50px;
 `;
 export default class ClaimDetails extends React.Component {
@@ -36,7 +35,6 @@ export default class ClaimDetails extends React.Component {
             <ClaimDetailsContainer>
                 <Header size="huge">Claim Details</Header>
 
-                <BackLink path="claims" />
                 {claimDetails.data ? (
                     <React.Fragment>
                         <ClaimInfo {...this.props} />
