@@ -1,11 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Header } from 'semantic-ui-react';
+import { Button, Header, Table } from 'semantic-ui-react';
 
-const DetailsTab = ({ user }) =>
+const DetailsTab = ({ user, token }) =>
     user ? (
         <Table selectable>
             <Table.Body>
+                <Table.Row>
+                    <Table.Cell>Insurance Mandate</Table.Cell>
+                    <Table.Cell>
+                        <Button onClick={() => window.open(`/api/member/mandate/${user.hid}?token=${token}`)}>
+                            Download
+                        </Button>
+                    </Table.Cell>
+                </Table.Row>
                 {Object.keys(user).map((field, id) => (
                     <Table.Row key={id}>
                         <Table.Cell>{field}</Table.Cell>
@@ -19,7 +27,8 @@ const DetailsTab = ({ user }) =>
     );
 
 DetailsTab.propTypes = {
-    user: PropTypes.object
+    user: PropTypes.object,
+    token: PropTypes.string
 };
 
 export default DetailsTab;

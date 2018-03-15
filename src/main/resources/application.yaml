@@ -76,6 +76,9 @@ claims:
   baseUrl: http://localhost:4083
   stub: false
 
+productPricing:
+  baseUrl: http://localhost:4085
+
 jwt:
   enabled: true
   expiration: 864000000
