@@ -14,7 +14,7 @@ const App = () => (
     <Provider store={store}>
         <Router history={history}>
             <React.Fragment>
-            <Navigation history={history} />
+                <Navigation history={history} store={store} />
                 <Switch>
                     <Route path="/login" component={Routes.LoginPageRoute} />
                     <Routes.PrivateRoute

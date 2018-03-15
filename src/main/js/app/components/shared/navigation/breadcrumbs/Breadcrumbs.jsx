@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Breadcrumb } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import { getUserInfo } from '../../../../lib/helpers';
 
 const BreadcrumbsContainer = styled.div`
     display: flex;
     margin: 20px;
 `;
 
-const Breadcrumbs = () => {
+const Breadcrumbs = ({ state }) => {
     // eslint-disable-next-line no-undef
     const pathname = window.location.pathname;
     const paths = pathname.split('/').map((path, i, arr) => {
@@ -22,9 +23,13 @@ const Breadcrumbs = () => {
         }
 
         if (i === arr.length - 1) {
+            const content =
+                pathname.indexOf('members/') >= 0
+                    ? getUserInfo(state.users.list, path)
+                    : path.toLowerCase();
             return {
                 key: i,
-                content: path.toLowerCase(),
+                content: content,
                 active: false
             };
         }
@@ -47,7 +52,7 @@ const Breadcrumbs = () => {
 };
 
 Breadcrumbs.propTypes = {
-    pathname: PropTypes.string
+    state: PropTypes.object
 };
 
 export default Breadcrumbs;
