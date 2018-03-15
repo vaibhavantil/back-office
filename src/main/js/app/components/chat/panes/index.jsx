@@ -19,7 +19,8 @@ const Details = ({ messages: { user }, token }) => (
 );
 
 Details.propTypes = {
-    messages: PropTypes.object.isRequired
+    messages: PropTypes.object.isRequired,
+    token: PropTypes.string
 };
 
 /* eslint-disable react/display-name */

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Header } from 'semantic-ui-react';
-import BackLink from 'components/shared/link/BackLink';
 import QuestionsList from './questions-list/QuestionsList';
 
 export default class Questions extends React.Component {
@@ -23,7 +22,6 @@ export default class Questions extends React.Component {
         return (
             <React.Fragment>
                 <Header size="huge">Questions</Header>
-                <BackLink path="dashboard" />
                 <QuestionsList
                     questions={questions.list}
                     sendAnswer={sendAnswer}
