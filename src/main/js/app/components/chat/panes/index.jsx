@@ -12,9 +12,9 @@ const TabContainer = styled(Tab.Pane)`
     }
 `;
 
-const Details = ({ messages: { user } }) => (
+const Details = ({ messages: { user }, token }) => (
     <TabContainer>
-        <DetailsTab user={user} />
+        <DetailsTab user={user} token={token}/>
     </TabContainer>
 );
 
