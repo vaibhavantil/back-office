@@ -79,12 +79,20 @@ claims:
 productPricing:
   baseUrl: http://localhost:4085
 
-jwt:
+oauth:
   enabled: true
-  expiration: 864000000
-  secret: fGWPyfB8wBGoXB5B07xoa6KKfXobo79p
-  header: Authorization
-  param: token
+  google:
+    client:
+      clientId:
+      clientSecret:
+      accessTokenUri: https://accounts.google.com/o/oauth2/token
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+      tokenName: oauth_token
+      authenticationScheme: query
+      clientAuthenticationScheme: form
+      scope: profile, email
+    resource:
+      userInfoUri: https://www.googleapis.com/userinfo/v2/me
 
 cors:
   origins:

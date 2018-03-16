@@ -8,7 +8,7 @@ public interface ChatService {
 
     void send(String hid, Message message);
 
-    void append(String hid, String message, String personnel);
+    void append(String hid, String message);
 
     void messages(String hid);
 
@@ -16,7 +16,7 @@ public interface ChatService {
 
     void close(String sessionId);
 
-    void subscribe(String hid, String subId, String sessionId, String principal);
+    void subscribe(String hid, String subId, String sessionId, String principalId);
 
     void unsubscribe(String subId, String sessionId);
 

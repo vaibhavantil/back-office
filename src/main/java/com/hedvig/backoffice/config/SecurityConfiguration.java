@@ -1,51 +1,59 @@
 package com.hedvig.backoffice.config;
 
-import com.hedvig.backoffice.security.JWTAuthenticationFilter;
+import com.hedvig.backoffice.security.OAuth2SuccessHandler;
+import com.hedvig.backoffice.services.personnel.PersonnelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
+import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.Filter;
 import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableOAuth2Client
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private boolean jwtEnabled;
+    private boolean oauthEnabled;
     private String[] corsOrigins;
     private String[] corsMethods;
 
-    private ApplicationContext context;
+    private OAuth2ClientContext clientContext;
+    private PersonnelService personnelService;
 
     @Autowired
-    public SecurityConfiguration(ApplicationContext context,
-                                 @Value("${jwt.enabled:true}") boolean jwtEnabled,
+    public SecurityConfiguration(OAuth2ClientContext clientContext,
+                                 PersonnelService personnelService,
+                                 @Value("${oauth.enabled:true}") boolean oauthEnabled,
                                  @Value("${cors.origins}") String[] corsOrigins,
                                  @Value("${cors.methods}") String[] corsMethods) {
-        this.context = context;
 
-        this.jwtEnabled = jwtEnabled;
+        this.clientContext = clientContext;
+        this.personnelService = personnelService;
+
+        this.oauthEnabled = oauthEnabled;
         this.corsOrigins = corsOrigins;
         this.corsMethods = corsMethods;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -53,21 +61,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http = http
                 .cors().and()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
                 .headers().frameOptions().disable()
                 .and()
-                .addFilterBefore(context.getAutowireCapableBeanFactory()
-                        .createBean(JWTAuthenticationFilter.class), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
 
         http = http
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .and();
 
-        if (jwtEnabled) {
+        if (oauthEnabled) {
             http.authorizeRequests()
-                    .antMatchers("/api/login").permitAll()
+                    .antMatchers("/login/google").permitAll()
                     .antMatchers("/api/**").authenticated()
                     .antMatchers("/chat/**").authenticated();
         }
@@ -85,5 +90,46 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
+    }
+
+    private Filter ssoFilter() {
+        OAuth2ClientAuthenticationProcessingFilter filter
+                = new OAuth2ClientAuthenticationProcessingFilter("/login/google");
+
+        OAuth2RestTemplate template = new OAuth2RestTemplate(google(), clientContext);
+        filter.setRestTemplate(template);
+
+        UserInfoTokenServices tokenServices = new UserInfoTokenServices(googleResource().getUserInfoUri(), google().getClientId());
+        tokenServices.setRestTemplate(template);
+        filter.setTokenServices(tokenServices);
+
+        filter.setAuthenticationSuccessHandler(successHandler());
+
+        return filter;
+    }
+
+    @Bean
+    public OAuth2SuccessHandler successHandler() {
+        return new OAuth2SuccessHandler(personnelService);
+    }
+
+    @Bean
+    @ConfigurationProperties("oauth.google.client")
+    public AuthorizationCodeResourceDetails google() {
+        return new AuthorizationCodeResourceDetails();
+    }
+
+    @Bean
+    @ConfigurationProperties("oauth.google.resource")
+    public ResourceServerProperties googleResource() {
+        return new ResourceServerProperties();
+    }
+
+    @Bean
+    public FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(filter);
+        registration.setOrder(-100);
+        return registration;
     }
 }

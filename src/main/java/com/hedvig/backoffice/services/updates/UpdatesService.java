@@ -6,8 +6,7 @@ public interface UpdatesService {
 
     void changeOn(long count, UpdateType type);
     void set(long count, UpdateType type);
-    void init(String email) throws AuthorizationException;
-    void clear(String email, UpdateType type);
-    void updates(String email);
+    void init(String id) throws AuthorizationException;
+    void updates(String id);
 
 }

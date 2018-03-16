@@ -49,7 +49,7 @@ public class QuestionController {
                                     @AuthenticationPrincipal String principal)
             throws AuthorizationException, QuestionNotFoundException {
 
-        Personnel personnel = personnelRepository.findByEmail(principal).orElseThrow(AuthorizationException::new);
+        Personnel personnel = personnelRepository.findById(principal).orElseThrow(AuthorizationException::new);
         return questionService.answer(hid, message.getMsg(), personnel);
     }
 
