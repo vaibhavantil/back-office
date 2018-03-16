@@ -1,11 +1,16 @@
 package com.hedvig.backoffice.web;
 
+import com.hedvig.backoffice.repository.PersonnelRepository;
+import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import com.hedvig.backoffice.services.settings.dto.SystemSettingDTO;
+import com.hedvig.backoffice.web.dto.PersonnelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -13,10 +18,13 @@ import java.util.List;
 public class SystemSettingsController {
 
     private final SystemSettingsService settingsService;
+    private final PersonnelRepository personnelRepository;
 
     @Autowired
-    public SystemSettingsController(SystemSettingsService settingsService) {
+    public SystemSettingsController(SystemSettingsService settingsService,
+                                    PersonnelRepository personnelRepository) {
         this.settingsService = settingsService;
+        this.personnelRepository = personnelRepository;
     }
 
     @GetMapping
@@ -28,6 +36,14 @@ public class SystemSettingsController {
     public ResponseEntity<?> update(@RequestBody SystemSettingDTO dto) {
         settingsService.update(dto.getType(), dto.getValue());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me")
+    public PersonnelDTO me(@AuthenticationPrincipal Principal principal)
+            throws AuthorizationException {
+        return PersonnelDTO.fromDomain(personnelRepository
+                .findById(principal.getName())
+                .orElseThrow(AuthorizationException::new));
     }
 
 }

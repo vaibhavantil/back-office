@@ -109,7 +109,7 @@ public class UpdatesServiceImpl implements UpdatesService {
                 .map(UpdatesDTO::fromDomain)
                 .collect(Collectors.toList());
 
-        template.convertAndSendToUser(personnel.getEmail(), "/updates", dto);
+        template.convertAndSendToUser(personnel.getId(), "/updates", dto);
     }
 
 }
