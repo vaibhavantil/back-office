@@ -94,7 +94,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private Filter ssoFilter() {
         OAuth2ClientAuthenticationProcessingFilter filter
-                = new OAuth2ClientAuthenticationProcessingFilter("/login/google");
+                = new OAuth2ClientAuthenticationProcessingFilter("/api/login/google");
 
         OAuth2RestTemplate template = new OAuth2RestTemplate(google(), clientContext);
         filter.setRestTemplate(template);
@@ -110,7 +110,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public OAuth2SuccessHandler successHandler() {
-        return new OAuth2SuccessHandler(personnelService);
+        return new OAuth2SuccessHandler(personnelService, "/login/process");
     }
 
     @Bean

@@ -13,8 +13,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final PersonnelService personnelService;
 
-    public OAuth2SuccessHandler(PersonnelService personnelService) {
+    public OAuth2SuccessHandler(PersonnelService personnelService, String targetUrl) {
         this.personnelService = personnelService;
+        setDefaultTargetUrl(targetUrl);
     }
 
     @Override
