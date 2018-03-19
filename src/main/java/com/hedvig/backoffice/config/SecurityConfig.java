@@ -62,6 +62,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .headers().frameOptions().disable()
+                .and().sessionManagement().maximumSessions(1).and()
+                .and().logout().logoutSuccessUrl("/login/oauth").logoutUrl("/api/logout")
                 .and()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
 
@@ -72,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         if (oauthEnabled) {
             http.authorizeRequests()
-                    .antMatchers("/login/google").permitAll()
+                    .antMatchers("/api/login/google").permitAll()
                     .antMatchers("/api/**").authenticated()
                     .antMatchers("/chat/**").authenticated();
         }
