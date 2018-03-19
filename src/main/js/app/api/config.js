@@ -13,8 +13,8 @@ export default {
     },
     login: {
         login: {
-            method: 'post',
-            url: 'login'
+            method: 'get',
+            url: 'settings/me'
         },
         logout: {
             method: 'post',

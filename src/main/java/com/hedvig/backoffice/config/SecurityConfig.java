@@ -32,7 +32,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @EnableOAuth2Client
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private boolean oauthEnabled;
     private String[] corsOrigins;
@@ -42,11 +42,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private PersonnelService personnelService;
 
     @Autowired
-    public SecurityConfiguration(OAuth2ClientContext clientContext,
-                                 PersonnelService personnelService,
-                                 @Value("${oauth.enabled:true}") boolean oauthEnabled,
-                                 @Value("${cors.origins}") String[] corsOrigins,
-                                 @Value("${cors.methods}") String[] corsMethods) {
+    public SecurityConfig(OAuth2ClientContext clientContext,
+                          PersonnelService personnelService,
+                          @Value("${oauth.enabled:true}") boolean oauthEnabled,
+                          @Value("${cors.origins}") String[] corsOrigins,
+                          @Value("${cors.methods}") String[] corsMethods) {
 
         this.clientContext = clientContext;
         this.personnelService = personnelService;

@@ -18,7 +18,7 @@ export function checkAuthorization(dispatch, setClientAction) {
 
 export function checkAssetAuthorization({ dispatch, getState }) {
     const client = getState().client;
-    if (client && client.token) return true;
+    if (client && client.creditals) return true;
     return checkAuthorization(dispatch);
 }
 

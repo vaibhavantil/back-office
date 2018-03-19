@@ -1,9 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { loginRequest } from 'app/store/actions/loginActions';
-import LoginForm from 'components/login/login-form/LoginForm';
 
 const LoginContainer = styled.div`
     display: flex;
@@ -12,23 +8,10 @@ const LoginContainer = styled.div`
     align-items: center;
 `;
 
-const LoginPage = ({ loginRequest, login }) => (
+const LoginPage = () => (
     <LoginContainer>
-        <h1>Login</h1>
-        <LoginForm onSubmit={loginRequest} errors={login.errors} />
+        <h1><a href="/api/login/google">Login via Google</a></h1>
     </LoginContainer>
 );
 
-LoginPage.propTypes = {
-    loginRequest: PropTypes.func.isRequired,
-    login: PropTypes.object.isRequired
-};
-
-export default connect(
-    ({ login }) => ({
-        login
-    }),
-    {
-        loginRequest
-    }
-)(LoginPage);
+export default LoginPage;

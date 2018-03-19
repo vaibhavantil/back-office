@@ -4,7 +4,7 @@ import api from 'app/api';
 import config from 'app/api/config';
 import { setClient, unsetClient } from '../actions/clientActions';
 import {
-    LOGIN_REQUESTING,
+    LOGIN_PROCESS,
     LOGIN_SUCCESS,
     LOGIN_ERROR,
     CLIENT_UNSET
@@ -18,24 +18,19 @@ export function* logout() {
     history.push('/login');
 }
 
-function* loginFlow(email, password) {
+function* loginFlow() {
     let request;
     try {
-        request = yield call(api, '', config.login.login, {
-            email,
-            password
-        });
-        const token = request.data.token;
-        yield put(setClient(token, email));
+        request = yield call(api, '', config.login.login);
+        const creditals = request.data;
+        yield put(setClient(creditals));
         yield put({ type: LOGIN_SUCCESS });
-        localStorage.setItem('token', JSON.stringify(token));
-        localStorage.setItem('user', email);
         history.push('/dashboard');
     } catch (error) {
         yield put({ type: LOGIN_ERROR, error });
     } finally {
         if (yield cancelled()) {
-            history.push('/login');
+            history.push('/login/oauth');
         }
     }
 
@@ -44,8 +39,8 @@ function* loginFlow(email, password) {
 
 function* loginWatcher() {
     while (true) {
-        const { email, password } = yield take(LOGIN_REQUESTING);
-        const task = yield fork(loginFlow, email, password);
+        yield take(LOGIN_PROCESS);
+        const task = yield fork(loginFlow);
         const action = yield take([CLIENT_UNSET, LOGIN_ERROR]);
         if (action.type === CLIENT_UNSET) {
             yield cancel(task);
