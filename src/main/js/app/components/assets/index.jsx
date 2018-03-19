@@ -32,8 +32,7 @@ class AssetList extends React.Component {
     }
 
     componentDidMount() {
-        const { setClient, assetRequest, assets } = this.props;
-        checkAuthorization(null, setClient);
+        const { assetRequest, assets } = this.props;
         if (!assets.list.length) assetRequest();
     }
 

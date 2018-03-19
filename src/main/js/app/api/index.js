@@ -11,13 +11,10 @@ const axiosInstance = axios.create({
     }
 });
 
-export default async (token, conf, data, id, params) =>
+export default async (conf, data, id, params) =>
     await axiosInstance.request({
         url: `${conf.url}${id ? '/' + id : ''}`,
         method: conf.method,
-        headers: {
-            [config.tokenHeaderName]: token
-        },
         data,
         params
     });

@@ -10,22 +10,27 @@ import {
     CLIENT_UNSET
 } from 'constants/login';
 
+const clearStore = () => {
+    unsetClient();
+    history.push('/login/oauth');
+};
 
-/* eslint-disable no-undef */
 export function* logout() {
-    yield put(unsetClient());
-    localStorage.removeItem('token');
-    history.push('/login');
+    try {
+        yield call(api, config.login.logout);
+        clearStore();
+    } catch (error) {
+        clearStore();
+    }
 }
 
 function* loginFlow() {
     let request;
     try {
-        request = yield call(api, '', config.login.login);
-        const creditals = request.data;
-        yield put(setClient(creditals));
-        yield put({ type: LOGIN_SUCCESS });
+        request = yield call(api, config.login.login);
+        yield put(setClient(request.data));
         history.push('/dashboard');
+        yield put({ type: LOGIN_SUCCESS });
     } catch (error) {
         yield put({ type: LOGIN_ERROR, error });
     } finally {

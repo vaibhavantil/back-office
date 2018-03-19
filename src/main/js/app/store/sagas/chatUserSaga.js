@@ -1,7 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import api from 'app/api';
 import config from 'app/api/config';
-import { getAuthToken } from '../../lib/checkAuth';
 import {
     USERS_REQUESTING,
     USER_SEARCH_REQUESTING,
@@ -15,8 +14,7 @@ import {
 
 function* usersRequestFlow() {
     try {
-        const token = getAuthToken();
-        const users = yield call(api, token, config.users.get);
+        const users = yield call(api, config.users.get);
         yield put(usersRequestSuccess(users.data));
     } catch (error) {
         yield put(usersRequestError(error));
@@ -25,14 +23,12 @@ function* usersRequestFlow() {
 
 function* usersSearchFlow({ query }) {
     try {
-        const token = getAuthToken();
         const queryParams = {
             ...query,
             status: query.status === 'ALL' ? '' : query.status
         };
         const searchResult = yield call(
             api,
-            token,
             config.users.search,
             null,
             '',

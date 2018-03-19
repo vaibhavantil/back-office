@@ -10,11 +10,7 @@ export default {
         successful: false,
         errors: []
     },
-    client: {
-        id: null,
-        token: null,
-        user: null
-    },
+    client: {},
     poll: {
         polling: false
     },

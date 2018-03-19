@@ -12,15 +12,14 @@ const TabContainer = styled(Tab.Pane)`
     }
 `;
 
-const Details = ({ messages: { user }, token }) => (
+const Details = ({ messages: { user } }) => (
     <TabContainer>
-        <DetailsTab user={user} token={token}/>
+        <DetailsTab user={user} />
     </TabContainer>
 );
 
 Details.propTypes = {
-    messages: PropTypes.object.isRequired,
-    token: PropTypes.string
+    messages: PropTypes.object.isRequired
 };
 
 /* eslint-disable react/display-name */

@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import HorizontalMenu from './horizontal-menu/HorizontalMenu';
 import Breadcrumbs from './breadcrumbs/Breadcrumbs';
 
+const menuIsHidden = path =>
+    !!(path.indexOf('dashboard') + 1) || !!(path.indexOf('login') + 1);
+
 const Navigation = ({ history, store }) =>
-    history.location.pathname !== '/dashboard' ? (
+    !menuIsHidden(history.location.pathname) ? (
         <React.Fragment>
-            <HorizontalMenu history={history} />
+            <HorizontalMenu history={history} dispatch={store.dispatch} />
             <Breadcrumbs history={history} state={store.getState()} />
         </React.Fragment>
     ) : null;

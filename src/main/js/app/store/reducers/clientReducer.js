@@ -5,14 +5,10 @@ export default function clientReducer(state = initialState.client, action) {
     switch (action.type) {
         case CLIENT_SET:
             return {
-                id: action.creditals.id,
-                creditals: action.creditals
+                ...action.creditals
             };
         case CLIENT_UNSET:
-            return {
-                id: null,
-                creditals: null
-            };
+            return {};
         default:
             return state;
     }

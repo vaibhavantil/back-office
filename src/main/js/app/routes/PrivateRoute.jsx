@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router';
-import { checkAssetAuthorization } from '../lib/checkAuth';
+import { checkApiAuth } from '../lib/checkAuth';
 
 const PrivateRoute = ({ component: Component, store, ...rest }) => {
     return (
         <Route
             {...rest}
             render={props =>
-                checkAssetAuthorization(store) ? (
+                checkApiAuth(store) ? (
                     <Component {...props} />
                 ) : (
                     <Redirect

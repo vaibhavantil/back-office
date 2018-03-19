@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Header, Table } from 'semantic-ui-react';
 
-const DetailsTab = ({ user, token }) => {
+const DetailsTab = ({ user }) => {
     const downloadClick = () => {
         //eslint-disable-next-line
-        window.open(`/api/member/mandate/${user.hid}?token=${token}`);
+        window.open(`/api/member/mandate/${user.hid}`);
     };
 
     return user ? (
@@ -31,8 +31,7 @@ const DetailsTab = ({ user, token }) => {
 };
 
 DetailsTab.propTypes = {
-    user: PropTypes.object,
-    token: PropTypes.string
+    user: PropTypes.object
 };
 
 export default DetailsTab;

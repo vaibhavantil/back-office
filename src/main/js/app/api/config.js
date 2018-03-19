@@ -1,6 +1,5 @@
 export default {
     baseUrl: '/api/',
-    tokenHeaderName: 'Authorization',
     asset: {
         get: {
             method: 'get',
