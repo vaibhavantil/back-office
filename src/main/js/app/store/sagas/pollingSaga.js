@@ -3,7 +3,6 @@ import { delay } from 'redux-saga';
 import api from 'app/api';
 import config from 'app/api/config';
 import { POLL_START, POLL_STOP } from 'constants/assets';
-import { getAuthToken } from 'app/lib/checkAuth';
 import {
     assetRequestError,
     assetRequestSuccess
@@ -12,9 +11,8 @@ import {
 function* pollAssetsSaga({ duration }) {
     while (true) {
         try {
-            const token = getAuthToken();
-            const assets = yield call(api, token, config.asset.get);
-            yield put(assetRequestSuccess(assets));
+            const assets = yield call(api, config.asset.get);
+            yield put(assetRequestSuccess(assets.data));
             yield call(delay, duration);
         } catch (error) {
             yield put(assetRequestError(error));

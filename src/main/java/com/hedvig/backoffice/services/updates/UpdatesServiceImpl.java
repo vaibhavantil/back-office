@@ -66,11 +66,10 @@ public class UpdatesServiceImpl implements UpdatesService {
         updates.forEach(u -> send(u.getPersonnel(), Collections.singletonList(u)));
     }
 
-
     @Override
     @Transactional
-    public void init(String email) throws AuthorizationException {
-        Personnel personnel = personnelRepository.findByEmail(email).orElseThrow(AuthorizationException::new);
+    public void init(String id) throws AuthorizationException {
+        Personnel personnel = personnelRepository.findById(id).orElseThrow(AuthorizationException::new);
         updatesRepository.deleteByPersonnel(personnel);
 
         List<Updates> updates = new ArrayList<>();
@@ -97,19 +96,8 @@ public class UpdatesServiceImpl implements UpdatesService {
 
     @Override
     @Transactional
-    public void clear(String email, UpdateType type) {
-        Optional<Personnel> optional = personnelRepository.findByEmail(email);
-        optional.ifPresent(p -> {
-            List<Updates> updates = updatesRepository.findByPersonnelAndType(p, type);
-            updates.forEach(u -> u.setCount(0L));
-            updatesRepository.save(updates);
-        });
-    }
-
-    @Override
-    @Transactional
-    public void updates(String email) {
-        Optional<Personnel> optional = personnelRepository.findByEmail(email);
+    public void updates(String id) {
+        Optional<Personnel> optional = personnelRepository.findById(id);
         optional.ifPresent(p -> {
             List<Updates> updates = updatesRepository.findByPersonnel(p);
             send(p, updates);
@@ -121,7 +109,7 @@ public class UpdatesServiceImpl implements UpdatesService {
                 .map(UpdatesDTO::fromDomain)
                 .collect(Collectors.toList());
 
-        template.convertAndSendToUser(personnel.getEmail(), "/updates", dto);
+        template.convertAndSendToUser(personnel.getId(), "/updates", dto);
     }
 
 }

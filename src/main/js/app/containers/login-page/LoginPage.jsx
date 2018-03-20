@@ -1,34 +1,30 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { loginRequest } from 'app/store/actions/loginActions';
-import LoginForm from 'components/login/login-form/LoginForm';
+import GoogleButton from 'react-google-button';
+import { Header, Segment } from 'semantic-ui-react';
 
-const LoginContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+const LoginContainer = styled(Segment)`
+    &&& {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 400px;
+        margin: 200px auto;
+
+        & a {
+            margin: 20px auto;
+        }
+    }
 `;
 
-const LoginPage = ({ loginRequest, login }) => (
+const LoginPage = () => (
     <LoginContainer>
-        <h1>Login</h1>
-        <LoginForm onSubmit={loginRequest} errors={login.errors} />
+        <Header size="huge">Login</Header>
+        <a href="/api/login/google">
+            <GoogleButton label="Login with Google"/>
+        </a>
     </LoginContainer>
 );
 
-LoginPage.propTypes = {
-    loginRequest: PropTypes.func.isRequired,
-    login: PropTypes.object.isRequired
-};
-
-export default connect(
-    ({ login }) => ({
-        login
-    }),
-    {
-        loginRequest
-    }
-)(LoginPage);
+export default LoginPage;

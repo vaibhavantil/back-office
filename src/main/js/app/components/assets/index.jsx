@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Dimmer, Header, Loader, Message } from 'semantic-ui-react';
-import { checkAuthorization } from 'app/lib/checkAuth';
 import AssetsList from './assets-list/AssetsList';
 
 class AssetList extends React.Component {
@@ -32,8 +31,7 @@ class AssetList extends React.Component {
     }
 
     componentDidMount() {
-        const { setClient, assetRequest, assets } = this.props;
-        checkAuthorization(null, setClient);
+        const { assetRequest, assets } = this.props;
         if (!assets.list.length) assetRequest();
     }
 

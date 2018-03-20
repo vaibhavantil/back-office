@@ -1,28 +1,26 @@
+import api from 'app/api';
+import config from 'app/api/config';
+import { history } from 'app/store';
 import { setClient } from '../store/actions/clientActions';
+/**
+ * Check credentials in app store
+ * @param {function} getState
+ */
+export function checkLocalAuth({ getState }) {
+    const state = getState();
+    return !!state.client.id;
+}
 
-export function checkAuthorization(dispatch, setClientAction) {
-    /* eslint-disable no-undef */
-    const storedToken = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-    if (storedToken) {
-        const token = JSON.parse(storedToken);
-        if (setClientAction) {
-            setClientAction(token, user);
-            return true;
-        }
-        dispatch(setClient(token, user));
+/**
+ * Check client credentails in backend
+ */
+export async function checkApiAuth({ dispatch }) {
+    try {
+        const client = await api(config.login.login);
+        dispatch(setClient(client.data));
         return true;
+    } catch (error) {
+        history.replace('/login/oauth');
+        return false;
     }
-    return false;
 }
-
-export function checkAssetAuthorization({ dispatch, getState }) {
-    const client = getState().client;
-    if (client && client.token) return true;
-    return checkAuthorization(dispatch);
-}
-
-export const getAuthToken = () => {
-    const token = localStorage.getItem('token');
-    return token ? JSON.parse(token) : '';
-};

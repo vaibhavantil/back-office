@@ -12,11 +12,8 @@ import java.util.stream.Stream;
 @Repository
 public interface PersonnelRepository extends CrudRepository<Personnel, Long> {
 
-    @Query("select u from Personnel u where u.email = :email")
-    Optional<Personnel> findByEmail(@Param("email") String email);
-
     @Query("select p from Personnel p  where p.id = :id")
-    Optional<Personnel> findById(@Param("id") long id);
+    Optional<Personnel> findById(@Param("id") String id);
 
     @Query("select p from Personnel p")
     Stream<Personnel> all();

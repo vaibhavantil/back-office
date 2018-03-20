@@ -4,38 +4,38 @@ import api from 'app/api';
 import config from 'app/api/config';
 import { setClient, unsetClient } from '../actions/clientActions';
 import {
-    LOGIN_REQUESTING,
+    LOGIN_PROCESS,
     LOGIN_SUCCESS,
     LOGIN_ERROR,
     CLIENT_UNSET
 } from 'constants/login';
 
+const clearStore = () => {
+    unsetClient();
+    history.push('/login/oauth');
+};
 
-/* eslint-disable no-undef */
 export function* logout() {
-    yield put(unsetClient());
-    localStorage.removeItem('token');
-    history.push('/login');
+    try {
+        yield call(api, config.login.logout);
+        clearStore();
+    } catch (error) {
+        clearStore();
+    }
 }
 
-function* loginFlow(email, password) {
+function* loginFlow() {
     let request;
     try {
-        request = yield call(api, '', config.login.login, {
-            email,
-            password
-        });
-        const token = request.data.token;
-        yield put(setClient(token, email));
-        yield put({ type: LOGIN_SUCCESS });
-        localStorage.setItem('token', JSON.stringify(token));
-        localStorage.setItem('user', email);
+        request = yield call(api, config.login.login);
+        yield put(setClient(request.data));
         history.push('/dashboard');
+        yield put({ type: LOGIN_SUCCESS });
     } catch (error) {
         yield put({ type: LOGIN_ERROR, error });
     } finally {
         if (yield cancelled()) {
-            history.push('/login');
+            history.push('/login/oauth');
         }
     }
 
@@ -44,8 +44,8 @@ function* loginFlow(email, password) {
 
 function* loginWatcher() {
     while (true) {
-        const { email, password } = yield take(LOGIN_REQUESTING);
-        const task = yield fork(loginFlow, email, password);
+        yield take(LOGIN_PROCESS);
+        const task = yield fork(loginFlow);
         const action = yield take([CLIENT_UNSET, LOGIN_ERROR]);
         if (action.type === CLIENT_UNSET) {
             yield cancel(task);

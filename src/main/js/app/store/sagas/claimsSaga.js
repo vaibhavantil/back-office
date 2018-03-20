@@ -1,7 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import api from 'app/api';
 import config from 'app/api/config';
-import { getAuthToken } from 'app/lib/checkAuth';
 import {
     CLAIMS_REQUESTING,
     CLAIM_UPDATING,
@@ -12,8 +11,7 @@ import * as actions from '../actions/claimsActions';
 
 function* requestFlow() {
     try {
-        const token = yield call(getAuthToken);
-        const { data } = yield call(api, token, config.claims.getList);
+        const { data } = yield call(api, config.claims.getList);
         yield put(actions.claimsRequestSuccess(data));
     } catch (error) {
         yield put(actions.claimsRequestError(error));
@@ -22,10 +20,8 @@ function* requestFlow() {
 
 function* requestByUserFlow({ id }) {
     try {
-        const token = yield call(getAuthToken);
         const { data } = yield call(
             api,
-            token,
             config.claims.getListByUserId,
             null,
             id
@@ -38,15 +34,8 @@ function* requestByUserFlow({ id }) {
 
 function* updateFlow({ data, id, reqType }) {
     try {
-        const token = yield call(getAuthToken);
         const path = `${id}/${reqType}`;
-        yield call(
-            api,
-            token,
-            config.claims.update,
-            { userId: id, ...data },
-            path
-        );
+        yield call(api, config.claims.update, { userId: id, ...data }, path);
         yield put(actions.claimUpdateSuccess(reqType, data));
     } catch (error) {
         yield put(actions.claimsRequestError(error));
@@ -55,8 +44,7 @@ function* updateFlow({ data, id, reqType }) {
 
 function* claimTypesFlow() {
     try {
-        const token = yield call(getAuthToken);
-        const { data } = yield call(api, token, config.claims.types);
+        const { data } = yield call(api, config.claims.types);
         yield put(actions.claimsTypesSuccess(data));
     } catch (error) {
         yield put(actions.claimsRequestError(error));

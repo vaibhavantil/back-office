@@ -72,17 +72,9 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void append(String hid, String message, String personnel) {
+    public void append(String hid, String message) {
         try {
             final BotMessage botMessage = new BotMessage(message, true);
-
-            Optional<Personnel> admin = personnelRepository.findByEmail(personnel);
-            if (!admin.isPresent()) {
-                send(hid, Message.error(500, "personnel not authorized"));
-                log.error("personnel not authorized");
-                return;
-            }
-
             messageUrlResolver.resolveUrls(botMessage);
             botService.response(hid, botMessage);
             expoNotificationService.sendNotification(hid);
@@ -124,7 +116,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public void subscribe(String hid, String subId, String sessionId, String principal) {
+    public void subscribe(String hid, String subId, String sessionId, String principalId) {
         MemberDTO member;
         try {
             member = memberService.findByHid(hid).orElseThrow(MemberServiceException::new);
@@ -138,7 +130,7 @@ public class ChatServiceImpl implements ChatService {
             return;
         }
 
-        Optional<Personnel> personnelOptional = personnelRepository.findByEmail(principal);
+        Optional<Personnel> personnelOptional = personnelRepository.findById(principalId);
         if (!personnelOptional.isPresent()) {
             send(hid, Message.error(400, "Not authorized"));
             log.warn("member not authorized hid = " + hid);

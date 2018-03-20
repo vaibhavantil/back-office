@@ -1,7 +1,6 @@
 import { call, put, takeLatest, take } from 'redux-saga/effects';
 import api from 'app/api';
 import config from 'app/api/config';
-import { getAuthToken } from 'app/lib/checkAuth';
 import { ASSET_UPDATING, ASSET_REQUESTING } from 'constants/assets';
 import { CLIENT_UNSET } from 'constants/login';
 import {
@@ -13,10 +12,8 @@ import { logout } from './loginSaga';
 
 function* assetUpdateFlow({ assetId, assetState }) {
     try {
-        const token = yield call(getAuthToken);
         const { data } = yield call(
             api,
-            token,
             config.asset.update,
             { state: assetState },
             assetId
@@ -29,8 +26,7 @@ function* assetUpdateFlow({ assetId, assetState }) {
 
 function* assetRequestFlow() {
     try {
-        const token = yield call(getAuthToken);
-        const { data } = yield call(api, token, config.asset.get);
+        const { data } = yield call(api, config.asset.get);
         yield put(assetRequestSuccess(data));
     } catch (error) {
         yield put(assetRequestError(error));

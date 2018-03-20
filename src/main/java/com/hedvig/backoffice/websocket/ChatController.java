@@ -22,8 +22,8 @@ public class ChatController {
     }
 
     @SubscribeMapping("/send/{hid}")
-    public void send(@DestinationVariable String hid, @RequestBody String body, @AuthenticationPrincipal String principal) {
-        chatService.append(hid, body, principal);
+    public void send(@DestinationVariable String hid, @RequestBody String body) {
+        chatService.append(hid, body);
     }
 
     @SubscribeMapping("/history/{hid}")

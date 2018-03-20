@@ -16,7 +16,8 @@ const App = () => (
             <React.Fragment>
                 <Navigation history={history} store={store} />
                 <Switch>
-                    <Route path="/login" component={Routes.LoginPageRoute} />
+                    <Route path="/login/oauth" component={Routes.LoginPageRoute} />
+                    <Route path="/login/process" component={Routes.LoginProcessPageRoute} />
                     <Routes.PrivateRoute
                         path="/assets"
                         store={store}

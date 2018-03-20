@@ -1,7 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import api from 'app/api';
 import config from 'app/api/config';
-import { getAuthToken } from 'app/lib/checkAuth';
 import {
     CREATE_PAYMENT_REQUESTING,
     UPDATE_RESUME_REQUESTING
@@ -11,14 +10,12 @@ import { claimRequestError } from '../actions/claimDetailsActions';
 
 function* createFlow({ id, data }) {
     try {
-        const token = yield call(getAuthToken);
         const requestBody = { ...data };
         delete requestBody.date;
         const created = yield call(
             api,
-            token,
             config.claims.details.create,
-            { ...requestBody, userId: token },
+            { ...requestBody },
             `${id}/payments`
         );
         yield put(actions.createPaymentSuccess(created.data || data));
@@ -29,15 +26,8 @@ function* createFlow({ id, data }) {
 
 function* updateResumeFlow({ id, data }) {
     try {
-        const token = yield call(getAuthToken);
         const path = `${id}/reserve`;
-        yield call(
-            api,
-            token,
-            config.claims.update,
-            { ...data, userId: token },
-            path
-        );
+        yield call(api, config.claims.update, { ...data }, path);
         yield put(actions.updateResumeSuccess(data.resume));
     } catch (error) {
         yield put(claimRequestError(error));

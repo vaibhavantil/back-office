@@ -39,11 +39,11 @@ export default class Dashboard extends React.Component {
             dashboardUpdated,
             dashboardErrorReceived,
             updatesRequestSuccess,
-            client: { user }
+            client: { id }
         } = this.props;
         const { stompClient, subscription } = sockets.dashboardSubscribe(
             { dashboardUpdated, dashboardErrorReceived, updatesRequestSuccess },
-            user,
+            id,
             connection
         );
         this.setState({

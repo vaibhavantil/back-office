@@ -6423,6 +6423,12 @@ react-dom@^16.2.0:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
+react-google-button@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/react-google-button/-/react-google-button-0.5.1.tgz#5a0a821a48eb658b4716462d2b898d051ba541a5"
+  dependencies:
+    prop-types "^15.5.8"
+
 react-moment-proptypes@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/react-moment-proptypes/-/react-moment-proptypes-1.5.0.tgz#4a448cd6479efc5dd509283f361f3753c3abe60e"
