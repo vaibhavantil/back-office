@@ -15,7 +15,13 @@ public class ProductPricingServiceStub implements ProductPricingService {
             "    \"Brandvarnare\",\n" +
             "    \"Säkerhetsdörr\"\n" +
             "  ],\n" +
-            "  \"insuranceStatus\": \"PENDING\"\n" +
+            "  \"insuranceStatus\": \"PENDING\",\n" +
+            "  \"currentTotalPrice\": 139,\n" +
+            "  \"newTotalPrice\": null,\n" +
+            "  \"insuredAtOtherCompany\": true,\n" +
+            "  \"insuranceType\": \"BRF\",\n" +
+            "  \"insuranceActiveFrom\": \"2018-03-20T00:00:00\",\n" +
+            "  \"insuanceActiveTo\": null\n" +
             "}";
 
     private ConcurrentHashMap<String, String> insurances;
