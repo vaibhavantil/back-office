@@ -195,3 +195,21 @@ export const getUserInfo = (users, id) => {
     const user = users.find(user => user.hid === id);
     return user ? `${user.firstName} ${user.lastName || ''}` : `id: ${id}`;
 };
+
+String.prototype.capitalize = function() {
+    return typeof this === 'string'
+        ? this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
+        : this;
+};
+
+/**
+ * Returns string splitted by words
+ * @param {string} field 
+ * @example 'memberFirstName' -> 'Member first name'
+ */
+export const getFieldName = field =>
+    field
+        .match(/([A-Z]?[^A-Z]*)/g)
+        .slice(0, -1)
+        .join(' ')
+        .capitalize();

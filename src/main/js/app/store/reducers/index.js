@@ -8,6 +8,7 @@ import dashboard from './dashboardReducer';
 import claims from './claimsReducer';
 import claimDetails from './claimDetailsReducer';
 import questions from './questionsReducer';
+import insurance from './insuranceReducer';
 
 export default {
     login,
@@ -19,5 +20,6 @@ export default {
     dashboard,
     claims,
     claimDetails,
-    questions
+    questions,
+    insurance
 };

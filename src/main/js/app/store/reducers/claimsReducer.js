@@ -57,7 +57,9 @@ export default function(state = initialState.claims, action) {
         case CLAIMS_BY_USER_SUCCESS:
             return {
                 ...state,
-                userClaims: action.claims
+                userClaims: action.claims,
+                requesting: false,
+                successful: true
             };
         default:
             return state;

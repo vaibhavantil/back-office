@@ -64,14 +64,21 @@ export default class Chat extends React.Component {
         }`;
 
     componentDidMount() {
-        const { match, userRequest } = this.props;
+        const {
+            match: { params: { id } },
+            userRequest,
+            insuranceRequest,
+            claimsByUser
+        } = this.props;
         const { stompClient, subscription } = this.subscribeSocket();
 
         if (!stompClient) {
             this.reconnectSocket();
         }
         this.setState({ socket: stompClient, subscription });
-        userRequest(match.params.id);
+        userRequest(id);
+        insuranceRequest(id);
+        claimsByUser(id);
     }
 
     componentWillUnmount() {
@@ -81,23 +88,23 @@ export default class Chat extends React.Component {
     }
 
     render() {
-        const { props, addMessageHandler } = this;
+        const { messages } = this.props;
         const panes = memberPagePanes(
-            props,
-            { addMessageHandler, claimsByUser: props.claimsByUser },
+            this.props,
+            this.addMessageHandler,
             this.state.socket
         );
-        // eslint-disable-next-line no-undef
-        const showChatTab = !!document.referrer.indexOf('questions') + 1;
         return (
             <React.Fragment>
                 <UserDetailsHeader>
-                    <Header size="huge">{this.getChatTitle(props.messages.user)}</Header>
+                    <Header size="huge">
+                        {this.getChatTitle(messages.user)}
+                    </Header>
                 </UserDetailsHeader>
                 <Tab
                     panes={panes}
                     renderActiveOnly={true}
-                    defaultActiveIndex={showChatTab ? 1 : 0}
+                    defaultActiveIndex={1}
                 />
             </React.Fragment>
         );
@@ -115,5 +122,7 @@ Chat.propTypes = {
     error: PropTypes.object,
     clearMessagesList: PropTypes.func.isRequired,
     claimsByUser: PropTypes.func.isRequired,
+    insuranceRequest: PropTypes.func.isRequired,
+    insurance: PropTypes.object.isRequired,
     userClaims: PropTypes.array
 };

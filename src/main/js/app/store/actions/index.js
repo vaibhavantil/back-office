@@ -10,6 +10,7 @@ import * as claimDetailsActions from './claimDetailsActions';
 import * as paymentActions from './paymentActions';
 import * as notesActions from './notesActions';
 import * as questionsActions from './questionsActions';
+import * as insuranceActions from './insuranceActions';
 
 export default {
     loginActions,
@@ -23,5 +24,6 @@ export default {
     claimDetailsActions,
     paymentActions,
     notesActions,
-    questionsActions
+    questionsActions,
+    insuranceActions
 };

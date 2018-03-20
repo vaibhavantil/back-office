@@ -11,16 +11,18 @@ const ChatPage = props => (
     </PageContainer>
 );
 
-const mapStateToProps = ({ messages, claims }) => ({
+const mapStateToProps = ({ messages, claims, insurance }) => ({
+    userClaims: claims.userClaims,
     messages,
-    userClaims: claims.userClaims
+    insurance
 });
 
 export default withRouter(
     connect(mapStateToProps, {
+        claimsByUser: actions.claimsActions.claimsByUser,
+        insuranceRequest: actions.insuranceActions.insuranceRequest,
         ...actions.messagesActions,
         ...actions.chatUserActions,
-        ...actions.clientActions,
-        claimsByUser: actions.claimsActions.claimsByUser
+        ...actions.clientActions
     })(ChatPage)
 );
