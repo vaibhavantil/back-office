@@ -7,5 +7,5 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(name="expo", url="https://exp.host/--/api/v2")
 public interface ExpoClient {
     @RequestMapping(method = RequestMethod.POST, value="/push/send")
-    void sendPush(ExpoPushDTO push);
+    String sendPush(ExpoPushDTO push);
 }

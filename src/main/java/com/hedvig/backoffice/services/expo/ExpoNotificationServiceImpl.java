@@ -27,7 +27,9 @@ public class ExpoNotificationServiceImpl implements ExpoNotificationService {
                 "Hedvig",
                 "Hej! Hedvig har svarat på din fråga"
             );
-            expoClient.sendPush(dto);
+            logger.info("Attempting  to send push to user with id: {}, body: {}", hid, dto.toString());
+            val result = expoClient.sendPush(dto);
+            logger.info("Got result from expo for push notification to user with id: {}, body: {}", hid, result);
         } catch (Exception e) {
             logger.error("Error, could not send push notification through expo", e);
         }
