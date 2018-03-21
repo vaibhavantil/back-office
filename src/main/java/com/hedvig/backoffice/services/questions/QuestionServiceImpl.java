@@ -7,6 +7,7 @@ import com.hedvig.backoffice.domain.Subscription;
 import com.hedvig.backoffice.repository.QuestionGroupRepository;
 import com.hedvig.backoffice.repository.QuestionRepository;
 import com.hedvig.backoffice.services.chat.SubscriptionService;
+import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
@@ -35,19 +36,22 @@ public class QuestionServiceImpl implements QuestionService {
     private final UpdatesService updatesService;
 
     private final BotService botService;
+    private final ExpoNotificationService expoNotificationService;
 
     @Autowired
     public QuestionServiceImpl(QuestionRepository questionRepository,
                                QuestionGroupRepository questionGroupRepository,
                                SubscriptionService subscriptionService,
                                UpdatesService updatesService,
-                               BotService botService) {
+                               BotService botService,
+                               ExpoNotificationService expoNotificationService) {
 
         this.questionRepository = questionRepository;
         this.questionGroupRepository = questionGroupRepository;
         this.subscriptionService = subscriptionService;
         this.updatesService = updatesService;
         this.botService = botService;
+        this.expoNotificationService = expoNotificationService;
     }
 
     @Override
@@ -86,6 +90,7 @@ public class QuestionServiceImpl implements QuestionService {
         group.setPersonnel(personnel);
 
         botService.answerQuestion(hid, message);
+        expoNotificationService.sendNotification(hid);
         questionGroupRepository.save(group);
         updatesService.changeOn(-1, UpdateType.QUESTIONS);
 

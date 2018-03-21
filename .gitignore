@@ -17,3 +17,4 @@ target/
 package-lock.json
 .settings
 .vscode
+.sts4-cache
