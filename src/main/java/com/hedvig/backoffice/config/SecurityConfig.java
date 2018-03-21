@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.config;
 
+import com.hedvig.backoffice.security.OAuth2Filter;
 import com.hedvig.backoffice.security.OAuth2SuccessHandler;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
@@ -95,15 +95,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private Filter ssoFilter() {
-        OAuth2ClientAuthenticationProcessingFilter filter
-                = new OAuth2ClientAuthenticationProcessingFilter("/api/login/google");
+        OAuth2Filter filter = new OAuth2Filter("/api/login/google");
 
         OAuth2RestTemplate template = new OAuth2RestTemplate(google(), clientContext);
         filter.setRestTemplate(template);
 
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(googleResource().getUserInfoUri(), google().getClientId());
         tokenServices.setRestTemplate(template);
-        filter.setTokenServices(tokenServices);
+        filter.setOauthTokenServices(tokenServices);
 
         filter.setAuthenticationSuccessHandler(successHandler());
 

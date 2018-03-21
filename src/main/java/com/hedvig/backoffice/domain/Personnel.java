@@ -3,9 +3,11 @@ package com.hedvig.backoffice.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 @Entity
 @Getter
@@ -20,6 +22,10 @@ public class Personnel {
     private String name;
 
     private String picture;
+
+    @Lob
+    @Type(type="org.hibernate.type.TextType")
+    private String idToken;
 
     public Personnel(String id) {
         this.id = id;

@@ -33,6 +33,7 @@ public class PersonnelServiceImpl implements PersonnelService {
         personnel.setEmail(details.get("email"));
         personnel.setName(details.get("name"));
         personnel.setPicture(details.get("picture"));
+        personnel.setIdToken(details.get("id_token"));
 
         personnelRepository.save(personnel);
     }
