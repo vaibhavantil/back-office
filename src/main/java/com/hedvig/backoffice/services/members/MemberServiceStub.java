@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 public class MemberServiceStub implements MemberService {
 
     private static Logger logger = LoggerFactory.getLogger(MemberServiceStub.class);
+    private static long[] testMemberIds = { 123456L };
 
     private List<MemberDTO> users;
 
@@ -21,8 +22,9 @@ public class MemberServiceStub implements MemberService {
         String[] statuses = { "INITIATED", "ONBOARDING", "SIGNED", "INACTIVATED" };
 
         users = IntStream.range(0, 10).mapToObj(i -> {
-            MemberDTO user = new MemberDTO(RandomUtils.nextInt());
-            user.setFirstName("Test user " + i);
+            long id = i < testMemberIds.length ? testMemberIds[i] : RandomUtils.nextInt();
+            MemberDTO user = new MemberDTO(id);
+            user.setFirstName("Test user " + id);
             user.setStatus(statuses[RandomUtils.nextInt(0, 4)]);
             return user;
         }).collect(Collectors.toList());

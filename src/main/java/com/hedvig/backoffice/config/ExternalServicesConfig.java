@@ -15,6 +15,9 @@ import com.hedvig.backoffice.services.messages.BotServiceStub;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.MemberServiceImpl;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
+import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceImpl;
+import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceStub;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,4 +79,12 @@ public class ExternalServicesConfig {
                 : factory.createBean(ExpoNotificationServiceImpl.class);
     }
 
+
+    @Bean
+    public ProductPricingService productPricingService(@Value("${productPricing.stub:false}") boolean stub) {
+        val factory = context.getAutowireCapableBeanFactory();
+        return stub
+                ? factory.createBean(ProductPricingServiceStub.class)
+                : factory.createBean(ProductPricingServiceImpl.class);
+    }
 }
