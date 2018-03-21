@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.product_pricing;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,4 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface ProductPricingClient {
     @GetMapping("/_/insurance/contract/{memberId}")
     byte[] insuranceContract(@PathVariable("memberId") String memberId);
+
+    @GetMapping("/_/insurance/{memberId}/insurance")
+    JsonNode insurance(@PathVariable("memberId") String memberId);
 }
