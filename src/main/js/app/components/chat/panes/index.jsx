@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import ChatTab from './ChatTab';
 import DetailsTab from './DetailsTab';
 import ClaimsTab from './ClaimsTab';
+import InsuranceTab from './InsuranceTab';
 
 const TabContainer = styled(Tab.Pane)`
     &&& {
@@ -12,41 +13,45 @@ const TabContainer = styled(Tab.Pane)`
     }
 `;
 
-const Details = ({ messages: { user } }) => (
-    <TabContainer>
-        <DetailsTab user={user} />
-    </TabContainer>
-);
-
-Details.propTypes = {
-    messages: PropTypes.object.isRequired
+const TabItem = ({ props, TabContent }) => {
+    return (
+        <TabContainer>
+            <TabContent {...props} />
+        </TabContainer>
+    );
+};
+TabItem.propTypes = {
+    props: PropTypes.object.isRequired,
+    TabContent: PropTypes.func.isRequired
 };
 
 /* eslint-disable react/display-name */
-export const memberPagePanes = (
-    props,
-    { addMessageHandler, claimsByUser },
-    socket
-) => [
-    { menuItem: 'Details', render: () => <Details {...props} /> },
-    {
-        menuItem: 'Chat',
-        render: () => (
-            <TabContainer>
-                <ChatTab
-                    {...props}
-                    addMessage={addMessageHandler}
-                    socket={socket}
+const memberPagePanes = (props, addMessage, socket) => {
+    const panes = [
+        {
+            menuItem: 'Details',
+            render: () => <TabItem props={props} TabContent={DetailsTab} />
+        },
+        {
+            menuItem: 'Chat',
+            render: () => (
+                <TabItem
+                    TabContent={ChatTab}
+                    props={{ ...props, addMessage, socket }}
                 />
-            </TabContainer>
-        )
-    },
-    {
-        menuItem: 'Claims',
-        render: () => (
-            <TabContainer>
-                <ClaimsTab {...props} claimsByUser={claimsByUser} />
-            </TabContainer>
-        )
+            )
+        },
+        {
+            menuItem: 'Claims',
+            render: () => <TabItem props={props} TabContent={ClaimsTab} />
+        }
+    ];
+    if (!props.insurance.error.length) {
+        panes.push({
+            menuItem: 'Insurance',
+            render: () => <TabItem props={props} TabContent={InsuranceTab} />
+        });
     }
-];
+    return panes;
+};
+export default memberPagePanes;

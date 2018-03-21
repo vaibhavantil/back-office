@@ -8,9 +8,8 @@ import {
     userRequestError
 } from '../actions/messagesActions';
 
-function* userRequestFlow(action) {
+function* userRequestFlow({ userId }) {
     try {
-        const { userId } = action;
         const user = yield call(api, config.users.get, null, userId);
         yield put(userRequestSuccess(user.data));
     } catch (error) {

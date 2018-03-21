@@ -52,5 +52,11 @@ export default {
         requesting: false,
         successful: false,
         errors: []
+    },
+    insurance: {
+        requesting: false,
+        successful: false,
+        error: [],
+        data: null
     }
 };

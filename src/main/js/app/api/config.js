@@ -84,6 +84,12 @@ export default {
             method: 'post'
         }
     },
+    insurance: {
+        get: {
+            url: 'member/insurance',
+            method: 'get'
+        }
+    },
     ws: {
         // eslint-disable-next-line
         endpoint: DEV ? 'http://localhost:8080/chat' : '/chat',

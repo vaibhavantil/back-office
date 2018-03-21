@@ -6,32 +6,20 @@ import {
     TableRow,
     TableHeader
 } from 'components/claims/claims-list/ClaimsList';
-export default class ClaimsTab extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
-    componentDidMount() {
-        const { claimsByUser, messages: { user } } = this.props;
-        if (user) claimsByUser(user.hid);
-    }
-
-    render() {
-        const claims = this.props.userClaims;
-        return claims.length ? (
-            <PaginatorList
-                list={this.props.userClaims}
-                itemContent={item => <TableRow item={item} />}
-                tableHeader={<TableHeader />}
-            />
-        ) : (
-            <Header>Claims list is empty</Header>
-        );
-    }
-}
+const ClaimsTab = ({ userClaims }) =>
+    userClaims.length ? (
+        <PaginatorList
+            list={userClaims}
+            itemContent={item => <TableRow item={item} />}
+            tableHeader={<TableHeader />}
+        />
+    ) : (
+        <Header>Claims list is empty</Header>
+    );
 
 ClaimsTab.propTypes = {
-    userClaims: PropTypes.array,
-    claimsByUser: PropTypes.func.isRequired,
-    messages: PropTypes.object.isRequired
+    userClaims: PropTypes.array
 };
+
+export default ClaimsTab;
