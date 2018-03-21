@@ -26,26 +26,32 @@ TabItem.propTypes = {
 };
 
 /* eslint-disable react/display-name */
-export const memberPagePanes = (props, addMessage, socket) => [
-    {
-        menuItem: 'Details',
-        render: () => <TabItem props={props} TabContent={DetailsTab} />
-    },
-    {
-        menuItem: 'Chat',
-        render: () => (
-            <TabItem
-                TabContent={ChatTab}
-                props={{ ...props, addMessage, socket }}
-            />
-        )
-    },
-    {
-        menuItem: 'Claims',
-        render: () => <TabItem props={props} TabContent={ClaimsTab} />
-    },
-    {
-        menuItem: 'Insurance',
-        render: () => <TabItem props={props} TabContent={InsuranceTab} />
+const memberPagePanes = (props, addMessage, socket) => {
+    const panes = [
+        {
+            menuItem: 'Details',
+            render: () => <TabItem props={props} TabContent={DetailsTab} />
+        },
+        {
+            menuItem: 'Chat',
+            render: () => (
+                <TabItem
+                    TabContent={ChatTab}
+                    props={{ ...props, addMessage, socket }}
+                />
+            )
+        },
+        {
+            menuItem: 'Claims',
+            render: () => <TabItem props={props} TabContent={ClaimsTab} />
+        }
+    ];
+    if (!props.insurance.error.length) {
+        panes.push({
+            menuItem: 'Insurance',
+            render: () => <TabItem props={props} TabContent={InsuranceTab} />
+        });
     }
-];
+    return panes;
+};
+export default memberPagePanes;

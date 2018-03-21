@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Tab, Header } from 'semantic-ui-react';
 import { subscribe, reconnect } from 'app/lib/sockets/chat';
 import { disconnect } from 'sockets';
-import { memberPagePanes } from './panes';
+import memberPagePanes from './panes';
 
 const UserDetailsHeader = styled.div`
     display: flex;

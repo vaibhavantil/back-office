@@ -204,7 +204,7 @@ String.prototype.capitalize = function() {
 
 /**
  * Returns string splitted by words
- * @param {string} field 
+ * @param {string} field
  * @example 'memberFirstName' -> 'Member first name'
  */
 export const getFieldName = field =>
@@ -213,3 +213,16 @@ export const getFieldName = field =>
         .slice(0, -1)
         .join(' ')
         .capitalize();
+
+export const getFieldValue = value => {
+    if (!value) {
+        return '';
+    }
+    if (Array.isArray(value)) {
+        return value.join(', ');
+    }
+    if (value && typeof value === 'object' && value.constructor === Object) {
+        return Object.keys(value).map(key => `${key}: ${value[key]}, `);
+    }
+    return value.toString();
+};

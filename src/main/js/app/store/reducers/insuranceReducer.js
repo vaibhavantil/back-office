@@ -11,7 +11,8 @@ export default function(state = initialState.insurance, action) {
             return {
                 ...state,
                 requesting: true,
-                successful: false
+                successful: false,
+                error: []
             };
 
         case INSURANCE_REQUEST_SUCCESS:
@@ -26,7 +27,8 @@ export default function(state = initialState.insurance, action) {
             return {
                 ...state,
                 requesting: false,
-                error: [...state.error, action.error]
+                error: [...state.error, action.error],
+                data: null
             };
 
         default:
