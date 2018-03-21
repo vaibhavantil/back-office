@@ -82,6 +82,7 @@ productPricing:
 
 oauth:
   enabled: true
+  enableHttps: true
   google:
     client:
       clientId:

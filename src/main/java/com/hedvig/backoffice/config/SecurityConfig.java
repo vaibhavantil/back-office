@@ -35,6 +35,7 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private boolean oauthEnabled;
+    private boolean enableHttps;
     private String[] corsOrigins;
     private String[] corsMethods;
 
@@ -45,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(OAuth2ClientContext clientContext,
                           PersonnelService personnelService,
                           @Value("${oauth.enabled:true}") boolean oauthEnabled,
+                          @Value("${oauth.enableHttps:true}") boolean enableHttps,
                           @Value("${cors.origins}") String[] corsOrigins,
                           @Value("${cors.methods}") String[] corsMethods) {
 
@@ -52,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.personnelService = personnelService;
 
         this.oauthEnabled = oauthEnabled;
+        this.enableHttps = enableHttps;
         this.corsOrigins = corsOrigins;
         this.corsMethods = corsMethods;
     }
@@ -77,6 +80,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/login/google").permitAll()
                     .antMatchers("/api/**").authenticated()
                     .antMatchers("/chat/**").authenticated();
+        }
+
+        if (enableHttps) {
+            http.requiresChannel()
+                    .antMatchers("/login/process").requiresSecure()
+                    .antMatchers("/api/login/google").requiresSecure();
         }
     }
 
