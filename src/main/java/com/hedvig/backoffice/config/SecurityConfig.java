@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.config;
 
+import com.google.common.collect.Sets;
 import com.hedvig.backoffice.security.OAuth2Filter;
 import com.hedvig.backoffice.security.OAuth2SuccessHandler;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
@@ -20,6 +21,7 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -38,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private boolean enableHttps;
     private String[] corsOrigins;
     private String[] corsMethods;
+    private String[] hds;
 
     private OAuth2ClientContext clientContext;
     private PersonnelService personnelService;
@@ -47,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           PersonnelService personnelService,
                           @Value("${oauth.enabled:true}") boolean oauthEnabled,
                           @Value("${oauth.enableHttps:true}") boolean enableHttps,
+                          @Value("${oauth.hds}") String[] hds,
                           @Value("${cors.origins}") String[] corsOrigins,
                           @Value("${cors.methods}") String[] corsMethods) {
 
@@ -55,6 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         this.oauthEnabled = oauthEnabled;
         this.enableHttps = enableHttps;
+        this.hds = hds;
         this.corsOrigins = corsOrigins;
         this.corsMethods = corsMethods;
     }
@@ -104,7 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private Filter ssoFilter() {
-        OAuth2Filter filter = new OAuth2Filter("/api/login/google");
+        OAuth2Filter filter = new OAuth2Filter("/api/login/google", Sets.newHashSet(hds));
 
         OAuth2RestTemplate template = new OAuth2RestTemplate(google(), clientContext);
         filter.setRestTemplate(template);
@@ -114,6 +119,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setOauthTokenServices(tokenServices);
 
         filter.setAuthenticationSuccessHandler(successHandler());
+        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/api/logout"));
 
         return filter;
     }

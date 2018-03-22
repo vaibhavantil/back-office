@@ -83,6 +83,7 @@ productPricing:
 oauth:
   enabled: true
   enableHttps: false
+  hds: hedvig.com
   google:
     client:
       clientId:

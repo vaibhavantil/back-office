@@ -22,18 +22,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.Set;
 
 public class OAuth2Filter extends OAuth2ClientAuthenticationProcessingFilter {
 
-    public OAuth2Filter(String defaultFilterProcessesUrl) {
-        super(defaultFilterProcessesUrl);
-    }
+    private Set<String> hds;
 
     private ResourceServerTokenServices oauthTokenServices;
 
     private AuthenticationDetailsSource<HttpServletRequest, ?> detailsSource = new OAuth2AuthenticationDetailsSource();
 
     private ApplicationEventPublisher processingEventPublisher;
+
+    public OAuth2Filter(String defaultFilterProcessesUrl, Set<String> hds) {
+        super(defaultFilterProcessesUrl);
+        this.hds = hds;
+    }
 
     public void setOauthTokenServices(ResourceServerTokenServices oauthTokenServices) {
         this.oauthTokenServices = oauthTokenServices;
@@ -61,7 +65,7 @@ public class OAuth2Filter extends OAuth2ClientAuthenticationProcessingFilter {
         }
         try {
             OAuth2Authentication result = oauthTokenServices.loadAuthentication(accessToken.getValue());
-            if (detailsSource !=null) {
+            if (detailsSource != null) {
                 request.setAttribute(OAuth2AuthenticationDetails.ACCESS_TOKEN_VALUE, accessToken.getValue());
                 request.setAttribute(OAuth2AuthenticationDetails.ACCESS_TOKEN_TYPE, accessToken.getTokenType());
                 result.setDetails(detailsSource.buildDetails(request));
@@ -70,6 +74,10 @@ public class OAuth2Filter extends OAuth2ClientAuthenticationProcessingFilter {
             LinkedHashMap<String, String> details
                     = (LinkedHashMap<String, String>) result.getUserAuthentication().getDetails();
             details.put("id_token", (String) accessToken.getAdditionalInformation().get("id_token"));
+
+            if (!hds.contains(details.get("hd"))) {
+                throw new BadCredentialsException("hd not allowed");
+            }
 
             publish(new AuthenticationSuccessEvent(result));
             return result;
