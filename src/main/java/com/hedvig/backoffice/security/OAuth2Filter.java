@@ -75,7 +75,7 @@ public class OAuth2Filter extends OAuth2ClientAuthenticationProcessingFilter {
                     = (LinkedHashMap<String, String>) result.getUserAuthentication().getDetails();
             details.put("id_token", (String) accessToken.getAdditionalInformation().get("id_token"));
 
-            if (!hds.contains(details.get("hd"))) {
+            if (hds.size() > 0 && !hds.contains(details.get("hd"))) {
                 throw new BadCredentialsException("hd not allowed");
             }
 
