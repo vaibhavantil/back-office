@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Form, TextArea } from 'semantic-ui-react';
+import { Button, Form, TextArea, Message } from 'semantic-ui-react';
 
 const FormGroup = styled(Form.Group)`
     &&& {
@@ -33,30 +33,33 @@ export default class AnswerForm extends React.Component {
     };
 
     render() {
-        const { hid, redirectClick } = this.props;
+        const { hid, redirectClick, error } = this.props;
         return (
-            <Form>
-                <FormGroup>
-                    <FormTextArea
-                        control={TextArea}
-                        label="Answer"
-                        placeholder="Answer text..."
-                        onChange={this.answerChangeHandler}
-                    />
-                    <div>
-                        <Button
-                            style={{ marginBottom: '3px' }}
-                            content="Open Chat"
-                            onClick={redirectClick.bind(this, hid)}
+            <React.Fragment>
+                <Form>
+                    <FormGroup>
+                        <FormTextArea
+                            control={TextArea}
+                            label="Answer"
+                            placeholder="Answer text..."
+                            onChange={this.answerChangeHandler}
                         />
-                        <Button
-                            content="Send"
-                            onClick={this.answerClick.bind(this, hid)}
-                            primary
-                        />
-                    </div>
-                </FormGroup>
-            </Form>
+                        <div>
+                            <Button
+                                style={{ marginBottom: '3px' }}
+                                content="Open Chat"
+                                onClick={redirectClick.bind(this, hid)}
+                            />
+                            <Button
+                                content="Send"
+                                onClick={this.answerClick.bind(this, hid)}
+                                primary
+                            />
+                        </div>
+                    </FormGroup>
+                </Form>
+                {error ? <Message negative>{error}</Message> : null}
+            </React.Fragment>
         );
     }
 }
@@ -64,5 +67,6 @@ export default class AnswerForm extends React.Component {
 AnswerForm.propTypes = {
     hid: PropTypes.string.isRequired,
     sendAnswer: PropTypes.func.isRequired,
-    redirectClick: PropTypes.func.isRequired
+    redirectClick: PropTypes.func.isRequired,
+    error: PropTypes.string
 };

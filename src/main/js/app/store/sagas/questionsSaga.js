@@ -5,7 +5,8 @@ import { QUESTIONS_REQUESTING, QUESTION_ANSWERING } from 'constants/questions';
 import {
     questionsReqSuccess,
     questionsReqError,
-    answerSuccess
+    answerSuccess,
+    answerError
 } from '../actions/questionsActions';
 
 function* requestFlow() {
@@ -28,7 +29,7 @@ function* sendAnswerFlow({ data }) {
         yield call(api, config.questions.sendAnswer, data, data.userId);
         yield put(answerSuccess(data));
     } catch (error) {
-        yield put(questionsReqError(error));
+        yield put(answerError({ message: error.message, hid: data.userId }));
     }
 }
 

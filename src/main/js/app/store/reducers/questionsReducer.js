@@ -3,9 +3,14 @@ import {
     QUESTIONS_REQUESTING,
     QUESTIONS_REQUEST_SUCCESS,
     QUESTION_ANSWERING,
-    QUESTION_ANSWER_SUCCESS
+    QUESTION_ANSWER_SUCCESS,
+    QUESTION_ANSWER_ERROR
 } from '../constants/questions';
-import { sortQuestions, replaceAnswer } from '../../lib/helpers';
+import {
+    sortQuestions,
+    replaceAnswer,
+    setAnswerError
+} from '../../lib/helpers';
 
 export default function(state = initialState.questions, action) {
     switch (action.type) {
@@ -30,8 +35,23 @@ export default function(state = initialState.questions, action) {
                 ...state,
                 requesting: false,
                 successful: true,
-                list: replaceAnswer({...state.list}, action.data)
-            }
+                list: replaceAnswer({ ...state.list }, action.data)
+            };
+
+        case QUESTION_ANSWER_ERROR:
+            return {
+                ...state,
+                list: {
+                    answered: state.list.answered,
+                    notAnswered: setAnswerError(
+                        state.list.notAnswered,
+                        action.error
+                    )
+                },
+                errors: [...state.errors, action.error],
+                requesting: false,
+                successful: false
+            };
         default:
             return state;
     }

@@ -226,3 +226,16 @@ export const getFieldValue = value => {
     }
     return value.toString();
 };
+
+export const setAnswerError = (answers, error) =>
+    answers.map(
+        item =>
+            item.hid === error.hid
+                ? {
+                      ...item,
+                      error: `The message is not added. Bot service responded with error "${
+                          error.message
+                      }"`
+                  }
+                : item
+    );

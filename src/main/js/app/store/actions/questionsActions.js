@@ -3,7 +3,8 @@ import {
     QUESTIONS_REQUEST_SUCCESS,
     QUESTIONS_REQUEST_ERROR,
     QUESTION_ANSWERING,
-    QUESTION_ANSWER_SUCCESS
+    QUESTION_ANSWER_SUCCESS,
+    QUESTION_ANSWER_ERROR
 } from '../constants/questions';
 
 export const questionsRequest = () => ({
@@ -28,4 +29,9 @@ export const sendAnswer = data => ({
 export const answerSuccess = data => ({
     type: QUESTION_ANSWER_SUCCESS,
     data
+});
+
+export const answerError = error => ({
+    type: QUESTION_ANSWER_ERROR,
+    error
 });

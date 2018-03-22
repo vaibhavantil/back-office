@@ -71,6 +71,7 @@ export default class SortedList extends React.Component {
                                         hid={question.hid}
                                         sendAnswer={sendAnswer}
                                         redirectClick={this.chatRedirectClick}
+                                        error={question.error}
                                     />
                                 ) : (
                                     <AnswerInfo
