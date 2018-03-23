@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String[] corsOrigins;
     private String[] corsMethods;
     private String[] hds;
+    private String successfulRedirectUrl;
 
     private OAuth2ClientContext clientContext;
     private PersonnelService personnelService;
@@ -50,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           PersonnelService personnelService,
                           @Value("${oauth.enabled:true}") boolean oauthEnabled,
                           @Value("${oauth.enableHttps:true}") boolean enableHttps,
+                          @Value("${oauth.successfulRedirectUrl}") String successfulRedirectUrl,
                           @Value("${oauth.hds}") String[] hds,
                           @Value("${cors.origins}") String[] corsOrigins,
                           @Value("${cors.methods}") String[] corsMethods) {
@@ -57,6 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.clientContext = clientContext;
         this.personnelService = personnelService;
 
+        this.successfulRedirectUrl = successfulRedirectUrl;
         this.oauthEnabled = oauthEnabled;
         this.enableHttps = enableHttps;
         this.hds = hds;
@@ -126,7 +129,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public OAuth2SuccessHandler successHandler() {
-        return new OAuth2SuccessHandler(personnelService, "/login/process");
+        return new OAuth2SuccessHandler(personnelService, successfulRedirectUrl);
     }
 
     @Bean
