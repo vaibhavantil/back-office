@@ -116,14 +116,24 @@ export const getActiveType = (types, claimData) => {
 };
 
 /**
- * Hidding inactive users on first render
+ * Hidding inactive users on first render && sort by signup date
  * @param {object} param0 -
  */
 export const filterUsersList = ({ type, users }) =>
     type !== 'USERS_REQUEST_SUCCESS'
         ? users
-        : users.filter(item => item.status !== 'INACTIVATED');
-
+        : users
+              .filter(item => item.status !== 'INACTIVATED')
+              .map(item => ({
+                  ...item,
+                  signupDate: moment(
+                      item.signupDate ||
+                          // TODO remove mock
+                          `03/${Math.floor(Math.random() * 15) + 1}/2018`
+                  )
+              }))
+              .sort((a, b) => a.signupDate.diff(b.signupDate))
+              .reverse();
 /**
  * Updating state of claims details fields
  * @param {array} fieldsData current active fields

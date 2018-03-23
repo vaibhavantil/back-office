@@ -78,7 +78,7 @@ export default class UsersList extends React.Component {
                 list={users}
                 itemContent={item => this.getTableRow(item)}
                 tableHeader={this.getTableHeader()}
-                pageSize={10}
+                pageSize={25}
             />
         );
     }
