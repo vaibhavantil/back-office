@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String[] corsMethods;
     private String[] hds;
     private String successfulRedirectUrl;
+    private String failureRedirectUrl;
 
     private OAuth2ClientContext clientContext;
     private PersonnelService personnelService;
@@ -52,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           @Value("${oauth.enabled:true}") boolean oauthEnabled,
                           @Value("${oauth.enableHttps:true}") boolean enableHttps,
                           @Value("${oauth.successfulRedirectUrl}") String successfulRedirectUrl,
+                          @Value("${oauth.failureRedirectUrl}") String failureRedirectUrl,
                           @Value("${oauth.hds}") String[] hds,
                           @Value("${cors.origins}") String[] corsOrigins,
                           @Value("${cors.methods}") String[] corsMethods) {
@@ -60,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.personnelService = personnelService;
 
         this.successfulRedirectUrl = successfulRedirectUrl;
+        this.failureRedirectUrl = failureRedirectUrl;
         this.oauthEnabled = oauthEnabled;
         this.enableHttps = enableHttps;
         this.hds = hds;
@@ -122,7 +125,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setOauthTokenServices(tokenServices);
 
         filter.setAuthenticationSuccessHandler(successHandler());
-        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/api/logout"));
+        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(failureRedirectUrl));
 
         return filter;
     }
