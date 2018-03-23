@@ -94,9 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
 
         if (enableHttps) {
-            http.requiresChannel()
-                    .antMatchers("/login/process").requiresSecure()
-                    .antMatchers("/api/login/google").requiresSecure();
+            http.requiresChannel().anyRequest().requiresSecure();
         }
     }
 
