@@ -6,6 +6,7 @@ import com.hedvig.backoffice.services.members.MemberNotFoundException;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.MemberServiceException;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,12 @@ public class MemberController {
     public JsonNode insurance(@PathVariable String hid) {
         return Optional.ofNullable(productPricingService.insurance(hid))
                 .orElseThrow(() -> new ExternalServiceException("request to product-pricing service failed"));
+    }
+
+    @PostMapping("/insurance/{hid}/activate")
+    public ResponseEntity<?> activate(@PathVariable String hid, @RequestBody InsuranceActivateDTO dto) {
+        productPricingService.activate(hid, dto);
+        return ResponseEntity.noContent().build();
     }
 
 }
