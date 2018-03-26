@@ -23,7 +23,11 @@ export default class InsuranceTab extends React.Component {
     };
 
     saveNewDate = () => {
-        this.props.saveInsuranceDate(this.state.dateValue);
+        const { messages: { user }, saveInsuranceDate } = this.props;
+        saveInsuranceDate(this.state.dateValue, user.hid);
+        this.setState({
+            datePickerDisabled: true
+        });
     };
 
     toggleEdit = () => {
@@ -58,36 +62,31 @@ export default class InsuranceTab extends React.Component {
                         </Table.Cell>
                     </Table.Row>
                     <TableFields fields={fields} />
-                    {activeDate ? (
-                        <Table.Row>
-                            <Table.Cell>Insurance active from</Table.Cell>
-
-                            <DateCell>
-                                {this.state.datePickerDisabled ? (
-                                    <React.Fragment>
-                                        {activeDate}
-                                        <Button onClick={this.toggleEdit}>
-                                            Edit
-                                        </Button>
-                                    </React.Fragment>
-                                ) : (
-                                    <React.Fragment>
-                                        <DateInput
-                                            changeHandler={
-                                                this.dateChangeHandler
-                                            }
-                                        />
-                                        <Button onClick={this.saveNewDate} primary>
-                                            Save
-                                        </Button>
-                                        <Button onClick={this.toggleEdit}>
-                                            Close
-                                        </Button>
-                                    </React.Fragment>
-                                )}
-                            </DateCell>
-                        </Table.Row>
-                    ) : null}
+                    <Table.Row>
+                        <Table.Cell>Insurance active from</Table.Cell>
+                        <DateCell>
+                            {this.state.datePickerDisabled ? (
+                                <React.Fragment>
+                                    {activeDate}
+                                    <Button onClick={this.toggleEdit}>
+                                        Edit
+                                    </Button>
+                                </React.Fragment>
+                            ) : (
+                                <React.Fragment>
+                                    <DateInput
+                                        changeHandler={this.dateChangeHandler}
+                                    />
+                                    <Button onClick={this.saveNewDate} primary>
+                                        Save
+                                    </Button>
+                                    <Button onClick={this.toggleEdit}>
+                                        Close
+                                    </Button>
+                                </React.Fragment>
+                            )}
+                        </DateCell>
+                    </Table.Row>
                 </Table.Body>
             </Table>
         ) : (

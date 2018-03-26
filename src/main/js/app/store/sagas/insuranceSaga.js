@@ -18,10 +18,11 @@ function* requestFlow({ userId }) {
     }
 }
 
-function* saveDateFlow({ userId, date }) {
+function* saveDateFlow({ userId, activationDate }) {
     try {
-        yield call(api, config.insurance.setDate, { date }, userId);
-        yield put(saveDateSuccess(date));
+        const path = `${userId}/activate`;
+        yield call(api, config.insurance.setDate, { activationDate }, path);
+        yield put(saveDateSuccess(activationDate));
     } catch (error) {
         yield put(insuranceGetError(error));
     }

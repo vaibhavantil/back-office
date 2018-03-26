@@ -90,7 +90,7 @@ export default {
             method: 'get'
         },
         setDate: {
-            url: 'member/insurance/date',
+            url: 'member/insurance',
             method: 'post'
         }
     },
