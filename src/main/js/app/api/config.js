@@ -88,6 +88,10 @@ export default {
         get: {
             url: 'member/insurance',
             method: 'get'
+        },
+        setDate: {
+            url: 'member/insurance/date',
+            method: 'post'
         }
     },
     ws: {

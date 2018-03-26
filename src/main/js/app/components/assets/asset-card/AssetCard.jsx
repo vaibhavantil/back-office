@@ -6,10 +6,14 @@ import moment from 'moment';
 import { assetStates } from 'app/lib/selectOptions';
 
 const CardButtons = styled(Card.Content)`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 120px;
+    &&& {
+        box-sizing: border-box;
+        max-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 120px;
+    }
 `;
 
 export default class AssetCard extends React.Component {

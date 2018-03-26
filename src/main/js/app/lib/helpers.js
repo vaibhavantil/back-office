@@ -249,3 +249,13 @@ export const setAnswerError = (answers, error) =>
                   }
                 : item
     );
+
+export const sortAssetsList = assets =>
+    assets
+        .map(el => ({
+            ...el,
+            // TODO: remove data mock
+            price: 1000,
+            purchaseDate: `${Math.floor(Math.random() * 10 + 1)}/03/2020`
+        }))
+        .sort((a, b) => moment(a.registerDate).diff(moment(b.registerDate)));
