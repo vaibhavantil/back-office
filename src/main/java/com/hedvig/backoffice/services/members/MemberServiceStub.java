@@ -21,7 +21,7 @@ public class MemberServiceStub implements MemberService {
     public MemberServiceStub() {
         String[] statuses = { "INITIATED", "ONBOARDING", "SIGNED", "INACTIVATED" };
 
-        users = IntStream.range(0, 50).mapToObj(i -> {
+        users = IntStream.range(0, 200).mapToObj(i -> {
             long id = i < testMemberIds.length ? testMemberIds[i] : RandomUtils.nextInt();
             MemberDTO user = new MemberDTO(id);
             user.setFirstName("Test user " + id);
