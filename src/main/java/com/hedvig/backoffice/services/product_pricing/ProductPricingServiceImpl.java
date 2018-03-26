@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.product_pricing;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProductPricingServiceImpl implements ProductPricingService {
@@ -20,5 +21,10 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     @Override
     public JsonNode insurance(String memberId) {
         return client.insurance(memberId);
+    }
+
+    @Override
+    public void activate(String memberId, InsuranceActivateDTO dto) {
+        client.activate(memberId, dto);
     }
 }
