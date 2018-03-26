@@ -22,6 +22,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
 
+        logger.info("user successful logged in, path: " + request.getRequestURL());
         personnelService.processAuthorization(authentication);
         handle(request, response, authentication);
         clearAuthenticationAttributes(request);

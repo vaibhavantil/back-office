@@ -86,6 +86,7 @@ oauth:
   hds: hedvig.com
   successfulRedirectUrl: https://backoffice.dev.hedvigit.com/login/process
   failureRedirectUrl: https://backoffice.dev.hedvigit.com/api/logout
+  logoutSuccessfulUrl: https://backoffice.dev.hedvigit.com/login/oauth
   google:
     client:
       clientId:
