@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String[] hds;
     private String successfulRedirectUrl;
     private String failureRedirectUrl;
+    private String logoutUrl;
 
     private OAuth2ClientContext clientContext;
     private PersonnelService personnelService;
@@ -54,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           @Value("${oauth.enableHttps:true}") boolean enableHttps,
                           @Value("${oauth.successfulRedirectUrl}") String successfulRedirectUrl,
                           @Value("${oauth.failureRedirectUrl}") String failureRedirectUrl,
+                          @Value("${oauth.logoutUrl}") String logoutUrl,
                           @Value("${oauth.hds}") String[] hds,
                           @Value("${cors.origins}") String[] corsOrigins,
                           @Value("${cors.methods}") String[] corsMethods) {
@@ -63,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         this.successfulRedirectUrl = successfulRedirectUrl;
         this.failureRedirectUrl = failureRedirectUrl;
+        this.logoutUrl = logoutUrl;
         this.oauthEnabled = oauthEnabled;
         this.enableHttps = enableHttps;
         this.hds = hds;
@@ -77,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .headers().frameOptions().disable()
                 .and().sessionManagement().maximumSessions(1).and()
-                .and().logout().logoutSuccessUrl("/login/oauth").logoutUrl("/api/logout")
+                .and().logout().logoutSuccessUrl(logoutUrl).logoutUrl("/api/logout")
                 .and()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
 
