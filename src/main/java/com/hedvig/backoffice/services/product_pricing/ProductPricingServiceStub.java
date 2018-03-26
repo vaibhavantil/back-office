@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.product_pricing;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
             "  \"newTotalPrice\": null,\n" +
             "  \"insuredAtOtherCompany\": true,\n" +
             "  \"insuranceType\": \"BRF\",\n" +
-            "  \"insuranceActiveFrom\": \"2018-03-20T00:00:00\",\n" +
+            "  \"insuranceActiveFrom\": null,\n" +
             "  \"insuanceActiveTo\": null\n" +
             "}";
 
@@ -49,5 +50,12 @@ public class ProductPricingServiceStub implements ProductPricingService {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    @Override
+    public void activate(String memberId, InsuranceActivateDTO dto) {
+        String i = insurances.computeIfAbsent(memberId, id -> INSURANCE_TEMPLATE);
+        i = i.replace("\"insuranceActiveFrom\": null", "\"insuranceActiveFrom\": \"" + dto.getActivationDate().toString() + "\"");
+        insurances.put(memberId, i);
     }
 }

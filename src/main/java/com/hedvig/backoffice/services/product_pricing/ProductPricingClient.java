@@ -2,9 +2,12 @@ package com.hedvig.backoffice.services.product_pricing;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.FeignConfig;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
         name = "product-pricing-service",
@@ -17,4 +20,7 @@ public interface ProductPricingClient {
 
     @GetMapping("/_/insurance/{memberId}/insurance")
     JsonNode insurance(@PathVariable("memberId") String memberId);
+
+    @PostMapping("/_/insurance/{memberId}/activateAtDate")
+    void activate(@PathVariable("memberId") String memberId, @RequestBody InsuranceActivateDTO dto);
 }
