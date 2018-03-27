@@ -37,13 +37,10 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private boolean oauthEnabled;
-    private boolean enableHttps;
     private String[] corsOrigins;
     private String[] corsMethods;
     private String[] hds;
-    private String successfulRedirectUrl;
-    private String failureRedirectUrl;
-    private String logoutSuccessfulUrl;
+    private String oauthBaseUrl;
 
     private OAuth2ClientContext clientContext;
     private PersonnelService personnelService;
@@ -52,23 +49,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(OAuth2ClientContext clientContext,
                           PersonnelService personnelService,
                           @Value("${oauth.enabled:true}") boolean oauthEnabled,
-                          @Value("${oauth.enableHttps:true}") boolean enableHttps,
-                          @Value("${oauth.successfulRedirectUrl}") String successfulRedirectUrl,
-                          @Value("${oauth.failureRedirectUrl}") String failureRedirectUrl,
-                          @Value("${oauth.logoutSuccessfulUrl}") String logoutSuccessfulUrl,
                           @Value("${oauth.hds}") String[] hds,
+                          @Value("${oauth.baseUrl}") String oauthBaseUrl,
                           @Value("${cors.origins}") String[] corsOrigins,
                           @Value("${cors.methods}") String[] corsMethods) {
 
         this.clientContext = clientContext;
         this.personnelService = personnelService;
 
-        this.successfulRedirectUrl = successfulRedirectUrl;
-        this.failureRedirectUrl = failureRedirectUrl;
-        this.logoutSuccessfulUrl = logoutSuccessfulUrl;
         this.oauthEnabled = oauthEnabled;
-        this.enableHttps = enableHttps;
         this.hds = hds;
+        this.oauthBaseUrl = oauthBaseUrl;
+
         this.corsOrigins = corsOrigins;
         this.corsMethods = corsMethods;
     }
@@ -80,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .headers().frameOptions().disable()
                 .and().sessionManagement().maximumSessions(1).and()
-                .and().logout().logoutSuccessUrl(logoutSuccessfulUrl).logoutUrl("/api/logout")
+                .and().logout().logoutSuccessUrl(oauthBaseUrl + "/login/oauth").logoutUrl(oauthBaseUrl + "/api/logout")
                 .and()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
 
@@ -96,9 +88,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/chat/**").authenticated();
         }
 
-        if (enableHttps) {
-            http.requiresChannel().anyRequest().requiresSecure();
-        }
     }
 
     @Bean
@@ -126,14 +115,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setOauthTokenServices(tokenServices);
 
         filter.setAuthenticationSuccessHandler(successHandler());
-        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(failureRedirectUrl));
+        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(oauthBaseUrl + "/api/logout"));
 
         return filter;
     }
 
     @Bean
     public OAuth2SuccessHandler successHandler() {
-        return new OAuth2SuccessHandler(personnelService, successfulRedirectUrl);
+        return new OAuth2SuccessHandler(personnelService, oauthBaseUrl + "/login/process");
     }
 
     @Bean
