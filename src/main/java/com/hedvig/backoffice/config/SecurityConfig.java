@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           PersonnelService personnelService,
                           @Value("${oauth.enabled:true}") boolean oauthEnabled,
                           @Value("${oauth.hds}") String[] hds,
-                          @Value("${oauth.baseUrl}") String oauthBaseUrl,
+                          @Value("${oauth.baseUrl:}") String oauthBaseUrl,
                           @Value("${cors.origins}") String[] corsOrigins,
                           @Value("${cors.methods}") String[] corsMethods) {
 
