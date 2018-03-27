@@ -12,6 +12,13 @@ const DateCell = styled(Table.Cell)`
         align-items: center;
     }
 `;
+
+const CellButton = styled(Button)`
+    &&& {
+        margin: 0 8px;
+    }
+`;
+
 export default class InsuranceTab extends React.Component {
     constructor(props) {
         super(props);
@@ -68,18 +75,21 @@ export default class InsuranceTab extends React.Component {
                             {this.state.datePickerDisabled ? (
                                 <React.Fragment>
                                     {activeDate}
-                                    <Button onClick={this.toggleEdit}>
+                                    <CellButton onClick={this.toggleEdit}>
                                         Edit
-                                    </Button>
+                                    </CellButton>
                                 </React.Fragment>
                             ) : (
                                 <React.Fragment>
                                     <DateInput
                                         changeHandler={this.dateChangeHandler}
                                     />
-                                    <Button onClick={this.saveNewDate} primary>
+                                    <CellButton
+                                        onClick={this.saveNewDate}
+                                        primary
+                                    >
                                         Save
-                                    </Button>
+                                    </CellButton>
                                     <Button onClick={this.toggleEdit}>
                                         Close
                                     </Button>
