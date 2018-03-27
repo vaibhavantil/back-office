@@ -20,7 +20,7 @@ const mapStateToProps = ({ messages, claims, insurance }) => ({
 export default withRouter(
     connect(mapStateToProps, {
         claimsByUser: actions.claimsActions.claimsByUser,
-        insuranceRequest: actions.insuranceActions.insuranceRequest,
+        ...actions.insuranceActions,
         ...actions.messagesActions,
         ...actions.chatUserActions,
         ...actions.clientActions
