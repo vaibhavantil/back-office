@@ -72,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .headers().frameOptions().disable()
                 .and().sessionManagement().maximumSessions(1).and()
-                .and().logout().logoutSuccessUrl(oauthBaseUrl + "/login/oauth").logoutUrl(oauthBaseUrl + "/api/logout")
+                .and().logout().logoutSuccessUrl(oauthBaseUrl + "/login/oauth").logoutUrl("/api/logout")
                 .and()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
 
