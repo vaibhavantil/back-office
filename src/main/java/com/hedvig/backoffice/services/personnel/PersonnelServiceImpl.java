@@ -2,6 +2,8 @@ package com.hedvig.backoffice.services.personnel;
 
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.repository.PersonnelRepository;
+import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.web.dto.PersonnelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonnelServiceImpl implements PersonnelService {
@@ -37,4 +41,20 @@ public class PersonnelServiceImpl implements PersonnelService {
 
         personnelRepository.save(personnel);
     }
+
+    @Transactional
+    @Override
+    public List<PersonnelDTO> list() {
+        return personnelRepository.all()
+                .map(PersonnelDTO::fromDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public PersonnelDTO me(String id) throws AuthorizationException {
+        return PersonnelDTO.fromDomain(personnelRepository
+                .findById(id)
+                .orElseThrow(AuthorizationException::new));
+    }
+
 }

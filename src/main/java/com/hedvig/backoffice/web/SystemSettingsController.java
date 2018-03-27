@@ -1,7 +1,7 @@
 package com.hedvig.backoffice.web;
 
-import com.hedvig.backoffice.repository.PersonnelRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import com.hedvig.backoffice.services.settings.dto.SystemSettingDTO;
 import com.hedvig.backoffice.web.dto.PersonnelDTO;
@@ -18,13 +18,13 @@ import java.util.List;
 public class SystemSettingsController {
 
     private final SystemSettingsService settingsService;
-    private final PersonnelRepository personnelRepository;
+    private final PersonnelService personnelService;
 
     @Autowired
     public SystemSettingsController(SystemSettingsService settingsService,
-                                    PersonnelRepository personnelRepository) {
+                                    PersonnelService personnelService) {
         this.settingsService = settingsService;
-        this.personnelRepository = personnelRepository;
+        this.personnelService = personnelService;
     }
 
     @GetMapping
@@ -41,9 +41,12 @@ public class SystemSettingsController {
     @GetMapping("/me")
     public PersonnelDTO me(@AuthenticationPrincipal Principal principal)
             throws AuthorizationException {
-        return PersonnelDTO.fromDomain(personnelRepository
-                .findById(principal.getName())
-                .orElseThrow(AuthorizationException::new));
+        return personnelService.me(principal.getName());
+    }
+
+    @GetMapping("/personnels")
+    public List<PersonnelDTO> personnelList() {
+        return personnelService.list();
     }
 
 }
