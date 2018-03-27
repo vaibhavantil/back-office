@@ -60,7 +60,9 @@ export default class DateInput extends React.Component {
     };
 
     componentWillMount() {
-        this.setState({ date: moment(this.props.date || moment()) });
+        this.setState({ date: moment(this.props.date || moment()) }, () => {
+            this.dateChangeHandler(this.state.date);
+        });
     }
 
     render() {

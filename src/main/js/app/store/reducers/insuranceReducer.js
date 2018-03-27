@@ -7,6 +7,7 @@ import {
     SAVE_DATE_SUCCESS
 } from 'constants/chatUsers';
 
+
 export default function(state = initialState.insurance, action) {
     switch (action.type) {
         case INSURANCE_REQUESTING:
@@ -35,7 +36,13 @@ export default function(state = initialState.insurance, action) {
             };
 
         case SAVE_DATE_SUCCESS:
-            return state;
+            return {
+                ...state,
+                requesting: false,
+                successful: true,
+                error: [],
+                data: { ...state.data, insuranceActiveFrom: action.date }
+            };
 
         default:
             return state;

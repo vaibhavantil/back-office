@@ -19,15 +19,15 @@ export default class InsuranceTab extends React.Component {
     }
 
     dateChangeHandler = (type, e, { value }) => {
-        this.setState({ dateValue: moment(value).toISOString() });
+        this.setState({ dateValue: moment(value).format('YYYY-MM-DD') });
     };
 
     saveNewDate = () => {
         const { messages: { user }, saveInsuranceDate } = this.props;
-        saveInsuranceDate(this.state.dateValue, user.hid);
-        this.setState({
-            datePickerDisabled: true
-        });
+        if (this.state.dateValue) {
+            saveInsuranceDate(this.state.dateValue, user.hid);
+            this.setState({ datePickerDisabled: true });
+        }
     };
 
     toggleEdit = () => {
