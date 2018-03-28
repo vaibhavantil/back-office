@@ -1,12 +1,14 @@
 package com.hedvig.backoffice;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.hedvig.backoffice.security.SecureFilter;
 import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
@@ -49,8 +51,17 @@ public class BackOfficeApplication {
         connector.setScheme("http");
         connector.setPort(httpPost);
         connector.setSecure(false);
-        connector.setRedirectPort(defaultPost);
         return connector;
+    }
+
+    @Bean
+    public FilterRegistrationBean secureFilterBean() {
+        final FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
+        filterRegBean.setFilter(new SecureFilter(defaultPost, httpPost));
+        filterRegBean.addUrlPatterns("/*");
+        filterRegBean.setEnabled(Boolean.TRUE);
+        filterRegBean.setAsyncSupported(Boolean.TRUE);
+        return filterRegBean;
     }
 
 }
