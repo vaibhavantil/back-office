@@ -30,7 +30,10 @@ public class SecureFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
         String fullUrl = getFullURL(request);
-        log.info("receive request host: " + fullUrl + " port: " + request.getServerPort());
+        log.info("receive request host: " + fullUrl
+                + " port: " + request.getServerPort()
+                + " local:" + request.getLocalPort()
+                + " remote: " + request.getRemotePort());
 
         if (request.getServerPort() == httpPort) {
             String locationHeader = null;
