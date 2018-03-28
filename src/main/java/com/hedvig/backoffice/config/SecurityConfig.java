@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String[] corsMethods;
     private String[] hds;
     private String oauthBaseUrl;
+    private boolean overHttps;
 
     private OAuth2ClientContext clientContext;
     private PersonnelService personnelService;
@@ -51,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           @Value("${oauth.enabled:true}") boolean oauthEnabled,
                           @Value("${oauth.hds}") String[] hds,
                           @Value("${oauth.baseUrl:}") String oauthBaseUrl,
+                          @Value("${server.overHttps:false}") boolean overHttps,
                           @Value("${cors.origins}") String[] corsOrigins,
                           @Value("${cors.methods}") String[] corsMethods) {
 
@@ -60,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.oauthEnabled = oauthEnabled;
         this.hds = hds;
         this.oauthBaseUrl = oauthBaseUrl;
+        this.overHttps = overHttps;
 
         this.corsOrigins = corsOrigins;
         this.corsMethods = corsMethods;
@@ -88,6 +91,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/chat/**").authenticated();
         }
 
+        if (overHttps) {
+            http.requiresChannel().anyRequest().requiresSecure();
+        }
     }
 
     @Bean

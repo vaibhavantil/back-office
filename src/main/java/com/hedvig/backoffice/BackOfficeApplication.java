@@ -1,8 +1,12 @@
 package com.hedvig.backoffice;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.apache.catalina.connector.Connector;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
@@ -26,5 +30,27 @@ public class BackOfficeApplication {
 
 		return builder;
 	}
+
+    @Value("${server.port:8443}")
+    private int defaultPost;
+
+    @Value("${server.httpPort:8080}")
+    private int httpPost;
+
+	@Bean
+    public EmbeddedServletContainerFactory servletContainer() {
+        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
+        tomcat.addAdditionalTomcatConnectors(httpConnector());
+        return tomcat;
+    }
+
+    private Connector httpConnector(){
+        Connector connector = new Connector(TomcatEmbeddedServletContainerFactory.DEFAULT_PROTOCOL);
+        connector.setScheme("http");
+        connector.setPort(httpPost);
+        connector.setSecure(false);
+        connector.setRedirectPort(defaultPost);
+        return connector;
+    }
 
 }

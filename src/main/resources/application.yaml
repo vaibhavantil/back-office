@@ -1,5 +1,7 @@
 server:
-  port: 8080
+  port: 8443
+  httpPort: 8080
+  overHttps: true
 
 logging:
   level:
