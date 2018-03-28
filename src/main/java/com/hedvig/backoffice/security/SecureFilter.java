@@ -27,22 +27,18 @@ public class SecureFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
+        String fullUrl = getFullURL(request);
 
         if (request.getServerPort() == httpPort) {
-            String locationHeader = null;
-            String fullUrl = getFullURL(request);
+            response.setStatus(HttpStatus.FOUND.value());
+            response.setHeader("Location", fullUrl.replace(httpPortStr, defaultPortStr));
+            return;
+        }
 
-            if (fullUrl.contains(httpPortStr)) {
-                locationHeader = fullUrl.replace(httpPortStr, defaultPortStr);
-            } else if (!fullUrl.contains("https")) {
-                locationHeader = fullUrl.replace("http", "https");
-            }
-
-            if (locationHeader != null) {
-                response.setStatus(HttpStatus.FOUND.value());
-                response.setHeader("Location", locationHeader);
-                return;
-            }
+        if (request.getServerPort() != defaultPort && !fullUrl.contains("https")) {
+            response.setStatus(HttpStatus.FOUND.value());
+            response.setHeader("Location", fullUrl.replace("http", "https"));
+            return;
         }
 
         chain.doFilter(request, response);
