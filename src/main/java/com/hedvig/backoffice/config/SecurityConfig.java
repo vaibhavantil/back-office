@@ -40,7 +40,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String[] corsOrigins;
     private String[] corsMethods;
     private String[] hds;
-    private String oauthBaseUrl;
 
     private OAuth2ClientContext clientContext;
     private PersonnelService personnelService;
@@ -50,7 +49,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           PersonnelService personnelService,
                           @Value("${oauth.enabled:true}") boolean oauthEnabled,
                           @Value("${oauth.hds}") String[] hds,
-                          @Value("${oauth.baseUrl:}") String oauthBaseUrl,
                           @Value("${cors.origins}") String[] corsOrigins,
                           @Value("${cors.methods}") String[] corsMethods) {
 
@@ -59,7 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         this.oauthEnabled = oauthEnabled;
         this.hds = hds;
-        this.oauthBaseUrl = oauthBaseUrl;
 
         this.corsOrigins = corsOrigins;
         this.corsMethods = corsMethods;
@@ -72,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .headers().frameOptions().disable()
                 .and().sessionManagement().maximumSessions(1).and()
-                .and().logout().logoutSuccessUrl(oauthBaseUrl + "/login/oauth").logoutUrl("/api/logout")
+                .and().logout().logoutSuccessUrl("/login/oauth").logoutUrl("/api/logout")
                 .and()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
 
@@ -115,14 +112,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setOauthTokenServices(tokenServices);
 
         filter.setAuthenticationSuccessHandler(successHandler());
-        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(oauthBaseUrl + "/api/logout"));
+        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler( "/api/logout"));
 
         return filter;
     }
 
     @Bean
     public OAuth2SuccessHandler successHandler() {
-        return new OAuth2SuccessHandler(personnelService, oauthBaseUrl + "/login/process");
+        return new OAuth2SuccessHandler(personnelService, "/login/process");
     }
 
     @Bean

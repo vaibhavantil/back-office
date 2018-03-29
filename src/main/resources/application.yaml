@@ -84,7 +84,6 @@ productPricing:
 oauth:
   enabled: true
   hds: hedvig.com
-  baseUrl: https://backoffice.dev.hedvigit.com
   google:
     client:
       clientId:

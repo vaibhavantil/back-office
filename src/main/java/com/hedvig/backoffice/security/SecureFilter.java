@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.security;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.*;
@@ -8,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Slf4j
 public class SecureFilter implements Filter {
 
     private int defaultPort;
@@ -30,10 +28,6 @@ public class SecureFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
         String fullUrl = getFullURL(request);
-        log.info("receive request host: " + fullUrl
-                + " port: " + request.getServerPort()
-                + " local:" + request.getLocalPort()
-                + " remote: " + request.getRemotePort());
 
         if (request.getLocalPort() == httpPort) {
             String locationHeader = null;
