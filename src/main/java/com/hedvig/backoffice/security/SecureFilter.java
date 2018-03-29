@@ -35,7 +35,7 @@ public class SecureFilter implements Filter {
                 + " local:" + request.getLocalPort()
                 + " remote: " + request.getRemotePort());
 
-        if (request.getServerPort() == httpPort) {
+        if (request.getLocalPort() == httpPort) {
             String locationHeader = null;
 
             if (fullUrl.contains(httpPortStr)) {
