@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface MemberService {
 
-    Optional<List<MemberDTO>> search(String status, String query);
-    Optional<MemberDTO> findByHid(String hid) throws MemberNotFoundException;
+    List<MemberDTO> search(String status, String query);
+    MemberDTO findByHid(String hid);
 
 }

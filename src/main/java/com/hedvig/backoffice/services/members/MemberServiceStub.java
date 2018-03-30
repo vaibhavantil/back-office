@@ -34,9 +34,9 @@ public class MemberServiceStub implements MemberService {
     }
 
     @Override
-    public Optional<List<MemberDTO>> search(String status, String query) throws MemberServiceException {
+    public List<MemberDTO> search(String status, String query) {
         if (StringUtils.isBlank(status) && StringUtils.isBlank(query)) {
-            return Optional.of(users);
+            return users;
         }
 
         List<MemberDTO> result = users.stream()
@@ -44,15 +44,15 @@ public class MemberServiceStub implements MemberService {
                         || (StringUtils.isNotBlank(status) && u.getStatus().contains(status)))
                 .collect(Collectors.toList());
 
-        return Optional.of(result);
+        return result;
     }
 
     @Override
-    public Optional<MemberDTO> findByHid(String hid) throws MemberNotFoundException, MemberServiceException {
-        return Optional.of(users.stream()
+    public MemberDTO findByHid(String hid) {
+        return users.stream()
                 .filter(u -> u.getHid().equals(hid))
                 .findAny()
-                .orElse(new MemberDTO(Long.parseLong(hid))));
+                .orElse(new MemberDTO(Long.parseLong(hid)));
     }
 
 }

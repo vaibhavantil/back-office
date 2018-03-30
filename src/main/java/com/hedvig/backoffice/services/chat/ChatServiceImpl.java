@@ -1,7 +1,7 @@
 package com.hedvig.backoffice.services.chat;
 
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
-import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
+import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Subscription;
@@ -9,9 +9,7 @@ import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.repository.PersonnelRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
-import com.hedvig.backoffice.services.members.MemberNotFoundException;
 import com.hedvig.backoffice.services.members.MemberService;
-import com.hedvig.backoffice.services.members.MemberServiceException;
 import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
@@ -119,12 +117,12 @@ public class ChatServiceImpl implements ChatService {
     public void subscribe(String hid, String subId, String sessionId, String principalId) {
         MemberDTO member;
         try {
-            member = memberService.findByHid(hid).orElseThrow(MemberServiceException::new);
-        } catch (MemberNotFoundException e) {
+            member = memberService.findByHid(hid);
+        } catch (ExternalServiceBadRequestException e) {
             send(hid, Message.error(400, "member with hid " + hid + " not found"));
             log.warn("member with hid " + hid + " not found", e);
             return;
-        } catch (MemberServiceException e) {
+        } catch (ExternalServiceException e) {
             send(hid, Message.error(500, e.getMessage()));
             log.error("can't fetch member hid = " + hid, e);
             return;

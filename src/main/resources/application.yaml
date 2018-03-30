@@ -68,9 +68,6 @@ botservice:
 
 memberservice:
   baseUrl: http://localhost:4084
-  urls:
-    search: /i/member/search
-    getById: /member
   stub: false
 
 claims:
