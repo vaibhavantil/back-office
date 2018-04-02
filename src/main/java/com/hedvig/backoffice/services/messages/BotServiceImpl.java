@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeAnswerDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
@@ -58,6 +59,10 @@ public class BotServiceImpl implements BotService {
     }
 
     private List<BotMessage> parseMessages(JsonNode root) {
+        if (root == null) {
+            throw new ExternalServiceException("bot-service returned null");
+        }
+
         Iterable<Map.Entry<String, JsonNode>> iterable = root::fields;
 
         return StreamSupport
