@@ -57,4 +57,10 @@ public class PersonnelServiceImpl implements PersonnelService {
                 .orElseThrow(AuthorizationException::new));
     }
 
+    @Override
+    public Personnel getPersonnel(String id) throws AuthorizationException {
+        return personnelRepository.findById(id)
+                .orElseThrow(AuthorizationException::new);
+    }
+
 }

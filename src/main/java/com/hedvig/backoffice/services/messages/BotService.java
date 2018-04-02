@@ -7,11 +7,10 @@ import java.time.Instant;
 import java.util.List;
 
 public interface BotService {
-    List<BotMessage> messages(String hid);
-    List<BotMessage> messages(String hid, int count);
-    List<BackOfficeMessage> fetch(Instant timestamp);
-    String pushTokenId(String hid);
-    void response(String hid, BotMessage message);
-    void answerQuestion(String hid, String answer);
-
+    List<BotMessage> messages(String hid, String token);
+    List<BotMessage> messages(String hid, int count, String token);
+    List<BackOfficeMessage> fetch(Instant timestamp, String token);
+    String pushTokenId(String hid, String token);
+    void response(String hid, BotMessage message, String token);
+    void answerQuestion(String hid, String answer, String token);
 }

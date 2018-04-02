@@ -70,12 +70,12 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void append(String hid, String message) {
+    public void append(String hid, String message, String token) {
         try {
             final BotMessage botMessage = new BotMessage(message, true);
             messageUrlResolver.resolveUrls(botMessage);
-            botService.response(hid, botMessage);
-            expoNotificationService.sendNotification(hid);
+            botService.response(hid, botMessage, token);
+            expoNotificationService.sendNotification(hid, token);
         } catch (BotMessageException | ExternalServiceBadRequestException e) {
             send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
@@ -83,9 +83,9 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void messages(String hid) {
+    public void messages(String hid, String token) {
         try {
-            send(hid, Message.chat(botService.messages(hid)));
+            send(hid, Message.chat(botService.messages(hid, token)));
         } catch (ExternalServiceBadRequestException e) {
             send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
@@ -96,9 +96,9 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void messages(String hid, int count) {
+    public void messages(String hid, int count, String token) {
         try {
-            send(hid, Message.chat(botService.messages(hid, count)));
+            send(hid, Message.chat(botService.messages(hid, count, token)));
         } catch (ExternalServiceBadRequestException e) {
             send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);

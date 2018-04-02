@@ -89,8 +89,8 @@ public class QuestionServiceImpl implements QuestionService {
         group.setAnswer(message);
         group.setPersonnel(personnel);
 
-        botService.answerQuestion(hid, message);
-        expoNotificationService.sendNotification(hid);
+        botService.answerQuestion(hid, message, personnel.getIdToken());
+        expoNotificationService.sendNotification(hid, personnel.getIdToken());
         questionGroupRepository.save(group);
         updatesService.changeOn(-1, UpdateType.QUESTIONS);
 

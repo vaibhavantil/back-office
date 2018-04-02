@@ -1,5 +1,7 @@
 package com.hedvig.backoffice.services.chat;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.collect.Sets;
 import com.hedvig.backoffice.domain.SystemSetting;
 import com.hedvig.backoffice.domain.SystemSettingType;
@@ -10,6 +12,7 @@ import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,19 +36,24 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     private final QuestionService questionService;
 
     private final Set<String> questionId;
+    private final String accessToken;
 
     @Autowired
     public ChatUpdatesServiceImpl(ChatService chatService,
                                   BotService botService,
                                   SystemSettingsService systemSettingsService,
                                   QuestionService questionService,
-                                  @Value("${botservice.questionId}") String[] questionId) {
+                                  @Value("${botservice.questionId}") String[] questionId,
+                                  @Value("${oauth.secret:}") String jwtSecret) throws UnsupportedEncodingException {
 
         this.chatService = chatService;
         this.botService = botService;
         this.systemSettingsService = systemSettingsService;
         this.questionService = questionService;
         this.questionId = Sets.newHashSet(questionId);
+
+        Algorithm algorithm = StringUtils.isBlank(jwtSecret) ? Algorithm.none() : Algorithm.HMAC256(jwtSecret);
+        accessToken = JWT.create().withIssuer("back-office").sign(algorithm);
 
         logger.info("CHAT UPDATE SERVICE: ");
         logger.info("question ids: " + Arrays.toString(questionId));
@@ -53,7 +62,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     @Scheduled(fixedDelayString = "${intervals.chat}")
     @Override
     public void update() {
-        List<BackOfficeMessage> fetched = botService.fetch(lastTimestamp());
+        List<BackOfficeMessage> fetched = botService.fetch(lastTimestamp(), accessToken);
 
         if (fetched.size() == 0) {
             return;
