@@ -10,7 +10,6 @@ const messagesWithFiles = [
     types.AUDIO,
     types.VIDEO,
     types.PHOTO,
-    types.PARAGRAPH,
     types.HERO,
     types.BANK_ID_COLLECT
 ];

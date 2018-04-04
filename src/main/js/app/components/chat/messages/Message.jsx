@@ -70,29 +70,23 @@ const Message = ({
     from
 }) => (
     <MessageRow left={left} isQuestion={isQuestionMessage} id={`msg-${msgId}`}>
-        {content.type == types.PARAGRAPH ? (
-            ''
-        ) : (
-            <MessageBox>
-                <MessageBody left={left}>
-                    {content.text}
-                    <br />
-                    <MessageContent content={content} />
-                </MessageBody>
-                {timestamp ? (
-                    <MessageInfo>
-                        <Label>
-                            {from}
-                            <Label.Detail>
-                                {moment(timestamp).format(
-                                    'HH:mm:ss DD MMMM YYYY'
-                                )}
-                            </Label.Detail>
-                        </Label>
-                    </MessageInfo>
-                ) : null}
-            </MessageBox>
-        )}
+        <MessageBox>
+            <MessageBody left={left}>
+                {content.text}
+                <br />
+                <MessageContent content={content} />
+            </MessageBody>
+            {timestamp ? (
+                <MessageInfo>
+                    <Label>
+                        {from}
+                        <Label.Detail>
+                            {moment(timestamp).format('HH:mm:ss DD MMMM YYYY')}
+                        </Label.Detail>
+                    </Label>
+                </MessageInfo>
+            ) : null}
+        </MessageBox>
     </MessageRow>
 );
 
