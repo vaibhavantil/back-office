@@ -9,6 +9,7 @@ import claims from './claimsReducer';
 import claimDetails from './claimDetailsReducer';
 import questions from './questionsReducer';
 import insurance from './insuranceReducer';
+import notifications from './notificationsReducer';
 
 export default {
     login,
@@ -21,5 +22,6 @@ export default {
     claims,
     claimDetails,
     questions,
-    insurance
+    insurance,
+    notifications
 };

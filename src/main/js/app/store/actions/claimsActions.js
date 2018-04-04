@@ -1,13 +1,13 @@
 import {
     CLAIMS_REQUESTING,
     CLAIMS_REQUEST_SUCCESS,
-    CLAIMS_REQUEST_ERROR,
     CLAIM_UPDATE_SUCCESS,
     CLAIM_TYPES,
     CLAIM_TYPES_SUCCESS,
     CLAIMS_BY_USER,
-    CLAIMS_BY_USER_SUCCESS
-} from 'constants/claims';
+    CLAIMS_BY_USER_SUCCESS,
+    CLAIMS_ERROR
+} from '../constants/claims';
 
 export const claimsRequest = () => ({
     type: CLAIMS_REQUESTING
@@ -16,10 +16,6 @@ export const claimsRequest = () => ({
 export const claimsRequestSuccess = claims => ({
     type: CLAIMS_REQUEST_SUCCESS,
     claims
-});
-export const claimsRequestError = error => ({
-    type: CLAIMS_REQUEST_ERROR,
-    error
 });
 
 export const claimUpdateSuccess = (reqType, data) => ({
@@ -45,4 +41,9 @@ export const claimsByUser = id => ({
 export const claimsByUserSuccess = claims => ({
     type: CLAIMS_BY_USER_SUCCESS,
     claims
+});
+
+export const claimsError = error => ({
+    type: CLAIMS_ERROR,
+    error
 });

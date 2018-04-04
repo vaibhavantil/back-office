@@ -8,6 +8,7 @@ import {
     assetRequestSuccess,
     assetRequestError
 } from '../actions/assetsActions';
+import { showNotification } from '../actions/notificationsActions';
 import { logout } from './loginSaga';
 
 function* assetUpdateFlow({ assetId, assetState }) {
@@ -20,7 +21,10 @@ function* assetUpdateFlow({ assetId, assetState }) {
         );
         yield put(assetUpdateSuccess(data));
     } catch (error) {
-        yield put(assetRequestError(error));
+        yield [
+            put(assetRequestError(error)),
+            put(showNotification({ message: error.message, header: 'Assets' }))
+        ];
     }
 }
 
@@ -29,7 +33,10 @@ function* assetRequestFlow() {
         const { data } = yield call(api, config.asset.get);
         yield put(assetRequestSuccess(data));
     } catch (error) {
-        yield put(assetRequestError(error));
+        yield [
+            put(assetRequestError(error)),
+            put(showNotification({ message: error.message, header: 'Assets' }))
+        ];
     }
 }
 

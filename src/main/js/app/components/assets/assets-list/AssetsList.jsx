@@ -40,7 +40,7 @@ class AssetsList extends React.Component {
 
     render() {
         const {
-            assets: { list, requesting },
+            assets: { list },
             poll: { polling },
             messages: { user },
             userRequest,
@@ -68,7 +68,6 @@ class AssetsList extends React.Component {
                                 key={asset.id}
                                 asset={asset}
                                 assetUpdate={assetUpdate}
-                                updateStatus={requesting}
                                 userRequest={userRequest}
                                 user={user}
                             />

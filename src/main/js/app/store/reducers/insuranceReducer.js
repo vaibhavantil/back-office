@@ -2,11 +2,10 @@ import initialState from '../initialState';
 import {
     INSURANCE_REQUESTING,
     INSURANCE_REQUEST_SUCCESS,
-    INSURANCE_REQUEST_ERROR,
+    INSURANCE_ERROR,
     SAVE_INSURANCE_DATE,
     SAVE_DATE_SUCCESS
-} from 'constants/chatUsers';
-
+} from '../constants/chatUsers';
 
 export default function(state = initialState.insurance, action) {
     switch (action.type) {
@@ -14,9 +13,7 @@ export default function(state = initialState.insurance, action) {
         case SAVE_INSURANCE_DATE:
             return {
                 ...state,
-                requesting: true,
-                successful: false,
-                error: []
+                requesting: true
             };
 
         case INSURANCE_REQUEST_SUCCESS:
@@ -27,11 +24,10 @@ export default function(state = initialState.insurance, action) {
                 data: action.insurance
             };
 
-        case INSURANCE_REQUEST_ERROR:
+        case INSURANCE_ERROR:
             return {
                 ...state,
                 requesting: false,
-                error: [...state.error, action.error],
                 data: null
             };
 
@@ -39,8 +35,6 @@ export default function(state = initialState.insurance, action) {
             return {
                 ...state,
                 requesting: false,
-                successful: true,
-                error: [],
                 data: { ...state.data, insuranceActiveFrom: action.date }
             };
 

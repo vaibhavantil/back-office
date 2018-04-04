@@ -2,11 +2,11 @@ import initialState from '../initialState';
 import {
     CLAIMS_REQUESTING,
     CLAIMS_REQUEST_SUCCESS,
-    CLAIMS_REQUEST_ERROR,
     CLAIM_TYPES,
     CLAIM_TYPES_SUCCESS,
     CLAIMS_BY_USER,
-    CLAIMS_BY_USER_SUCCESS
+    CLAIMS_BY_USER_SUCCESS,
+    CLAIMS_ERROR
 } from '../constants/claims';
 
 export default function(state = initialState.claims, action) {
@@ -16,31 +16,14 @@ export default function(state = initialState.claims, action) {
         case CLAIMS_BY_USER:
             return {
                 ...state,
-                requesting: true,
-                successful: false,
-                errors: []
+                requesting: true
             };
 
         case CLAIMS_REQUEST_SUCCESS:
             return {
                 ...state,
                 list: action.claims,
-                requesting: false,
-                successful: true,
-                errors: []
-            };
-
-        case CLAIMS_REQUEST_ERROR:
-            return {
-                ...state,
-                requesting: false,
-                successful: false,
-                errors: state.errors.concat([
-                    {
-                        message: action.error.response.statusText,
-                        status: action.error.response.status
-                    }
-                ])
+                requesting: false
             };
 
         case CLAIM_TYPES_SUCCESS:
@@ -58,8 +41,13 @@ export default function(state = initialState.claims, action) {
             return {
                 ...state,
                 userClaims: action.claims,
-                requesting: false,
-                successful: true
+                requesting: false
+            };
+
+        case CLAIMS_ERROR:
+            return {
+                ...state,
+                requesting: false
             };
         default:
             return state;

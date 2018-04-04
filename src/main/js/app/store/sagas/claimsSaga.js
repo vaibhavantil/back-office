@@ -14,7 +14,10 @@ function* requestFlow() {
         const { data } = yield call(api, config.claims.getList);
         yield put(actions.claimsRequestSuccess(data));
     } catch (error) {
-        yield put(actions.claimsRequestError(error));
+        yield [
+            put(actions.claimsError(error)),
+            put(actions.claimsError(error))
+        ];
     }
 }
 

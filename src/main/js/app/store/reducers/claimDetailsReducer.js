@@ -2,7 +2,6 @@ import initialState from '../initialState';
 import {
     CLAIM_REQUESTING,
     CLAIM_REQUEST_SUCCESS,
-    CLAIM_REQUEST_ERROR,
     CREATE_NOTE_REQUESTING,
     CREATE_NOTE_SUCCESS,
     CREATE_PAYMENT_REQUESTING,
@@ -22,8 +21,6 @@ export default function(state = initialState.claimDetails, action) {
             return {
                 ...state,
                 requesting: true,
-                successful: false,
-                errors: []
             };
 
         case CLAIM_REQUEST_SUCCESS:
@@ -31,22 +28,6 @@ export default function(state = initialState.claimDetails, action) {
                 ...state,
                 data: action.claim.data,
                 requesting: false,
-                successful: true,
-                errors: []
-            };
-
-        case CLAIM_REQUEST_ERROR:
-            return {
-                ...state,
-                requesting: false,
-                successful: false,
-                errors: [
-                    ...state.errors,
-                    ...{
-                        message: action.error.response.statusText,
-                        status: action.error.response.status
-                    }
-                ]
             };
 
         case CREATE_NOTE_SUCCESS:

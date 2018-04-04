@@ -11,6 +11,7 @@ import * as paymentActions from './paymentActions';
 import * as notesActions from './notesActions';
 import * as questionsActions from './questionsActions';
 import * as insuranceActions from './insuranceActions';
+import * as notificationsActions from './notificationsActions';
 
 export default {
     loginActions,
@@ -25,5 +26,6 @@ export default {
     paymentActions,
     notesActions,
     questionsActions,
-    insuranceActions
+    insuranceActions,
+    notificationsActions
 };

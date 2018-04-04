@@ -3,8 +3,8 @@ import {
     ASSET_UPDATE_SUCCESS,
     ASSET_REQUESTING,
     ASSET_REQUEST_SUCCESS,
-    ASSET_REQUEST_ERROR
-} from 'constants/assets';
+    ASSET_ERROR
+} from '../constants/assets';
 
 export const assetUpdate = (assetId, assetState) => ({
     type: ASSET_UPDATING,
@@ -25,7 +25,8 @@ export const assetRequestSuccess = assets => ({
     type: ASSET_REQUEST_SUCCESS,
     assets
 });
+
 export const assetRequestError = error => ({
-    type: ASSET_REQUEST_ERROR,
+    type: ASSET_ERROR,
     error
 });

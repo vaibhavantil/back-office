@@ -4,10 +4,8 @@ import {
     MESSAGE_RECEIVED,
     CLEAR_MESSAGES_LIST,
     SET_ACTIVE_CONNECTION,
-    ERROR_RECEIVED,
     USER_REQUESTING,
-    USER_REQUEST_SUCCESS,
-    USER_REQUEST_ERROR
+    USER_REQUEST_SUCCESS
 } from 'constants/chatUsers';
 
 export default function(state = initialState.messages, action) {
@@ -20,8 +18,7 @@ export default function(state = initialState.messages, action) {
         case CLEAR_MESSAGES_LIST:
             return {
                 ...state,
-                list: [],
-                error: null
+                list: []
             };
         case SET_ACTIVE_CONNECTION:
             return {
@@ -37,12 +34,6 @@ export default function(state = initialState.messages, action) {
             return {
                 ...state,
                 user: action.user
-            };
-        case ERROR_RECEIVED:
-        case USER_REQUEST_ERROR:
-            return {
-                ...state,
-                error: action.error
             };
         default:
             return state;

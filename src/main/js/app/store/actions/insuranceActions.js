@@ -1,7 +1,7 @@
 import {
     INSURANCE_REQUESTING,
     INSURANCE_REQUEST_SUCCESS,
-    INSURANCE_REQUEST_ERROR,
+    INSURANCE_ERROR,
     SAVE_INSURANCE_DATE,
     SAVE_DATE_SUCCESS
 } from 'constants/chatUsers';
@@ -17,7 +17,7 @@ export const insuranceGetSuccess = insurance => ({
 });
 
 export const insuranceGetError = error => ({
-    type: INSURANCE_REQUEST_ERROR,
+    type: INSURANCE_ERROR,
     error
 });
 
