@@ -10,6 +10,7 @@ import com.hedvig.backoffice.services.chat.SubscriptionService;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.updates.UpdateType;
 import com.hedvig.backoffice.services.updates.UpdatesService;
@@ -28,15 +29,12 @@ import java.util.stream.Collectors;
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
-
     private final QuestionGroupRepository questionGroupRepository;
-
     private final SubscriptionService subscriptionService;
-
     private final UpdatesService updatesService;
-
     private final BotService botService;
     private final ExpoNotificationService expoNotificationService;
+    private final PersonnelService personnelService;
 
     @Autowired
     public QuestionServiceImpl(QuestionRepository questionRepository,
@@ -44,7 +42,8 @@ public class QuestionServiceImpl implements QuestionService {
                                SubscriptionService subscriptionService,
                                UpdatesService updatesService,
                                BotService botService,
-                               ExpoNotificationService expoNotificationService) {
+                               ExpoNotificationService expoNotificationService,
+                               PersonnelService personnelService) {
 
         this.questionRepository = questionRepository;
         this.questionGroupRepository = questionGroupRepository;
@@ -52,6 +51,7 @@ public class QuestionServiceImpl implements QuestionService {
         this.updatesService = updatesService;
         this.botService = botService;
         this.expoNotificationService = expoNotificationService;
+        this.personnelService = personnelService;
     }
 
     @Override
@@ -89,8 +89,8 @@ public class QuestionServiceImpl implements QuestionService {
         group.setAnswer(message);
         group.setPersonnel(personnel);
 
-        botService.answerQuestion(hid, message, personnel.getIdToken());
-        expoNotificationService.sendNotification(hid, personnel.getIdToken());
+        botService.answerQuestion(hid, message, personnelService.getIdToken(personnel));
+        expoNotificationService.sendNotification(hid, personnelService.getIdToken(personnel));
         questionGroupRepository.save(group);
         updatesService.changeOn(-1, UpdateType.QUESTIONS);
 

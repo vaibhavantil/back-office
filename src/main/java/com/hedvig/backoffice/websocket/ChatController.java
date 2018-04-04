@@ -28,18 +28,18 @@ public class ChatController {
     @SubscribeMapping("/send/{hid}")
     public void send(@DestinationVariable String hid, @RequestBody String body, @AuthenticationPrincipal String principalId)
             throws AuthorizationException {
-        chatService.append(hid, body, personnelService.getPersonnel(principalId).getIdToken());
+        chatService.append(hid, body, personnelService.getIdToken(principalId));
     }
 
     @SubscribeMapping("/history/{hid}")
     public void messages(@DestinationVariable String hid, @AuthenticationPrincipal String principalId)
             throws AuthorizationException {
-        chatService.messages(hid, personnelService.getPersonnel(principalId).getIdToken());
+        chatService.messages(hid, personnelService.getIdToken(principalId));
     }
 
     @SubscribeMapping("/history/{hid}/{count}")
     public void messages(@DestinationVariable String hid, @DestinationVariable int count, @AuthenticationPrincipal String principalId)
             throws AuthorizationException {
-        chatService.messages(hid, count, personnelService.getPersonnel(principalId).getIdToken());
+        chatService.messages(hid, count, personnelService.getIdToken(principalId));
     }
 }

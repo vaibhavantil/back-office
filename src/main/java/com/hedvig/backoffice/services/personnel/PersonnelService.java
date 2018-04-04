@@ -13,5 +13,7 @@ public interface PersonnelService {
     List<PersonnelDTO> list();
     PersonnelDTO me(String id) throws AuthorizationException;
     Personnel getPersonnel(String id) throws AuthorizationException;
+    String getIdToken(String id);
+    String getIdToken(Personnel personnel);
 
 }

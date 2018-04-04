@@ -27,6 +27,8 @@ public class Personnel {
     @Type(type="org.hibernate.type.TextType")
     private String idToken;
 
+    private String refreshToken;
+
     public Personnel(String id) {
         this.id = id;
     }

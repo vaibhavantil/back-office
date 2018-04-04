@@ -43,6 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private OAuth2ClientContext clientContext;
     private PersonnelService personnelService;
+    private AuthorizationCodeResourceDetails clientDetails;
+    private ResourceServerProperties clientResource;
 
     @Autowired
     public SecurityConfig(OAuth2ClientContext clientContext,
@@ -50,7 +52,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           @Value("${oauth.enabled:true}") boolean oauthEnabled,
                           @Value("${oauth.hds}") String[] hds,
                           @Value("${cors.origins}") String[] corsOrigins,
-                          @Value("${cors.methods}") String[] corsMethods) {
+                          @Value("${cors.methods}") String[] corsMethods,
+                          AuthorizationCodeResourceDetails clientDetails,
+                          ResourceServerProperties clientResource) {
 
         this.clientContext = clientContext;
         this.personnelService = personnelService;
@@ -60,6 +64,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         this.corsOrigins = corsOrigins;
         this.corsMethods = corsMethods;
+
+        this.clientDetails = clientDetails;
+        this.clientResource = clientResource;
     }
 
     @Override
@@ -71,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().sessionManagement().maximumSessions(1).and()
                 .and().logout().logoutSuccessUrl("/login/oauth").logoutUrl("/api/logout")
                 .and()
-                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+                .addFilterBefore(ssoFilter(clientDetails, clientResource), BasicAuthenticationFilter.class);
 
         http = http
                 .authorizeRequests()
@@ -101,13 +108,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    private Filter ssoFilter() {
+    private Filter ssoFilter(AuthorizationCodeResourceDetails clientDetails, ResourceServerProperties clientResource) {
         OAuth2Filter filter = new OAuth2Filter("/api/login/google", Sets.newHashSet(hds));
 
-        OAuth2RestTemplate template = new OAuth2RestTemplate(google(), clientContext);
+        OAuth2RestTemplate template = new OAuth2RestTemplate(clientDetails, clientContext);
         filter.setRestTemplate(template);
 
-        UserInfoTokenServices tokenServices = new UserInfoTokenServices(googleResource().getUserInfoUri(), google().getClientId());
+        UserInfoTokenServices tokenServices = new UserInfoTokenServices(clientResource.getUserInfoUri(), clientDetails.getClientId());
         tokenServices.setRestTemplate(template);
         filter.setOauthTokenServices(tokenServices);
 
@@ -120,18 +127,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public OAuth2SuccessHandler successHandler() {
         return new OAuth2SuccessHandler(personnelService, "/login/process");
-    }
-
-    @Bean
-    @ConfigurationProperties("oauth.google.client")
-    public AuthorizationCodeResourceDetails google() {
-        return new AuthorizationCodeResourceDetails();
-    }
-
-    @Bean
-    @ConfigurationProperties("oauth.google.resource")
-    public ResourceServerProperties googleResource() {
-        return new ResourceServerProperties();
     }
 
     @Bean

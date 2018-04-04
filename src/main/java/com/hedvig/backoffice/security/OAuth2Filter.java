@@ -10,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.filter.OAuth2AuthenticationFailureEvent;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -74,6 +75,10 @@ public class OAuth2Filter extends OAuth2ClientAuthenticationProcessingFilter {
             LinkedHashMap<String, String> details
                     = (LinkedHashMap<String, String>) result.getUserAuthentication().getDetails();
             details.put("id_token", (String) accessToken.getAdditionalInformation().get("id_token"));
+            OAuth2RefreshToken refreshToken = accessToken.getRefreshToken();
+            if (refreshToken != null) {
+                details.put("refresh_token", refreshToken.getValue());
+            }
 
             if (hds.size() > 0 && !hds.contains(details.get("hd"))) {
                 throw new BadCredentialsException("hd not allowed");
@@ -90,7 +95,7 @@ public class OAuth2Filter extends OAuth2ClientAuthenticationProcessingFilter {
     }
 
     private void publish(ApplicationEvent event) {
-        if (processingEventPublisher !=null) {
+        if (processingEventPublisher != null) {
             processingEventPublisher.publishEvent(event);
         }
     }
