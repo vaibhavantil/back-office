@@ -36,6 +36,10 @@ public class FeignConfig {
                 return new ExternalServiceNotFoundException("entity not found", buff.toString());
             }
 
+            if (status == HttpStatus.UNAUTHORIZED) {
+                return new ExternalServiceUnauthorizedException("unauthorized", buff.toString());
+            }
+
             if (status.is4xxClientError()) {
                 return new ExternalServiceBadRequestException("bad request", buff.toString());
             }
