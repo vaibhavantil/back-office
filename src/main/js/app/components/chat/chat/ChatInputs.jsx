@@ -20,6 +20,16 @@ export default {
         );
     },
 
+    [types.PARAGRAPH](onChangeHandler, cleanupForm) {
+        return (
+            <TextInput
+                changeHandler={onChangeHandler}
+                cleanupForm={cleanupForm}
+                label
+            />
+        );
+    },
+
     [types.NUMBER](onChangeHandler) {
         return <NumberInput changeHandler={onChangeHandler} />;
     },
