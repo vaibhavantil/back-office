@@ -13,13 +13,16 @@ public class SecureFilter implements Filter {
     private int httpPort;
     private String defaultPortStr;
     private String httpPortStr;
+    private boolean httpsRedirect;
 
-    public SecureFilter(int defaultPort, int httpPort) {
+    public SecureFilter(int defaultPort, int httpPort, boolean httpsRedirect) {
         this.defaultPort = defaultPort;
         this.httpPort = httpPort;
 
         this.defaultPortStr = Integer.toString(defaultPort);
         this.httpPortStr = Integer.toString(httpPort);
+
+        this.httpsRedirect = httpsRedirect;
     }
 
     @Override
@@ -29,7 +32,7 @@ public class SecureFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) resp;
         String fullUrl = getFullURL(request);
 
-        if (request.getLocalPort() == httpPort) {
+        if (request.getLocalPort() == httpPort && httpsRedirect) {
             String locationHeader = null;
 
             if (fullUrl.contains(httpPortStr)) {

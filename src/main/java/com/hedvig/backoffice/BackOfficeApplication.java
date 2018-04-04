@@ -39,6 +39,9 @@ public class BackOfficeApplication {
     @Value("${server.httpPort:8080}")
     private int httpPost;
 
+    @Value("${server.httpsRedirect:true}")
+    private boolean httpsRedirect;
+
 	@Bean
     public EmbeddedServletContainerFactory servletContainer() {
         TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
@@ -57,7 +60,7 @@ public class BackOfficeApplication {
     @Bean
     public FilterRegistrationBean secureFilterBean() {
         final FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
-        filterRegBean.setFilter(new SecureFilter(defaultPost, httpPost));
+        filterRegBean.setFilter(new SecureFilter(defaultPost, httpPost, httpsRedirect));
         filterRegBean.addUrlPatterns("/*");
         filterRegBean.setEnabled(Boolean.TRUE);
         filterRegBean.setAsyncSupported(Boolean.TRUE);
