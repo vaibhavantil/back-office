@@ -29,9 +29,8 @@ function* loginFlow() {
     let request;
     try {
         request = yield call(api, config.login.login);
-        yield put(setClient(request.data));
+        yield [put(setClient(request.data)), put({ type: LOGIN_SUCCESS })];
         history.push('/dashboard');
-        yield put({ type: LOGIN_SUCCESS });
     } catch (error) {
         yield [
             put(showNotification({ message: error.message, header: 'Login' })),

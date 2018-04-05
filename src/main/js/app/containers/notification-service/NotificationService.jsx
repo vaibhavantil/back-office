@@ -9,9 +9,8 @@ import Notifications from 'components/notifications';
 const NotificationsContainer = styled.div`
     position: fixed;
     bottom: 10px;
-    right: 0;
-    left: 0;
-    max-width: 400px;
+    right: 10px;
+    width: 400px;
     margin: auto;
     z-index: 10000;
 `;
