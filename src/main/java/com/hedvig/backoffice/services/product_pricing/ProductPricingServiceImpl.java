@@ -14,17 +14,17 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
 
     @Override
-    public byte[] insuranceContract(String memberId) {
-        return client.insuranceContract(memberId);
+    public byte[] insuranceContract(String memberId, String token) {
+        return client.insuranceContract(memberId, token);
     }
 
     @Override
-    public JsonNode insurance(String memberId) {
-        return client.insurance(memberId);
+    public JsonNode insurance(String memberId, String token) {
+        return client.insurance(memberId, token);
     }
 
     @Override
-    public void activate(String memberId, InsuranceActivateDTO dto) {
-        client.activate(memberId, dto);
+    public void activate(String memberId, InsuranceActivateDTO dto, String token) {
+        client.activate(memberId, dto, token);
     }
 }

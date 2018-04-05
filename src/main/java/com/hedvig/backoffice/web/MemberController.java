@@ -57,8 +57,8 @@ public class MemberController {
     }
 
     @RequestMapping(path = "/mandate/{hid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> insuranceMandate(@PathVariable String hid) {
-        val mandate = productPricingService.insuranceContract(hid);
+    public ResponseEntity<byte[]> insuranceMandate(@PathVariable String hid, @AuthenticationPrincipal Principal principal) {
+        val mandate = productPricingService.insuranceContract(hid, personnelService.getIdToken(principal.getName()));
         val headers = new HttpHeaders();
         val filename = "insurance-mandate-" + hid + ".pdf";
         headers.setContentDispositionFormData(filename, filename);
@@ -67,14 +67,16 @@ public class MemberController {
     }
 
     @GetMapping("/insurance/{hid}")
-    public JsonNode insurance(@PathVariable String hid) {
-        return Optional.ofNullable(productPricingService.insurance(hid))
+    public JsonNode insurance(@PathVariable String hid, @AuthenticationPrincipal Principal principal) {
+        return Optional.ofNullable(productPricingService.insurance(hid, personnelService.getIdToken(principal.getName())))
                 .orElseThrow(() -> new ExternalServiceException("request to product-pricing service failed"));
     }
 
     @PostMapping("/insurance/{hid}/activate")
-    public ResponseEntity<?> activate(@PathVariable String hid, @RequestBody InsuranceActivateDTO dto) {
-        productPricingService.activate(hid, dto);
+    public ResponseEntity<?> activate(@PathVariable String hid,
+                                      @RequestBody InsuranceActivateDTO dto,
+                                      @AuthenticationPrincipal Principal principal) {
+        productPricingService.activate(hid, dto, personnelService.getIdToken(principal.getName()));
         return ResponseEntity.noContent().build();
     }
 
