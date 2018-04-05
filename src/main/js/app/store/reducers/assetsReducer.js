@@ -2,10 +2,9 @@ import initialState from '../initialState';
 import {
     ASSET_UPDATING,
     ASSET_UPDATE_SUCCESS,
-    ASSET_UPDATE_ERROR,
     ASSET_REQUESTING,
     ASSET_REQUEST_SUCCESS,
-    ASSET_REQUEST_ERROR
+    ASSET_ERROR
 } from '../constants/assets';
 import { sortAssetsList } from '../../lib/helpers';
 
@@ -16,8 +15,6 @@ export default function(state = initialState.assets, action) {
             return {
                 ...state,
                 requesting: true,
-                successful: false,
-                errors: []
             };
 
         case ASSET_UPDATE_SUCCESS:
@@ -29,31 +26,20 @@ export default function(state = initialState.assets, action) {
                             : asset
                 ),
                 requesting: false,
-                successful: true,
-                errors: []
-            };
-
-        case ASSET_REQUEST_ERROR:
-        case ASSET_UPDATE_ERROR:
-            return {
-                ...state,
-                requesting: false,
-                successful: false,
-                errors: state.errors.concat([
-                    {
-                        message: action.error.response.statusText,
-                        status: action.error.response.status
-                    }
-                ])
             };
 
         case ASSET_REQUEST_SUCCESS:
             return {
+                ...state,
                 list: sortAssetsList(action.assets),
                 requesting: false,
-                successful: true,
-                errors: []
             };
+        
+        case ASSET_ERROR:
+            return {
+                ...state,
+                requesting: false
+            }
 
         default:
             return state;

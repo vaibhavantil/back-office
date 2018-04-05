@@ -7,6 +7,7 @@ import {
     assetRequestError,
     assetRequestSuccess
 } from '../actions/assetsActions';
+import { showNotification } from '../actions/notificationsActions';
 
 function* pollAssetsSaga({ duration }) {
     while (true) {
@@ -15,7 +16,15 @@ function* pollAssetsSaga({ duration }) {
             yield put(assetRequestSuccess(assets.data));
             yield call(delay, duration);
         } catch (error) {
-            yield put(assetRequestError(error));
+            yield [
+                put(
+                    showNotification({
+                        message: error.message,
+                        header: 'Assets polling'
+                    })
+                ),
+                put(assetRequestError(error))
+            ];
             take(POLL_STOP);
         }
     }

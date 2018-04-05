@@ -7,10 +7,11 @@ import {
 } from 'constants/claims';
 import * as actions from '../actions/paymentActions';
 import { claimRequestError } from '../actions/claimDetailsActions';
+import { showNotification } from '../actions/notificationsActions';
 
 function* createFlow({ id, data }) {
     try {
-        const requestBody = { ...data };
+        const requestBody = { ...data, userId: id };
         delete requestBody.date;
         const created = yield call(
             api,
@@ -20,7 +21,12 @@ function* createFlow({ id, data }) {
         );
         yield put(actions.createPaymentSuccess(created.data || data));
     } catch (error) {
-        yield put(claimRequestError(error));
+        yield [
+            put(
+                showNotification({ message: error.message, header: 'Payments' })
+            ),
+            put(claimRequestError(error))
+        ];
     }
 }
 
@@ -30,7 +36,12 @@ function* updateResumeFlow({ id, data }) {
         yield call(api, config.claims.update, { ...data }, path);
         yield put(actions.updateResumeSuccess(data.resume));
     } catch (error) {
-        yield put(claimRequestError(error));
+        yield [
+            put(
+                showNotification({ message: error.message, header: 'Payments' })
+            ),
+            put(claimRequestError(error))
+        ];
     }
 }
 

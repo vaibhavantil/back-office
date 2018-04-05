@@ -7,6 +7,7 @@ import Routes from './routes';
 import Store from './store';
 import { history } from './store';
 import Navigation from './components/shared/navigation';
+import Notifications from './containers/notification-service/NotificationService';
 
 const store = Store.configureStore();
 
@@ -16,8 +17,14 @@ const App = () => (
             <React.Fragment>
                 <Navigation history={history} store={store} />
                 <Switch>
-                    <Route path="/login/oauth" component={Routes.LoginPageRoute} />
-                    <Route path="/login/process" component={Routes.LoginProcessPageRoute} />
+                    <Route
+                        path="/login/oauth"
+                        component={Routes.LoginPageRoute}
+                    />
+                    <Route
+                        path="/login/process"
+                        component={Routes.LoginProcessPageRoute}
+                    />
                     <Routes.PrivateRoute
                         path="/assets"
                         store={store}
@@ -53,6 +60,7 @@ const App = () => (
                     />
                     <Redirect from="*" to="/dashboard" />
                 </Switch>
+                <Notifications />
             </React.Fragment>
         </Router>
     </Provider>

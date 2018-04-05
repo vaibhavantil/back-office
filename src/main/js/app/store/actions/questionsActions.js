@@ -1,10 +1,10 @@
 import {
     QUESTIONS_REQUESTING,
     QUESTIONS_REQUEST_SUCCESS,
-    QUESTIONS_REQUEST_ERROR,
     QUESTION_ANSWERING,
     QUESTION_ANSWER_SUCCESS,
-    QUESTION_ANSWER_ERROR
+    QUESTION_ERROR,
+    ANSWER_ERROR
 } from '../constants/questions';
 
 export const questionsRequest = () => ({
@@ -17,7 +17,7 @@ export const questionsReqSuccess = questions => ({
 });
 
 export const questionsReqError = error => ({
-    type: QUESTIONS_REQUEST_ERROR,
+    type: QUESTION_ERROR,
     error
 });
 
@@ -32,6 +32,6 @@ export const answerSuccess = data => ({
 });
 
 export const answerError = error => ({
-    type: QUESTION_ANSWER_ERROR,
+    type: ANSWER_ERROR,
     error
 });

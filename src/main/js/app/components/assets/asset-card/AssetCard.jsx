@@ -20,7 +20,6 @@ export default class AssetCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            disabled: false,
             dropdownValue: ''
         };
     }
@@ -40,12 +39,6 @@ export default class AssetCard extends React.Component {
     componentDidMount() {
         const { userRequest, asset } = this.props;
         userRequest(asset.userId);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.updateStatus !== this.props.updateStatus) {
-            this.setState({ disabled: false });
-        }
     }
 
     render() {
@@ -86,7 +79,6 @@ export default class AssetCard extends React.Component {
                         placeholder="Choose asset state"
                         selection
                         value={this.state.dropdownValue || asset.state}
-                        disabled={this.state.disabled}
                     />
                     <Button primary fluid onClick={this.saveClickHandler}>
                         Save
@@ -100,7 +92,6 @@ export default class AssetCard extends React.Component {
 AssetCard.propTypes = {
     asset: PropTypes.object.isRequired,
     assetUpdate: PropTypes.func.isRequired,
-    updateStatus: PropTypes.bool,
     user: PropTypes.object,
     userRequest: PropTypes.func
 };

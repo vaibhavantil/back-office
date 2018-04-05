@@ -7,13 +7,17 @@ import {
     userRequestSuccess,
     userRequestError
 } from '../actions/messagesActions';
+import { showNotification } from '../actions/notificationsActions';
 
 function* userRequestFlow({ userId }) {
     try {
         const user = yield call(api, config.users.get, null, userId);
         yield put(userRequestSuccess(user.data));
     } catch (error) {
-        yield put(userRequestError(error));
+        yield [
+            put(showNotification({ message: error.message, header: 'Users' })),
+            put(userRequestError(error))
+        ];
     }
 }
 

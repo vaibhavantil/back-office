@@ -8,6 +8,7 @@ import {
     answerSuccess,
     answerError
 } from '../actions/questionsActions';
+import { showNotification } from '../actions/notificationsActions';
 
 function* requestFlow() {
     try {
@@ -20,7 +21,10 @@ function* requestFlow() {
             })
         );
     } catch (error) {
-        yield put(questionsReqError(error));
+        yield [
+            put(showNotification({ message: error.message, header: 'Questions' })),
+            put(questionsReqError(error))
+        ];
     }
 }
 
@@ -29,7 +33,10 @@ function* sendAnswerFlow({ data }) {
         yield call(api, config.questions.sendAnswer, data, data.userId);
         yield put(answerSuccess(data));
     } catch (error) {
-        yield put(answerError({ message: error.message, hid: data.userId }));
+        yield [
+            put(showNotification({ message: error.message, header: 'Questions' })),
+            put(answerError({ message: error.message, hid: data.userId }))
+        ];
     }
 }
 

@@ -4,6 +4,7 @@ import config from 'app/api/config';
 import { CREATE_NOTE_REQUESTING } from '../constants/claims';
 import * as actions from '../actions/notesActions';
 import { claimRequestError } from '../actions/claimDetailsActions';
+import { showNotification } from '../actions/notificationsActions';
 
 function* createNoteFlow({ data, id }) {
     try {
@@ -15,7 +16,10 @@ function* createNoteFlow({ data, id }) {
         );
         yield put(actions.createNoteSuccess(note.data || data));
     } catch (error) {
-        yield put(claimRequestError(error));
+        yield [
+            put(showNotification({ message: error.message, header: 'Notes' })),
+            put(claimRequestError(error))
+        ];
     }
 }
 

@@ -1,37 +1,21 @@
 import initialState from '../initialState';
-import {
-    LOGIN_REQUESTING,
-    LOGIN_SUCCESS,
-    LOGIN_ERROR
-} from 'constants/login';
+import { LOGIN_REQUESTING, LOGIN_SUCCESS, LOGIN_ERROR } from 'constants/login';
 
 export default function(state = initialState.login, action) {
     switch (action.type) {
         case LOGIN_REQUESTING:
             return {
-                requesting: true,
-                successful: false,
-                errors: []
+                requesting: true
             };
 
         case LOGIN_SUCCESS:
             return {
-                errors: [],
-                messages: [],
-                requesting: false,
-                successful: true
+                requesting: false
             };
 
         case LOGIN_ERROR:
             return {
-                errors: state.errors.concat([
-                    {
-                        message: action.error.response.statusText,
-                        status: action.error.response.status
-                    }
-                ]),
-                requesting: false,
-                successful: false
+                requesting: false
             };
 
         default:

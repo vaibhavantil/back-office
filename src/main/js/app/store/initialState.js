@@ -1,14 +1,10 @@
 export default {
     login: {
-        requesting: false,
-        successful: false,
-        errors: []
+        requesting: false
     },
     assets: {
         list: [],
-        requesting: false,
-        successful: false,
-        errors: []
+        requesting: false
     },
     client: {},
     poll: {
@@ -17,25 +13,19 @@ export default {
     messages: {
         list: [],
         activeConnection: null,
-        error: null,
         user: null
     },
     users: {
         list: [],
         requesting: false,
-        successful: false,
-        errors: [],
         filter: ''
     },
     dashboard: {
-        data: null,
-        error: null
+        data: null
     },
     claims: {
         list: [],
         requesting: false,
-        successful: false,
-        errors: [],
         types: [],
         userClaims: []
     },
@@ -49,14 +39,12 @@ export default {
             answered: [],
             notAnswered: []
         },
-        requesting: false,
-        successful: false,
-        errors: []
+        requesting: false
     },
     insurance: {
         requesting: false,
-        successful: false,
-        error: [],
-        data: null
-    }
+        data: null,
+        error: []
+    },
+    notifications: []
 };

@@ -3,7 +3,7 @@ import { setNewMessagesCounter, filterUsersList } from '../../lib/helpers';
 import {
     USERS_REQUESTING,
     USERS_REQUEST_SUCCESS,
-    USERS_REQUEST_ERROR,
+    USERS_ERROR,
     USER_SEARCH_REQUESTING,
     NEW_MESSAGES_RECEIVED,
     SET_USER_FILTER,
@@ -16,9 +16,7 @@ export default function(state = initialState.users, action) {
         case USERS_REQUESTING:
             return {
                 ...state,
-                requesting: true,
-                successful: false,
-                errors: []
+                requesting: true
             };
 
         case USERS_REQUEST_SUCCESS:
@@ -26,22 +24,7 @@ export default function(state = initialState.users, action) {
             return {
                 ...state,
                 list: filterUsersList(action),
-                requesting: false,
-                successful: true,
-                errors: []
-            };
-
-        case USERS_REQUEST_ERROR:
-            return {
-                ...state,
-                requesting: false,
-                successful: false,
-                errors: state.errors.concat([
-                    {
-                        message: action.error.response.statusText,
-                        status: action.error.response.status
-                    }
-                ])
+                requesting: false
             };
 
         case NEW_MESSAGES_RECEIVED:
@@ -57,9 +40,13 @@ export default function(state = initialState.users, action) {
             return {
                 ...state,
                 filter: action.query.status,
-                requesting: true,
-                successful: false,
-                errors: []
+                requesting: true
+            };
+
+        case USERS_ERROR:
+            return {
+                ...state,
+                requesting: false
             };
 
         default:

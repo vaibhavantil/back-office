@@ -8,13 +8,17 @@ import {
     CLAIMS_BY_USER
 } from '../constants/claims';
 import * as actions from '../actions/claimsActions';
+import { showNotification } from '../actions/notificationsActions';
 
 function* requestFlow() {
     try {
         const { data } = yield call(api, config.claims.getList);
         yield put(actions.claimsRequestSuccess(data));
     } catch (error) {
-        yield put(actions.claimsRequestError(error));
+        yield [
+            put(showNotification({ message: error.message, header: 'Claims' })),
+            put(actions.claimsError(error))
+        ];
     }
 }
 
@@ -28,7 +32,10 @@ function* requestByUserFlow({ id }) {
         );
         yield put(actions.claimsByUserSuccess(data));
     } catch (error) {
-        yield put(actions.claimsRequestError(error));
+        yield [
+            put(showNotification({ message: error.message, header: 'Claims' })),
+            put(actions.claimsError(error))
+        ];
     }
 }
 
@@ -38,7 +45,10 @@ function* updateFlow({ data, id, reqType }) {
         yield call(api, config.claims.update, { userId: id, ...data }, path);
         yield put(actions.claimUpdateSuccess(reqType, data));
     } catch (error) {
-        yield put(actions.claimsRequestError(error));
+        yield [
+            put(showNotification({ message: error.message, header: 'Claims' })),
+            put(actions.claimsError(error))
+        ];
     }
 }
 
@@ -47,7 +57,10 @@ function* claimTypesFlow() {
         const { data } = yield call(api, config.claims.types);
         yield put(actions.claimsTypesSuccess(data));
     } catch (error) {
-        yield put(actions.claimsRequestError(error));
+        yield [
+            put(showNotification({ message: error.message, header: 'Claims' })),
+            put(actions.claimsError(error))
+        ];
     }
 }
 

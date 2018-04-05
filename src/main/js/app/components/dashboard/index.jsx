@@ -73,9 +73,9 @@ export default class Dashboard extends React.Component {
     };
 
     componentDidMount() {
-        const { setActiveConnection, messages } = this.props;
+        const { setActiveConnection, messages, client } = this.props;
 
-        if (!messages.activeConnection) {
+        if (!messages.activeConnection && client.id) {
             sockets.connect().then(stompClient => {
                 setActiveConnection(stompClient);
                 this.subscribeSocket(stompClient);
@@ -90,8 +90,8 @@ export default class Dashboard extends React.Component {
     }
 
     render() {
-        const { unsetClient } = this.props;
-        return (
+        const { unsetClient, client } = this.props;
+        return client.id ? (
             <DashboardContainer>
                 <ListContainer>
                     <List
@@ -120,7 +120,7 @@ export default class Dashboard extends React.Component {
                     </List>
                 </ListContainer>
             </DashboardContainer>
-        );
+        ) : null;
     }
 }
 
