@@ -43,7 +43,8 @@ export default {
     },
     insurance: {
         requesting: false,
-        data: null
+        data: null,
+        error: []
     },
     notifications: []
 };

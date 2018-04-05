@@ -8,13 +8,22 @@ import {
     insuranceGetError,
     saveDateSuccess
 } from '../actions/insuranceActions';
+import { showNotification } from '../actions/notificationsActions';
 
 function* requestFlow({ userId }) {
     try {
         const { data } = yield call(api, config.insurance.get, null, userId);
         yield put(insuranceGetSuccess(data));
     } catch (error) {
-        yield put(insuranceGetError(error));
+        yield [
+            put(
+                showNotification({
+                    message: error.message,
+                    header: 'Insurance'
+                })
+            ),
+            put(insuranceGetError(error.message))
+        ];
     }
 }
 
@@ -24,7 +33,15 @@ function* saveDateFlow({ userId, activationDate }) {
         yield call(api, config.insurance.setDate, { activationDate }, path);
         yield put(saveDateSuccess(activationDate));
     } catch (error) {
-        yield put(insuranceGetError(error));
+        yield [
+            put(
+                showNotification({
+                    message: error.message,
+                    header: 'Insurance'
+                })
+            ),
+            put(insuranceGetError(error.message))
+        ];
     }
 }
 

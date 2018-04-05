@@ -9,6 +9,7 @@ import {
     LOGIN_ERROR,
     CLIENT_UNSET
 } from 'constants/login';
+import { showNotification } from '../actions/notificationsActions';
 
 const clearStore = () => {
     unsetClient();
@@ -32,7 +33,10 @@ function* loginFlow() {
         history.push('/dashboard');
         yield put({ type: LOGIN_SUCCESS });
     } catch (error) {
-        yield put({ type: LOGIN_ERROR, error });
+        yield [
+            put(showNotification({ message: error.message, header: 'Login' })),
+            put({ type: LOGIN_ERROR, error })
+        ];
     } finally {
         if (yield cancelled()) {
             history.push('/login/oauth');

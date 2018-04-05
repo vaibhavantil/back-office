@@ -28,7 +28,8 @@ export default function(state = initialState.insurance, action) {
             return {
                 ...state,
                 requesting: false,
-                data: null
+                data: null,
+                error: [...state.error, action.error]
             };
 
         case SAVE_DATE_SUCCESS:

@@ -11,13 +11,17 @@ import {
     usersRequestError,
     searchUsersSuccess
 } from '../actions/chatUserActions';
+import { showNotification } from '../actions/notificationsActions';
 
 function* usersRequestFlow() {
     try {
         const users = yield call(api, config.users.get);
         yield put(usersRequestSuccess(users.data));
     } catch (error) {
-        yield put(usersRequestError(error));
+        yield [
+            put(usersRequestError(error)),
+            put(showNotification({ message: error.message, header: 'Members' }))
+        ];
     }
 }
 
@@ -36,7 +40,10 @@ function* usersSearchFlow({ query }) {
         );
         yield put(searchUsersSuccess(searchResult.data));
     } catch (error) {
-        yield put(usersRequestError(error));
+        yield [
+            put(usersRequestError(error)),
+            put(showNotification({ message: error.message, header: 'Members' }))
+        ];
     }
 }
 

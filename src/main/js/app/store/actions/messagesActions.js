@@ -6,6 +6,7 @@ import {
     ERROR_RECEIVED,
     USER_REQUESTING,
     USER_REQUEST_SUCCESS,
+    USER_REQUEST_ERROR
 } from '../constants/chatUsers';
 
 export const addMessage = (message, messageType, userId, socket) => ({
@@ -43,4 +44,9 @@ export const userRequest = userId => ({
 export const userRequestSuccess = user => ({
     type: USER_REQUEST_SUCCESS,
     user
+});
+
+export const userRequestError = error => ({
+    type: USER_REQUEST_ERROR,
+    error
 });

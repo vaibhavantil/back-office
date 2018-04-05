@@ -8,9 +8,10 @@ export default class Error extends React.Component {
     }
 
     componentDidMount() {
+        const { content: { id }, closeHandler } = this.props;
         //eslint-disable-next-line
         setTimeout(() => {
-            this.props.closeHandler(this.props.content.id);
+            closeHandler(id);
         }, 5000);
     }
 

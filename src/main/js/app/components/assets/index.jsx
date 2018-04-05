@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { Dimmer, Header, Loader, Message } from 'semantic-ui-react';
+import { Dimmer, Header, Loader } from 'semantic-ui-react';
 import AssetsList from './assets-list/AssetsList';
 
 class AssetList extends React.Component {
@@ -36,41 +35,22 @@ class AssetList extends React.Component {
     }
 
     render() {
-        const { assets: { list, errors } } = this.props;
+        const { assets: { requesting } } = this.props;
         return (
             <React.Fragment>
                 <Header size="huge">Assets</Header>
-                <Dimmer active={list && !list.length} inverted>
+                <Dimmer active={requesting} inverted>
                     <Loader size="large">Loading</Loader>
                 </Dimmer>
-                {errors && errors.length ? (
-                    <AssetListErrors errors={errors} />
-                ) : (
-                    <AssetsList
-                        {...this.props}
-                        assetUpdate={this.assetUpdateHandler}
-                        pollingHandler={this.pollingHandler}
-                    />
-                )}
+                <AssetsList
+                    {...this.props}
+                    assetUpdate={this.assetUpdateHandler}
+                    pollingHandler={this.pollingHandler}
+                />
             </React.Fragment>
         );
     }
 }
-
-const AssetListErrors = errors => {
-    return errors.errors.map((err, id) => (
-        <Message negative key={id}>
-            <p>
-                {err.message}.
-                {(err.status === 403 || err.status === 401) && (
-                    <span>
-                        Go to <Link to="/login">login</Link>
-                    </span>
-                )}
-            </p>
-        </Message>
-    ));
-};
 
 export default AssetList;
 
