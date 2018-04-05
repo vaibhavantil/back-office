@@ -26,63 +26,63 @@ public class ClaimsServiceImpl implements ClaimsService {
     }
 
     @Override
-    public List<Claim> list() {
-        return client.list();
+    public List<Claim> list(String token) {
+        return client.list(token);
     }
 
     @Override
-    public List<Claim> listByUserId(String userId) {
-        return client.listByUserId(userId);
+    public List<Claim> listByUserId(String userId, String token) {
+        return client.listByUserId(userId, token);
     }
 
     @Override
-    public Claim find(String id) {
-        return client.find(id);
+    public Claim find(String id, String token) {
+        return client.find(id, token);
     }
 
     @Override
-    public List<ClaimType> types() {
-        return client.types();
+    public List<ClaimType> types(String token) {
+        return client.types(token);
     }
 
     @Override
-    public void addPayment(ClaimPayment dto) {
-        client.addPayment(dto);
+    public void addPayment(ClaimPayment dto, String token) {
+        client.addPayment(dto, token);
     }
 
     @Override
-    public void addNote(ClaimNote dto) {
-        client.addNote(dto);
+    public void addNote(ClaimNote dto, String token) {
+        client.addNote(dto, token);
     }
 
     @Override
-    public void addData(ClaimData data) {
-       client.addDataItem(data);
+    public void addData(ClaimData data, String token) {
+       client.addDataItem(data, token);
     }
 
     @Override
-    public void changeState(ClaimStateUpdate state) {
-        client.updateState(state);
+    public void changeState(ClaimStateUpdate state, String token) {
+        client.updateState(state, token);
     }
 
     @Override
-    public void changeReserve(ClaimReserveUpdate reserve) {
-        client.updateReserve(reserve);
+    public void changeReserve(ClaimReserveUpdate reserve, String token) {
+        client.updateReserve(reserve, token);
     }
 
     @Override
-    public void changeType(ClaimTypeUpdate type) {
-        client.updateType(type);
+    public void changeType(ClaimTypeUpdate type, String token) {
+        client.updateType(type, token);
     }
 
     @Override
-    public Map<String, Long> statistics() {
-        return client.statistics();
+    public Map<String, Long> statistics(String token) {
+        return client.statistics(token);
     }
 
     @Override
-    public long totalClaims() {
-        val stat = statistics();
+    public long totalClaims(String token) {
+        val stat = statistics(token);
 
         return stat.getOrDefault(ClaimState.OPEN.name(), 0L)
                 + stat.getOrDefault(ClaimState.REOPENED.name(), 0L);

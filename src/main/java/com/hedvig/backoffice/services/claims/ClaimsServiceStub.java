@@ -68,7 +68,7 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public List<Claim> list() {
+    public List<Claim> list(String token) {
         return claims.stream()
                 .map(c -> {
                     Claim claim = new Claim();
@@ -87,65 +87,65 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public List<Claim> listByUserId(String userId) {
+    public List<Claim> listByUserId(String userId, String token) {
         return claims.stream().filter(c -> c.getUserId().equals(userId)).collect(Collectors.toList());
     }
 
     @Override
-    public Claim find(String id) {
+    public Claim find(String id, String token) {
         return claims.stream().filter(c -> c.getId().equals(id)).findAny()
                 .orElseThrow(() -> new ExternalServiceNotFoundException("claim not found", "mock"));
     }
 
     @Override
-    public List<ClaimType> types() {
+    public List<ClaimType> types(String token) {
         return types;
     }
 
     @Override
-    public void addPayment(ClaimPayment dto) {
-        Claim claim = find(dto.getClaimID());
+    public void addPayment(ClaimPayment dto, String token) {
+        Claim claim = find(dto.getClaimID(), token);
         claim.getPayments().add(dto);
         addEvent(claim,"[test] payment added");
     }
 
     @Override
-    public void addNote(ClaimNote dto) {
-        Claim claim = find(dto.getClaimID());
+    public void addNote(ClaimNote dto, String token) {
+        Claim claim = find(dto.getClaimID(), token);
         claim.getNotes().add(dto);
         addEvent(claim,"[test] note added");
     }
 
     @Override
-    public void addData(ClaimData data) {
-        Claim claim = find(data.getClaimID());
+    public void addData(ClaimData data, String token) {
+        Claim claim = find(data.getClaimID(), token);
         claim.getData().add(data);
         addEvent(claim,"[test] data added");
     }
 
     @Override
-    public void changeState(ClaimStateUpdate state) {
-        Claim claim = find(state.getClaimID());
+    public void changeState(ClaimStateUpdate state, String token) {
+        Claim claim = find(state.getClaimID(), token);
         claim.setState(state.getState());
         addEvent(claim,"[test] state changed");
     }
 
     @Override
-    public void changeReserve(ClaimReserveUpdate reserve) {
-        Claim claim = find(reserve.getClaimID());
+    public void changeReserve(ClaimReserveUpdate reserve, String token) {
+        Claim claim = find(reserve.getClaimID(), token);
         claim.setReserve(reserve.getAmount());
         addEvent(claim,"[test] reserve changed");
     }
 
     @Override
-    public void changeType(ClaimTypeUpdate type) {
-        Claim claim = find(type.getClaimID());
+    public void changeType(ClaimTypeUpdate type, String token) {
+        Claim claim = find(type.getClaimID(), token);
         claim.setType(type.getType());
         addEvent(claim,"[test] type changed");
     }
 
     @Override
-    public Map<String, Long> statistics() {
+    public Map<String, Long> statistics(String token) {
         Map<String, Long> stat = new HashMap<>();
         for (ClaimState state : ClaimState.values()) {
             stat.put(state.name(), 10L);
@@ -155,8 +155,8 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     @Override
-    public long totalClaims() {
-        val stat = statistics();
+    public long totalClaims(String token) {
+        val stat = statistics(token);
 
         return stat.getOrDefault(ClaimState.OPEN.name(), 0L)
                 + stat.getOrDefault(ClaimState.REOPENED.name(), 0L);

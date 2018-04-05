@@ -16,7 +16,7 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
     private static Logger log = LoggerFactory.getLogger(ClaimsServiceClientFallback.class);
 
     @Override
-    public Map<String, Long> statistics() {
+    public Map<String, Long> statistics(String token) {
         log.error("request to claim-service failed");
 
         Map<String, Long> stat = new HashMap<>();
@@ -28,56 +28,56 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
     }
 
     @Override
-    public List<Claim> listByUserId(String userId) {
+    public List<Claim> listByUserId(String userId, String token) {
         log.error("request to claim-service failed");
         return new ArrayList<>();
     }
 
     @Override
-    public List<Claim> list() {
+    public List<Claim> list(String token) {
         log.error("request to claim-service failed");
         return new ArrayList<>();
     }
 
     @Override
-    public Claim find(String id) {
+    public Claim find(String id, String token) {
         log.error("request to claim-service failed");
         return null;
     }
 
     @Override
-    public List<ClaimType> types() {
+    public List<ClaimType> types(String token) {
         log.error("request to claim-service failed");
         return new ArrayList<>();
     }
 
     @Override
-    public void addPayment(ClaimPayment dto) {
+    public void addPayment(ClaimPayment dto, String token) {
         log.error("request to claim-service failed");
     }
 
     @Override
-    public void addNote(ClaimNote dto) {
+    public void addNote(ClaimNote dto, String token) {
         log.error("request to claim-service failed");
     }
 
     @Override
-    public void addDataItem(ClaimData data) {
+    public void addDataItem(ClaimData data, String token) {
         log.error("request to claim-service failed");
     }
 
     @Override
-    public void updateState(ClaimStateUpdate state) {
+    public void updateState(ClaimStateUpdate state, String token) {
         log.error("request to claim-service failed");
     }
 
     @Override
-    public void updateReserve(ClaimReserveUpdate reserve) {
+    public void updateReserve(ClaimReserveUpdate reserve, String token) {
         log.error("request to claim-service failed");
     }
 
     @Override
-    public void updateType(ClaimTypeUpdate type) {
+    public void updateType(ClaimTypeUpdate type, String token) {
         log.error("request to claim-service failed");
     }
 
