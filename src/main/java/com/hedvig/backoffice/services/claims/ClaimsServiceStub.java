@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import lombok.val;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class ClaimsServiceStub implements ClaimsService {
     private List<Claim> claims;
     private List<ClaimType> types;
 
-    public ClaimsServiceStub(MemberService memberService) {
+    public ClaimsServiceStub(MemberService memberService, SystemSettingsService settingsService) {
         try {
             val resource = new ClassPathResource("claim_types.json").getInputStream();
             val mapper = new ObjectMapper();
@@ -36,7 +37,7 @@ public class ClaimsServiceStub implements ClaimsService {
         }
 
         List<String> memberIds = memberService
-                .search("", "")
+                .search("", "", settingsService.getInternalAccessToken())
                 .stream()
                 .map(MemberDTO::getHid)
                 .collect(Collectors.toList());

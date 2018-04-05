@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface MemberService {
 
-    List<MemberDTO> search(String status, String query);
-    MemberDTO findByHid(String hid);
+    List<MemberDTO> search(String status, String query, String token);
+    MemberDTO findByHid(String hid, String token);
 
 }

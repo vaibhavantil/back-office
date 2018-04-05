@@ -36,7 +36,7 @@ public class MemberServiceStub implements MemberService {
     }
 
     @Override
-    public List<MemberDTO> search(String status, String query) {
+    public List<MemberDTO> search(String status, String query, String token) {
         if (StringUtils.isBlank(status) && StringUtils.isBlank(query)) {
             return users;
         }
@@ -50,7 +50,7 @@ public class MemberServiceStub implements MemberService {
     }
 
     @Override
-    public MemberDTO findByHid(String hid) {
+    public MemberDTO findByHid(String hid, String token) {
         return users.stream()
                 .filter(u -> u.getHid().equals(hid))
                 .findAny()

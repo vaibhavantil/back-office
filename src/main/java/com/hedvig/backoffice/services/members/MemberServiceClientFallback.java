@@ -12,13 +12,13 @@ import java.util.List;
 public class MemberServiceClientFallback implements MemberServiceClient {
 
     @Override
-    public List<MemberDTO> search(String status, String query) {
+    public List<MemberDTO> search(String status, String query, String token) {
         log.error("request to member-service failed");
         return new ArrayList<>();
     }
 
     @Override
-    public MemberDTO member(String id) {
+    public MemberDTO member(String id, String token) {
         log.error("request to member-service failed");
         return null;
     }
