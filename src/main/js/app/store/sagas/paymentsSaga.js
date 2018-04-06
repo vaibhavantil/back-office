@@ -33,7 +33,7 @@ function* createFlow({ id, data }) {
 function* updateResumeFlow({ id, data }) {
     try {
         const path = `${id}/reserve`;
-        yield call(api, config.claims.update, { ...data }, path);
+        yield call(api, config.claims.update, { ...data, userId: id }, path);
         yield put(actions.updateResumeSuccess(data.resume));
     } catch (error) {
         yield [
