@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Segment, Header } from 'semantic-ui-react';
 import moment from 'moment';
+import { List, Segment, Header } from 'semantic-ui-react';
+import { ScrollList } from 'components/shared';
 
 const EventsLog = ({ events }) => (
     <Segment>
         <Header>Events log</Header>
-        <List selection>
+        <ScrollList selection>
             {events.map((event, id) => (
                 <List.Item key={event.id || id}>
                     <List.Content floated="left">
@@ -15,7 +16,7 @@ const EventsLog = ({ events }) => (
                     <List.Content floated="right">{event.text}</List.Content>
                 </List.Item>
             ))}
-        </List>
+        </ScrollList>
     </Segment>
 );
 

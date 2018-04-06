@@ -16,32 +16,32 @@ const PayoutsList = props => (
                     id={props.id}
                 />
             </Header>
-        </Segment>
 
-        {!props.list.length ? <Header>No payments</Header> : null}
-        {props.list.length ? (
-            <React.Fragment>
-                <Table>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Amount</Table.HeaderCell>
-                            <Table.HeaderCell>Note</Table.HeaderCell>
-                            <Table.HeaderCell>Date</Table.HeaderCell>
-                            <Table.HeaderCell>Ex Gratia</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        {props.list.map((item, id) => (
-                            <Table.Row key={item.id || id}>
-                                <PaymentRow {...props} data={item} />
+            {!props.list.length ? <Header>No payments</Header> : null}
+            {props.list.length ? (
+                <React.Fragment>
+                    <Table>
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell>Amount</Table.HeaderCell>
+                                <Table.HeaderCell>Note</Table.HeaderCell>
+                                <Table.HeaderCell>Date</Table.HeaderCell>
+                                <Table.HeaderCell>Ex Gratia</Table.HeaderCell>
                             </Table.Row>
-                        ))}
-                    </Table.Body>
-                </Table>
-            </React.Fragment>
-        ) : null}
+                        </Table.Header>
+                        <Table.Body>
+                            {props.list.map((item, id) => (
+                                <Table.Row key={item.id || id}>
+                                    <PaymentRow {...props} data={item} />
+                                </Table.Row>
+                            ))}
+                        </Table.Body>
+                    </Table>
+                </React.Fragment>
+            ) : null}
 
-        <span>Total payed out: {props.sum || 0} SEK</span>
+            <span>Total payed out: {props.sum || 0} SEK</span>
+        </Segment>
     </React.Fragment>
 );
 

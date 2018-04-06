@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List } from 'semantic-ui-react';
+import { ScrollList } from 'components/shared';
 
 const NotesList = ({ notes }) => (
-    <List selection>
+    <ScrollList selection>
         {notes &&
             notes.map((note, id) => (
                 <List.Item key={note.id || id}>
@@ -15,7 +16,7 @@ const NotesList = ({ notes }) => (
                     )}
                 </List.Item>
             ))}
-    </List>
+    </ScrollList>
 );
 
 NotesList.propTypes = {

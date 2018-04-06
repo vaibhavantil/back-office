@@ -25,7 +25,7 @@ export default class ClaimDetails extends React.Component {
 
     render() {
         const {
-            claimDetails,
+            claimDetails: { data },
             createNote,
             updateReserve,
             createPayment,
@@ -35,21 +35,21 @@ export default class ClaimDetails extends React.Component {
             <ClaimDetailsContainer>
                 <Header size="huge">Claim Details</Header>
 
-                {claimDetails.data ? (
+                {data ? (
                     <React.Fragment>
                         <ClaimInfo {...this.props} />
                         <Notes
-                            notes={claimDetails.data.notes}
+                            notes={data.notes}
                             createNote={createNote}
                             id={match.params.id}
                         />
                         <Payments
-                            claimDetails={claimDetails}
+                            claimDetails={data}
                             updateReserve={updateReserve}
                             createPayment={createPayment}
                             id={match.params.id}
                         />
-                        <EventsLog events={claimDetails.data.events} />
+                        <EventsLog events={data.events} />
                     </React.Fragment>
                 ) : null}
             </ClaimDetailsContainer>

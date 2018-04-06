@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Table } from 'semantic-ui-react';
+import { Table, List } from 'semantic-ui-react';
 
 export const ListPage = styled.div`
     display: flex;
@@ -35,3 +35,10 @@ export const LinkRow = styled(Table.Row)`
         cursor: pointer;
     }
 `;
+
+export const ScrollList = styled(List)`
+     &&& {
+         max-height: 200px;
+         overflow-y: scroll;
+     }
+`

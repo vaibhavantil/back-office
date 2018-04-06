@@ -46,7 +46,7 @@ export default class Payments extends React.Component {
     render() {
         const { claimDetails } = this.props;
         const { reserve, editDisabled } = this.state;
-        const sum = getSum(claimDetails.data.payments);
+        const sum = getSum(claimDetails.payments);
         return (
             <Segment>
                 <Form>
@@ -76,7 +76,7 @@ export default class Payments extends React.Component {
 
                 <PaymentsList
                     {...this.props}
-                    list={claimDetails.data.payments}
+                    list={claimDetails.payments}
                     sum={sum}
                 />
             </Segment>
