@@ -75,7 +75,7 @@ export const updateTypesList = list =>
  * @param {array} list
  */
 export const getSum = list =>
-    list.reduce((sum, payment) => sum + payment.amount, 0);
+    list.reduce((sum, payment) => sum + parseFloat(payment.amount), 0);
 
 const setFieldsValues = (fields, data) =>
     fields.map(item => {
