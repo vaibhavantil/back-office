@@ -15,15 +15,7 @@ function* requestFlow({ userId }) {
         const { data } = yield call(api, config.insurance.get, null, userId);
         yield put(insuranceGetSuccess(data));
     } catch (error) {
-        yield [
-            put(
-                showNotification({
-                    message: error.message,
-                    header: 'Insurance'
-                })
-            ),
-            put(insuranceGetError(error.message))
-        ];
+        yield [put(insuranceGetError(error.message))];
     }
 }
 

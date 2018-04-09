@@ -13,7 +13,8 @@ export default function(state = initialState.insurance, action) {
         case SAVE_INSURANCE_DATE:
             return {
                 ...state,
-                requesting: true
+                requesting: true,
+                error: []
             };
 
         case INSURANCE_REQUEST_SUCCESS:
@@ -21,7 +22,8 @@ export default function(state = initialState.insurance, action) {
                 ...state,
                 requesting: false,
                 successful: true,
-                data: action.insurance
+                data: action.insurance,
+                error: []
             };
 
         case INSURANCE_ERROR:
