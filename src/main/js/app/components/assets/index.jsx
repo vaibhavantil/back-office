@@ -24,14 +24,16 @@ class AssetList extends React.Component {
         else pollStart(2000);
     };
 
+    componentDidMount() {
+        const { assetRequest, assets } = this.props;
+        if (!assets.list.length) {
+            assetRequest();
+        }
+    }
+
     componentWillUnmount() {
         const { poll: { polling }, pollStop } = this.props;
         if (polling) pollStop();
-    }
-
-    componentDidMount() {
-        const { assetRequest, assets } = this.props;
-        if (!assets.list.length) assetRequest();
     }
 
     render() {

@@ -3,7 +3,6 @@ import AssetsSaga from './assetsSaga';
 import PollingSaga from './pollingSaga';
 import ChatUserSaga from './chatUserSaga';
 import MessagesSaga from './messagesSaga';
-import DashboardSaga from './dashboardSaga';
 import ClaimsSaga from './claimsSaga';
 import ClaimDetailsSaga from './claimDetailsSaga';
 import PaymentsSaga from './paymentsSaga';
@@ -18,7 +17,6 @@ export default function* IndexSaga() {
         PollingSaga(),
         ChatUserSaga(),
         MessagesSaga(),
-        DashboardSaga(),
         ClaimsSaga(),
         ClaimDetailsSaga(),
         PaymentsSaga(),
