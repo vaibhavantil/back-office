@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -24,16 +21,15 @@ public class Updates {
     @NotNull
     private UpdateType type;
 
-    @NotNull
-    @OneToOne
-    private Personnel personnel;
+    @ManyToOne
+    private UpdateContext context;
 
     @NotNull
     private Long count;
 
-    public Updates(UpdateType type, Personnel personnel, Long count) {
+    public Updates(UpdateType type, UpdateContext context, Long count) {
         this.type = type;
-        this.personnel = personnel;
+        this.context = context;
         this.count = count;
     }
 
