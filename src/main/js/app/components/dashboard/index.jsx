@@ -71,33 +71,24 @@ export default class Dashboard extends React.Component {
         );
     };
 
-    socketConnect = (setActiveConnection, activeConnection, id) => {
-        if (!activeConnection && id) {
-            sockets.connect().then(stompClient => {
-                setActiveConnection(stompClient);
-                this.subscribeSocket(stompClient);
-            });
-        } else {
-            this.subscribeSocket(activeConnection);
-        }
+    socketConnect = setActiveConnection => {
+        sockets.connect().then(stompClient => {
+            setActiveConnection(stompClient);
+            this.subscribeSocket(stompClient);
+        });
     };
 
     componentDidMount() {
-        const { setActiveConnection, messages, client } = this.props;
-        this.socketConnect(
-            setActiveConnection,
-            messages.activeConnection,
-            client.id
-        );
+        const { messages: { activeConnection } } = this.props;
+        if (activeConnection) {
+            this.subscribeSocket(activeConnection);
+        }
     }
 
     componentWillReceiveProps({ setActiveConnection, messages, client }) {
-        if (client.id && !messages.activeConnection) {
-            this.socketConnect(
-                setActiveConnection,
-                messages.activeConnection,
-                client.id
-            );
+        const { activeConnection } = messages;
+        if (client.id && !activeConnection) {
+            this.socketConnect(setActiveConnection);
         }
     }
 
@@ -141,7 +132,6 @@ Dashboard.propTypes = {
     setActiveConnection: PropTypes.func.isRequired,
     messages: PropTypes.object.isRequired,
     dashboard: PropTypes.object.isRequired,
-    cleanupDashboardItem: PropTypes.func.isRequired,
     dashboardUpdated: PropTypes.func.isRequired,
     dashboardErrorReceived: PropTypes.func.isRequired,
     updatesRequestSuccess: PropTypes.func.isRequired,
