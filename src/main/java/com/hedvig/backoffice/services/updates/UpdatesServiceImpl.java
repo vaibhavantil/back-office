@@ -77,12 +77,8 @@ public class UpdatesServiceImpl implements UpdatesService {
     @Override
     @Transactional
     public void updates(String personnelId) {
-        List<UpdateContext> uc = updateContextRepository.findByPersonnelId(personnelId);
-
-        uc.forEach(context -> {
-            List<Updates> updates = updatesRepository.findByContext(context);
-            send(context.getPersonnel(), updates);
-        });
+        List<Updates> updates = updatesRepository.findByPersonnelId(personnelId);
+        send(personnelId, updates);
     }
 
     @Override
@@ -135,11 +131,15 @@ public class UpdatesServiceImpl implements UpdatesService {
     }
 
     private void send(Personnel personnel, List<Updates> updates) {
+        send(personnel.getId(), updates);
+    }
+
+    private void send(String personnelId, List<Updates> updates) {
         List<UpdatesDTO> dto = updates.stream()
                 .map(UpdatesDTO::fromDomain)
                 .collect(Collectors.toList());
 
-        template.convertAndSendToUser(personnel.getId(), "/updates", dto);
+        template.convertAndSendToUser(personnelId, "/updates", dto);
     }
 
 }

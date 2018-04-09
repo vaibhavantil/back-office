@@ -17,8 +17,8 @@ public interface UpdatesRepository extends JpaRepository<Updates, Long> {
     @Query("select u from Updates u where u.type = :type")
     List<Updates> findByType(@Param("type") UpdateType type);
 
-    @Query("select u from Updates u where u.context = :context")
-    List<Updates> findByContext(@Param("context") UpdateContext context);
+    @Query("select u from Updates u where u.context.personnel.id = :id")
+    List<Updates> findByPersonnelId(@Param("id") String id);
 
     @Modifying
     @Query("delete from Updates u where u.context = :context")
