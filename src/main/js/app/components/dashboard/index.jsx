@@ -52,8 +52,7 @@ export default class Dashboard extends React.Component {
         });
     };
 
-    redirect = (route, type) => {
-        this.props.cleanupDashboardItem(type, this.state.socket);
+    redirect = route => {
         history.push(route);
     };
 
@@ -72,16 +71,33 @@ export default class Dashboard extends React.Component {
         );
     };
 
-    componentDidMount() {
-        const { setActiveConnection, messages, client } = this.props;
-
-        if (!messages.activeConnection && client.id) {
+    socketConnect = (setActiveConnection, activeConnection, id) => {
+        if (!activeConnection && id) {
             sockets.connect().then(stompClient => {
                 setActiveConnection(stompClient);
                 this.subscribeSocket(stompClient);
             });
         } else {
-            this.subscribeSocket(messages.activeConnection);
+            this.subscribeSocket(activeConnection);
+        }
+    };
+
+    componentDidMount() {
+        const { setActiveConnection, messages, client } = this.props;
+        this.socketConnect(
+            setActiveConnection,
+            messages.activeConnection,
+            client.id
+        );
+    }
+
+    componentWillReceiveProps({ setActiveConnection, messages, client }) {
+        if (client.id && !messages.activeConnection) {
+            this.socketConnect(
+                setActiveConnection,
+                messages.activeConnection,
+                client.id
+            );
         }
     }
 
@@ -103,11 +119,7 @@ export default class Dashboard extends React.Component {
                         {routesList.map((item, id) => (
                             <List.Item
                                 key={id}
-                                onClick={this.redirect.bind(
-                                    this,
-                                    item.route,
-                                    item.type
-                                )}
+                                onClick={this.redirect.bind(this, item.route)}
                             >
                                 {this.getItemContent(item)}
                             </List.Item>
