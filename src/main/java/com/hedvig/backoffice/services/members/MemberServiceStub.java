@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 public class MemberServiceStub implements MemberService {
 
     private static Logger logger = LoggerFactory.getLogger(MemberServiceStub.class);
-    private static long[] testMemberIds = { 3267661L, 2820671L, 6865256L, 9417985L,
+    private static long[] testMemberIds = { 123456L, 3267661L, 2820671L, 6865256L, 9417985L,
             9403769L, 6871398L, 5418127L, 2134653L, 2503961L, 5867700L, 4254211, 9908657L, 1074023L
     };
 
