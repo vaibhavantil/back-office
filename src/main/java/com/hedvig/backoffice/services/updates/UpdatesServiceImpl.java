@@ -10,7 +10,6 @@ import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import com.hedvig.backoffice.services.updates.data.UpdatesDTO;
 import com.hedvig.common.constant.AssetState;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,7 +60,7 @@ public class UpdatesServiceImpl implements UpdatesService {
             updates.forEach(u -> u.setCount(u.getCount() + count));
             updatesRepository.save(updates);
 
-            sendForActiveContext(type);
+            updates.forEach(u -> send(u.getContext().getPersonnel(), Collections.singletonList(u)));
         }
     }
 
@@ -72,23 +71,27 @@ public class UpdatesServiceImpl implements UpdatesService {
         updates.forEach(u -> u.setCount(count));
         updatesRepository.save(updates);
 
-        sendForActiveContext(type);
+        updates.forEach(u -> send(u.getContext().getPersonnel(), Collections.singletonList(u)));
     }
 
     @Override
     @Transactional
-    public void init(String personnelId) throws AuthorizationException {
+    public void updates(String personnelId) {
+        List<UpdateContext> uc = updateContextRepository.findByPersonnelId(personnelId);
+
+        uc.forEach(context -> {
+            List<Updates> updates = updatesRepository.findByContext(context);
+            send(context.getPersonnel(), updates);
+        });
+    }
+
+    @Override
+    @Transactional
+    public void subscribe(String personnelId, String sessionId, String subId) throws AuthorizationException {
         Personnel personnel = personnelRepository.findById(personnelId).orElseThrow(AuthorizationException::new);
 
-        UpdateContext uc = updateContextRepository
-                .findByPersonnel(personnel)
-                .orElseGet(() -> {
-                    UpdateContext context = new UpdateContext(personnel);
-                    updateContextRepository.save(context);
-                    return context;
-                });
-
-        updatesRepository.deleteByContext(uc);
+        UpdateContext uc = new UpdateContext(personnel, sessionId, subId);
+        updateContextRepository.save(uc);
 
         List<Updates> updates = new ArrayList<>();
         for (UpdateType type : UpdateType.values()) {
@@ -114,56 +117,21 @@ public class UpdatesServiceImpl implements UpdatesService {
 
     @Override
     @Transactional
-    public void updates(String personnelId) {
-        Optional<UpdateContext> uc = updateContextRepository.findByPersonnelId(personnelId);
-
-        uc.ifPresent(context -> {
-            List<Updates> updates = updatesRepository.findByContext(context);
-            send(context.getPersonnel(), updates);
-        });
-    }
-
-    @Override
-    @Transactional
-    public void subscribe(String personnelId, String sessionId, String subId) throws AuthorizationException {
-        Personnel personnel = personnelRepository.findById(personnelId).orElseThrow(AuthorizationException::new);
-
-        UpdateContext uc = updateContextRepository
-                .findByPersonnel(personnel)
-                .orElseGet(() -> new UpdateContext(personnel));
-
-        uc.setActive(true);
-        uc.setSessionId(sessionId);
-        uc.setSubId(subId);
-
-        updateContextRepository.save(uc);
-    }
-
-    @Override
-    @Transactional
     public void unsubscribe(String personnelId, String sessionId, String subId) {
         Optional<UpdateContext> optional = updateContextRepository
                 .findByPersonnelIdAndSessionIdAndSubId(personnelId, sessionId, subId);
 
         if (optional.isPresent()) {
             UpdateContext uc = optional.get();
-            uc.setActive(false);
-            updateContextRepository.save(uc);
+            updatesRepository.deleteByContext(uc);
+            updateContextRepository.delete(uc);
         }
     }
 
     @Override
     public void close(String sessionId) {
         Optional<UpdateContext> uc = updateContextRepository.findBySessionId(sessionId);
-        uc.ifPresent(context -> {
-            context.setActive(false);
-            updateContextRepository.save(context);
-        });
-    }
-
-    private void sendForActiveContext(UpdateType type) {
-        List<Updates> updates = updatesRepository.findByTypeAndActiveContext(type);
-        updates.forEach(u -> send(u.getContext().getPersonnel(), Collections.singletonList(u)));
+        uc.ifPresent(updateContextRepository::delete);
     }
 
     private void send(Personnel personnel, List<Updates> updates) {

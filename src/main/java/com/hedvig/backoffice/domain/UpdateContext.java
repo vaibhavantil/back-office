@@ -28,10 +28,10 @@ public class UpdateContext {
     @OneToOne
     private Personnel personnel;
 
-    private boolean active = false;
-
-    public UpdateContext(Personnel personnel) {
+    public UpdateContext(Personnel personnel, String sessionId, String subId) {
         this.personnel = personnel;
+        this.sessionId = sessionId;
+        this.subId = subId;
     }
 
 }
