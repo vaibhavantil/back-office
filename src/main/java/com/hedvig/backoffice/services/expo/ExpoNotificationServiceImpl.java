@@ -19,9 +19,9 @@ public class ExpoNotificationServiceImpl implements ExpoNotificationService {
     }
 
     @Override
-    public void sendNotification(String hid) {
+    public void sendNotification(String hid, String token) {
         try {
-            val expoId = botService.pushTokenId(hid);
+            val expoId = botService.pushTokenId(hid, token);
             val dto = new ExpoPushDTO(
                 expoId,
                 "Hedvig",

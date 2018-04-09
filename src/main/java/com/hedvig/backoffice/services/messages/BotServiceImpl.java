@@ -32,30 +32,30 @@ public class BotServiceImpl implements BotService {
     }
 
     @Override
-    public List<BotMessage> messages(String hid) {
-        JsonNode root = botServiceClient.messages(hid);
+    public List<BotMessage> messages(String hid, String token) {
+        JsonNode root = botServiceClient.messages(hid, token);
         return parseMessages(root);
     }
 
     @Override
-    public List<BotMessage> messages(String hid, int count) {
-        JsonNode root = botServiceClient.messages(hid, count);
+    public List<BotMessage> messages(String hid, int count, String token) {
+        JsonNode root = botServiceClient.messages(hid, count, token);
         return parseMessages(root);
     }
 
     @Override
-    public List<BackOfficeMessage> fetch(Instant timestamp) {
-        return botServiceClient.fetch(timestamp.toEpochMilli());
+    public List<BackOfficeMessage> fetch(Instant timestamp, String token) {
+        return botServiceClient.fetch(timestamp.toEpochMilli(), token);
     }
 
     @Override
-    public void response(String hid, BotMessage message) {
-        botServiceClient.response(new BackOfficeMessage(hid, message.getMessage()));
+    public void response(String hid, BotMessage message, String token) {
+        botServiceClient.response(new BackOfficeMessage(hid, message.getMessage()), token);
     }
 
     @Override
-    public void answerQuestion(String hid, String answer) {
-        botServiceClient.answer(new BackOfficeAnswerDTO(hid, answer));
+    public void answerQuestion(String hid, String answer, String token) {
+        botServiceClient.answer(new BackOfficeAnswerDTO(hid, answer), token);
     }
 
     private List<BotMessage> parseMessages(JsonNode root) {
@@ -80,8 +80,8 @@ public class BotServiceImpl implements BotService {
     }
 
 	@Override
-	public String pushTokenId(String hid) {
-        val pushTokenDto = botServiceClient.getPushTokenByHid(hid);
+	public String pushTokenId(String hid, String token) {
+        val pushTokenDto = botServiceClient.getPushTokenByHid(hid, token);
         return pushTokenDto.getToken();
 	}
 }

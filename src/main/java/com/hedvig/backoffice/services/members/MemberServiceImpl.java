@@ -21,13 +21,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<MemberDTO> search(String status, String query) {
-        return client.search(status, query);
+    public List<MemberDTO> search(String status, String query, String token) {
+        return client.search(status, query, token);
     }
 
     @Override
-    public MemberDTO findByHid(String hid) {
-        return client.member(hid);
+    public MemberDTO findByHid(String hid, String token) {
+        return client.member(hid, token);
     }
 
 }

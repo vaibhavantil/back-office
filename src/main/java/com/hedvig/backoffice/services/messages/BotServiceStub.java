@@ -103,7 +103,7 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<BotMessage> messages(String hid) {
+    public List<BotMessage> messages(String hid, String token) {
         List<BotMessage> current = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         Instant time = new Date().toInstant();
         Instant timestamp = timestamps.computeIfAbsent(hid, k -> new Date().toInstant());
@@ -130,8 +130,8 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<BotMessage> messages(String hid, int count) {
-        List<BotMessage> all = messages(hid);
+    public List<BotMessage> messages(String hid, int count, String token) {
+        List<BotMessage> all = messages(hid, token);
         if (all.size() <= count) {
             return all;
         }
@@ -140,7 +140,7 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<BackOfficeMessage> fetch(Instant timestamp) {
+    public List<BackOfficeMessage> fetch(Instant timestamp, String token) {
         return messages
                 .entrySet()
                 .stream()
@@ -158,7 +158,7 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public void response(String hid, BotMessage message) {
+    public void response(String hid, BotMessage message, String token) {
         List<BotMessage> msg = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         message.setGlobalId(increment.addAndGet(1));
         message.setMessageId((long) msg.size());
@@ -167,7 +167,7 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public void answerQuestion(String hid, String answer) {
+    public void answerQuestion(String hid, String answer, String token) {
         List<BotMessage> current = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         try {
             response(hid, new BotMessage(String.format(STUB_MESSAGE_TEMPLATE,
@@ -177,7 +177,7 @@ public class BotServiceStub implements BotService {
                     "text",
                     answer,
                     typesTemplates.get("text"),
-                    new Date().toInstant())));
+                    new Date().toInstant())), token);
         } catch (BotMessageException e) {
             logger.error("message not created", e);
         }
@@ -185,11 +185,11 @@ public class BotServiceStub implements BotService {
 
     @Scheduled(fixedDelay = 1000)
     public void addMessage() {
-        subscriptionRepository.findActiveSubscriptions().forEach(s -> messages(s.getHid()));
+        subscriptionRepository.findActiveSubscriptions().forEach(s -> messages(s.getHid(), ""));
     }
 
 	@Override
-	public String pushTokenId(String hid) {
+	public String pushTokenId(String hid, String token) {
 		return "";
 	}
 }

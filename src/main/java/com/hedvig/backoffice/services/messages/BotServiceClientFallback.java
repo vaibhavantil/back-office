@@ -26,36 +26,36 @@ public class BotServiceClientFallback implements BotServiceClient {
     }
 
     @Override
-    public PushTokenDTO getPushTokenByHid(String hid) {
+    public PushTokenDTO getPushTokenByHid(String hid, String token) {
         log.error("request to bot-service failed");
         return new PushTokenDTO("");
     }
 
     @Override
-    public JsonNode messages(String hid) {
+    public JsonNode messages(String hid, String token) {
         log.error("request to bot-service failed");
         return mapper.createArrayNode();
     }
 
     @Override
-    public JsonNode messages(String hid, int count) {
+    public JsonNode messages(String hid, int count, String token) {
         log.error("request to bot-service failed");
         return mapper.createArrayNode();
     }
 
     @Override
-    public List<BackOfficeMessage> fetch(long time) {
+    public List<BackOfficeMessage> fetch(long time, String token) {
         log.error("request to bot-service failed");
         return new ArrayList<>();
     }
 
     @Override
-    public void response(BackOfficeMessage message) {
+    public void response(BackOfficeMessage message, String token) {
         log.error("request to bot-service failed");
     }
 
     @Override
-    public void answer(BackOfficeAnswerDTO answer) {
+    public void answer(BackOfficeAnswerDTO answer, String token) {
         log.error("request to bot-service failed");
     }
 

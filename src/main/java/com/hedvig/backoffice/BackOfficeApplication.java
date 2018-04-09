@@ -6,14 +6,17 @@ import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -65,6 +68,18 @@ public class BackOfficeApplication {
         filterRegBean.setEnabled(Boolean.TRUE);
         filterRegBean.setAsyncSupported(Boolean.TRUE);
         return filterRegBean;
+    }
+
+    @Bean
+    @ConfigurationProperties("oauth.google.client")
+    public AuthorizationCodeResourceDetails clientDetails() {
+        return new AuthorizationCodeResourceDetails();
+    }
+
+    @Bean
+    @ConfigurationProperties("oauth.google.resource")
+    public ResourceServerProperties clientResource() {
+        return new ResourceServerProperties();
     }
 
 }

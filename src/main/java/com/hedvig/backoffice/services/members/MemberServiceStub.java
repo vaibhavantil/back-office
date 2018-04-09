@@ -14,14 +14,16 @@ import java.util.stream.IntStream;
 public class MemberServiceStub implements MemberService {
 
     private static Logger logger = LoggerFactory.getLogger(MemberServiceStub.class);
-    private static long[] testMemberIds = { 123456L };
+    private static long[] testMemberIds = { 3267661L, 2820671L, 6865256L, 9417985L,
+            9403769L, 6871398L, 5418127L, 2134653L, 2503961L, 5867700L, 4254211, 9908657L, 1074023L
+    };
 
     private List<MemberDTO> users;
 
     public MemberServiceStub() {
         String[] statuses = { "INITIATED", "ONBOARDING", "SIGNED", "INACTIVATED" };
 
-        users = IntStream.range(0, 200).mapToObj(i -> {
+        users = IntStream.range(0, testMemberIds.length).mapToObj(i -> {
             long id = i < testMemberIds.length ? testMemberIds[i] : RandomUtils.nextInt();
             MemberDTO user = new MemberDTO(id);
             user.setFirstName("Test user " + id);
@@ -34,7 +36,7 @@ public class MemberServiceStub implements MemberService {
     }
 
     @Override
-    public List<MemberDTO> search(String status, String query) {
+    public List<MemberDTO> search(String status, String query, String token) {
         if (StringUtils.isBlank(status) && StringUtils.isBlank(query)) {
             return users;
         }
@@ -48,7 +50,7 @@ public class MemberServiceStub implements MemberService {
     }
 
     @Override
-    public MemberDTO findByHid(String hid) {
+    public MemberDTO findByHid(String hid, String token) {
         return users.stream()
                 .filter(u -> u.getHid().equals(hid))
                 .findAny()

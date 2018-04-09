@@ -10,19 +10,19 @@ import org.springframework.stereotype.Component;
 public class ProductPricingClientFallback implements ProductPricingClient {
 
     @Override
-    public byte[] insuranceContract(String memberId) {
+    public byte[] insuranceContract(String memberId, String token) {
         log.error("product-pricing service unavailable");
         return new byte[0];
     }
 
     @Override
-    public JsonNode insurance(String memberId) {
+    public JsonNode insurance(String memberId, String token) {
         log.error("product-pricing service unavailable");
         return null;
     }
 
     @Override
-    public void activate(String memberId, InsuranceActivateDTO dto) {
+    public void activate(String memberId, InsuranceActivateDTO dto, String token) {
         log.error("product-pricing service unavailable");
     }
 }

@@ -8,11 +8,11 @@ public interface ChatService {
 
     void send(String hid, Message message);
 
-    void append(String hid, String message);
+    void append(String hid, String message, String token);
 
-    void messages(String hid);
+    void messages(String hid, String token);
 
-    void messages(String hid, int count);
+    void messages(String hid, int count, String token);
 
     void close(String sessionId);
 

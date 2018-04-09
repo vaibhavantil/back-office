@@ -7,21 +7,21 @@ import java.util.Map;
 
 public interface ClaimsService {
 
-    List<Claim> list();
-    List<Claim> listByUserId(String userId);
-    Claim find(String id);
+    List<Claim> list(String token);
+    List<Claim> listByUserId(String userId, String token);
+    Claim find(String id, String token);
 
-    List<ClaimType> types();
+    List<ClaimType> types(String token);
 
-    void addPayment(ClaimPayment dto);
-    void addNote(ClaimNote dto);
-    void addData(ClaimData data);
+    void addPayment(ClaimPayment dto, String token);
+    void addNote(ClaimNote dto, String token);
+    void addData(ClaimData data, String token);
 
-    void changeState(ClaimStateUpdate state);
-    void changeReserve(ClaimReserveUpdate reserve);
-    void changeType(ClaimTypeUpdate type);
+    void changeState(ClaimStateUpdate state, String token);
+    void changeReserve(ClaimReserveUpdate reserve, String token);
+    void changeType(ClaimTypeUpdate type, String token);
 
-    Map<String, Long> statistics();
-    long totalClaims();
+    Map<String, Long> statistics(String token);
+    long totalClaims(String token);
 
 }

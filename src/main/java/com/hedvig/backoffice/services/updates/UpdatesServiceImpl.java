@@ -5,6 +5,7 @@ import com.hedvig.backoffice.domain.Updates;
 import com.hedvig.backoffice.repository.*;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import com.hedvig.backoffice.services.updates.data.UpdatesDTO;
 import com.hedvig.common.constant.AssetState;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -25,6 +26,7 @@ public class UpdatesServiceImpl implements UpdatesService {
     private final AssetRepository assetRepository;
     private final QuestionGroupRepository questionRepository;
     private final ClaimsService claimsService;
+    private final SystemSettingsService settingsService;
 
     private final SimpMessagingTemplate template;
 
@@ -33,6 +35,7 @@ public class UpdatesServiceImpl implements UpdatesService {
                               AssetRepository assetRepository,
                               QuestionGroupRepository questionRepository,
                               ClaimsService claimsService,
+                              SystemSettingsService settingsService,
                               SimpMessagingTemplate template) {
 
         this.updatesRepository = updatesRepository;
@@ -40,6 +43,7 @@ public class UpdatesServiceImpl implements UpdatesService {
         this.assetRepository = assetRepository;
         this.questionRepository = questionRepository;
         this.claimsService = claimsService;
+        this.settingsService = settingsService;
 
         this.template = template;
     }
@@ -83,7 +87,7 @@ public class UpdatesServiceImpl implements UpdatesService {
                     updates.add(new Updates(UpdateType.ASSETS, personnel, assetRepository.countAllByState(AssetState.PENDING)));
                     break;
                 case CLAIMS:
-                    updates.add(new Updates(UpdateType.CLAIMS, personnel, claimsService.totalClaims()));
+                    updates.add(new Updates(UpdateType.CLAIMS, personnel, claimsService.totalClaims(settingsService.getInternalAccessToken())));
                     break;
                 default:
                     updates.add(new Updates(type, personnel,0L));

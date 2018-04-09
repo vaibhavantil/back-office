@@ -5,6 +5,7 @@ import com.hedvig.backoffice.web.dto.MemberDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 
@@ -16,9 +17,11 @@ import java.util.List;
 public interface MemberServiceClient {
 
     @GetMapping("/i/member/search?status={status}&query={query}")
-    List<MemberDTO> search(@PathVariable("status") String status, @PathVariable("query") String query);
+    List<MemberDTO> search(@PathVariable("status") String status,
+                           @PathVariable("query") String query,
+                           @RequestHeader("Authorization") String token);
 
     @GetMapping("/member/{id}")
-    MemberDTO member(@PathVariable("id") String id);
+    MemberDTO member(@PathVariable("id") String id, @RequestHeader("Authorization") String token);
 
 }

@@ -11,5 +11,6 @@ public interface SystemSettingsService {
     SystemSetting getSetting(SystemSettingType type, String defaultValue);
     List<SystemSettingDTO> list();
     void update(SystemSettingType type, String value);
+    String getInternalAccessToken();
 
 }

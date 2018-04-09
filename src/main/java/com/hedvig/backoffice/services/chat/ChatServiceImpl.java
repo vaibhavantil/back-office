@@ -7,12 +7,14 @@ import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Subscription;
 import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.repository.PersonnelRepository;
+import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -35,7 +37,7 @@ public class ChatServiceImpl implements ChatService {
 
     private final ChatContextRepository chatContextRepository;
 
-    private final PersonnelRepository personnelRepository;
+    private final PersonnelService personnelService;
 
     private final MessageUrlResolver messageUrlResolver;
 
@@ -48,7 +50,7 @@ public class ChatServiceImpl implements ChatService {
             BotService botService,
             MemberService memberService,
             ChatContextRepository chatContextRepository,
-            PersonnelRepository personnelRepository,
+            PersonnelService personnelService,
             MessageUrlResolver messageUrlResolver,
             ExpoNotificationService expoNotificationService,
             SubscriptionService subscriptionService
@@ -58,7 +60,7 @@ public class ChatServiceImpl implements ChatService {
         this.botService = botService;
         this.memberService = memberService;
         this.chatContextRepository = chatContextRepository;
-        this.personnelRepository = personnelRepository;
+        this.personnelService = personnelService;
         this.messageUrlResolver = messageUrlResolver;
         this.expoNotificationService = expoNotificationService;
         this.subscriptionService = subscriptionService;
@@ -70,12 +72,12 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void append(String hid, String message) {
+    public void append(String hid, String message, String token) {
         try {
             final BotMessage botMessage = new BotMessage(message, true);
             messageUrlResolver.resolveUrls(botMessage);
-            botService.response(hid, botMessage);
-            expoNotificationService.sendNotification(hid);
+            botService.response(hid, botMessage, token);
+            expoNotificationService.sendNotification(hid, token);
         } catch (BotMessageException | ExternalServiceBadRequestException e) {
             send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
@@ -83,9 +85,9 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void messages(String hid) {
+    public void messages(String hid, String token) {
         try {
-            send(hid, Message.chat(botService.messages(hid)));
+            send(hid, Message.chat(botService.messages(hid, token)));
         } catch (ExternalServiceBadRequestException e) {
             send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
@@ -96,9 +98,9 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void messages(String hid, int count) {
+    public void messages(String hid, int count, String token) {
         try {
-            send(hid, Message.chat(botService.messages(hid, count)));
+            send(hid, Message.chat(botService.messages(hid, count, token)));
         } catch (ExternalServiceBadRequestException e) {
             send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
@@ -121,9 +123,18 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional
     public void subscribe(String hid, String subId, String sessionId, String principalId) {
+        Personnel personnel;
+        try {
+            personnel = personnelService.getPersonnel(principalId);
+        } catch (AuthorizationException e) {
+            send(hid, Message.error(400, "Not authorized"));
+            log.warn("member not authorized hid = " + hid);
+            return;
+        }
+
         MemberDTO member;
         try {
-            member = memberService.findByHid(hid);
+            member = memberService.findByHid(hid, personnelService.getIdToken(personnel));
         } catch (ExternalServiceBadRequestException e) {
             send(hid, Message.error(400, "member with hid " + hid + " not found"));
             log.warn("member with hid " + hid + " not found", e);
@@ -133,15 +144,6 @@ public class ChatServiceImpl implements ChatService {
             log.error("can't fetch member hid = " + hid, e);
             return;
         }
-
-        Optional<Personnel> personnelOptional = personnelRepository.findById(principalId);
-        if (!personnelOptional.isPresent()) {
-            send(hid, Message.error(400, "Not authorized"));
-            log.warn("member not authorized hid = " + hid);
-            return;
-        }
-
-        Personnel personnel = personnelOptional.get();
 
         Optional<ChatContext> chatOptional = chatContextRepository.findByHidAndPersonnel(member.getHid(), personnel);
         ChatContext chat = chatOptional.orElseGet(ChatContext::new);

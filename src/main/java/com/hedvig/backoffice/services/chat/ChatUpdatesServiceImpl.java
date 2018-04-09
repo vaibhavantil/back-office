@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
                                   BotService botService,
                                   SystemSettingsService systemSettingsService,
                                   QuestionService questionService,
-                                  @Value("${botservice.questionId}") String[] questionId) {
+                                  @Value("${botservice.questionId}") String[] questionId) throws UnsupportedEncodingException {
 
         this.chatService = chatService;
         this.botService = botService;
@@ -53,7 +54,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     @Scheduled(fixedDelayString = "${intervals.chat}")
     @Override
     public void update() {
-        List<BackOfficeMessage> fetched = botService.fetch(lastTimestamp());
+        List<BackOfficeMessage> fetched = botService.fetch(lastTimestamp(), systemSettingsService.getInternalAccessToken());
 
         if (fetched.size() == 0) {
             return;

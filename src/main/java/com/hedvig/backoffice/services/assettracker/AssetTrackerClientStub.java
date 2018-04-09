@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.assettracker;
 
 import com.hedvig.backoffice.domain.Asset;
 import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.hedvig.common.constant.AssetState;
 import lombok.val;
@@ -26,10 +27,12 @@ public class AssetTrackerClientStub implements AssetTrackerClient {
     private AtomicInteger globalId;
 
     private final MemberService memberService;
+    private final SystemSettingsService settingsService;
 
     @Autowired
-    public AssetTrackerClientStub(MemberService memberService) {
+    public AssetTrackerClientStub(MemberService memberService, SystemSettingsService settingsService) {
         this.memberService = memberService;
+        this.settingsService = settingsService;
 
         logger.info("ASSET TRACKER SERVICE:");
         logger.info("class: " + AssetTrackerClientStub.class.getName());
@@ -43,7 +46,7 @@ public class AssetTrackerClientStub implements AssetTrackerClient {
             logger.info("fetch pending assets");
             generation.incrementAndGet();
 
-            List<String> memberIds = memberService.search("", "").stream()
+            List<String> memberIds = memberService.search("", "", settingsService.getInternalAccessToken()).stream()
                     .map(MemberDTO::getHid).collect(Collectors.toList());
 
             return IntStream.range(0, 15).mapToObj(i -> {

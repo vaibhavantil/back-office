@@ -35,12 +35,12 @@ public class ProductPricingServiceStub implements ProductPricingService {
     }
 
     @Override
-    public byte[] insuranceContract(String memberId) {
+    public byte[] insuranceContract(String memberId, String token) {
         return new byte[0];
     }
 
     @Override
-    public JsonNode insurance(String memberId) {
+    public JsonNode insurance(String memberId, String token) {
         if (memberId.startsWith("123")) {
             throw new ExternalServiceNotFoundException("insurance not found", "");
         }
@@ -53,7 +53,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
     }
 
     @Override
-    public void activate(String memberId, InsuranceActivateDTO dto) {
+    public void activate(String memberId, InsuranceActivateDTO dto, String token) {
         String i = insurances.computeIfAbsent(memberId, id -> INSURANCE_TEMPLATE);
         i = i.replace("\"insuranceActiveFrom\": null", "\"insuranceActiveFrom\": \"" + dto.getActivationDate().toString() + "\"");
         insurances.put(memberId, i);
