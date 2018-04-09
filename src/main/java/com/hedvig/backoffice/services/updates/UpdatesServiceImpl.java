@@ -83,10 +83,10 @@ public class UpdatesServiceImpl implements UpdatesService {
 
     @Override
     @Transactional
-    public void subscribe(String personnelId, String sessionId, String subId) throws AuthorizationException {
+    public void subscribe(String personnelId, String sessionId) throws AuthorizationException {
         Personnel personnel = personnelRepository.findById(personnelId).orElseThrow(AuthorizationException::new);
 
-        UpdateContext uc = new UpdateContext(personnel, sessionId, subId);
+        UpdateContext uc = new UpdateContext(personnel, sessionId);
         updateContextRepository.save(uc);
 
         List<Updates> updates = new ArrayList<>();
@@ -113,21 +113,15 @@ public class UpdatesServiceImpl implements UpdatesService {
 
     @Override
     @Transactional
-    public void unsubscribe(String personnelId, String sessionId, String subId) {
+    public void unsubscribe(String personnelId, String sessionId) {
         Optional<UpdateContext> optional = updateContextRepository
-                .findByPersonnelIdAndSessionIdAndSubId(personnelId, sessionId, subId);
+                .findByPersonnelIdAndSessionIdAndSubId(personnelId, sessionId);
 
         if (optional.isPresent()) {
             UpdateContext uc = optional.get();
             updatesRepository.deleteByContext(uc);
             updateContextRepository.delete(uc);
         }
-    }
-
-    @Override
-    public void close(String sessionId) {
-        Optional<UpdateContext> uc = updateContextRepository.findBySessionId(sessionId);
-        uc.ifPresent(updateContextRepository::delete);
     }
 
     private void send(Personnel personnel, List<Updates> updates) {

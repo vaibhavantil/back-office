@@ -22,16 +22,13 @@ public class UpdateContext {
 
     private String sessionId;
 
-    private String subId;
-
     @NotNull
     @OneToOne
     private Personnel personnel;
 
-    public UpdateContext(Personnel personnel, String sessionId, String subId) {
+    public UpdateContext(Personnel personnel, String sessionId) {
         this.personnel = personnel;
         this.sessionId = sessionId;
-        this.subId = subId;
     }
 
 }

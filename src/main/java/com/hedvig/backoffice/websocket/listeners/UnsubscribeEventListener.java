@@ -12,12 +12,10 @@ import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 public class UnsubscribeEventListener implements ApplicationListener<SessionUnsubscribeEvent> {
 
     private final ChatService chatService;
-    private final UpdatesService updatesService;
 
     @Autowired
-    public UnsubscribeEventListener(ChatService chatService, UpdatesService updatesService) {
+    public UnsubscribeEventListener(ChatService chatService) {
         this.chatService = chatService;
-        this.updatesService = updatesService;
     }
 
     @Override
@@ -25,7 +23,6 @@ public class UnsubscribeEventListener implements ApplicationListener<SessionUnsu
         StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
         String subId = (String) headers.getHeader("simpSubscriptionId");
         chatService.unsubscribe(subId, headers.getSessionId());
-        updatesService.unsubscribe(headers.getUser().getName(), headers.getSessionId(), subId);
     }
 
 }

@@ -24,7 +24,7 @@ public class DisconnectEventListener implements ApplicationListener<SessionDisco
     public void onApplicationEvent(SessionDisconnectEvent event) {
         StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
         chatService.close(headers.getSessionId());
-        updatesService.close(headers.getSessionId());
+        updatesService.unsubscribe(headers.getUser().getName(), headers.getSessionId());
     }
 
 }
