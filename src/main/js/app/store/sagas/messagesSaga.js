@@ -1,6 +1,5 @@
 import { call, takeEvery, put, takeLatest } from 'redux-saga/effects';
 import { USER_REQUESTING, ADD_MESSAGE } from 'constants/chatUsers';
-import { updateMessageBody } from 'app/lib/sockets/chat';
 import api from 'app/api';
 import config from 'app/api/config';
 import {
@@ -23,24 +22,19 @@ function* userRequestFlow({ userId }) {
 
 function* messagesWatcher() {
     yield [
-        takeEvery(ADD_MESSAGE, ({ message, messageType, socket, userId }) => {
+        takeEvery(ADD_MESSAGE, ({ message, socket, userId }) => {
             const content = {
                 id: 'message.hello',
                 header: {
                     fromId: 1
                 },
                 body: {
-                    type: messageType,
-                    text: message.text
+                    type: 'text',
+                    text: message
                 },
                 timestamp: new Date().toISOString()
             };
-            const updatedContent = updateMessageBody(
-                content,
-                message,
-                messageType
-            );
-            socket.send(config.ws.send + userId, {}, updatedContent);
+            socket.send(config.ws.send + userId, {}, content);
         }),
         takeLatest(USER_REQUESTING, userRequestFlow)
     ];
