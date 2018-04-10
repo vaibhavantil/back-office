@@ -25,12 +25,17 @@ public class Updates {
     private UpdateContext context;
 
     @NotNull
+    @OneToOne
+    private Personnel personnel;
+
+    @NotNull
     private Long count;
 
     public Updates(UpdateType type, UpdateContext context, Long count) {
         this.type = type;
         this.context = context;
         this.count = count;
+        this.personnel = context.getPersonnel();
     }
 
 }
