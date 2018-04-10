@@ -6,8 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -23,11 +24,19 @@ public class MemberServiceStub implements MemberService {
     public MemberServiceStub() {
         String[] statuses = { "INITIATED", "ONBOARDING", "SIGNED", "INACTIVATED" };
 
+        long minDay = LocalDate.of(1970, 1, 1).toEpochDay();
+        long maxDay = LocalDate.of(2018, 12, 31).toEpochDay();
+
         users = IntStream.range(0, testMemberIds.length).mapToObj(i -> {
             long id = i < testMemberIds.length ? testMemberIds[i] : RandomUtils.nextInt();
             MemberDTO user = new MemberDTO(id);
             user.setFirstName("Test user " + id);
             user.setStatus(statuses[RandomUtils.nextInt(0, 4)]);
+
+            long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
+            LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
+            user.setBirthDate(randomDate);
+
             return user;
         }).collect(Collectors.toList());
 
