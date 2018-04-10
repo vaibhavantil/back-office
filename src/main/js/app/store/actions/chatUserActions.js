@@ -5,7 +5,8 @@ import {
     USER_SEARCH_REQUESTING,
     NEW_MESSAGES_RECEIVED,
     SET_USER_FILTER,
-    USERS_SEARCH_SUCCESS
+    USERS_SEARCH_SUCCESS,
+    SORT_USERS_LIST
 } from '../constants/chatUsers';
 
 export const usersRequest = client => ({
@@ -41,4 +42,10 @@ export const newMessagesReceived = messagesCounters => ({
 export const setFilter = query => ({
     type: SET_USER_FILTER,
     query
+});
+
+export const sortUsersList = (fieldName, isReverse) => ({
+    type: SORT_USERS_LIST,
+    fieldName,
+    isReverse
 });

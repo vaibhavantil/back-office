@@ -237,19 +237,6 @@ export const getFieldValue = value => {
     return value.toString();
 };
 
-export const setAnswerError = (answers, error) =>
-    answers.map(
-        item =>
-            item.hid === error.hid
-                ? {
-                      ...item,
-                      error: `The message is not added. Bot service responded with error "${
-                          error.message
-                      }"`
-                  }
-                : item
-    );
-
 export const sortAssetsList = assets =>
     assets
         .map(el => ({
@@ -259,3 +246,27 @@ export const sortAssetsList = assets =>
             purchaseDate: `${Math.floor(Math.random() * 10 + 1)}/03/2020`
         }))
         .sort((a, b) => moment(a.registerDate).diff(moment(b.registerDate)));
+
+export const sortUsersList = (list, fieldName, isReverse) => {
+    let sortedList = null;
+
+    switch (fieldName) {
+        case 'name':
+            sortedList = list.sort(
+                (a, b) =>
+                    a.firstName + a.lastName > b.firstName + b.lastName ? 1 : -1
+            );
+            break;
+        case 'birthday':
+            sortedList = list.sort(
+                (a, b) =>
+                    a.birthDate && b.birthDate
+                        ? moment(a.birthDate).diff(moment(b.birthDate))
+                        : 0
+            );
+            break;
+        default:
+            sortedList = list;
+    }
+    return isReverse ? sortedList.reverse() : sortedList;
+};

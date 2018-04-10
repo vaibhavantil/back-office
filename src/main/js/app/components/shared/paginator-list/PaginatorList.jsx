@@ -24,11 +24,17 @@ export default class PaginatorList extends React.Component {
 
     render() {
         const { activeList } = this.state;
-        const { list, itemContent, pageSize, tableHeader } = this.props;
+        const {
+            list,
+            itemContent,
+            pageSize,
+            tableHeader,
+            isSortable
+        } = this.props;
         return (
             <React.Fragment>
-                <Table celled selectable>
-                    {tableHeader && tableHeader}
+                <Table celled selectable sortable={isSortable ? true : false}>
+                    {tableHeader}
                     {activeList.length ? (
                         <Table.Body>
                             {activeList.map(item => (
@@ -55,5 +61,6 @@ PaginatorList.propTypes = {
     list: PropTypes.array.isRequired,
     itemContent: PropTypes.func.isRequired,
     tableHeader: PropTypes.object,
-    pageSize: PropTypes.number
+    pageSize: PropTypes.number,
+    isSortable: PropTypes.bool
 };

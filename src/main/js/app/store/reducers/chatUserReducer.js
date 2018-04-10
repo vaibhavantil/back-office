@@ -1,5 +1,9 @@
 import initialState from '../initialState';
-import { setNewMessagesCounter, filterUsersList } from '../../lib/helpers';
+import {
+    setNewMessagesCounter,
+    filterUsersList,
+    sortUsersList
+} from '../../lib/helpers';
 import {
     USERS_REQUESTING,
     USERS_REQUEST_SUCCESS,
@@ -7,7 +11,8 @@ import {
     USER_SEARCH_REQUESTING,
     NEW_MESSAGES_RECEIVED,
     SET_USER_FILTER,
-    USERS_SEARCH_SUCCESS
+    USERS_SEARCH_SUCCESS,
+    SORT_USERS_LIST
 } from '../constants/chatUsers';
 
 export default function(state = initialState.users, action) {
@@ -47,6 +52,16 @@ export default function(state = initialState.users, action) {
             return {
                 ...state,
                 requesting: false
+            };
+
+        case SORT_USERS_LIST:
+            return {
+                ...state,
+                list: sortUsersList(
+                    [...state.list],
+                    action.fieldName,
+                    action.isReverse
+                )
             };
 
         default:
