@@ -23,18 +23,14 @@ function* userRequestFlow({ userId }) {
 function* messagesWatcher() {
     yield [
         takeEvery(ADD_MESSAGE, ({ message, socket, userId }) => {
-            const content = {
-                id: 'message.hello',
-                header: {
-                    fromId: 1
-                },
-                body: {
-                    type: 'text',
-                    text: message
-                },
-                timestamp: new Date().toISOString()
-            };
-            socket.send(config.ws.send + userId, {}, content);
+            socket.send(
+                config.ws.send + userId,
+                {},
+                {
+                    memberId: userId,
+                    msg: message
+                }
+            );
         }),
         takeLatest(USER_REQUESTING, userRequestFlow)
     ];
