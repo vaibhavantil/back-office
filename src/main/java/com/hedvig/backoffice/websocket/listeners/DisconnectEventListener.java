@@ -12,16 +12,19 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 public class DisconnectEventListener implements ApplicationListener<SessionDisconnectEvent> {
 
     private final ChatService chatService;
+    private final UpdatesService updatesService;
 
     @Autowired
-    public DisconnectEventListener(ChatService chatService) {
+    public DisconnectEventListener(ChatService chatService, UpdatesService updatesService) {
         this.chatService = chatService;
+        this.updatesService = updatesService;
     }
 
     @Override
     public void onApplicationEvent(SessionDisconnectEvent event) {
         StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
         chatService.close(headers.getSessionId());
+        updatesService.unsubscribe(headers.getUser().getName(), headers.getSessionId());
     }
 
 }

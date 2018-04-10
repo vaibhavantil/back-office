@@ -27,10 +27,11 @@ public class ConnectEventListener implements ApplicationListener<SessionConnectE
         StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
         if (headers.getUser() != null) {
             try {
-                updatesService.init(headers.getUser().getName());
+                updatesService.subscribe(headers.getUser().getName(), headers.getSessionId());
             } catch (AuthorizationException e) {
                 logger.error("updates initialization error", e);
             }
         }
     }
 }
+

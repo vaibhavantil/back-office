@@ -6,7 +6,9 @@ public interface UpdatesService {
 
     void changeOn(long count, UpdateType type);
     void set(long count, UpdateType type);
-    void init(String id) throws AuthorizationException;
-    void updates(String id);
+    void updates(String personnelId);
+
+    void subscribe(String personnelId, String sessionId) throws AuthorizationException;
+    void unsubscribe(String personnelId, String sessionId);
 
 }

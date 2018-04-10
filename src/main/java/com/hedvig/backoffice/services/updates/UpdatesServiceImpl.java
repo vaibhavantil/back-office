@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.updates;
 
 import com.hedvig.backoffice.domain.Personnel;
+import com.hedvig.backoffice.domain.UpdateContext;
 import com.hedvig.backoffice.domain.Updates;
 import com.hedvig.backoffice.repository.*;
 import com.hedvig.backoffice.security.AuthorizationException;
@@ -27,6 +28,7 @@ public class UpdatesServiceImpl implements UpdatesService {
     private final QuestionGroupRepository questionRepository;
     private final ClaimsService claimsService;
     private final SystemSettingsService settingsService;
+    private final UpdateContextRepository updateContextRepository;
 
     private final SimpMessagingTemplate template;
 
@@ -36,7 +38,8 @@ public class UpdatesServiceImpl implements UpdatesService {
                               QuestionGroupRepository questionRepository,
                               ClaimsService claimsService,
                               SystemSettingsService settingsService,
-                              SimpMessagingTemplate template) {
+                              SimpMessagingTemplate template,
+                              UpdateContextRepository updateContextRepository) {
 
         this.updatesRepository = updatesRepository;
         this.personnelRepository = personnelRepository;
@@ -44,6 +47,7 @@ public class UpdatesServiceImpl implements UpdatesService {
         this.questionRepository = questionRepository;
         this.claimsService = claimsService;
         this.settingsService = settingsService;
+        this.updateContextRepository = updateContextRepository;
 
         this.template = template;
     }
@@ -56,7 +60,7 @@ public class UpdatesServiceImpl implements UpdatesService {
             updates.forEach(u -> u.setCount(u.getCount() + count));
             updatesRepository.save(updates);
 
-            updates.forEach(u -> send(u.getPersonnel(), Collections.singletonList(u)));
+            updates.forEach(u -> send(u.getContext().getPersonnel(), Collections.singletonList(u)));
         }
     }
 
@@ -67,30 +71,39 @@ public class UpdatesServiceImpl implements UpdatesService {
         updates.forEach(u -> u.setCount(count));
         updatesRepository.save(updates);
 
-        updates.forEach(u -> send(u.getPersonnel(), Collections.singletonList(u)));
+        updates.forEach(u -> send(u.getContext().getPersonnel(), Collections.singletonList(u)));
     }
 
     @Override
     @Transactional
-    public void init(String id) throws AuthorizationException {
-        Personnel personnel = personnelRepository.findById(id).orElseThrow(AuthorizationException::new);
-        updatesRepository.deleteByPersonnel(personnel);
+    public void updates(String personnelId) {
+        List<Updates> updates = updatesRepository.findByPersonnelId(personnelId);
+        send(personnelId, updates);
+    }
+
+    @Override
+    @Transactional
+    public void subscribe(String personnelId, String sessionId) throws AuthorizationException {
+        Personnel personnel = personnelRepository.findById(personnelId).orElseThrow(AuthorizationException::new);
+
+        UpdateContext uc = new UpdateContext(personnel, sessionId);
+        updateContextRepository.save(uc);
 
         List<Updates> updates = new ArrayList<>();
         for (UpdateType type : UpdateType.values()) {
             switch (type) {
                 case QUESTIONS:
-                    updates.add(new Updates(UpdateType.QUESTIONS, personnel,
+                    updates.add(new Updates(UpdateType.QUESTIONS, uc,
                             Optional.ofNullable(questionRepository.notAnsweredCount()).orElse(0L)));
                     break;
                 case ASSETS:
-                    updates.add(new Updates(UpdateType.ASSETS, personnel, assetRepository.countAllByState(AssetState.PENDING)));
+                    updates.add(new Updates(UpdateType.ASSETS, uc, assetRepository.countAllByState(AssetState.PENDING)));
                     break;
                 case CLAIMS:
-                    updates.add(new Updates(UpdateType.CLAIMS, personnel, claimsService.totalClaims(settingsService.getInternalAccessToken())));
+                    updates.add(new Updates(UpdateType.CLAIMS, uc, claimsService.totalClaims(settingsService.getInternalAccessToken())));
                     break;
                 default:
-                    updates.add(new Updates(type, personnel,0L));
+                    updates.add(new Updates(type, uc,0L));
                     break;
             }
         }
@@ -100,20 +113,27 @@ public class UpdatesServiceImpl implements UpdatesService {
 
     @Override
     @Transactional
-    public void updates(String id) {
-        Optional<Personnel> optional = personnelRepository.findById(id);
-        optional.ifPresent(p -> {
-            List<Updates> updates = updatesRepository.findByPersonnel(p);
-            send(p, updates);
-        });
+    public void unsubscribe(String personnelId, String sessionId) {
+        Optional<UpdateContext> optional = updateContextRepository
+                .findByPersonnelIdAndSessionIdAndSubId(personnelId, sessionId);
+
+        if (optional.isPresent()) {
+            UpdateContext uc = optional.get();
+            updatesRepository.deleteByContext(uc);
+            updateContextRepository.delete(uc);
+        }
     }
 
     private void send(Personnel personnel, List<Updates> updates) {
+        send(personnel.getId(), updates);
+    }
+
+    private void send(String personnelId, List<Updates> updates) {
         List<UpdatesDTO> dto = updates.stream()
                 .map(UpdatesDTO::fromDomain)
                 .collect(Collectors.toList());
 
-        template.convertAndSendToUser(personnel.getId(), "/updates", dto);
+        template.convertAndSendToUser(personnelId, "/updates", dto);
     }
 
 }
