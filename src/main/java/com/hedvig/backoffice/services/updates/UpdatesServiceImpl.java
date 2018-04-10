@@ -60,7 +60,7 @@ public class UpdatesServiceImpl implements UpdatesService {
             updates.forEach(u -> u.setCount(u.getCount() + count));
             updatesRepository.save(updates);
 
-            updates.forEach(u -> send(u.getContext().getPersonnel(), Collections.singletonList(u)));
+            updates.forEach(u -> send(u.getPersonnel(), Collections.singletonList(u)));
         }
     }
 
@@ -71,7 +71,7 @@ public class UpdatesServiceImpl implements UpdatesService {
         updates.forEach(u -> u.setCount(count));
         updatesRepository.save(updates);
 
-        updates.forEach(u -> send(u.getContext().getPersonnel(), Collections.singletonList(u)));
+        updates.forEach(u -> send(u.getPersonnel(), Collections.singletonList(u)));
     }
 
     @Override
