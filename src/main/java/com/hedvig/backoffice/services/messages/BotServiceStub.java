@@ -171,7 +171,7 @@ public class BotServiceStub implements BotService {
             appendMessage(hid, new BotMessage(String.format(STUB_MESSAGE_TEMPLATE,
                     increment.addAndGet(1),
                     current.size(),
-                    hid,
+                    "1",
                     "text",
                     answer,
                     typesTemplates.get("text"),
