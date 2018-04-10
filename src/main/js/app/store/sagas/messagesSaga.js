@@ -26,10 +26,10 @@ function* messagesWatcher() {
             socket.send(
                 config.ws.send + userId,
                 {},
-                {
+                JSON.stringify({
                     memberId: userId,
                     msg: message
-                }
+                })
             );
         }),
         takeLatest(USER_REQUESTING, userRequestFlow)
