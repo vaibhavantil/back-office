@@ -50,7 +50,7 @@ public class BotServiceClientFallback implements BotServiceClient {
     }
 
     @Override
-    public void response(BackOfficeMessage message, String token) {
+    public void response(BackOfficeAnswerDTO message, String token) {
         log.error("request to bot-service failed");
     }
 

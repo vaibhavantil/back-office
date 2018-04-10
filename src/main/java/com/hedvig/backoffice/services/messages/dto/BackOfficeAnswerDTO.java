@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class BackOfficeAnswerDTO {
 
-    public String userId;
+    public String memberId;
 
     @NotNull
     public String msg;

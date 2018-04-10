@@ -49,8 +49,8 @@ public class BotServiceImpl implements BotService {
     }
 
     @Override
-    public void response(String hid, BotMessage message, String token) {
-        botServiceClient.response(new BackOfficeMessage(hid, message.getMessage()), token);
+    public void response(String hid, String message, String token) {
+        botServiceClient.response(new BackOfficeAnswerDTO(hid, message), token);
     }
 
     @Override

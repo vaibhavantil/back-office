@@ -30,7 +30,7 @@ public interface BotServiceClient {
     List<BackOfficeMessage> fetch(@PathVariable("time") long time, @RequestHeader("Authorization") String token);
 
     @PostMapping("/_/messages/addmessage")
-    void response(@RequestBody BackOfficeMessage message, @RequestHeader("Authorization") String token);
+    void response(@RequestBody BackOfficeAnswerDTO message, @RequestHeader("Authorization") String token);
 
     @PostMapping("/_/messages/addanswer")
     void answer(@RequestBody BackOfficeAnswerDTO answer, @RequestHeader("Authorization") String token);
