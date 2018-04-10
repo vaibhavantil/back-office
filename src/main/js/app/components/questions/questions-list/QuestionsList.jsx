@@ -8,7 +8,7 @@ const ListContainer = styled.div`
     display: flex;
     flex-direction: column;
     width: 700px;
-    margin: 50px auto;
+    margin: 0 auto 50px;
 `;
 
 const QuestionsList = ({ questions, users, sendAnswer, tabChange }) => {
