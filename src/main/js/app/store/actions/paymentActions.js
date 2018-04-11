@@ -5,10 +5,11 @@ import {
     UPDATE_RESUME_SUCCESS
 } from '../constants/claims';
 
-export const createPayment = (id, data) => ({
+export const createPayment = (id, data, userId) => ({
     type: CREATE_PAYMENT_REQUESTING,
     id,
-    data
+    data,
+    userId
 });
 
 export const createPaymentSuccess = payment => ({
@@ -16,10 +17,11 @@ export const createPaymentSuccess = payment => ({
     payment
 });
 
-export const updateReserve = (id, data) => ({
+export const updateReserve = (id, data, userId) => ({
     type: UPDATE_RESUME_REQUESTING,
     id,
-    data
+    data,
+    userId
 });
 
 export const updateResumeSuccess = resume => ({

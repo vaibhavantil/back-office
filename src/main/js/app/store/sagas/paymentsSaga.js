@@ -9,9 +9,9 @@ import * as actions from '../actions/paymentActions';
 import { claimRequestError } from '../actions/claimDetailsActions';
 import { showNotification } from '../actions/notificationsActions';
 
-function* createFlow({ id, data }) {
+function* createFlow({ data, id, userId }) {
     try {
-        const requestBody = { ...data, id: id };
+        const requestBody = { ...data, id, userId };
         delete requestBody.date;
         const created = yield call(
             api,
@@ -30,10 +30,10 @@ function* createFlow({ id, data }) {
     }
 }
 
-function* updateResumeFlow({ id, data }) {
+function* updateResumeFlow({ data, id, userId }) {
     try {
         const path = `${id}/reserve`;
-        yield call(api, config.claims.update, { ...data, id: id }, path);
+        yield call(api, config.claims.update, { ...data, id, userId }, path);
         yield put(actions.updateResumeSuccess(data.resume));
     } catch (error) {
         yield [

@@ -23,11 +23,11 @@ export default {
     members: {
         get: {
             method: 'get',
-            url: 'user'
+            url: 'member'
         },
         search: {
             method: 'get',
-            url: 'user/search'
+            url: 'member/search'
         },
         findOne: {
             method: 'get',
