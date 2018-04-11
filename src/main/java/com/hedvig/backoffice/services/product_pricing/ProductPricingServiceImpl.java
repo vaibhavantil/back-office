@@ -27,4 +27,9 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     public void activate(String memberId, InsuranceActivateDTO dto, String token) {
         client.activate(memberId, dto, token);
     }
+
+    @Override
+    public JsonNode search(String state, String query, String token) {
+        return client.search(state, query, token);
+    }
 }
