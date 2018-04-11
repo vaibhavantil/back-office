@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.messages.dto;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -42,6 +43,7 @@ public class BotMessage {
 
     public BotMessage(String message, boolean newMessage) throws BotMessageException {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         try {
             this.message = mapper.readValue(message, JsonNode.class);
         } catch (IOException e) {
