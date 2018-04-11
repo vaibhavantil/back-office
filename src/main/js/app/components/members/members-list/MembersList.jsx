@@ -46,7 +46,7 @@ export default class MembersList extends React.Component {
                 column: clickedColumn,
                 direction: 'ascending'
             });
-            this.props.sort(clickedColumn, false);
+            this.props.sortMembersList(clickedColumn, false);
             return;
         }
 
@@ -56,7 +56,7 @@ export default class MembersList extends React.Component {
                     direction === 'ascending' ? 'descending' : 'ascending'
             },
             () => {
-                this.props.sort(
+                this.props.sortMembersList(
                     clickedColumn,
                     this.state.direction === 'descending'
                 );
@@ -113,10 +113,10 @@ export default class MembersList extends React.Component {
     }
 
     render() {
-        const { members } = this.props;
+        const { members: { list } } = this.props;
         return (
             <PaginatorList
-                list={members}
+                list={list}
                 itemContent={item => this.getTableRow(item)}
                 tableHeader={this.getTableHeader()}
                 pageSize={25}
@@ -127,8 +127,8 @@ export default class MembersList extends React.Component {
 }
 
 MembersList.propTypes = {
-    members: PropTypes.array.isRequired,
+    members: PropTypes.object.isRequired,
     newMessagesReceived: PropTypes.func.isRequired,
     client: PropTypes.object.isRequired,
-    sort: PropTypes.func.isRequired
+    sortMembersList: PropTypes.func.isRequired
 };

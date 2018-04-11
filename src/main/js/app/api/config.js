@@ -98,6 +98,16 @@ export default {
             method: 'post'
         }
     },
+    insMembers: {
+        get: {
+            method: 'get',
+            url: 'member'
+        },
+        search: {
+            method: 'get',
+            url: 'member/search'
+        }
+    },
     ws: {
         // eslint-disable-next-line
         endpoint: DEV ? 'http://localhost:8080/chat' : '/chat',

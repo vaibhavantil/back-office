@@ -34,6 +34,11 @@ export const routesList = [
         type: 'MEMBERS'
     },
     {
+        text: 'Member Insurance',
+        route: '/member_insurance',
+        type: 'MEMBER_INSURANCE'
+    },
+    {
         text: 'Questions',
         route: '/questions',
         type: 'QUESTIONS'

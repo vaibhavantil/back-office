@@ -12,6 +12,7 @@ import * as notesActions from './notesActions';
 import * as questionsActions from './questionsActions';
 import * as insuranceActions from './insuranceActions';
 import * as notificationsActions from './notificationsActions';
+import * as memberInsuranceActions from './memberInsuranceActions';
 
 export default {
     loginActions,
@@ -27,5 +28,6 @@ export default {
     notesActions,
     questionsActions,
     insuranceActions,
-    notificationsActions
+    notificationsActions,
+    memberInsuranceActions
 };

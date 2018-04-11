@@ -58,6 +58,15 @@ const App = () => (
                             />
                         )}
                     />
+                    <Route
+                        path="/member_insurance"
+                        render={routeProps => (
+                            <Routes.MemberInsurancePageRoute
+                                {...routeProps}
+                                store={store}
+                            />
+                        )}
+                    />
                     <Redirect from="*" to="/dashboard" />
                 </Switch>
                 <Notifications />

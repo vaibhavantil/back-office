@@ -46,5 +46,9 @@ export default {
         data: null,
         error: []
     },
-    notifications: []
+    notifications: [],
+    memberInsurance: {
+        requesting: false,
+        list: []
+    }
 };

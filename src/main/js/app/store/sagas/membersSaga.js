@@ -47,7 +47,7 @@ function* membersSearchFlow({ query }) {
     }
 }
 
-function* chatWatcher() {
+function* membersWatcher() {
     yield [
         takeLatest(MEMBERS_REQUESTING, membersRequestFlow),
         takeLatest(SET_MEMBER_FILTER, membersSearchFlow),
@@ -55,4 +55,4 @@ function* chatWatcher() {
     ];
 }
 
-export default chatWatcher;
+export default membersWatcher;

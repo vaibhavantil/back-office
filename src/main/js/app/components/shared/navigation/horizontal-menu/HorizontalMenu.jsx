@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu } from 'semantic-ui-react';
-import { unsetClient } from '../../../../store/actions/clientActions';
-
-const menuItems = ['Dashboard', 'Assets', 'Members', 'Questions', 'Claims'];
+import { unsetClient } from 'app/store/actions/clientActions';
+import { routesList } from 'app/lib/selectOptions';
 
 export default class HorizontalMenu extends React.Component {
     constructor(props) {
@@ -13,9 +12,9 @@ export default class HorizontalMenu extends React.Component {
         };
     }
 
-    itemClickHander = (e, { name }) => {
-        this.setState({ activeItem: name });
-        this.props.history.push(`/${name.toLowerCase()}`);
+    itemClickHander = menuItem => {
+        this.setState({ activeItem: menuItem.type });
+        this.props.history.push(menuItem.route);
     };
 
     logout = () => {
@@ -25,14 +24,14 @@ export default class HorizontalMenu extends React.Component {
     render() {
         return (
             <Menu stackable>
-                {menuItems.map((item, id) => (
+                {routesList.map((item, id) => (
                     <Menu.Item
                         key={id}
-                        name={item}
-                        onClick={this.itemClickHander}
-                        active={this.state.activeItem === item}
+                        name={item.type}
+                        onClick={this.itemClickHander.bind(this, item)}
+                        active={this.state.activeItem === item.type}
                     >
-                        {item}
+                        {item.text}
                     </Menu.Item>
                 ))}
                 <Menu.Menu position="right">
