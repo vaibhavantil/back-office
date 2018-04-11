@@ -2,7 +2,7 @@ import * as loginActions from './loginActions';
 import * as assetsActions from './assetsActions';
 import * as clientActions from './clientActions';
 import * as pollActions from './pollActions';
-import * as chatUserActions from './chatUserActions';
+import * as membersActions from './membersActions';
 import * as messagesActions from './messagesActions';
 import * as dashboardActions from './dashboardActions';
 import * as claimsActions from './claimsActions';
@@ -18,7 +18,7 @@ export default {
     assetsActions,
     clientActions,
     pollActions,
-    chatUserActions,
+    membersActions,
     messagesActions,
     dashboardActions,
     claimsActions,

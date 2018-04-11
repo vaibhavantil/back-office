@@ -20,7 +20,7 @@ export default {
             url: 'logout'
         }
     },
-    users: {
+    members: {
         get: {
             method: 'get',
             url: 'user'
@@ -28,6 +28,10 @@ export default {
         search: {
             method: 'get',
             url: 'user/search'
+        },
+        findOne: {
+            method: 'get',
+            url: 'member'
         }
     },
     claims: {
@@ -35,7 +39,7 @@ export default {
             url: 'claims',
             method: 'get'
         },
-        getListByUserId: {
+        getListByMemberId: {
             url: 'claims/user',
             method: 'get'
         },

@@ -30,12 +30,12 @@ function* requestFlow() {
 
 function* sendAnswerFlow({ data }) {
     try {
-        yield call(api, config.questions.sendAnswer, data, data.userId);
+        yield call(api, config.questions.sendAnswer, data, data.id);
         yield put(answerSuccess(data));
     } catch (error) {
         yield [
             put(showNotification({ message: error.message, header: 'Questions' })),
-            put(answerError({ message: error.message, hid: data.userId }))
+            put(answerError({ message: error.message, hid: data.id }))
         ];
     }
 }

@@ -7,10 +7,10 @@ import {
     TableHeader
 } from 'components/claims/claims-list/ClaimsList';
 
-const ClaimsTab = ({ userClaims }) =>
-    userClaims.length ? (
+const ClaimsTab = ({ memberClaims }) =>
+    memberClaims.length ? (
         <PaginatorList
-            list={userClaims}
+            list={memberClaims}
             itemContent={item => <TableRow item={item} />}
             tableHeader={<TableHeader />}
         />
@@ -19,7 +19,7 @@ const ClaimsTab = ({ userClaims }) =>
     );
 
 ClaimsTab.propTypes = {
-    userClaims: PropTypes.array
+    memberClaims: PropTypes.array
 };
 
 export default ClaimsTab;

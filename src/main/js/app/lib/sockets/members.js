@@ -13,11 +13,11 @@ const responseHandler = (actions, response) => {
     actions.newMessagesReceived(data);
 };
 
-export const subscribe = (actions, user, stompClient) => {
+export const subscribe = (actions, member, stompClient) => {
     if (stompClient) {
         try {
             const subscription = stompClient.subscribe(
-                `${config.ws.newMessagesSub}${user}/updates`,
+                `${config.ws.newMessagesSub}${member}/updates`,
                 responseHandler.bind(this, actions)
             );
             stompClient.send(config.ws.messagesUpdates);

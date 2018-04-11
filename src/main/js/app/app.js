@@ -52,7 +52,7 @@ const App = () => (
                     <Route
                         path="/members"
                         render={routeProps => (
-                            <Routes.UsersPageRoute
+                            <Routes.MembersPageRoute
                                 {...routeProps}
                                 store={store}
                             />

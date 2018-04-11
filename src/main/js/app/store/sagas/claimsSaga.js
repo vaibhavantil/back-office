@@ -5,7 +5,7 @@ import {
     CLAIMS_REQUESTING,
     CLAIM_UPDATING,
     CLAIM_TYPES,
-    CLAIMS_BY_USER
+    CLAIMS_BY_MEMBER
 } from '../constants/claims';
 import * as actions from '../actions/claimsActions';
 import { showNotification } from '../actions/notificationsActions';
@@ -22,15 +22,15 @@ function* requestFlow() {
     }
 }
 
-function* requestByUserFlow({ id }) {
+function* requestByMemberFlow({ id }) {
     try {
         const { data } = yield call(
             api,
-            config.claims.getListByUserId,
+            config.claims.getListByMemberId,
             null,
             id
         );
-        yield put(actions.claimsByUserSuccess(data));
+        yield put(actions.claimsByMemberSuccess(data));
     } catch (error) {
         yield [
             put(showNotification({ message: error.message, header: 'Claims' })),
@@ -42,7 +42,7 @@ function* requestByUserFlow({ id }) {
 function* updateFlow({ data, id, reqType }) {
     try {
         const path = `${id}/${reqType}`;
-        yield call(api, config.claims.update, { userId: id, ...data }, path);
+        yield call(api, config.claims.update, { id: id, ...data }, path);
         yield put(actions.claimUpdateSuccess(reqType, data));
     } catch (error) {
         yield [
@@ -69,7 +69,7 @@ function* claimsWatcher() {
         takeLatest(CLAIMS_REQUESTING, requestFlow),
         takeLatest(CLAIM_UPDATING, updateFlow),
         takeLatest(CLAIM_TYPES, claimTypesFlow),
-        takeLatest(CLAIMS_BY_USER, requestByUserFlow)
+        takeLatest(CLAIMS_BY_MEMBER, requestByMemberFlow)
     ];
 }
 

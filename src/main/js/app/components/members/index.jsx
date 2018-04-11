@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Dropdown, Input, Header } from 'semantic-ui-react';
-import UsersList from './users-list/UsersList';
-import { userStatus } from 'app/lib/selectOptions';
+import MembersList from './members-list/MembersList';
+import { memberStatus } from 'app/lib/selectOptions';
 
-const UsersFilter = styled.div`
+const MembersFilter = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -19,7 +19,7 @@ const ResetButton = styled(Button)`
     }
 `;
 
-export default class Users extends React.Component {
+export default class Members extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -38,7 +38,7 @@ export default class Users extends React.Component {
 
     searchRequest = () => {
         const { searchValue, filter } = this.state;
-        this.props.searchUserRequest({ query: searchValue, status: filter });
+        this.props.searchMemberRequest({ query: searchValue, status: filter });
     };
 
     filterChangeHandler = (e, { value }) => {
@@ -54,29 +54,29 @@ export default class Users extends React.Component {
     };
 
     componentDidMount() {
-        const { users, usersRequest } = this.props;
-        this.setState({ filter: users.filter });
-        if (!users.list.length) {
-            usersRequest();
+        const { members, membersRequest } = this.props;
+        this.setState({ filter: members.filter });
+        if (!members.list.length) {
+            membersRequest();
         }
     }
 
     render() {
         const {
-            users,
+            members,
             messages,
             setActiveConnection,
             newMessagesReceived,
             client,
-            sortUsersList
+            sortMembersList
         } = this.props;
         const { searchValue } = this.state;
         return (
             <React.Fragment>
                 <Header size="huge">Members</Header>
-                <UsersFilter>
+                <MembersFilter>
                     <Input
-                        loading={users.requesting}
+                        loading={members.requesting}
                         placeholder="Search..."
                         iconPosition="left"
                         onChange={this.inputChangeHandler}
@@ -88,33 +88,33 @@ export default class Users extends React.Component {
                     <label>Status: </label>
                     <Dropdown
                         onChange={this.filterChangeHandler}
-                        options={userStatus}
+                        options={memberStatus}
                         selection
-                        value={users.filter}
+                        value={members.filter}
                     />
-                </UsersFilter>
+                </MembersFilter>
                 <ResetButton onClick={this.resetSearch}>reset</ResetButton>
-                <UsersList
-                    users={users.list}
+                <MembersList
+                    members={members.list}
                     messages={messages}
                     newMessagesReceived={newMessagesReceived}
                     setActiveConnection={setActiveConnection}
                     client={client}
-                    sort={sortUsersList}
+                    sort={sortMembersList}
                 />
             </React.Fragment>
         );
     }
 }
 
-Users.propTypes = {
-    users: PropTypes.object.isRequired,
+Members.propTypes = {
+    members: PropTypes.object.isRequired,
     messages: PropTypes.object.isRequired,
     newMessagesReceived: PropTypes.func.isRequired,
     setActiveConnection: PropTypes.func.isRequired,
     client: PropTypes.object.isRequired,
-    searchUserRequest: PropTypes.func.isRequired,
-    usersRequest: PropTypes.func.isRequired,
+    searchMemberRequest: PropTypes.func.isRequired,
+    membersRequest: PropTypes.func.isRequired,
     setFilter: PropTypes.func,
-    sortUsersList: PropTypes.func.isRequired
+    sortMembersList: PropTypes.func.isRequired
 };

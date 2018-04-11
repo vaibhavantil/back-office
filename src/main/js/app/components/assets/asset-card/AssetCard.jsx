@@ -37,12 +37,12 @@ export default class AssetCard extends React.Component {
     };
 
     componentDidMount() {
-        const { userRequest, asset } = this.props;
-        userRequest(asset.userId);
+        const { memberRequest, asset } = this.props;
+        memberRequest(asset.userId);
     }
 
     render() {
-        const { asset, user } = this.props;
+        const { asset, member } = this.props;
         const assetDate = moment(
             asset.registrationDate,
             'YYYY-MM-DD HH:mm'
@@ -54,7 +54,7 @@ export default class AssetCard extends React.Component {
                     <Card.Header>{asset.title}</Card.Header>
                     <Card.Meta>{assetDate}</Card.Meta>
                     <Card.Description>
-                        Member: {user && user.firstName}
+                        Member: {member && member.firstName}
                     </Card.Description>
                     <Card.Description>
                         Price: {asset.price} SEK
@@ -92,6 +92,6 @@ export default class AssetCard extends React.Component {
 AssetCard.propTypes = {
     asset: PropTypes.object.isRequired,
     assetUpdate: PropTypes.func.isRequired,
-    user: PropTypes.object,
-    userRequest: PropTypes.func
+    member: PropTypes.object,
+    memberRequest: PropTypes.func
 };

@@ -51,7 +51,7 @@ export const claimStatus = [
     { key: 3, text: 'Reopened', value: 'REOPENED' }
 ];
 
-export const userStatus = [
+export const memberStatus = [
     { key: 0, text: 'INITIATED', value: 'INITIATED' },
     { key: 1, text: 'ONBOARDING', value: 'ONBOARDING' },
     { key: 2, text: 'SIGNED', value: 'SIGNED' },

@@ -33,14 +33,16 @@ export default class ClaimInfo extends React.Component {
     };
 
     componentDidMount() {
-        const { userRequest, claimDetails: { data } } = this.props;
-        if (data.userId) userRequest(data.userId);
+        const { memberRequest, claimDetails: { data } } = this.props;
+        if (data.userId) {
+            memberRequest(data.userId);
+        }
         this.setState({ status: data.state });
     }
 
     render() {
         const {
-            user,
+            member,
             types,
             match,
             claimDetails: { data },
@@ -56,7 +58,9 @@ export default class ClaimInfo extends React.Component {
                             Registration date:{' '}
                             {moment(data.date).format('HH:mm DD MMMM YYYY')}
                         </Grid.Row>
-                        <Grid.Row>User: {user && user.firstName}</Grid.Row>
+                        <Grid.Row>
+                            Member: {member && member.firstName}
+                        </Grid.Row>
                         <Grid.Row>
                             <a href={data.audioURL} target="_blank">
                                 file
@@ -93,11 +97,11 @@ export default class ClaimInfo extends React.Component {
 }
 
 ClaimInfo.propTypes = {
-    user: PropTypes.object,
+    member: PropTypes.object,
     claimUpdate: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
     types: PropTypes.array.isRequired,
-    userRequest: PropTypes.func.isRequired,
+    memberRequest: PropTypes.func.isRequired,
     claimDetails: PropTypes.object.isRequired,
     claimDetailsUpdate: PropTypes.func.isRequired
 };

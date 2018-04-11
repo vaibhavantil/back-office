@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Breadcrumb } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { getUserInfo } from '../../../../lib/helpers';
+import { getMemberInfo } from 'app/lib/helpers';
 
 const BreadcrumbsContainer = styled.div`
     display: flex;
@@ -25,7 +25,7 @@ const Breadcrumbs = ({ state }) => {
         if (i === arr.length - 1) {
             const content =
                 pathname.indexOf('members/') >= 0
-                    ? getUserInfo(state.users.list, path)
+                    ? getMemberInfo(state.members.list, path)
                     : path.toLowerCase();
             return {
                 key: i,

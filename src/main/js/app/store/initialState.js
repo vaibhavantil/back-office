@@ -13,9 +13,9 @@ export default {
     messages: {
         list: [],
         activeConnection: null,
-        user: null
+        member: null
     },
-    users: {
+    members: {
         list: [],
         requesting: false,
         filter: ''
@@ -27,7 +27,7 @@ export default {
         list: [],
         requesting: false,
         types: [],
-        userClaims: []
+        memberClaims: []
     },
     claimDetails: {
         data: null,

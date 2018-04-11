@@ -11,7 +11,7 @@ import { showNotification } from '../actions/notificationsActions';
 
 function* createFlow({ id, data }) {
     try {
-        const requestBody = { ...data, userId: id };
+        const requestBody = { ...data, id: id };
         delete requestBody.date;
         const created = yield call(
             api,
@@ -33,7 +33,7 @@ function* createFlow({ id, data }) {
 function* updateResumeFlow({ id, data }) {
     try {
         const path = `${id}/reserve`;
-        yield call(api, config.claims.update, { ...data, userId: id }, path);
+        yield call(api, config.claims.update, { ...data, id: id }, path);
         yield put(actions.updateResumeSuccess(data.resume));
     } catch (error) {
         yield [

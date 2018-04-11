@@ -17,7 +17,7 @@ const List = styled(Segment)`
     }
 `;
 
-const UserQuestionItem = styled.div`
+const MemberQuestionItem = styled.div`
     border-bottom: solid 1px #22242626;
     padding: 10px 0;
 `;
@@ -53,18 +53,18 @@ export default class SortedList extends React.Component {
     };
 
     render() {
-        const { list, users, sendAnswer } = this.props;
+        const { list, members, sendAnswer } = this.props;
         const { activeList } = this.state;
         return (
             <List>
                 {list.length ? (
                     <React.Fragment>
                         {list.map(question => (
-                            <UserQuestionItem key={question.id}>
+                            <MemberQuestionItem key={question.id}>
                                 <Question
                                     activeList={activeList}
                                     question={question}
-                                    usersList={users}
+                                    membersList={members}
                                 />
                                 {!question.answer ? (
                                     <AnswerForm
@@ -75,7 +75,7 @@ export default class SortedList extends React.Component {
                                     />
                                 ) : (
                                     <AnswerInfo
-                                        user={question}
+                                        member={question}
                                         redirectClick={this.chatRedirectClick}
                                     />
                                 )}
@@ -87,7 +87,7 @@ export default class SortedList extends React.Component {
                                     )}
                                     pageSize={10}
                                 />
-                            </UserQuestionItem>
+                            </MemberQuestionItem>
                         ))}
                     </React.Fragment>
                 ) : (
@@ -101,5 +101,5 @@ export default class SortedList extends React.Component {
 SortedList.propTypes = {
     list: PropTypes.array.isRequired,
     sendAnswer: PropTypes.func.isRequired,
-    users: PropTypes.array
+    members: PropTypes.array
 };

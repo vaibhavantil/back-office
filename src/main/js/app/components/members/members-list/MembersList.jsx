@@ -7,7 +7,7 @@ import * as sockets from 'sockets';
 import { history } from 'app/store';
 import { LinkRow } from 'components/shared';
 
-export default class UsersList extends React.Component {
+export default class MembersList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,10 +18,10 @@ export default class UsersList extends React.Component {
         };
     }
 
-    getUserName = user =>
-        user.firstName
-            ? `${user.firstName} ${user.lastName || ''}`
-            : `User-${user.hid}`;
+    getMemberName = member =>
+        member.firstName
+            ? `${member.firstName} ${member.lastName || ''}`
+            : `Member-${member.hid}`;
 
     linkClickHandler = id => history.push(`/members/${id}`);
 
@@ -32,7 +32,7 @@ export default class UsersList extends React.Component {
             : '-';
         return (
             <LinkRow onClick={this.linkClickHandler.bind(this, item.hid)}>
-                <Table.Cell>{this.getUserName(item)}</Table.Cell>
+                <Table.Cell>{this.getMemberName(item)}</Table.Cell>
                 <Table.Cell>{formattedDate}</Table.Cell>
             </LinkRow>
         );
@@ -88,7 +88,7 @@ export default class UsersList extends React.Component {
 
     subscribeSocket = connection => {
         const { newMessagesReceived, client: { name } } = this.props;
-        const { stompClient, subscription } = sockets.usersListSubscribe(
+        const { stompClient, subscription } = sockets.membersListSubscribe(
             { newMessagesReceived },
             name,
             connection
@@ -113,10 +113,10 @@ export default class UsersList extends React.Component {
     }
 
     render() {
-        const { users } = this.props;
+        const { members } = this.props;
         return (
             <PaginatorList
-                list={users}
+                list={members}
                 itemContent={item => this.getTableRow(item)}
                 tableHeader={this.getTableHeader()}
                 pageSize={25}
@@ -126,8 +126,8 @@ export default class UsersList extends React.Component {
     }
 }
 
-UsersList.propTypes = {
-    users: PropTypes.array.isRequired,
+MembersList.propTypes = {
+    members: PropTypes.array.isRequired,
     newMessagesReceived: PropTypes.func.isRequired,
     client: PropTypes.object.isRequired,
     sort: PropTypes.func.isRequired

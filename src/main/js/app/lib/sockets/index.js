@@ -2,7 +2,7 @@ import SockJS from 'sockjs-client';
 import Stomp from '@stomp/stompjs';
 import config from 'app/api/config';
 import * as dashboard from './dashboard';
-import * as usersList from './users';
+import * as membersList from './members';
 import * as chat from './chat';
 
 /* eslint-disable no-undef */
@@ -28,6 +28,6 @@ export const disconnect = (connection, subscription) => {
 };
 
 export const dashboardSubscribe = dashboard.subscribe;
-export const usersListSubscribe = usersList.subscribe;
+export const membersListSubscribe = membersList.subscribe;
 export const chatSubscribe = chat.subscribe;
 export const chatReconnect = chat.reconnect;

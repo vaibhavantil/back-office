@@ -5,21 +5,22 @@ import actions from 'app/store/actions';
 import Questions from 'components/questions';
 import { ListPage } from 'components/shared';
 
-const QuestionsPage = props =>
+const QuestionsPage = props => (
     <ListPage>
         <Questions {...props} />
-    </ListPage>;
+    </ListPage>
+);
 
-const mapStateToProps = ({ client, questions, users }) => ({
+const mapStateToProps = ({ client, questions, members }) => ({
     client,
     questions,
-    users
+    members
 });
 
 export default withRouter(
     connect(mapStateToProps, {
         ...actions.clientActions,
         ...actions.questionsActions,
-        ...actions.chatUserActions
+        ...actions.membersActions
     })(QuestionsPage)
 );

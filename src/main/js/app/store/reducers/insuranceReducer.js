@@ -5,7 +5,7 @@ import {
     INSURANCE_ERROR,
     SAVE_INSURANCE_DATE,
     SAVE_DATE_SUCCESS
-} from '../constants/chatUsers';
+} from '../constants/members';
 
 export default function(state = initialState.insurance, action) {
     switch (action.type) {

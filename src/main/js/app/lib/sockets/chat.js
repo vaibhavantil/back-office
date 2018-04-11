@@ -14,14 +14,14 @@ const responseHandler = (actions, response) => {
     actions.messageReceived(data.messages);
 };
 
-export const subscribe = (actions, userId, stompClient) => {
+export const subscribe = (actions, id, stompClient) => {
     if (stompClient) {
         try {
             const subscription = stompClient.subscribe(
-                config.ws.messages + userId,
+                config.ws.messages + id,
                 responseHandler.bind(this, actions)
             );
-            stompClient.send(config.ws.history + userId);
+            stompClient.send(config.ws.history + id);
             return { stompClient, subscription };
         } catch (error) {
             return connectError;
@@ -32,13 +32,13 @@ export const subscribe = (actions, userId, stompClient) => {
 };
 
 /* eslint-disable no-undef */
-export const reconnect = (actions, userId) => {
+export const reconnect = (actions, id) => {
     return new Promise((resolve, reject) => {
         connect()
             .then(connection => {
                 const { stompClient, subscription } = subscribe(
                     actions,
-                    userId,
+                    id,
                     connection
                 );
                 resolve({ stompClient, subscription });

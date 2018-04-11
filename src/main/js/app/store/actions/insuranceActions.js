@@ -4,11 +4,11 @@ import {
     INSURANCE_ERROR,
     SAVE_INSURANCE_DATE,
     SAVE_DATE_SUCCESS
-} from 'constants/chatUsers';
+} from '../constants/members';
 
-export const insuranceRequest = userId => ({
+export const insuranceRequest = id => ({
     type: INSURANCE_REQUESTING,
-    userId
+    id
 });
 
 export const insuranceGetSuccess = insurance => ({
@@ -21,10 +21,10 @@ export const insuranceGetError = error => ({
     error
 });
 
-export const saveInsuranceDate = (activationDate, userId) => ({
+export const saveInsuranceDate = (activationDate, id) => ({
     type: SAVE_INSURANCE_DATE,
     activationDate,
-    userId
+    id
 });
 
 export const saveDateSuccess = date => ({

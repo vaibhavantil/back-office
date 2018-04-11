@@ -4,8 +4,8 @@ import {
     CLAIM_UPDATE_SUCCESS,
     CLAIM_TYPES,
     CLAIM_TYPES_SUCCESS,
-    CLAIMS_BY_USER,
-    CLAIMS_BY_USER_SUCCESS,
+    CLAIMS_BY_MEMBER,
+    CLAIMS_BY_MEMBER_SUCCESS,
     CLAIMS_ERROR
 } from '../constants/claims';
 
@@ -33,13 +33,13 @@ export const claimsTypesSuccess = types => ({
     types
 });
 
-export const claimsByUser = id => ({
-    type: CLAIMS_BY_USER,
+export const claimsByMember = id => ({
+    type: CLAIMS_BY_MEMBER,
     id
 });
 
-export const claimsByUserSuccess = claims => ({
-    type: CLAIMS_BY_USER_SUCCESS,
+export const claimsByMemberSuccess = claims => ({
+    type: CLAIMS_BY_MEMBER_SUCCESS,
     claims
 });
 

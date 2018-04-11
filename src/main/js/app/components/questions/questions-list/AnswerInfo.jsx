@@ -10,24 +10,24 @@ const ChatLinkButton = styled(Button)`
     }
 `;
 
-const AnswerInfo = ({ user, redirectClick }) => (
+const AnswerInfo = ({ member, redirectClick }) => (
     <Segment>
         <Label ribbon>
             <Label.Detail>
-                {moment(user.date).format('Do MM YYYY HH:mm')}
+                {moment(member.date).format('Do MM YYYY HH:mm')}
             </Label.Detail>
         </Label>
         <ChatLinkButton
             content="Open Chat"
-            onClick={redirectClick.bind(this, user.hid)}
+            onClick={redirectClick.bind(this, member.hid)}
         />
         <Header size="medium">Admin answer:</Header>
-        <Header size="small">{user.answer}</Header>
+        <Header size="small">{member.answer}</Header>
     </Segment>
 );
 
 AnswerInfo.propTypes = {
-    user: PropTypes.object.isRequired,
+    member: PropTypes.object.isRequired,
     redirectClick: PropTypes.func.isRequired
 };
 

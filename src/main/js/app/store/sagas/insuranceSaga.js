@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-import { INSURANCE_REQUESTING, SAVE_INSURANCE_DATE } from 'constants/chatUsers';
+import { INSURANCE_REQUESTING, SAVE_INSURANCE_DATE } from 'constants/members';
 import api from 'app/api';
 import config from 'app/api/config';
 import {
@@ -10,18 +10,18 @@ import {
 } from '../actions/insuranceActions';
 import { showNotification } from '../actions/notificationsActions';
 
-function* requestFlow({ userId }) {
+function* requestFlow({ id }) {
     try {
-        const { data } = yield call(api, config.insurance.get, null, userId);
+        const { data } = yield call(api, config.insurance.get, null, id);
         yield put(insuranceGetSuccess(data));
     } catch (error) {
         yield [put(insuranceGetError(error.message))];
     }
 }
 
-function* saveDateFlow({ userId, activationDate }) {
+function* saveDateFlow({ id, activationDate }) {
     try {
-        const path = `${userId}/activate`;
+        const path = `${id}/activate`;
         yield call(api, config.insurance.setDate, { activationDate }, path);
         yield put(saveDateSuccess(activationDate));
     } catch (error) {

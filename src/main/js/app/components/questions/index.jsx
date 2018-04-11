@@ -14,11 +14,11 @@ export default class Questions extends React.Component {
 
     componentDidMount() {
         this.props.questionsRequest();
-        this.props.usersRequest();
+        this.props.membersRequest();
     }
 
     render() {
-        const { questions, users: { list }, sendAnswer } = this.props;
+        const { questions, members: { list }, sendAnswer } = this.props;
         return (
             <React.Fragment>
                 <Header size="huge">Questions</Header>
@@ -26,7 +26,7 @@ export default class Questions extends React.Component {
                     questions={questions.list}
                     sendAnswer={sendAnswer}
                     tabChange={this.tabChange}
-                    users={list}
+                    members={list}
                 />
             </React.Fragment>
         );
@@ -34,9 +34,9 @@ export default class Questions extends React.Component {
 }
 
 Questions.propTypes = {
-    users: PropTypes.object.isRequired,
+    members: PropTypes.object.isRequired,
     questions: PropTypes.object.isRequired,
-    usersRequest: PropTypes.func.isRequired,
+    membersRequest: PropTypes.func.isRequired,
     questionsRequest: PropTypes.func.isRequired,
     sendAnswer: PropTypes.func.isRequired
 };

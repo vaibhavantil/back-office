@@ -60,19 +60,19 @@ export default class Chat extends React.Component {
         );
     };
 
-    getChatTitle = user =>
+    getChatTitle = member =>
         `Member: ${
-            user && (user.firstName || user.lastName)
-                ? user.firstName + ' ' + (user.lastName || '')
+            member && (member.firstName || member.lastName)
+                ? member.firstName + ' ' + (member.lastName || '')
                 : ''
         }`;
 
     componentDidMount() {
         const {
             match: { params: { id } },
-            userRequest,
+            memberRequest,
             insuranceRequest,
-            claimsByUser
+            claimsByMember
         } = this.props;
         const { stompClient, subscription } = this.subscribeSocket();
 
@@ -80,9 +80,9 @@ export default class Chat extends React.Component {
             this.reconnectSocket();
         }
         this.setState({ socket: stompClient, subscription });
-        userRequest(id);
+        memberRequest(id);
         insuranceRequest(id);
-        claimsByUser(id);
+        claimsByMember(id);
     }
 
     componentWillUnmount() {
@@ -100,7 +100,7 @@ export default class Chat extends React.Component {
         );
         return (
             <ChatPageContainer>
-                <Header size="huge">{this.getChatTitle(messages.user)}</Header>
+                <Header size="huge">{this.getChatTitle(messages.member)}</Header>
                 <Tab
                     style={{ height: '100%' }}
                     panes={panes}
@@ -119,12 +119,12 @@ Chat.propTypes = {
     errorReceived: PropTypes.func,
     addMessage: PropTypes.func.isRequired,
     setActiveConnection: PropTypes.func.isRequired,
-    userRequest: PropTypes.func.isRequired,
+    memberRequest: PropTypes.func.isRequired,
     error: PropTypes.object,
     clearMessagesList: PropTypes.func.isRequired,
-    claimsByUser: PropTypes.func.isRequired,
+    claimsByMember: PropTypes.func.isRequired,
     insuranceRequest: PropTypes.func.isRequired,
     insurance: PropTypes.object.isRequired,
     saveInsuranceDate: PropTypes.func.isRequired,
-    userClaims: PropTypes.array
+    memberClaims: PropTypes.array
 };

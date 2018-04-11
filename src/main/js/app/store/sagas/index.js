@@ -1,7 +1,7 @@
 import LoginSaga from './loginSaga';
 import AssetsSaga from './assetsSaga';
 import PollingSaga from './pollingSaga';
-import ChatUserSaga from './chatUserSaga';
+import MembersSaga from './membersSaga';
 import MessagesSaga from './messagesSaga';
 import ClaimsSaga from './claimsSaga';
 import ClaimDetailsSaga from './claimDetailsSaga';
@@ -15,7 +15,7 @@ export default function* IndexSaga() {
         LoginSaga(),
         AssetsSaga(),
         PollingSaga(),
-        ChatUserSaga(),
+        MembersSaga(),
         MessagesSaga(),
         ClaimsSaga(),
         ClaimDetailsSaga(),

@@ -4,8 +4,8 @@ import {
     CLAIMS_REQUEST_SUCCESS,
     CLAIM_TYPES,
     CLAIM_TYPES_SUCCESS,
-    CLAIMS_BY_USER,
-    CLAIMS_BY_USER_SUCCESS,
+    CLAIMS_BY_MEMBER,
+    CLAIMS_BY_MEMBER_SUCCESS,
     CLAIMS_ERROR
 } from '../constants/claims';
 
@@ -13,7 +13,7 @@ export default function(state = initialState.claims, action) {
     switch (action.type) {
         case CLAIM_TYPES:
         case CLAIMS_REQUESTING:
-        case CLAIMS_BY_USER:
+        case CLAIMS_BY_MEMBER:
             return {
                 ...state,
                 requesting: true
@@ -37,10 +37,10 @@ export default function(state = initialState.claims, action) {
                 }))
             };
 
-        case CLAIMS_BY_USER_SUCCESS:
+        case CLAIMS_BY_MEMBER_SUCCESS:
             return {
                 ...state,
-                userClaims: action.claims,
+                memberClaims: action.claims,
                 requesting: false
             };
 

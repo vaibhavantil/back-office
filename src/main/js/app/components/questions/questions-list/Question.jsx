@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Header } from 'semantic-ui-react';
-import { getUserInfo } from 'app/lib/helpers';
+import { getMemberInfo } from 'app/lib/helpers';
 import Message from 'components/chat/messages/Message';
 
-const Question = ({ activeList, question, usersList }) => {
+const Question = ({ activeList, question, membersList }) => {
 
-    const userInfo = getUserInfo(usersList, question.hid);
+    const memberInfo = getMemberInfo(membersList, question.hid);
 
     return (
         <React.Fragment>
-            <Header>Questions from: {userInfo}</Header>
+            <Header>Questions from: {memberInfo}</Header>
             {activeList[question.hid] &&
                 activeList[question.hid].map(data => (
                     <div key={data.id}>
@@ -19,7 +19,7 @@ const Question = ({ activeList, question, usersList }) => {
                             left={!data.answer}
                             isQuestionMessage={true}
                             timestamp={data.date}
-                            from={userInfo}
+                            from={memberInfo}
                         />
                         {data.answer ? (
                             <Message
@@ -38,7 +38,7 @@ const Question = ({ activeList, question, usersList }) => {
 
 Question.propTypes = {
     question: PropTypes.object.isRequired,
-    usersList: PropTypes.array,
+    membersList: PropTypes.array,
     activeList: PropTypes.object
 };
 
