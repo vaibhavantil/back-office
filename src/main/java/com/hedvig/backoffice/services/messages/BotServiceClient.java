@@ -2,7 +2,7 @@ package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.FeignConfig;
-import com.hedvig.backoffice.services.messages.dto.BackOfficeAnswerDTO;
+import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -30,8 +30,8 @@ public interface BotServiceClient {
     List<BackOfficeMessage> fetch(@PathVariable("time") long time, @RequestHeader("Authorization") String token);
 
     @PostMapping("/_/messages/addmessage")
-    void response(@RequestBody BackOfficeAnswerDTO message, @RequestHeader("Authorization") String token);
+    void response(@RequestBody BackOfficeResponseDTO message, @RequestHeader("Authorization") String token);
 
     @PostMapping("/_/messages/addanswer")
-    void answer(@RequestBody BackOfficeAnswerDTO answer, @RequestHeader("Authorization") String token);
+    void answer(@RequestBody BackOfficeResponseDTO answer, @RequestHeader("Authorization") String token);
 }

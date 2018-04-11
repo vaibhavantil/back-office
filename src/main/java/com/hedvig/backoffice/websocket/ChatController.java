@@ -1,7 +1,7 @@
 package com.hedvig.backoffice.websocket;
 
 import com.hedvig.backoffice.services.chat.ChatService;
-import com.hedvig.backoffice.services.messages.dto.BackOfficeAnswerDTO;
+import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -25,7 +25,7 @@ public class ChatController {
     }
 
     @SubscribeMapping("/send/{hid}")
-    public void send(@DestinationVariable String hid, @RequestBody BackOfficeAnswerDTO message, @AuthenticationPrincipal String principalId) {
+    public void send(@DestinationVariable String hid, @RequestBody BackOfficeResponseDTO message, @AuthenticationPrincipal String principalId) {
         chatService.append(hid, message.getMsg(), personnelService.getIdToken(principalId));
     }
 
