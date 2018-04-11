@@ -6,11 +6,13 @@ import { subscribe, reconnect } from 'app/lib/sockets/chat';
 import { disconnect } from 'sockets';
 import memberPagePanes from './panes';
 
-const UserDetailsHeader = styled.div`
+const ChatPageContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     width: 700px;
+    margin-bottom: 50px;
+    height: 100%;
 `;
 
 export default class Chat extends React.Component {
@@ -22,10 +24,12 @@ export default class Chat extends React.Component {
         };
     }
 
-    addMessageHandler = (message, messageType) => {
+    addMessageHandler = message => {
         const { socket } = this.state;
         const { addMessage, match } = this.props;
-        if (socket) addMessage(message, messageType, match.params.id, socket);
+        if (socket) {
+            addMessage(message, match.params.id, socket);
+        }
     };
 
     subscribeSocket = () => {
@@ -95,18 +99,15 @@ export default class Chat extends React.Component {
             this.state.socket
         );
         return (
-            <React.Fragment>
-                <UserDetailsHeader>
-                    <Header size="huge">
-                        {this.getChatTitle(messages.user)}
-                    </Header>
-                </UserDetailsHeader>
+            <ChatPageContainer>
+                <Header size="huge">{this.getChatTitle(messages.user)}</Header>
                 <Tab
+                    style={{ height: '100%' }}
                     panes={panes}
                     renderActiveOnly={true}
                     defaultActiveIndex={1}
                 />
-            </React.Fragment>
+            </ChatPageContainer>
         );
     }
 }

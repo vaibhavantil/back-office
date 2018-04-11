@@ -2,7 +2,7 @@ package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
-import com.hedvig.backoffice.services.messages.dto.BackOfficeAnswerDTO;
+import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import lombok.val;
@@ -49,13 +49,13 @@ public class BotServiceImpl implements BotService {
     }
 
     @Override
-    public void response(String hid, BotMessage message, String token) {
-        botServiceClient.response(new BackOfficeMessage(hid, message.getMessage()), token);
+    public void response(String hid, String message, String token) {
+        botServiceClient.response(new BackOfficeResponseDTO(hid, message), token);
     }
 
     @Override
     public void answerQuestion(String hid, String answer, String token) {
-        botServiceClient.answer(new BackOfficeAnswerDTO(hid, answer), token);
+        botServiceClient.answer(new BackOfficeResponseDTO(hid, answer), token);
     }
 
     private List<BotMessage> parseMessages(JsonNode root) {

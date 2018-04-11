@@ -67,7 +67,8 @@ export default class Users extends React.Component {
             messages,
             setActiveConnection,
             newMessagesReceived,
-            client
+            client,
+            sortUsersList
         } = this.props;
         const { searchValue } = this.state;
         return (
@@ -99,6 +100,7 @@ export default class Users extends React.Component {
                     newMessagesReceived={newMessagesReceived}
                     setActiveConnection={setActiveConnection}
                     client={client}
+                    sort={sortUsersList}
                 />
             </React.Fragment>
         );
@@ -113,5 +115,6 @@ Users.propTypes = {
     client: PropTypes.object.isRequired,
     searchUserRequest: PropTypes.func.isRequired,
     usersRequest: PropTypes.func.isRequired,
-    setFilter: PropTypes.func
+    setFilter: PropTypes.func,
+    sortUsersList: PropTypes.func.isRequired
 };

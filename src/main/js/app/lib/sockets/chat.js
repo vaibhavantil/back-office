@@ -1,5 +1,4 @@
 import config from 'app/api/config';
-import * as types from '../messageTypes';
 import { connect } from './index';
 
 const connectError = { stompClient: null, subscription: null };
@@ -48,35 +47,4 @@ export const reconnect = (actions, userId) => {
                 reject(connectError);
             });
     });
-};
-
-export const updateMessageBody = (content, message, type) => {
-    const updated = { ...content };
-    switch (type) {
-        case types.PARAGRAPH:
-            updated.body.imageURL = message[type];
-            break;
-        case types.NUMBER:
-            updated.body.number = message[type];
-            break;
-        case types.MULTIPLE_SELECT:
-        case types.SINGLE_SELECT:
-            updated.body.choices = [...message[type]];
-            break;
-        case types.DATE:
-            updated.body.date = message[type];
-            break;
-        case types.AUDIO:
-        case types.VIDEO:
-        case types.PHOTO:
-            updated.body.URL = message[type];
-            break;
-        case types.HERO:
-            updated.body.imageUri = message[type];
-            break;
-        default:
-            break;
-    }
-
-    return JSON.stringify(updated);
 };

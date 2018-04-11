@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.messages;
 import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class BotServiceStub implements BotService {
 
     private static Logger logger = LoggerFactory.getLogger(BotServiceStub.class);
@@ -158,29 +160,32 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public void response(String hid, BotMessage message, String token) {
-        List<BotMessage> msg = messages.computeIfAbsent(hid, k -> new ArrayList<>());
-        message.setGlobalId(increment.addAndGet(1));
-        message.setMessageId((long) msg.size());
-
-        msg.add(message);
+    public void response(String hid, String message, String token) {
+        answerQuestion(hid, message, token);
     }
 
     @Override
     public void answerQuestion(String hid, String answer, String token) {
         List<BotMessage> current = messages.computeIfAbsent(hid, k -> new ArrayList<>());
         try {
-            response(hid, new BotMessage(String.format(STUB_MESSAGE_TEMPLATE,
+            appendMessage(hid, new BotMessage(String.format(STUB_MESSAGE_TEMPLATE,
                     increment.addAndGet(1),
                     current.size(),
-                    hid,
+                    "1",
                     "text",
                     answer,
                     typesTemplates.get("text"),
-                    new Date().toInstant())), token);
+                    new Date().toInstant())));
         } catch (BotMessageException e) {
             logger.error("message not created", e);
         }
+    }
+
+    private void appendMessage(String hid, BotMessage bm) {
+        List<BotMessage> msg = messages.computeIfAbsent(hid, k -> new ArrayList<>());
+        bm.setGlobalId(increment.addAndGet(1));
+        bm.setMessageId((long) msg.size());
+        msg.add(bm);
     }
 
     @Scheduled(fixedDelay = 1000)

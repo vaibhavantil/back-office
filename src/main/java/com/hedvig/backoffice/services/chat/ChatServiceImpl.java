@@ -6,14 +6,11 @@ import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Subscription;
 import com.hedvig.backoffice.repository.ChatContextRepository;
-import com.hedvig.backoffice.repository.PersonnelRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.members.MemberService;
-import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
-import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +36,6 @@ public class ChatServiceImpl implements ChatService {
 
     private final PersonnelService personnelService;
 
-    private final MessageUrlResolver messageUrlResolver;
-
     private final ExpoNotificationService expoNotificationService;
 
     private final SubscriptionService subscriptionService;
@@ -51,7 +46,6 @@ public class ChatServiceImpl implements ChatService {
             MemberService memberService,
             ChatContextRepository chatContextRepository,
             PersonnelService personnelService,
-            MessageUrlResolver messageUrlResolver,
             ExpoNotificationService expoNotificationService,
             SubscriptionService subscriptionService
     ) {
@@ -61,7 +55,6 @@ public class ChatServiceImpl implements ChatService {
         this.memberService = memberService;
         this.chatContextRepository = chatContextRepository;
         this.personnelService = personnelService;
-        this.messageUrlResolver = messageUrlResolver;
         this.expoNotificationService = expoNotificationService;
         this.subscriptionService = subscriptionService;
     }
@@ -74,11 +67,9 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void append(String hid, String message, String token) {
         try {
-            final BotMessage botMessage = new BotMessage(message, true);
-            messageUrlResolver.resolveUrls(botMessage);
-            botService.response(hid, botMessage, token);
+            botService.response(hid, message, token);
             expoNotificationService.sendNotification(hid, token);
-        } catch (BotMessageException | ExternalServiceBadRequestException e) {
+        } catch (ExternalServiceBadRequestException e) {
             send(hid, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
         }

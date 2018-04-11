@@ -14,6 +14,7 @@ export const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
 `;
 
 export const ListContainer = styled.div`
@@ -21,7 +22,7 @@ export const ListContainer = styled.div`
     border: solid 1px #dfe0e0;
     border-radius: 5px;
     padding: 20px 10px;
-    margin: 30px 0;
+    margin-bottom: 50px;
 `;
 
 export const ItemContent = styled.div`

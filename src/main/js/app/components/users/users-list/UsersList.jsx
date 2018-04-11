@@ -5,14 +5,16 @@ import { Table } from 'semantic-ui-react';
 import PaginatorList from 'components/shared/paginator-list/PaginatorList';
 import * as sockets from 'sockets';
 import { history } from 'app/store';
-import {LinkRow} from 'components/shared'
+import { LinkRow } from 'components/shared';
 
 export default class UsersList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             socket: null,
-            subscription: null
+            subscription: null,
+            column: null,
+            direction: null
         };
     }
 
@@ -36,14 +38,53 @@ export default class UsersList extends React.Component {
         );
     };
 
-    getTableHeader = () => (
-        <Table.Header>
-            <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell>Birthday</Table.HeaderCell>
-            </Table.Row>
-        </Table.Header>
-    );
+    sortTable = clickedColumn => {
+        const { column, direction } = this.state;
+
+        if (column !== clickedColumn) {
+            this.setState({
+                column: clickedColumn,
+                direction: 'ascending'
+            });
+            this.props.sort(clickedColumn, false);
+            return;
+        }
+
+        this.setState(
+            {
+                direction:
+                    direction === 'ascending' ? 'descending' : 'ascending'
+            },
+            () => {
+                this.props.sort(
+                    clickedColumn,
+                    this.state.direction === 'descending'
+                );
+            }
+        );
+    };
+
+    getTableHeader = () => {
+        const { column, direction } = this.state;
+        return (
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell
+                        sorted={column === 'name' ? direction : null}
+                        onClick={this.sortTable.bind(this, 'name')}
+                    >
+                        Name
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={column === 'birthday' ? direction : null}
+                        onClick={this.sortTable.bind(this, 'birthday')}
+                    >
+                        Birthday
+                    </Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+        );
+    };
 
     subscribeSocket = connection => {
         const { newMessagesReceived, client: { name } } = this.props;
@@ -79,6 +120,7 @@ export default class UsersList extends React.Component {
                 itemContent={item => this.getTableRow(item)}
                 tableHeader={this.getTableHeader()}
                 pageSize={25}
+                isSortable={true}
             />
         );
     }
@@ -87,5 +129,6 @@ export default class UsersList extends React.Component {
 UsersList.propTypes = {
     users: PropTypes.array.isRequired,
     newMessagesReceived: PropTypes.func.isRequired,
-    client: PropTypes.object.isRequired
+    client: PropTypes.object.isRequired,
+    sort: PropTypes.func.isRequired
 };

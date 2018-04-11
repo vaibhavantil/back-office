@@ -9,10 +9,9 @@ import {
     USER_REQUEST_ERROR
 } from '../constants/chatUsers';
 
-export const addMessage = (message, messageType, userId, socket) => ({
+export const addMessage = (message, userId, socket) => ({
     type: ADD_MESSAGE,
     message,
-    messageType,
     userId,
     socket
 });

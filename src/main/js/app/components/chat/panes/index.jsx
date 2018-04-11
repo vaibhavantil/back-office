@@ -9,24 +9,29 @@ import InsuranceTab from './InsuranceTab';
 
 const TabContainer = styled(Tab.Pane)`
     &&& {
+        display: flex;
+        flex-direction: column;
         min-width: 700px;
+        height: ${props => (props.isChatTab ? '100%' : 'auto')};
+        margin-bottom: 50px;
     }
 `;
 
-const TabItem = ({ props, TabContent }) => {
-    return (
-        <TabContainer>
-            <TabContent {...props} />
-        </TabContainer>
-    );
-};
+const TabItem = ({ props, TabContent, isChatTab }) => (
+    <TabContainer isChatTab={isChatTab}>
+        <TabContent {...props} />
+    </TabContainer>
+);
+
 TabItem.propTypes = {
     props: PropTypes.object.isRequired,
-    TabContent: PropTypes.func.isRequired
+    TabContent: PropTypes.func,
+    isChatTab: PropTypes.bool
 };
 
 /* eslint-disable react/display-name */
 const memberPagePanes = (props, addMessage, socket) => {
+    const { insurance } = props;
     const panes = [
         {
             menuItem: 'Details',
@@ -38,6 +43,7 @@ const memberPagePanes = (props, addMessage, socket) => {
                 <TabItem
                     TabContent={ChatTab}
                     props={{ ...props, addMessage, socket }}
+                    isChatTab={true}
                 />
             )
         },
@@ -46,7 +52,7 @@ const memberPagePanes = (props, addMessage, socket) => {
             render: () => <TabItem props={props} TabContent={ClaimsTab} />
         }
     ];
-    if (!props.insurance.error.length) {
+    if (!insurance.error.length && insurance.data) {
         panes.push({
             menuItem: 'Insurance',
             render: () => <TabItem props={props} TabContent={InsuranceTab} />

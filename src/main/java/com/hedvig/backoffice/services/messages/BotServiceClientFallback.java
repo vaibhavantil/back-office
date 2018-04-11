@@ -2,7 +2,7 @@ package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hedvig.backoffice.services.messages.dto.BackOfficeAnswerDTO;
+import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
 import org.slf4j.Logger;
@@ -50,12 +50,12 @@ public class BotServiceClientFallback implements BotServiceClient {
     }
 
     @Override
-    public void response(BackOfficeMessage message, String token) {
+    public void response(BackOfficeResponseDTO message, String token) {
         log.error("request to bot-service failed");
     }
 
     @Override
-    public void answer(BackOfficeAnswerDTO answer, String token) {
+    public void answer(BackOfficeResponseDTO answer, String token) {
         log.error("request to bot-service failed");
     }
 
