@@ -24,4 +24,9 @@ public interface ProductPricingClient {
 
     @PostMapping("/_/insurance/{memberId}/activateAtDate")
     void activate(@PathVariable("memberId") String memberId, @RequestBody InsuranceActivateDTO dto, @RequestHeader("Authorization") String token);
+
+    @GetMapping("/_/insurance/search?state={state}&query={query}")
+    JsonNode search(@PathVariable("state") String state,
+                    @PathVariable("query") String query,
+                    @RequestHeader("Authorization") String token);
 }

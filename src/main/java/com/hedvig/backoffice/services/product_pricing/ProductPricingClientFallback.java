@@ -25,4 +25,10 @@ public class ProductPricingClientFallback implements ProductPricingClient {
     public void activate(String memberId, InsuranceActivateDTO dto, String token) {
         log.error("product-pricing service unavailable");
     }
+
+    @Override
+    public JsonNode search(String state, String query, String token) {
+        log.error("product-pricing service unavailable");
+        return null;
+    }
 }

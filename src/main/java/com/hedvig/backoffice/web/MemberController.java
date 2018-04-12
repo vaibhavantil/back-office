@@ -80,4 +80,11 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/insurance/search")
+    public JsonNode serachInsurance(@RequestParam(name = "state", defaultValue = "", required = false) String state,
+                                    @RequestParam(name = "query", defaultValue = "", required = false) String query,
+                                    @AuthenticationPrincipal Principal principal) {
+        return productPricingService.search(state, query, personnelService.getIdToken(principal.getName()));
+    }
+
 }
