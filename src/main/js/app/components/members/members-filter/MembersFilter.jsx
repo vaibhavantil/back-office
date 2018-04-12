@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Dropdown, Input } from 'semantic-ui-react';
+import { Button, Dropdown, Form, Input } from 'semantic-ui-react';
 import { memberStatus, memberState } from 'app/lib/selectOptions';
 
 const MembersFilterContainer = styled.div`
@@ -70,16 +70,19 @@ export default class MembersFilter extends React.Component {
                         action={{ icon: 'search', onClick: this.searchRequest }}
                         value={this.state.searchValue}
                     />
-
-                    <label>{filterName}: </label>
-                    <Dropdown
-                        onChange={this.filterChangeHandler}
-                        options={
-                            filterName === 'State' ? memberState : memberStatus
-                        }
-                        selection
-                        value={data.filter}
-                    />
+                    <Form.Group>
+                        <label>{filterName}: </label>
+                        <Dropdown
+                            onChange={this.filterChangeHandler}
+                            options={
+                                filterName === 'State'
+                                    ? memberState
+                                    : memberStatus
+                            }
+                            selection
+                            value={data.filter}
+                        />
+                    </Form.Group>
                 </MembersFilterContainer>
                 <ResetButton onClick={this.resetSearch}>reset</ResetButton>
             </React.Fragment>

@@ -1,9 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import styled from 'styled-components';
 import actions from 'app/store/actions';
 import MemberInsurance from 'components/member-insurance';
-import { ListPage } from 'components/shared';
+
+const ListPage = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 800px;
+    margin: 0 auto 50px;
+`;
 
 const MemberInsurancePage = props => (
     <ListPage>

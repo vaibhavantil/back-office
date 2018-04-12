@@ -35,6 +35,7 @@ export default class MemberInsuranceList extends React.Component {
                 <Table.Cell>{item.insuranceType}</Table.Cell>
                 <Table.Cell>{formattedDate}</Table.Cell>
                 <Table.Cell>{item.insuranceStatus}</Table.Cell>
+                <Table.Cell>{item.cancellationEmailSent.toString()}</Table.Cell>
             </LinkRow>
         );
     };
@@ -71,7 +72,7 @@ export default class MemberInsuranceList extends React.Component {
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell
-                        width={6}
+                        width={5}
                         sorted={column === 'name' ? direction : null}
                         onClick={this.sortTable.bind(this, 'name')}
                     >
@@ -85,6 +86,7 @@ export default class MemberInsuranceList extends React.Component {
                         Insurance type
                     </Table.HeaderCell>
                     <Table.HeaderCell
+                        width={4}
                         sorted={column === 'date' ? direction : null}
                         onClick={this.sortTable.bind(this, 'date')}
                     >
@@ -97,6 +99,7 @@ export default class MemberInsuranceList extends React.Component {
                     >
                         Insurance status
                     </Table.HeaderCell>
+                    <Table.HeaderCell>Cancellation email sent</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
         );
