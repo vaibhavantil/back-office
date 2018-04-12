@@ -30,9 +30,9 @@ export default class InsuranceTab extends React.Component {
     };
 
     saveNewDate = () => {
-        const { messages: { user }, saveInsuranceDate } = this.props;
+        const { messages: { member }, saveInsuranceDate } = this.props;
         if (this.state.dateValue) {
-            saveInsuranceDate(this.state.dateValue, user.hid);
+            saveInsuranceDate(this.state.dateValue, member.hid);
             this.setState({ datePickerDisabled: true });
         }
     };
@@ -42,9 +42,9 @@ export default class InsuranceTab extends React.Component {
     };
 
     downloadClick = () => {
-        const { messages: { user } } = this.props;
+        const { messages: { member } } = this.props;
         //eslint-disable-next-line
-        window.open(`/api/member/mandate/${user.hid}`);
+        window.open(`/api/member/mandate/${member.hid}`);
     };
 
     render() {

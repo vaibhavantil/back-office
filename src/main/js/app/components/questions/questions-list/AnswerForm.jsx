@@ -28,8 +28,8 @@ export default class AnswerForm extends React.Component {
         this.setState({ answer: value });
     };
 
-    answerClick = userId => {
-        this.props.sendAnswer({ msg: this.state.answer, userId });
+    answerClick = id => {
+        this.props.sendAnswer({ msg: this.state.answer, id });
     };
 
     render() {

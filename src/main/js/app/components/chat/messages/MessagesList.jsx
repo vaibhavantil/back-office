@@ -35,26 +35,24 @@ export default class MessagesList extends React.Component {
 
     render() {
         const { messages, error } = this.props;
-        const userId = parseInt(this.props.userId);
+        const id = parseInt(this.props.id);
         return (
             <MessagesListContainer innerRef={el => (this.messagesList = el)}>
                 {messages.length ? (
-                    messages.map((item, id) => (
+                    messages.map((item, key) => (
                         <Message
-                            key={id}
+                            key={key}
                             content={item.body}
-                            left={item.header.fromId !== userId}
+                            left={item.header.fromId !== id}
                             msgId={item.globalId}
                             timestamp={item.timestamp}
-                            from={
-                                item.header.fromId !== userId ? 'bot' : 'member'
-                            }
+                            from={item.header.fromId !== id ? 'bot' : 'member'}
                         />
                     ))
                 ) : (
                     <EmptyList>
                         {error
-                            ? 'No messages with this User'
+                            ? 'No messages with this Member'
                             : 'Lost connection to server'}
                     </EmptyList>
                 )}
@@ -64,7 +62,7 @@ export default class MessagesList extends React.Component {
 }
 
 MessagesList.propTypes = {
-    userId: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     messageId: PropTypes.string,
     messages: PropTypes.array,
     error: PropTypes.bool

@@ -25,9 +25,9 @@ export default class Payments extends React.Component {
     };
 
     updateReserve = () => {
-        const { id, updateReserve } = this.props;
+        const { id, updateReserve, claimDetails } = this.props;
 
-        updateReserve(id, { amount: this.state.reserve });
+        updateReserve(id, { amount: this.state.reserve }, claimDetails.userId);
         this.setState({
             editDisabled: true
         });

@@ -4,9 +4,9 @@ import {
     MESSAGE_RECEIVED,
     CLEAR_MESSAGES_LIST,
     SET_ACTIVE_CONNECTION,
-    USER_REQUESTING,
-    USER_REQUEST_SUCCESS
-} from 'constants/chatUsers';
+    MEMBER_REQUESTING,
+    MEMBER_REQUEST_SUCCESS
+} from '../constants/members';
 
 export default function(state = initialState.messages, action) {
     switch (action.type) {
@@ -25,15 +25,15 @@ export default function(state = initialState.messages, action) {
                 ...state,
                 activeConnection: action.connection
             };
-        case USER_REQUESTING:
+        case MEMBER_REQUESTING:
             return {
                 ...state
             };
 
-        case USER_REQUEST_SUCCESS:
+        case MEMBER_REQUEST_SUCCESS:
             return {
                 ...state,
-                user: action.user
+                member: action.member
             };
         default:
             return state;

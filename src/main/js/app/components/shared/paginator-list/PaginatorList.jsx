@@ -29,7 +29,8 @@ export default class PaginatorList extends React.Component {
             itemContent,
             pageSize,
             tableHeader,
-            isSortable
+            isSortable,
+            keyName
         } = this.props;
         return (
             <React.Fragment>
@@ -37,8 +38,10 @@ export default class PaginatorList extends React.Component {
                     {tableHeader}
                     {activeList.length ? (
                         <Table.Body>
-                            {activeList.map(item => (
-                                <React.Fragment key={item.hid || item.id}>
+                            {activeList.map((item, key) => (
+                                <React.Fragment
+                                    key={keyName ? item[keyName] : key}
+                                >
                                     {itemContent(item)}
                                 </React.Fragment>
                             ))}
@@ -62,5 +65,6 @@ PaginatorList.propTypes = {
     itemContent: PropTypes.func.isRequired,
     tableHeader: PropTypes.object,
     pageSize: PropTypes.number,
-    isSortable: PropTypes.bool
+    isSortable: PropTypes.bool,
+    keyName: PropTypes.string
 };

@@ -1,34 +1,34 @@
 import initialState from '../initialState';
 import {
     setNewMessagesCounter,
-    filterUsersList,
-    sortUsersList
+    filterMembersList,
+    sortMembersList
 } from '../../lib/helpers';
 import {
-    USERS_REQUESTING,
-    USERS_REQUEST_SUCCESS,
-    USERS_ERROR,
-    USER_SEARCH_REQUESTING,
+    MEMBERS_REQUESTING,
+    MEMBERS_REQUEST_SUCCESS,
+    MEMBERS_ERROR,
+    MEMBER_SEARCH_REQUESTING,
     NEW_MESSAGES_RECEIVED,
-    SET_USER_FILTER,
-    USERS_SEARCH_SUCCESS,
-    SORT_USERS_LIST
-} from '../constants/chatUsers';
+    SET_MEMBER_FILTER,
+    MEMBERS_SEARCH_SUCCESS,
+    SORT_MEMBERS_LIST
+} from '../constants/members';
 
-export default function(state = initialState.users, action) {
+export default function(state = initialState.members, action) {
     switch (action.type) {
-        case USER_SEARCH_REQUESTING:
-        case USERS_REQUESTING:
+        case MEMBER_SEARCH_REQUESTING:
+        case MEMBERS_REQUESTING:
             return {
                 ...state,
                 requesting: true
             };
 
-        case USERS_REQUEST_SUCCESS:
-        case USERS_SEARCH_SUCCESS:
+        case MEMBERS_REQUEST_SUCCESS:
+        case MEMBERS_SEARCH_SUCCESS:
             return {
                 ...state,
-                list: filterUsersList(action),
+                list: filterMembersList(action),
                 requesting: false
             };
 
@@ -41,23 +41,23 @@ export default function(state = initialState.users, action) {
                 )
             };
 
-        case SET_USER_FILTER:
+        case SET_MEMBER_FILTER:
             return {
                 ...state,
-                filter: action.query.status,
+                filter: action.query.filter,
                 requesting: true
             };
 
-        case USERS_ERROR:
+        case MEMBERS_ERROR:
             return {
                 ...state,
                 requesting: false
             };
 
-        case SORT_USERS_LIST:
+        case SORT_MEMBERS_LIST:
             return {
                 ...state,
-                list: sortUsersList(
+                list: sortMembersList(
                     [...state.list],
                     action.fieldName,
                     action.isReverse

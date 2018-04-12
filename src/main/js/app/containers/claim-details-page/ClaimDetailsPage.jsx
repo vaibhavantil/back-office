@@ -9,7 +9,7 @@ const ClaimDetailsPage = props => <ClaimDetails {...props} />;
 const mapStateToProps = ({ claimDetails, claims, messages }) => ({
     claimDetails,
     types: claims.types,
-    user: messages.user
+    member: messages.member
 });
 
 export default withRouter(
@@ -17,7 +17,7 @@ export default withRouter(
         ...actions.claimDetailsActions,
         ...actions.notesActions,
         ...actions.paymentActions,
-        userRequest: actions.messagesActions.userRequest,
+        memberRequest: actions.messagesActions.memberRequest,
         claimTypes: actions.claimsActions.claimTypes
     })(ClaimDetailsPage)
 );

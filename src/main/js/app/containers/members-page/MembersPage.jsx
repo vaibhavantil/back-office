@@ -2,25 +2,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import actions from 'app/store/actions';
-import Users from 'components/users';
+import Members from 'components/members';
 import { ListPage } from 'components/shared';
 
-const UsersPage = props => (
+const MembersPage = props => (
     <ListPage>
-        <Users {...props} />
+        <Members {...props} />
     </ListPage>
 );
 
-const mapStateToProps = ({ client, users, messages }) => ({
+const mapStateToProps = ({ client, members, messages }) => ({
     client,
-    users,
+    members,
     messages
 });
 
 export default withRouter(
     connect(mapStateToProps, {
         ...actions.clientActions,
-        ...actions.chatUserActions,
+        ...actions.membersActions,
         ...actions.messagesActions
-    })(UsersPage)
+    })(MembersPage)
 );

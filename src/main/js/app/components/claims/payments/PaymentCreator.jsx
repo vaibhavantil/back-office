@@ -21,14 +21,18 @@ export default class PaymentCreator extends React.Component {
     checkboxHandler = () => this.setState({ exGratia: !this.state.exg });
 
     createPayment = () => {
-        const { createPayment, id } = this.props;
+        const { createPayment, id, userId } = this.props;
         const { exGratia, amount, note } = this.state;
-        createPayment(id, {
-            exGratia,
-            amount,
-            note,
-            date: moment().unix()
-        });
+        createPayment(
+            id,
+            {
+                exGratia,
+                amount,
+                note,
+                date: moment().unix()
+            },
+            userId
+        );
         this.setState({
             note: '',
             amount: '',
@@ -98,5 +102,6 @@ export default class PaymentCreator extends React.Component {
 
 PaymentCreator.propTypes = {
     createPayment: PropTypes.func.isRequired,
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    userId: PropTypes.string
 };

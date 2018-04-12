@@ -19,5 +19,5 @@ export default connect(mapStateToProps, {
     ...actions.assetsActions,
     ...actions.clientActions,
     ...actions.pollActions,
-    userRequest: actions.messagesActions.userRequest
+    memberRequest: actions.messagesActions.memberRequest
 })(AssetsPage);

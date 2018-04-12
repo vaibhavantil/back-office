@@ -20,14 +20,18 @@ export default {
             url: 'logout'
         }
     },
-    users: {
+    members: {
         get: {
             method: 'get',
-            url: 'user'
+            url: 'member'
         },
         search: {
             method: 'get',
-            url: 'user/search'
+            url: 'member/search'
+        },
+        findOne: {
+            method: 'get',
+            url: 'member'
         }
     },
     claims: {
@@ -35,7 +39,7 @@ export default {
             url: 'claims',
             method: 'get'
         },
-        getListByUserId: {
+        getListByMemberId: {
             url: 'claims/user',
             method: 'get'
         },
@@ -93,6 +97,12 @@ export default {
             url: 'member/insurance',
             method: 'post'
         }
+    },
+    insMembers: {
+        get: {
+            method: 'get',
+            url: 'member/insurance/search'
+        },
     },
     ws: {
         // eslint-disable-next-line

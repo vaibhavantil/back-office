@@ -52,7 +52,16 @@ const App = () => (
                     <Route
                         path="/members"
                         render={routeProps => (
-                            <Routes.UsersPageRoute
+                            <Routes.MembersPageRoute
+                                {...routeProps}
+                                store={store}
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/member_insurance"
+                        render={routeProps => (
+                            <Routes.MemberInsurancePageRoute
                                 {...routeProps}
                                 store={store}
                             />

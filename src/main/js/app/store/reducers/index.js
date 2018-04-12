@@ -3,13 +3,14 @@ import assets from './assetsReducer';
 import poll from './pollReducer';
 import client from './clientReducer';
 import messages from './messagesReducer';
-import users from './chatUserReducer';
+import members from './membersReducer';
 import dashboard from './dashboardReducer';
 import claims from './claimsReducer';
 import claimDetails from './claimDetailsReducer';
 import questions from './questionsReducer';
 import insurance from './insuranceReducer';
 import notifications from './notificationsReducer';
+import memberInsurance from './memberInsuranceReducer';
 
 export default {
     login,
@@ -17,11 +18,12 @@ export default {
     poll,
     client,
     messages,
-    users,
+    members,
     dashboard,
     claims,
     claimDetails,
     questions,
     insurance,
-    notifications
+    notifications,
+    memberInsurance
 };

@@ -9,7 +9,7 @@ const ChatTab = ({ messages, error, match, socket, addMessage }) => (
         <MessagesList
             messages={messages.list}
             error={!!socket}
-            userId={match.params.id}
+            id={match.params.id}
             messageId={match.params.msgId}
         />
         <ChatPanel addMessage={addMessage} select={messages.select} />

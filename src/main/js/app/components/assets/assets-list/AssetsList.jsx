@@ -42,8 +42,8 @@ class AssetsList extends React.Component {
         const {
             assets: { list },
             poll: { polling },
-            messages: { user },
-            userRequest,
+            messages: { member },
+            memberRequest,
             pollingHandler,
             assetUpdate
         } = this.props;
@@ -68,8 +68,8 @@ class AssetsList extends React.Component {
                                 key={asset.id}
                                 asset={asset}
                                 assetUpdate={assetUpdate}
-                                userRequest={userRequest}
-                                user={user}
+                                memberRequest={memberRequest}
+                                member={member}
                             />
                         ))
                     ) : (
@@ -96,7 +96,7 @@ AssetsList.propTypes = {
     poll: PropTypes.object,
     setClient: PropTypes.func.isRequired,
     assetRequest: PropTypes.func.isRequired,
-    userRequest: PropTypes.func.isRequired,
+    memberRequest: PropTypes.func.isRequired,
     messages: PropTypes.object.isRequired,
     pollingHandler: PropTypes.func.isRequired
 };

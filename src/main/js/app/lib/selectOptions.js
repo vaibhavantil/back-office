@@ -34,6 +34,11 @@ export const routesList = [
         type: 'MEMBERS'
     },
     {
+        text: 'Member Insurance',
+        route: '/member_insurance',
+        type: 'MEMBER_INSURANCE'
+    },
+    {
         text: 'Questions',
         route: '/questions',
         type: 'QUESTIONS'
@@ -51,10 +56,17 @@ export const claimStatus = [
     { key: 3, text: 'Reopened', value: 'REOPENED' }
 ];
 
-export const userStatus = [
+export const memberStatus = [
     { key: 0, text: 'INITIATED', value: 'INITIATED' },
     { key: 1, text: 'ONBOARDING', value: 'ONBOARDING' },
     { key: 2, text: 'SIGNED', value: 'SIGNED' },
     { key: 3, text: 'INACTIVATED', value: 'INACTIVATED' },
     { key: 6, text: 'ALL', value: 'ALL' }
+];
+
+export const memberState = [
+    { key: 0, text: 'QUOTE', value: 'QUOTE' },
+    { key: 1, text: 'SIGNED', value: 'SIGNED' },
+    { key: 2, text: 'TERMINATED', value: 'TERMINATED' },
+    { key: 3, text: 'ALL', value: 'ALL' }
 ];

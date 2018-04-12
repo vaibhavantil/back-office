@@ -7,19 +7,20 @@ import {
     TableHeader
 } from 'components/claims/claims-list/ClaimsList';
 
-const ClaimsTab = ({ userClaims }) =>
-    userClaims.length ? (
+const ClaimsTab = ({ memberClaims }) =>
+    memberClaims.length ? (
         <PaginatorList
-            list={userClaims}
+            list={memberClaims}
             itemContent={item => <TableRow item={item} />}
             tableHeader={<TableHeader />}
+            keyName="id"
         />
     ) : (
         <Header>Claims list is empty</Header>
     );
 
 ClaimsTab.propTypes = {
-    userClaims: PropTypes.array
+    memberClaims: PropTypes.array
 };
 
 export default ClaimsTab;

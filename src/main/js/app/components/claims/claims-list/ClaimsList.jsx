@@ -43,6 +43,7 @@ const ClaimsList = ({ claims }) => (
         list={claims}
         itemContent={item => <TableRow item={item} />}
         tableHeader={<TableHeader />}
+        keyName="id"
     />
 );
 

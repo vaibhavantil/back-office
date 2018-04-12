@@ -4,15 +4,15 @@ import {
     CLEAR_MESSAGES_LIST,
     SET_ACTIVE_CONNECTION,
     ERROR_RECEIVED,
-    USER_REQUESTING,
-    USER_REQUEST_SUCCESS,
-    USER_REQUEST_ERROR
-} from '../constants/chatUsers';
+    MEMBER_REQUESTING,
+    MEMBER_REQUEST_SUCCESS,
+    MEMBER_REQUEST_ERROR
+} from '../constants/members';
 
-export const addMessage = (message, userId, socket) => ({
+export const addMessage = (message, id, socket) => ({
     type: ADD_MESSAGE,
     message,
-    userId,
+    id,
     socket
 });
 
@@ -35,17 +35,17 @@ export const setActiveConnection = connection => ({
     connection
 });
 
-export const userRequest = userId => ({
-    type: USER_REQUESTING,
-    userId
+export const memberRequest = id => ({
+    type: MEMBER_REQUESTING,
+    id
 });
 
-export const userRequestSuccess = user => ({
-    type: USER_REQUEST_SUCCESS,
-    user
+export const memberRequestSuccess = member => ({
+    type: MEMBER_REQUEST_SUCCESS,
+    member
 });
 
-export const userRequestError = error => ({
-    type: USER_REQUEST_ERROR,
+export const memberRequestError = error => ({
+    type: MEMBER_REQUEST_ERROR,
     error
 });

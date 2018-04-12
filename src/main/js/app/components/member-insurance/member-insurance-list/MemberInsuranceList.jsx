@@ -3,37 +3,39 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Table } from 'semantic-ui-react';
 import PaginatorList from 'components/shared/paginator-list/PaginatorList';
-import * as sockets from 'sockets';
 import { history } from 'app/store';
 import { LinkRow } from 'components/shared';
 
-export default class UsersList extends React.Component {
+export default class MemberInsuranceList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            socket: null,
-            subscription: null,
             column: null,
             direction: null
         };
     }
 
-    getUserName = user =>
-        user.firstName
-            ? `${user.firstName} ${user.lastName || ''}`
-            : `User-${user.hid}`;
+    getMemberName = member =>
+        member.memberFirstName
+            ? `${member.memberFirstName} ${member.memberLastName || ''}`
+            : `Member-${member.memberId}`;
 
-    linkClickHandler = id => history.push(`/members/${id}`);
+    linkClickHandler = id => {
+        history.push(`/members/${id}`, { to: 'insurance' });
+    };
 
     getTableRow = item => {
-        const date = moment(item.birthDate);
+        const date = moment(item.insuranceActiveFrom);
         const formattedDate = date.isValid()
             ? date.format('DD MMMM YYYY')
             : '-';
         return (
-            <LinkRow onClick={this.linkClickHandler.bind(this, item.hid)}>
-                <Table.Cell>{this.getUserName(item)}</Table.Cell>
+            <LinkRow onClick={this.linkClickHandler.bind(this, item.memberId)}>
+                <Table.Cell>{this.getMemberName(item)}</Table.Cell>
+                <Table.Cell>{item.insuranceType}</Table.Cell>
                 <Table.Cell>{formattedDate}</Table.Cell>
+                <Table.Cell>{item.insuranceStatus}</Table.Cell>
+                <Table.Cell>{item.cancellationEmailSent.toString()}</Table.Cell>
             </LinkRow>
         );
     };
@@ -46,7 +48,7 @@ export default class UsersList extends React.Component {
                 column: clickedColumn,
                 direction: 'ascending'
             });
-            this.props.sort(clickedColumn, false);
+            this.props.sortMemberInsList(clickedColumn, false);
             return;
         }
 
@@ -56,7 +58,7 @@ export default class UsersList extends React.Component {
                     direction === 'ascending' ? 'descending' : 'ascending'
             },
             () => {
-                this.props.sort(
+                this.props.sortMemberInsList(
                     clickedColumn,
                     this.state.direction === 'descending'
                 );
@@ -70,65 +72,55 @@ export default class UsersList extends React.Component {
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell
+                        width={5}
                         sorted={column === 'name' ? direction : null}
                         onClick={this.sortTable.bind(this, 'name')}
                     >
                         Name
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                        sorted={column === 'birthday' ? direction : null}
-                        onClick={this.sortTable.bind(this, 'birthday')}
+                        width={4}
+                        sorted={column === 'type' ? direction : null}
+                        onClick={this.sortTable.bind(this, 'type')}
                     >
-                        Birthday
+                        Insurance type
                     </Table.HeaderCell>
+                    <Table.HeaderCell
+                        width={4}
+                        sorted={column === 'date' ? direction : null}
+                        onClick={this.sortTable.bind(this, 'date')}
+                    >
+                        Insurance active from
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                        width={4}
+                        sorted={column === 'status' ? direction : null}
+                        onClick={this.sortTable.bind(this, 'status')}
+                    >
+                        Insurance status
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>Cancellation email sent</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
         );
     };
-
-    subscribeSocket = connection => {
-        const { newMessagesReceived, client: { name } } = this.props;
-        const { stompClient, subscription } = sockets.usersListSubscribe(
-            { newMessagesReceived },
-            name,
-            connection
-        );
-        this.setState({
-            socket: stompClient,
-            subscription
-        });
-    };
-
-    componentDidMount() {
-        // TODO uncomment when ready method to count the number of unread messages
-        /* const { setActiveConnection, messages } = this.props;
-        if (!messages.activeConnection) {
-            sockets.connect().then(stompClient => {
-                setActiveConnection(stompClient);
-                this.subscribeSocket(stompClient);
-            });
-        } else {
-            this.subscribeSocket(messages.activeConnection);
-        } */
-    }
-
     render() {
-        const { users } = this.props;
+        const { memberInsurance: { list } } = this.props;
+
         return (
             <PaginatorList
-                list={users}
+                list={list}
                 itemContent={item => this.getTableRow(item)}
                 tableHeader={this.getTableHeader()}
-                pageSize={25}
+                pageSize={20}
                 isSortable={true}
+                keyName="productId"
             />
         );
     }
 }
 
-UsersList.propTypes = {
-    users: PropTypes.array.isRequired,
-    newMessagesReceived: PropTypes.func.isRequired,
-    client: PropTypes.object.isRequired,
-    sort: PropTypes.func.isRequired
+MemberInsuranceList.propTypes = {
+    memberInsurance: PropTypes.object.isRequired,
+    sortMemberInsList: PropTypes.func.isRequired
 };
