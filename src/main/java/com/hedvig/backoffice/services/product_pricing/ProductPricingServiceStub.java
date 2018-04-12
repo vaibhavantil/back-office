@@ -30,6 +30,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
             "    \"newTotalPrice\": null,\n" +
             "    \"insuredAtOtherCompany\": true,\n" +
             "    \"insuranceType\": \"BRF\",\n" +
+            "    \"cancellationEmailSent\": false,\n" +
             "    \"insuranceActiveFrom\": null,\n" +
             "    \"insuranceActiveTo\": null\n" +
             "  }";
@@ -92,5 +93,12 @@ public class ProductPricingServiceStub implements ProductPricingService {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    @Override
+    public void sendCancellationEmail(String memberId, String token) {
+        String i = insurances.computeIfAbsent(memberId, id -> INSURANCE_TEMPLATE);
+        i = i.replace("\"cancellationEmailSent\": false", "\"cancellationEmailSent\": true");
+        insurances.put(memberId, i);
     }
 }
