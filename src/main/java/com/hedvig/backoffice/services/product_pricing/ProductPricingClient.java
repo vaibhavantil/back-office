@@ -29,4 +29,7 @@ public interface ProductPricingClient {
     JsonNode search(@PathVariable("state") String state,
                     @PathVariable("query") String query,
                     @RequestHeader("Authorization") String token);
+
+    @PostMapping("_/insurance/{memberId}/sendCancellationEmail")
+    void sendCancellationEmail(@PathVariable("memberId") String memberId, @RequestHeader("Authorization") String token);
 }

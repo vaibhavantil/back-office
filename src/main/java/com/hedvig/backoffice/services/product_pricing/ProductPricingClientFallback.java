@@ -31,4 +31,9 @@ public class ProductPricingClientFallback implements ProductPricingClient {
         log.error("product-pricing service unavailable");
         return null;
     }
+
+    @Override
+    public void sendCancellationEmail(String memberId, String token) {
+        log.error("product-pricing service unavailable");
+    }
 }

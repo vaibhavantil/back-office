@@ -32,4 +32,9 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     public JsonNode search(String state, String query, String token) {
         return client.search(state, query, token);
     }
+
+    @Override
+    public void sendCancellationEmail(String memberId, String token) {
+        client.sendCancellationEmail(memberId, token);
+    }
 }
