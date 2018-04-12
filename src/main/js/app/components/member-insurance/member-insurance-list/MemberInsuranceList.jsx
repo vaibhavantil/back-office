@@ -35,7 +35,11 @@ export default class MemberInsuranceList extends React.Component {
                 <Table.Cell>{item.insuranceType}</Table.Cell>
                 <Table.Cell>{formattedDate}</Table.Cell>
                 <Table.Cell>{item.insuranceStatus}</Table.Cell>
-                <Table.Cell>{item.cancellationEmailSent.toString()}</Table.Cell>
+                <Table.Cell>
+                    {item.cancellationEmailSent
+                        ? item.cancellationEmailSent.toString()
+                        : '-'}
+                </Table.Cell>
             </LinkRow>
         );
     };
