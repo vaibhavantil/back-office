@@ -44,7 +44,7 @@ export default function(state = initialState.members, action) {
         case SET_MEMBER_FILTER:
             return {
                 ...state,
-                filter: action.query.status,
+                filter: action.query.filter,
                 requesting: true
             };
 

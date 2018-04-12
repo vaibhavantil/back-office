@@ -121,6 +121,7 @@ export default class MembersList extends React.Component {
                 tableHeader={this.getTableHeader()}
                 pageSize={25}
                 isSortable={true}
+                keyName="hid"
             />
         );
     }

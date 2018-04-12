@@ -204,7 +204,9 @@ export const replaceAnswer = (questions, data) => {
  */
 export const getMemberInfo = (members, id) => {
     const member = members.find(member => member.hid === id);
-    return member ? `${member.firstName} ${member.lastName || ''}` : `id: ${id}`;
+    return member
+        ? `${member.firstName} ${member.lastName || ''}`
+        : `id: ${id}`;
 };
 
 String.prototype.capitalize = function() {
@@ -248,6 +250,12 @@ export const sortAssetsList = assets =>
         }))
         .sort((a, b) => moment(a.registerDate).diff(moment(b.registerDate)));
 
+/**
+ * Sort members table (Members overview page)
+ * @param {array} list members list
+ * @param {string} fieldName clicked column name
+ * @param {bool} isReverse 
+ */
 export const sortMembersList = (list, fieldName, isReverse) => {
     let sortedList = null;
 
@@ -266,6 +274,54 @@ export const sortMembersList = (list, fieldName, isReverse) => {
                         : 0
             );
             break;
+        default:
+            sortedList = list;
+    }
+    return isReverse ? sortedList.reverse() : sortedList;
+};
+
+/**
+ * Sort members table (MemberInsurance page)
+ * @param {array} list membersList
+ * @param {string} fieldName clicked column name
+ * @param {bool} isReverse 
+ */
+export const sortMemberInsList = (list, fieldName, isReverse) => {
+    let sortedList = null;
+
+    switch (fieldName) {
+        case 'name':
+            sortedList = list.sort(
+                (a, b) =>
+                    `${a.memberFirstName}${a.memberLastName}` >
+                    `${b.memberFirstName}${b.memberLastName}`
+                        ? 1
+                        : -1
+            );
+            break;
+        case 'date':
+            sortedList = list.sort(
+                (a, b) =>
+                    a.insuranceActiveFrom && b.insuranceActiveFrom
+                        ? moment(a.insuranceActiveFrom).diff(
+                              moment(b.insuranceActiveFrom)
+                          )
+                        : 0
+            );
+            break;
+
+        case 'type':
+            sortedList = list.sort(
+                (a, b) => (a.insuranceType > b.insuranceType ? 1 : -1)
+            );
+            break;
+
+        case 'status':
+            sortedList = list.sort(
+                (a, b) => (a.insuranceStatus > b.insuranceStatus ? 1 : -1)
+            );
+            break;
+
         default:
             sortedList = list;
     }

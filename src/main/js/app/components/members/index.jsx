@@ -17,10 +17,16 @@ export default class Members extends React.Component {
     }
 
     render() {
+        const { members, setFilter, searchMemberRequest } = this.props;
         return (
             <React.Fragment>
                 <Header size="huge">Members</Header>
-                <MembersFilter {...this.props} />
+                <MembersFilter
+                    data={members}
+                    setFilter={setFilter}
+                    search={searchMemberRequest}
+                    filterName="Status"
+                />
                 <MembersList {...this.props} />
             </React.Fragment>
         );
@@ -29,5 +35,7 @@ export default class Members extends React.Component {
 
 Members.propTypes = {
     members: PropTypes.object.isRequired,
-    membersRequest: PropTypes.func.isRequired
+    membersRequest: PropTypes.func.isRequired,
+    setFilter: PropTypes.func.isRequired,
+    searchMemberRequest: PropTypes.func.isRequired
 };

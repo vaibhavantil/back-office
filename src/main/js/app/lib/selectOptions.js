@@ -63,3 +63,10 @@ export const memberStatus = [
     { key: 3, text: 'INACTIVATED', value: 'INACTIVATED' },
     { key: 6, text: 'ALL', value: 'ALL' }
 ];
+
+export const memberState = [
+    { key: 0, text: 'QUOTE', value: 'QUOTE' },
+    { key: 1, text: 'SIGNED', value: 'SIGNED' },
+    { key: 2, text: 'TERMINATED', value: 'TERMINATED' },
+    { key: 3, text: 'ALL', value: 'ALL' }
+];

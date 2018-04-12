@@ -1,10 +1,13 @@
 import initialState from '../initialState';
+import { sortMemberInsList } from 'app/lib/helpers';
 import {
     MEMBER_INS_REQUESTING,
     MEMBER_INS_SUCCESS,
     MEMBER_INS_ERROR,
     MEMBER_INS_SEARCH_REQUESTING,
-    MEMBER_INS_SEARCH_SUCCESS
+    MEMBER_INS_SEARCH_SUCCESS,
+    SET_MEMBER_INS_FILTER,
+    SORT_MEMBER_INS_LIST
 } from '../constants/memberInsurance';
 
 export default function(state = initialState.memberInsurance, action) {
@@ -30,6 +33,22 @@ export default function(state = initialState.memberInsurance, action) {
                 requesting: false
             };
 
+        case SET_MEMBER_INS_FILTER:
+            return {
+                ...state,
+                filter: action.query.filter,
+                requesting: true
+            };
+
+        case SORT_MEMBER_INS_LIST:
+            return {
+                ...state,
+                list: sortMemberInsList(
+                    [...state.list],
+                    action.fieldName,
+                    action.isReverse
+                )
+            };
         default:
             return state;
     }

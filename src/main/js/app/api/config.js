@@ -101,12 +101,8 @@ export default {
     insMembers: {
         get: {
             method: 'get',
-            url: 'member'
+            url: 'member/insurance/search'
         },
-        search: {
-            method: 'get',
-            url: 'member/search'
-        }
     },
     ws: {
         // eslint-disable-next-line

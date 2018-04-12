@@ -49,6 +49,7 @@ export default {
     notifications: [],
     memberInsurance: {
         requesting: false,
-        list: []
+        list: [],
+        filter: ''
     }
 };

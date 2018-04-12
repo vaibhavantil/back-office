@@ -92,7 +92,7 @@ export default class Chat extends React.Component {
     }
 
     render() {
-        const { messages } = this.props;
+        const { messages, history: { location } } = this.props;
         const panes = memberPagePanes(
             this.props,
             this.addMessageHandler,
@@ -100,12 +100,16 @@ export default class Chat extends React.Component {
         );
         return (
             <ChatPageContainer>
-                <Header size="huge">{this.getChatTitle(messages.member)}</Header>
+                <Header size="huge">
+                    {this.getChatTitle(messages.member)}
+                </Header>
                 <Tab
                     style={{ height: '100%' }}
                     panes={panes}
                     renderActiveOnly={true}
-                    defaultActiveIndex={1}
+                    defaultActiveIndex={
+                        location.state.to === 'insurance' ? 3 : 1
+                    }
                 />
             </ChatPageContainer>
         );
@@ -126,5 +130,6 @@ Chat.propTypes = {
     insuranceRequest: PropTypes.func.isRequired,
     insurance: PropTypes.object.isRequired,
     saveInsuranceDate: PropTypes.func.isRequired,
-    memberClaims: PropTypes.array
+    memberClaims: PropTypes.array,
+    history: PropTypes.object.isRequired
 };

@@ -13,6 +13,7 @@ const ClaimsTab = ({ memberClaims }) =>
             list={memberClaims}
             itemContent={item => <TableRow item={item} />}
             tableHeader={<TableHeader />}
+            keyName="id"
         />
     ) : (
         <Header>Claims list is empty</Header>

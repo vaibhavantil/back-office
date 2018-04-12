@@ -3,7 +3,8 @@ import api from 'app/api';
 import config from 'app/api/config';
 import {
     MEMBER_INS_REQUESTING,
-    MEMBER_INS_SEARCH_REQUESTING
+    MEMBER_INS_SEARCH_REQUESTING,
+    SET_MEMBER_INS_FILTER
 } from '../constants/memberInsurance';
 
 import {
@@ -33,12 +34,12 @@ function* requestFlow() {
 function* searchFlow({ query }) {
     try {
         const queryParams = {
-            ...query,
-            status: query.status === 'ALL' ? '' : query.status
+            query: query.query,
+            state: query.filter === 'ALL' ? '' : query.filter
         };
         const searchResult = yield call(
             api,
-            config.insMembers.search,
+            config.insMembers.get,
             null,
             '',
             queryParams
@@ -55,7 +56,8 @@ function* searchFlow({ query }) {
 function* membersInsuranceWatcher() {
     yield [
         takeLatest(MEMBER_INS_REQUESTING, requestFlow),
-        takeLatest(MEMBER_INS_SEARCH_REQUESTING, searchFlow)
+        takeLatest(MEMBER_INS_SEARCH_REQUESTING, searchFlow),
+        takeLatest(SET_MEMBER_INS_FILTER, searchFlow)
     ];
 }
 

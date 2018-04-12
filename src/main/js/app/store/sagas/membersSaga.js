@@ -28,8 +28,8 @@ function* membersRequestFlow() {
 function* membersSearchFlow({ query }) {
     try {
         const queryParams = {
-            ...query,
-            status: query.status === 'ALL' ? '' : query.status
+            query: query.query,
+            status: query.filter === 'ALL' ? '' : query.filter
         };
         const searchResult = yield call(
             api,

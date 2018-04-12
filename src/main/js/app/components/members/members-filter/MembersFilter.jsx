@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Dropdown, Input } from 'semantic-ui-react';
-import { memberStatus } from 'app/lib/selectOptions';
+import { memberStatus, memberState } from 'app/lib/selectOptions';
 
 const MembersFilterContainer = styled.div`
     display: flex;
@@ -37,32 +37,32 @@ export default class MembersFilter extends React.Component {
 
     searchRequest = () => {
         const { searchValue, filter } = this.state;
-        this.props.searchMemberRequest({ query: searchValue, status: filter });
+        this.props.search({ query: searchValue, filter });
     };
 
     filterChangeHandler = (e, { value }) => {
         const searchValue = this.state.searchValue;
-        this.props.setFilter({ query: searchValue, status: value });
+        this.props.setFilter({ query: searchValue, filter: value });
         this.setState({ filter: value });
     };
 
     resetSearch = () => {
         const { setFilter } = this.props;
-        setFilter({ status: 'ALL' });
+        setFilter({ filter: 'ALL' });
         this.setState({ searchValue: '' });
     };
 
     componentDidMount() {
-        this.setState({ filter: this.props.members.filter });
+        this.setState({ filter: this.props.data.filter });
     }
 
     render() {
-        const { members } = this.props;
+        const { data, filterName } = this.props;
         return (
             <React.Fragment>
                 <MembersFilterContainer>
                     <Input
-                        loading={members.requesting}
+                        loading={data.requesting}
                         placeholder="Search..."
                         iconPosition="left"
                         onChange={this.inputChangeHandler}
@@ -71,12 +71,14 @@ export default class MembersFilter extends React.Component {
                         value={this.state.searchValue}
                     />
 
-                    <label>Status: </label>
+                    <label>{filterName}: </label>
                     <Dropdown
                         onChange={this.filterChangeHandler}
-                        options={memberStatus}
+                        options={
+                            filterName === 'State' ? memberState : memberStatus
+                        }
                         selection
-                        value={members.filter}
+                        value={data.filter}
                     />
                 </MembersFilterContainer>
                 <ResetButton onClick={this.resetSearch}>reset</ResetButton>
@@ -86,8 +88,8 @@ export default class MembersFilter extends React.Component {
 }
 
 MembersFilter.propTypes = {
-    members: PropTypes.object.isRequired,
-    searchMemberRequest: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired,
+    search: PropTypes.func.isRequired,
     setFilter: PropTypes.func,
-    sortMembersList: PropTypes.func.isRequired
+    filterName: PropTypes.string
 };

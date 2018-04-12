@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Header } from 'semantic-ui-react';
-// import MembersFilter from '../members/members-filter/MembersFilter';
+import MembersFilter from '../members/members-filter/MembersFilter';
 import MemberInsuranceList from './member-insurance-list/MemberInsuranceList';
 
 export default class MemberInsurance extends React.Component {
@@ -17,10 +17,20 @@ export default class MemberInsurance extends React.Component {
     }
 
     render() {
+        const {
+            setMemberInsFilter,
+            searchMemberInsRequest,
+            memberInsurance
+        } = this.props;
         return (
             <React.Fragment>
                 <Header size="huge"> Member Insurance </Header>
-                {/* <MembersFilter {...this.props} /> */}
+                <MembersFilter
+                    data={memberInsurance}
+                    setFilter={setMemberInsFilter}
+                    search={searchMemberInsRequest}
+                    filterName="State"
+                />
                 <MemberInsuranceList {...this.props} />
             </React.Fragment>
         );
@@ -28,5 +38,7 @@ export default class MemberInsurance extends React.Component {
 }
 MemberInsurance.propTypes = {
     memberInsurance: PropTypes.object.isRequired,
-    memberInsRequest: PropTypes.func.isRequired
+    memberInsRequest: PropTypes.func.isRequired,
+    searchMemberInsRequest: PropTypes.func.isRequired,
+    setMemberInsFilter: PropTypes.func.isRequired
 };
