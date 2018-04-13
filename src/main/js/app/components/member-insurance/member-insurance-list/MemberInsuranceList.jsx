@@ -18,7 +18,7 @@ export default class MemberInsuranceList extends React.Component {
     getMemberName = member =>
         member.memberFirstName
             ? `${member.memberFirstName} ${member.memberLastName || ''}`
-            : `Member-${member.memberId}`;
+            : `${member.memberId ? 'Member-' + member.memberId : 'No id'}`;
 
     linkClickHandler = id => {
         history.push(`/members/${id}`, { to: 'insurance' });

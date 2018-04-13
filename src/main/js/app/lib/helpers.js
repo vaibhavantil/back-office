@@ -254,7 +254,7 @@ export const sortAssetsList = assets =>
  * Sort members table (Members overview page)
  * @param {array} list members list
  * @param {string} fieldName clicked column name
- * @param {bool} isReverse 
+ * @param {bool} isReverse
  */
 export const sortMembersList = (list, fieldName, isReverse) => {
     let sortedList = null;
@@ -284,7 +284,7 @@ export const sortMembersList = (list, fieldName, isReverse) => {
  * Sort members table (MemberInsurance page)
  * @param {array} list membersList
  * @param {string} fieldName clicked column name
- * @param {bool} isReverse 
+ * @param {bool} isReverse
  */
 export const sortMemberInsList = (list, fieldName, isReverse) => {
     let sortedList = null;
@@ -300,14 +300,11 @@ export const sortMemberInsList = (list, fieldName, isReverse) => {
             );
             break;
         case 'date':
-            sortedList = list.sort(
-                (a, b) =>
-                    a.insuranceActiveFrom && b.insuranceActiveFrom
-                        ? moment(a.insuranceActiveFrom).diff(
-                              moment(b.insuranceActiveFrom)
-                          )
-                        : 0
-            );
+            sortedList = list.sort((a, b) => {
+                const dateA = moment(a.insuranceActiveFrom || '10000-01-01');
+                const dateB = moment(b.insuranceActiveFrom || '10000-01-01');
+                return dateA.diff(dateB);
+            });
             break;
 
         case 'type':
