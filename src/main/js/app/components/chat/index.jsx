@@ -98,6 +98,7 @@ export default class Chat extends React.Component {
             this.addMessageHandler,
             this.state.socket
         );
+        const routeData = location.state ? location.state.to : null;
         return (
             <ChatPageContainer>
                 <Header size="huge">
@@ -107,9 +108,7 @@ export default class Chat extends React.Component {
                     style={{ height: '100%' }}
                     panes={panes}
                     renderActiveOnly={true}
-                    defaultActiveIndex={
-                        location.state.to === 'insurance' ? 3 : 1
-                    }
+                    defaultActiveIndex={routeData === 'insurance' ? 3 : 1}
                 />
             </ChatPageContainer>
         );
