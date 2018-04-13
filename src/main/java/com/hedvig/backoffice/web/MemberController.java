@@ -87,7 +87,7 @@ public class MemberController {
         return productPricingService.search(state, query, personnelService.getIdToken(principal.getName()));
     }
 
-    @PostMapping("/insyrance/{hid}/sendCancellationEmail")
+    @PostMapping("/insurance/{hid}/sendCancellationEmail")
     public ResponseEntity<?> sendCancellationEmail(@PathVariable String hid, @AuthenticationPrincipal Principal principal) {
         productPricingService.sendCancellationEmail(hid, personnelService.getIdToken(principal.getName()));
         return ResponseEntity.noContent().build();
