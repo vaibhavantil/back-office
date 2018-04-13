@@ -130,5 +130,6 @@ Chat.propTypes = {
     insurance: PropTypes.object.isRequired,
     saveInsuranceDate: PropTypes.func.isRequired,
     memberClaims: PropTypes.array,
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    sendCancelRequest: PropTypes.func.isRequired
 };

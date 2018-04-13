@@ -21,7 +21,8 @@ export default function(state = initialState.members, action) {
         case MEMBERS_REQUESTING:
             return {
                 ...state,
-                requesting: true
+                requesting: true,
+                query: action.query.query
             };
 
         case MEMBERS_REQUEST_SUCCESS:

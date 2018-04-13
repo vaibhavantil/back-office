@@ -96,6 +96,10 @@ export default {
         setDate: {
             url: 'member/insurance',
             method: 'post'
+        },
+        cancel: {
+            url: 'member/insurance',
+            method: 'post'
         }
     },
     insMembers: {

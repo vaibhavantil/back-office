@@ -126,11 +126,7 @@ export const filterMembersList = ({ type, members }) =>
               .filter(item => item.status !== 'INACTIVATED')
               .map(item => ({
                   ...item,
-                  signupDate: moment(
-                      item.signupDate ||
-                          // TODO remove mock
-                          `03/${Math.floor(Math.random() * 15) + 1}/2018`
-                  )
+                  signupDate: moment(item.signupDate)
               }))
               .sort((a, b) => a.signupDate.diff(b.signupDate))
               .reverse();

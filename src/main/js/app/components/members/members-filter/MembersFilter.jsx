@@ -53,7 +53,8 @@ export default class MembersFilter extends React.Component {
     };
 
     componentDidMount() {
-        this.setState({ filter: this.props.data.filter });
+        const { data } = this.props;
+        this.setState({ filter: data.filter, searchValue: data.query });
     }
 
     render() {

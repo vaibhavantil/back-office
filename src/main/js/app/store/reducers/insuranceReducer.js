@@ -4,11 +4,14 @@ import {
     INSURANCE_REQUEST_SUCCESS,
     INSURANCE_ERROR,
     SAVE_INSURANCE_DATE,
-    SAVE_DATE_SUCCESS
+    SAVE_DATE_SUCCESS,
+    SEND_CANCEL_REQUEST,
+    SEND_CANCEL_REQUEST_SUCCESS
 } from '../constants/members';
 
 export default function(state = initialState.insurance, action) {
     switch (action.type) {
+        case SEND_CANCEL_REQUEST:
         case INSURANCE_REQUESTING:
         case SAVE_INSURANCE_DATE:
             return {
@@ -41,6 +44,11 @@ export default function(state = initialState.insurance, action) {
                 data: { ...state.data, insuranceActiveFrom: action.date }
             };
 
+        case SEND_CANCEL_REQUEST_SUCCESS:
+            return {
+                ...state,
+                requesting: false
+            };
         default:
             return state;
     }

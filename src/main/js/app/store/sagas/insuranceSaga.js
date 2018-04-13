@@ -1,12 +1,16 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-
-import { INSURANCE_REQUESTING, SAVE_INSURANCE_DATE } from 'constants/members';
+import {
+    INSURANCE_REQUESTING,
+    SAVE_INSURANCE_DATE,
+    SEND_CANCEL_REQUEST
+} from 'constants/members';
 import api from 'app/api';
 import config from 'app/api/config';
 import {
     insuranceGetSuccess,
     insuranceGetError,
-    saveDateSuccess
+    saveDateSuccess,
+    sendCancelRequestSuccess
 } from '../actions/insuranceActions';
 import { showNotification } from '../actions/notificationsActions';
 
@@ -37,10 +41,30 @@ function* saveDateFlow({ id, activationDate }) {
     }
 }
 
+function* cancelRequestFlow({ id }) {
+    try {
+        const path = `${id}/sendCancellationEmail`;
+        yield call(api, config.insurance.cancel, null, path);
+        yield [
+            put(sendCancelRequestSuccess()),
+            put(
+                showNotification({
+                    message: 'Success',
+                    header: 'Send cancellation email to existing insurer',
+                    success: true
+                })
+            )
+        ];
+    } catch (error) {
+        yield [put(insuranceGetError(error.message))];
+    }
+}
+
 function* insuranceWatcher() {
     yield [
         takeLatest(INSURANCE_REQUESTING, requestFlow),
-        takeLatest(SAVE_INSURANCE_DATE, saveDateFlow)
+        takeLatest(SAVE_INSURANCE_DATE, saveDateFlow),
+        takeLatest(SEND_CANCEL_REQUEST, cancelRequestFlow)
     ];
 }
 
