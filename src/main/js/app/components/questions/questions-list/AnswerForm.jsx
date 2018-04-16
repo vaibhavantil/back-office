@@ -63,6 +63,7 @@ export default class AnswerForm extends React.Component {
                                 content="Send"
                                 onClick={this.answerClick.bind(this, hid)}
                                 primary
+                                disabled={!this.state.answer.trim().length}
                             />
                             <Button
                                 content="Done"
