@@ -1,5 +1,6 @@
 import config from 'app/api/config';
 import { connect } from './index';
+import api from 'app/api';
 
 const connectError = { stompClient: null, subscription: null };
 
@@ -32,20 +33,18 @@ export const subscribe = (actions, id, user, stompClient) => {
 };
 
 /* eslint-disable no-undef */
-export const reconnect = (actions, id, user) => {
-    return new Promise((resolve, reject) => {
-        connect()
-            .then(connection => {
-                const { stompClient, subscription } = subscribe(
-                    actions,
-                    id,
-                    user,
-                    connection
-                );
-                resolve({ stompClient, subscription });
-            })
-            .catch(() => {
-                reject(connectError);
-            });
-    });
+export const reconnect = async (actions, id, user) => {
+    try {
+        const response = user ? user : await api(config.login.login);
+        const connection = await connect();
+        const { stompClient, subscription } = subscribe(
+            actions,
+            id,
+            user || response.data.id,
+            connection
+        );
+        return { stompClient, subscription };
+    } catch (error) {
+        return connectError;
+    }
 };
