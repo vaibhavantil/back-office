@@ -97,6 +97,18 @@ public class QuestionServiceImpl implements QuestionService {
         return QuestionGroupDTO.fromDomain(group);
     }
 
+    @Override
+    public QuestionGroupDTO done(String hid, Personnel personnel) throws QuestionNotFoundException {
+        QuestionGroup group = questionGroupRepository.findUnasweredByHid(hid).orElseThrow(() -> new QuestionNotFoundException(hid));
+        group.setAnswerDate(Instant.now());
+        group.setAnswer("");
+        group.setPersonnel(personnel);
+        questionGroupRepository.save(group);
+        updatesService.changeOn(-1, UpdateType.QUESTIONS);
+
+        return QuestionGroupDTO.fromDomain(group);
+    }
+
     @Transactional
     @Override
     public void addNewQuestions(List<BotMessage> questions) {

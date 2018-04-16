@@ -52,4 +52,11 @@ public class QuestionController {
         return questionService.answer(hid, message.getMsg(), personnel);
     }
 
+    @PostMapping("/done/{hid}")
+    public QuestionGroupDTO done(@PathVariable String hid, @AuthenticationPrincipal String principal)
+            throws QuestionNotFoundException, AuthorizationException {
+        Personnel personnel = personnelRepository.findById(principal).orElseThrow(AuthorizationException::new);
+        return questionService.done(hid, personnel);
+    }
+
 }
