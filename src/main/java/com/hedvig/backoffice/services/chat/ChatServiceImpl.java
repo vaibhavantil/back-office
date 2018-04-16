@@ -114,8 +114,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             personnel = personnelService.getPersonnel(principalId);
         } catch (AuthorizationException e) {
-            // TODO
-            //send(hid, personnel.getId(), Message.error(400, "Not authorized"));
+            send(hid, principalId, Message.error(400, "Not authorized"));
             log.warn("member not authorized hid = " + hid);
             return;
         }

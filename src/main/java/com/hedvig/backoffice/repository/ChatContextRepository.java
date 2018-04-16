@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ChatContextRepository extends CrudRepository<ChatContext, String> {
@@ -22,7 +21,7 @@ public interface ChatContextRepository extends CrudRepository<ChatContext, Strin
     @Query("delete from ChatContext c where c.sessionId = :sessionId")
     void deleteBySessionId(@Param("sessionId") String sessionId);
 
-    @Query("select c from ChatContext c where c.hid = :hid and c.active = true")
-    List<ChatContext> findActiveChatsByHid(@Param("hid") String hid);
+    @Query("select distinct c.personnel from ChatContext c where c.hid = :hid and c.active = true")
+    List<Personnel> findPersonnelsWithActiveChatsByHid(@Param("hid") String hid);
 
 }
