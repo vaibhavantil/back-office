@@ -1,7 +1,11 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import api from 'app/api';
 import config from '../../api/config';
-import { QUESTIONS_REQUESTING, QUESTION_ANSWERING } from 'constants/questions';
+import {
+    QUESTIONS_REQUESTING,
+    QUESTION_ANSWERING,
+    QUESTION_DONE_MSG
+} from '../constants/questions';
 import {
     questionsReqSuccess,
     questionsReqError,
@@ -22,7 +26,12 @@ function* requestFlow() {
         );
     } catch (error) {
         yield [
-            put(showNotification({ message: error.message, header: 'Questions' })),
+            put(
+                showNotification({
+                    message: error.message,
+                    header: 'Questions'
+                })
+            ),
             put(questionsReqError(error))
         ];
     }
@@ -34,7 +43,29 @@ function* sendAnswerFlow({ data }) {
         yield put(answerSuccess(data));
     } catch (error) {
         yield [
-            put(showNotification({ message: error.message, header: 'Questions' })),
+            put(
+                showNotification({
+                    message: error.message,
+                    header: 'Questions'
+                })
+            ),
+            put(answerError({ message: error.message, hid: data.id }))
+        ];
+    }
+}
+
+function* sendDoneMsgFlow({ data }) {
+    try {
+        yield call(api, config.questions.sendDoneMsg, data, data.id);
+        yield put(answerSuccess(data));
+    } catch (error) {
+        yield [
+            put(
+                showNotification({
+                    message: error.message,
+                    header: 'Questions'
+                })
+            ),
             put(answerError({ message: error.message, hid: data.id }))
         ];
     }
@@ -43,7 +74,8 @@ function* sendAnswerFlow({ data }) {
 function* watcher() {
     yield [
         takeLatest(QUESTIONS_REQUESTING, requestFlow),
-        takeLatest(QUESTION_ANSWERING, sendAnswerFlow)
+        takeLatest(QUESTION_ANSWERING, sendAnswerFlow),
+        takeLatest(QUESTION_DONE_MSG, sendDoneMsgFlow)
     ];
 }
 

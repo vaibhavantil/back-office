@@ -11,13 +11,20 @@ const ListContainer = styled.div`
     margin: 0 auto 50px;
 `;
 
-const QuestionsList = ({ questions, members, sendAnswer, tabChange }) => {
+const QuestionsList = ({
+    questions,
+    members,
+    sendAnswer,
+    tabChange,
+    sendDoneMsg
+}) => {
     const notAnswered = () => (
         <Tab.Pane>
             <SortedList
                 list={questions.notAnswered}
                 members={members}
                 sendAnswer={sendAnswer}
+                sendDoneMsg={sendDoneMsg}
             />
         </Tab.Pane>
     );
@@ -28,6 +35,7 @@ const QuestionsList = ({ questions, members, sendAnswer, tabChange }) => {
                 list={questions.answered}
                 members={members}
                 sendAnswer={sendAnswer}
+                sendDoneMsg={sendDoneMsg}
             />
         </Tab.Pane>
     );
@@ -51,6 +59,7 @@ const QuestionsList = ({ questions, members, sendAnswer, tabChange }) => {
 QuestionsList.propTypes = {
     questions: PropTypes.object.isRequired,
     sendAnswer: PropTypes.func.isRequired,
+    sendDoneMsg: PropTypes.func.isRequired,
     tabChange: PropTypes.func.isRequired,
     members: PropTypes.array
 };

@@ -21,8 +21,14 @@ const AnswerInfo = ({ member, redirectClick }) => (
             content="Open Chat"
             onClick={redirectClick.bind(this, member.hid)}
         />
-        <Header size="medium">Admin answer:</Header>
-        <Header size="small">{member.answer}</Header>
+        {!member.answer.length ? (
+            <Header size="medium">Done</Header>
+        ) : (
+            <React.Fragment>
+                <Header size="medium">Admin answer:</Header>
+                <Header size="small">{member.answer}</Header>
+            </React.Fragment>
+        )}
     </Segment>
 );
 
