@@ -10,10 +10,11 @@ export default class MemberInsurance extends React.Component {
     }
 
     componentDidMount() {
-        const { memberInsurance, memberInsRequest } = this.props;
-        if (!memberInsurance.list.length) {
-            memberInsRequest();
-        }
+        const {
+            memberInsurance: { filter, query },
+            searchMemberInsRequest
+        } = this.props;
+        searchMemberInsRequest({ query, filter });
     }
 
     render() {

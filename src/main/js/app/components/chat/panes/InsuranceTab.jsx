@@ -47,6 +47,11 @@ export default class InsuranceTab extends React.Component {
         window.open(`/api/member/mandate/${member.hid}`);
     };
 
+    cancelInsuranceClick = () => {
+        const { insurance: { data }, sendCancelRequest } = this.props;
+        sendCancelRequest(data.memberId);
+    };
+
     render() {
         const { insurance: { data } } = this.props;
         let activeDate;
@@ -65,6 +70,16 @@ export default class InsuranceTab extends React.Component {
                         <Table.Cell>
                             <Button onClick={this.downloadClick}>
                                 Download
+                            </Button>
+                        </Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>
+                            Send cancellation email to existing insurer
+                        </Table.Cell>
+                        <Table.Cell>
+                            <Button onClick={this.cancelInsuranceClick}>
+                                Send
                             </Button>
                         </Table.Cell>
                     </Table.Row>
@@ -108,5 +123,6 @@ export default class InsuranceTab extends React.Component {
 InsuranceTab.propTypes = {
     insurance: PropTypes.object.isRequired,
     messages: PropTypes.object.isRequired,
-    saveInsuranceDate: PropTypes.func.isRequired
+    saveInsuranceDate: PropTypes.func.isRequired,
+    sendCancelRequest: PropTypes.func.isRequired
 };

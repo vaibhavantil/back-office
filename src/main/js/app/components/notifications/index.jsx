@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Error from './Error';
+import Notification from './Notification';
 
 const Notifications = ({ notifications, dismissNotification }) => (
     <React.Fragment>
         {notifications.map((item, id) => (
             <React.Fragment key={item.id || id}>
-                <Error
+                <Notification
                     closeHandler={dismissNotification}
                     content={{ ...item }}
                 />

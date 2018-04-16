@@ -18,7 +18,8 @@ export default {
     members: {
         list: [],
         requesting: false,
-        filter: ''
+        filter: '',
+        query: ''
     },
     dashboard: {
         data: null
@@ -50,6 +51,7 @@ export default {
     memberInsurance: {
         requesting: false,
         list: [],
-        filter: ''
+        filter: '',
+        query: ''
     }
 };

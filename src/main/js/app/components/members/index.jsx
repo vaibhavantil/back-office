@@ -10,10 +10,8 @@ export default class Members extends React.Component {
     }
 
     componentDidMount() {
-        const { members, membersRequest } = this.props;
-        if (!members.list.length) {
-            membersRequest();
-        }
+        const { members: { filter, query }, searchMemberRequest } = this.props;
+        searchMemberRequest({ query, filter });
     }
 
     render() {

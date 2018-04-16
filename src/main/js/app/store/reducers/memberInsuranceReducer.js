@@ -16,7 +16,8 @@ export default function(state = initialState.memberInsurance, action) {
         case MEMBER_INS_SEARCH_REQUESTING:
             return {
                 ...state,
-                requesting: true
+                requesting: true,
+                query: action.query.query
             };
 
         case MEMBER_INS_SUCCESS:

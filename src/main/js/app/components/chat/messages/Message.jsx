@@ -104,7 +104,7 @@ const MessageContent = ({ content }) => {
         case types.DATE:
             return <p>Date: {moment(content.date).format('MMMM Do YYYY')}</p>;
         case types.AUDIO:
-            return <AudioMessage content={content.URL} />;
+            return <audio src={content.URL} controls />;
         case types.VIDEO:
             return <Video src={content.URL} controls />;
         case types.PHOTO:
