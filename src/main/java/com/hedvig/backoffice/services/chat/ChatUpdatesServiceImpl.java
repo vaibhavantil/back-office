@@ -1,7 +1,7 @@
 package com.hedvig.backoffice.services.chat;
 
 import com.google.common.collect.Sets;
-import com.hedvig.backoffice.domain.ChatContext;
+import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.SystemSetting;
 import com.hedvig.backoffice.domain.SystemSettingType;
 import com.hedvig.backoffice.repository.ChatContextRepository;
@@ -147,8 +147,8 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     }
 
     private void sendMessages(String hid, List<BotMessage> messages) {
-        List<ChatContext> chats = chatContextRepository.findActiveChatsByHid(hid);
+        List<Personnel> personnels = chatContextRepository.findPersonnelsWithActiveChatsByHid(hid);
         Message m = Message.chat(messages);
-        chats.forEach(c -> chatService.send(c.getHid(), c.getPersonnel().getId(), m));
+        personnels.forEach(p -> chatService.send(hid, p.getId(), m));
     }
 }
