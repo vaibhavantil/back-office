@@ -1,8 +1,10 @@
 package com.hedvig.backoffice.services.chat;
 
 import com.google.common.collect.Sets;
+import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.domain.SystemSetting;
 import com.hedvig.backoffice.domain.SystemSettingType;
+import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
@@ -33,6 +35,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     private final BotService botService;
     private final SystemSettingsService systemSettingsService;
     private final QuestionService questionService;
+    private final ChatContextRepository chatContextRepository;
 
     private final Set<String> questionId;
 
@@ -43,12 +46,14 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
                                   BotService botService,
                                   SystemSettingsService systemSettingsService,
                                   QuestionService questionService,
+                                  ChatContextRepository chatContextRepository,
                                   @Value("${botservice.questionId}") String[] questionId) {
 
         this.chatService = chatService;
         this.botService = botService;
         this.systemSettingsService = systemSettingsService;
         this.questionService = questionService;
+        this.chatContextRepository = chatContextRepository;
         this.questionId = Sets.newHashSet(questionId);
 
         log.info("CHAT UPDATE SERVICE: ");
@@ -142,6 +147,8 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     }
 
     private void sendMessages(String hid, List<BotMessage> messages) {
-        chatService.send(hid, Message.chat(messages));
+        List<ChatContext> chats = chatContextRepository.findActiveChatsByHid(hid);
+        Message m = Message.chat(messages);
+        chats.forEach(c -> chatService.send(c.getHid(), m));
     }
 }
