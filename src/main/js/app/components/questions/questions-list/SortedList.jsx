@@ -53,7 +53,7 @@ export default class SortedList extends React.Component {
     };
 
     render() {
-        const { list, members, sendAnswer } = this.props;
+        const { list, members, sendAnswer, sendDoneMsg } = this.props;
         const { activeList } = this.state;
         return (
             <List>
@@ -66,10 +66,11 @@ export default class SortedList extends React.Component {
                                     question={question}
                                     membersList={members}
                                 />
-                                {!question.answer ? (
+                                {!question.answer && question.answer !== '' ? (
                                     <AnswerForm
                                         hid={question.hid}
                                         sendAnswer={sendAnswer}
+                                        sendDoneMsg={sendDoneMsg}
                                         redirectClick={this.chatRedirectClick}
                                         error={question.error}
                                     />
@@ -101,5 +102,6 @@ export default class SortedList extends React.Component {
 SortedList.propTypes = {
     list: PropTypes.array.isRequired,
     sendAnswer: PropTypes.func.isRequired,
+    sendDoneMsg: PropTypes.func.isRequired,
     members: PropTypes.array
 };

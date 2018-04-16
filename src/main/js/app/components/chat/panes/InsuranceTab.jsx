@@ -22,7 +22,11 @@ const CellButton = styled(Button)`
 export default class InsuranceTab extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { dateValue: null, datePickerDisabled: true };
+        this.state = {
+            dateValue: null,
+            datePickerDisabled: true,
+            cancelBtnIsVisible: true
+        };
     }
 
     dateChangeHandler = (type, e, { value }) => {
@@ -50,10 +54,12 @@ export default class InsuranceTab extends React.Component {
     cancelInsuranceClick = () => {
         const { insurance: { data }, sendCancelRequest } = this.props;
         sendCancelRequest(data.memberId);
+        this.setState({ cancelBtnIsVisible: false });
     };
 
     render() {
         const { insurance: { data } } = this.props;
+        const { cancelBtnIsVisible } = this.state;
         let activeDate;
         let fields;
         if (data) {
@@ -73,16 +79,19 @@ export default class InsuranceTab extends React.Component {
                             </Button>
                         </Table.Cell>
                     </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>
-                            Send cancellation email to existing insurer
-                        </Table.Cell>
-                        <Table.Cell>
-                            <Button onClick={this.cancelInsuranceClick}>
-                                Send
-                            </Button>
-                        </Table.Cell>
-                    </Table.Row>
+                    {fields.cancellationEmailSent ||
+                    !cancelBtnIsVisible ? null : (
+                        <Table.Row>
+                            <Table.Cell>
+                                Send cancellation email to existing insurer
+                            </Table.Cell>
+                            <Table.Cell>
+                                <Button onClick={this.cancelInsuranceClick}>
+                                    Send
+                                </Button>
+                            </Table.Cell>
+                        </Table.Row>
+                    )}
                     <TableFields fields={fields} />
                     <Table.Row>
                         <Table.Cell>Insurance active from</Table.Cell>

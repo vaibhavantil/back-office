@@ -24,11 +24,6 @@ export const messageTypes = [
 
 export const routesList = [
     {
-        text: 'Assets',
-        route: '/assets',
-        type: 'ASSETS'
-    },
-    {
         text: 'Members overview',
         route: '/members',
         type: 'MEMBERS'

@@ -22,7 +22,7 @@ export default function(state = initialState.members, action) {
             return {
                 ...state,
                 requesting: true,
-                query: action.query.query
+                query: action.query ? action.query.query : state.query
             };
 
         case MEMBERS_REQUEST_SUCCESS:

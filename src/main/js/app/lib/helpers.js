@@ -122,14 +122,7 @@ export const getActiveType = (types, claimData) => {
 export const filterMembersList = ({ type, members }) =>
     type !== 'MEMBERS_REQUEST_SUCCESS'
         ? members
-        : members
-              .filter(item => item.status !== 'INACTIVATED')
-              .map(item => ({
-                  ...item,
-                  signupDate: moment(item.signupDate)
-              }))
-              .sort((a, b) => a.signupDate.diff(b.signupDate))
-              .reverse();
+        : members.filter(item => item.status !== 'INACTIVATED').reverse();
 
 /**
  * Updating state of claims details fields

@@ -21,7 +21,9 @@ const FormTextArea = styled(Form.Field)`
 export default class AnswerForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            answer: ''
+        };
     }
 
     answerChangeHandler = (e, { value }) => {
@@ -29,7 +31,13 @@ export default class AnswerForm extends React.Component {
     };
 
     answerClick = id => {
-        this.props.sendAnswer({ msg: this.state.answer, id });
+        if (this.state.answer.trim().length) {
+            this.props.sendAnswer({ msg: this.state.answer, id });
+        }
+    };
+
+    doneClick = id => {
+        this.props.sendDoneMsg({ id });
     };
 
     render() {
@@ -43,6 +51,7 @@ export default class AnswerForm extends React.Component {
                             label="Answer"
                             placeholder="Answer text..."
                             onChange={this.answerChangeHandler}
+                            value={this.state.answer}
                         />
                         <div>
                             <Button
@@ -53,6 +62,11 @@ export default class AnswerForm extends React.Component {
                             <Button
                                 content="Send"
                                 onClick={this.answerClick.bind(this, hid)}
+                                primary
+                            />
+                            <Button
+                                content="Done"
+                                onClick={this.doneClick.bind(this, hid)}
                                 primary
                             />
                         </div>
@@ -67,6 +81,7 @@ export default class AnswerForm extends React.Component {
 AnswerForm.propTypes = {
     hid: PropTypes.string.isRequired,
     sendAnswer: PropTypes.func.isRequired,
+    sendDoneMsg: PropTypes.func.isRequired,
     redirectClick: PropTypes.func.isRequired,
     error: PropTypes.string
 };

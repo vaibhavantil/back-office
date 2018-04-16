@@ -18,13 +18,19 @@ export default class Questions extends React.Component {
     }
 
     render() {
-        const { questions, members: { list }, sendAnswer } = this.props;
+        const {
+            questions,
+            members: { list },
+            sendAnswer,
+            sendDoneMsg
+        } = this.props;
         return (
             <React.Fragment>
                 <Header size="huge">Questions</Header>
                 <QuestionsList
                     questions={questions.list}
                     sendAnswer={sendAnswer}
+                    sendDoneMsg={sendDoneMsg}
                     tabChange={this.tabChange}
                     members={list}
                 />
@@ -38,5 +44,6 @@ Questions.propTypes = {
     questions: PropTypes.object.isRequired,
     membersRequest: PropTypes.func.isRequired,
     questionsRequest: PropTypes.func.isRequired,
-    sendAnswer: PropTypes.func.isRequired
+    sendAnswer: PropTypes.func.isRequired,
+    sendDoneMsg: PropTypes.func.isRequired
 };

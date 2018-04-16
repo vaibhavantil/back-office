@@ -4,7 +4,8 @@ import {
     QUESTIONS_REQUEST_SUCCESS,
     QUESTION_ANSWERING,
     QUESTION_ANSWER_SUCCESS,
-    QUESTION_ERROR
+    QUESTION_ERROR,
+    QUESTION_DONE_MSG
 } from '../constants/questions';
 import { sortQuestions, replaceAnswer } from '../../lib/helpers';
 
@@ -33,8 +34,13 @@ export default function(state = initialState.questions, action) {
         case QUESTION_ERROR:
             return {
                 errors: [...state.errors, action.error],
-                requesting: false,
-                successful: false
+                requesting: false
+            };
+
+        case QUESTION_DONE_MSG:
+            return {
+                ...state,
+                requesting: false
             };
 
         default:

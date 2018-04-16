@@ -86,6 +86,10 @@ export default {
         sendAnswer: {
             url: 'questions/answer',
             method: 'post'
+        },
+        sendDoneMsg: {
+            url: 'questions/done',
+            method: 'post'
         }
     },
     insurance: {
@@ -106,7 +110,7 @@ export default {
         get: {
             method: 'get',
             url: 'member/insurance/search'
-        },
+        }
     },
     ws: {
         // eslint-disable-next-line
