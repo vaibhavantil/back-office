@@ -11,10 +11,11 @@ const ChatPage = props => (
     </PageContainer>
 );
 
-const mapStateToProps = ({ messages, claims, insurance }) => ({
+const mapStateToProps = ({ messages, claims, insurance, client }) => ({
     memberClaims: claims.memberClaims,
     messages,
-    insurance
+    insurance,
+    client
 });
 
 export default withRouter(

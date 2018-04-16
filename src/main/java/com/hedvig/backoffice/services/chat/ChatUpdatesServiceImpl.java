@@ -149,6 +149,6 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     private void sendMessages(String hid, List<BotMessage> messages) {
         List<ChatContext> chats = chatContextRepository.findActiveChatsByHid(hid);
         Message m = Message.chat(messages);
-        chats.forEach(c -> chatService.send(c.getHid(), m));
+        chats.forEach(c -> chatService.send(c.getHid(), c.getPersonnel().getId(), m));
     }
 }

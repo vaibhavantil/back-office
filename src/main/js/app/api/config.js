@@ -115,7 +115,8 @@ export default {
     ws: {
         // eslint-disable-next-line
         endpoint: DEV ? 'http://localhost:8080/chat' : '/chat',
-        messages: '/topic/messages/',
+        messagesPrefix: '/user/',
+        messages: '/messages/',
         history: '/app/messages/history/',
         send: '/app/messages/send/',
         dashboardSub: '/user/',

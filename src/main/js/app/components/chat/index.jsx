@@ -33,11 +33,12 @@ export default class Chat extends React.Component {
     };
 
     subscribeSocket = () => {
-        const { messageReceived, match, messages, errorReceived } = this.props;
+        const { messageReceived, match, messages, errorReceived, client } = this.props;
 
         const { stompClient, subscription } = subscribe(
             { messageReceived, errorReceived },
             match.params.id,
+            client.id,
             messages.activeConnection
         );
         return { stompClient, subscription };
@@ -48,10 +49,11 @@ export default class Chat extends React.Component {
             messageReceived,
             match,
             setActiveConnection,
-            errorReceived
+            errorReceived,
+            client
         } = this.props;
 
-        reconnect({ messageReceived, errorReceived }, match.params.id).then(
+        reconnect({ messageReceived, errorReceived }, match.params.id, client.id).then(
             reslut => {
                 const { stompClient, subscription } = reslut;
                 this.setState({ socket: stompClient, subscription });
@@ -119,6 +121,7 @@ Chat.propTypes = {
     messageReceived: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
     messages: PropTypes.object.isRequired,
+    client: PropTypes.object.isRequired,
     errorReceived: PropTypes.func,
     addMessage: PropTypes.func.isRequired,
     setActiveConnection: PropTypes.func.isRequired,
