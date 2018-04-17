@@ -12,7 +12,7 @@ export default class Notification extends React.Component {
         //eslint-disable-next-line
         setTimeout(() => {
             closeHandler(id);
-        }, 5000);
+        }, 10000);
     }
 
     render() {

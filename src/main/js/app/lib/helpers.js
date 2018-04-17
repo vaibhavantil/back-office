@@ -289,12 +289,7 @@ export const sortMemberInsList = (list, fieldName, isReverse) => {
             );
             break;
         case 'date':
-            sortedList = list.sort((a, b) => {
-                const dateA = moment(a.insuranceActiveFrom || '10000-01-01');
-                const dateB = moment(b.insuranceActiveFrom || '10000-01-01');
-                return dateA.diff(dateB);
-            });
-            break;
+            return sortMembersByDate(list, isReverse);
 
         case 'type':
             sortedList = list.sort(
@@ -313,3 +308,22 @@ export const sortMemberInsList = (list, fieldName, isReverse) => {
     }
     return isReverse ? sortedList.reverse() : sortedList;
 };
+
+function sortMembersByDate(list, isReverse) {
+    const withoutDates = [];
+
+    const withDates = list.filter(item => {
+        if (!item.insuranceActiveFrom) {
+            withoutDates.push(item);
+        }
+        return !!item.insuranceActiveFrom;
+    });
+
+    const sortedDates = withDates.sort((a, b) => {
+        const dateA = moment(a.insuranceActiveFrom || '10000-01-01');
+        const dateB = moment(b.insuranceActiveFrom || '10000-01-01');
+        return dateA.diff(dateB);
+    });
+    const resultList = isReverse ? sortedDates.reverse() : sortedDates;
+    return [...resultList, ...withoutDates];
+}
