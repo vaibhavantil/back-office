@@ -22,7 +22,7 @@ public class ExpoNotificationServiceImpl implements ExpoNotificationService {
     public void sendNotification(String hid, String token) {
         try {
             val pushToken = botService.pushTokenId(hid, token);
-            if (pushToken.getToken() == null) {
+            if (pushToken == null || pushToken.getToken() == null) {
                 logger.error("Member does not have push token, id = " + hid);
                 return;
             }
