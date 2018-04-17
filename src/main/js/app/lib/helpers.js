@@ -193,9 +193,9 @@ export const replaceAnswer = (questions, data) => {
  */
 export const getMemberInfo = (members, id) => {
     const member = members.find(member => member.hid === id);
-    return member
+    return member && member.firstName
         ? `${member.firstName} ${member.lastName || ''}`
-        : `id: ${id}`;
+        : `${id ? 'Member-' + id : 'No id'}`;
 };
 
 String.prototype.capitalize = function() {
