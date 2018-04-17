@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.messages;
 import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -194,7 +195,7 @@ public class BotServiceStub implements BotService {
     }
 
 	@Override
-	public String pushTokenId(String hid, String token) {
-		return "";
+	public PushTokenDTO pushTokenId(String hid, String token) {
+		return new PushTokenDTO(null);
 	}
 }

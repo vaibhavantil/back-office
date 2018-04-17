@@ -72,6 +72,9 @@ public class ChatServiceImpl implements ChatService {
         } catch (ExternalServiceBadRequestException e) {
             send(hid, personnelId, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
+        } catch (ExternalServiceException e) {
+            send(hid, personnelId, Message.error(500, e.getMessage()));
+            log.error("chat not updated hid = " + hid, e);
         }
     }
 

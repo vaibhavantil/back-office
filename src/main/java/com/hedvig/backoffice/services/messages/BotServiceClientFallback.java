@@ -28,7 +28,7 @@ public class BotServiceClientFallback implements BotServiceClient {
     @Override
     public PushTokenDTO getPushTokenByHid(String hid, String token) {
         log.error("request to bot-service failed");
-        return new PushTokenDTO("");
+        return new PushTokenDTO(null);
     }
 
     @Override

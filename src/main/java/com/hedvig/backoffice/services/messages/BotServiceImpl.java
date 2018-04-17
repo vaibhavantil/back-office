@@ -5,6 +5,7 @@ import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
 import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,8 +81,7 @@ public class BotServiceImpl implements BotService {
     }
 
 	@Override
-	public String pushTokenId(String hid, String token) {
-        val pushTokenDto = botServiceClient.getPushTokenByHid(hid, token);
-        return pushTokenDto.getToken();
+	public PushTokenDTO pushTokenId(String hid, String token) {
+        return botServiceClient.getPushTokenByHid(hid, token);
 	}
 }
