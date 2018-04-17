@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,6 +51,12 @@ public class UpdatesServiceImpl implements UpdatesService {
         this.updateContextRepository = updateContextRepository;
 
         this.template = template;
+    }
+
+    @PostConstruct
+    public void setup() {
+        updatesRepository.deleteAll();
+        updateContextRepository.deleteAll();
     }
 
     @Override
@@ -115,7 +122,7 @@ public class UpdatesServiceImpl implements UpdatesService {
     @Transactional
     public void unsubscribe(String personnelId, String sessionId) {
         Optional<UpdateContext> optional = updateContextRepository
-                .findByPersonnelIdAndSessionIdAndSubId(personnelId, sessionId);
+                .findByPersonnelIdAndSessionId(personnelId, sessionId);
 
         if (optional.isPresent()) {
             UpdateContext uc = optional.get();
