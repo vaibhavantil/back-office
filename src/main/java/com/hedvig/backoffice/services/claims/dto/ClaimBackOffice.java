@@ -14,7 +14,6 @@ public class ClaimBackOffice {
 
     protected LocalDateTime date;
 
-    @NotNull
     protected String userId;
 
 }
