@@ -18,6 +18,4 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
     @Query("select s from Subscription s where s.chats.size > 0")
     List<Subscription> findActiveSubscriptions();
 
-    @Query("select s from Subscription s where s.hid in :hids")
-    List<Subscription> fincByHids(@Param("hids") List<String> hids);
 }

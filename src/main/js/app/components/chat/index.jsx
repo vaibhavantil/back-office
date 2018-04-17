@@ -33,11 +33,18 @@ export default class Chat extends React.Component {
     };
 
     subscribeSocket = () => {
-        const { messageReceived, match, messages, errorReceived } = this.props;
+        const {
+            messageReceived,
+            match: { params: { id } },
+            messages,
+            errorReceived,
+            client
+        } = this.props;
 
         const { stompClient, subscription } = subscribe(
             { messageReceived, errorReceived },
-            match.params.id,
+            id,
+            client.id,
             messages.activeConnection
         );
         return { stompClient, subscription };
@@ -46,12 +53,13 @@ export default class Chat extends React.Component {
     reconnectSocket = () => {
         const {
             messageReceived,
-            match,
+            match: { params: { id } },
             setActiveConnection,
-            errorReceived
+            errorReceived,
+            client
         } = this.props;
 
-        reconnect({ messageReceived, errorReceived }, match.params.id).then(
+        reconnect({ messageReceived, errorReceived }, id, client.id).then(
             reslut => {
                 const { stompClient, subscription } = reslut;
                 this.setState({ socket: stompClient, subscription });
@@ -74,12 +82,13 @@ export default class Chat extends React.Component {
             insuranceRequest,
             claimsByMember
         } = this.props;
-        const { stompClient, subscription } = this.subscribeSocket();
 
+        const { stompClient, subscription } = this.subscribeSocket();
         if (!stompClient) {
             this.reconnectSocket();
         }
         this.setState({ socket: stompClient, subscription });
+
         memberRequest(id);
         insuranceRequest(id);
         claimsByMember(id);
@@ -119,6 +128,7 @@ Chat.propTypes = {
     messageReceived: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
     messages: PropTypes.object.isRequired,
+    client: PropTypes.object.isRequired,
     errorReceived: PropTypes.func,
     addMessage: PropTypes.func.isRequired,
     setActiveConnection: PropTypes.func.isRequired,
@@ -131,5 +141,6 @@ Chat.propTypes = {
     saveInsuranceDate: PropTypes.func.isRequired,
     memberClaims: PropTypes.array,
     history: PropTypes.object.isRequired,
-    sendCancelRequest: PropTypes.func.isRequired
+    sendCancelRequest: PropTypes.func.isRequired,
+    checkAuth: PropTypes.func.isRequired
 };

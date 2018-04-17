@@ -60,43 +60,43 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void send(String hid, Message message) {
-        template.convertAndSend(getTopicPrefix() + hid, message.toJson());
+    public void send(String hid, String personnelId, Message message) {
+        template.convertAndSendToUser(personnelId, getTopicPrefix() + hid, message.toJson());
     }
 
     @Override
-    public void append(String hid, String message, String token) {
+    public void append(String hid, String message, String personnelId, String token) {
         try {
             botService.response(hid, message, token);
             expoNotificationService.sendNotification(hid, token);
         } catch (ExternalServiceBadRequestException e) {
-            send(hid, Message.error(400, e.getMessage()));
+            send(hid, personnelId, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
         }
     }
 
     @Override
-    public void messages(String hid, String token) {
+    public void messages(String hid, String personnelId, String token) {
         try {
-            send(hid, Message.chat(botService.messages(hid, token)));
+            send(hid, personnelId, Message.chat(botService.messages(hid, token)));
         } catch (ExternalServiceBadRequestException e) {
-            send(hid, Message.error(400, e.getMessage()));
+            send(hid, personnelId, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
         } catch (ExternalServiceException e) {
-            send(hid, Message.error(500, e.getMessage()));
+            send(hid, personnelId, Message.error(500, e.getMessage()));
             log.error("can't fetch member hid = " + hid, e);
         }
     }
 
     @Override
-    public void messages(String hid, int count, String token) {
+    public void messages(String hid, int count, String personnelId, String token) {
         try {
-            send(hid, Message.chat(botService.messages(hid, count, token)));
+            send(hid, personnelId, Message.chat(botService.messages(hid, count, token)));
         } catch (ExternalServiceBadRequestException e) {
-            send(hid, Message.error(400, e.getMessage()));
+            send(hid, personnelId, Message.error(400, e.getMessage()));
             log.error("chat not updated hid = " + hid, e);
         } catch (ExternalServiceException e) {
-            send(hid, Message.error(500, e.getMessage()));
+            send(hid, personnelId, Message.error(500, e.getMessage()));
             log.error("can't fetch member hid = " + hid, e);
         }
     }
@@ -104,11 +104,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional
     public void close(String sessionId) {
-        List<ChatContext> chats = chatContextRepository.findBySessionId(sessionId);
-        if (chats.size() > 0) {
-            chats.forEach(c -> c.setActive(false));
-            chatContextRepository.save(chats);
-        }
+        chatContextRepository.deleteBySessionId(sessionId);
     }
 
     @Override
@@ -118,7 +114,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             personnel = personnelService.getPersonnel(principalId);
         } catch (AuthorizationException e) {
-            send(hid, Message.error(400, "Not authorized"));
+            send(hid, principalId, Message.error(400, "Not authorized"));
             log.warn("member not authorized hid = " + hid);
             return;
         }
@@ -127,17 +123,16 @@ public class ChatServiceImpl implements ChatService {
         try {
             member = memberService.findByHid(hid, personnelService.getIdToken(personnel));
         } catch (ExternalServiceBadRequestException e) {
-            send(hid, Message.error(400, "member with hid " + hid + " not found"));
+            send(hid, personnel.getId(), Message.error(400, "member with hid " + hid + " not found"));
             log.warn("member with hid " + hid + " not found", e);
             return;
         } catch (ExternalServiceException e) {
-            send(hid, Message.error(500, e.getMessage()));
+            send(hid, personnel.getId(), Message.error(500, e.getMessage()));
             log.error("can't fetch member hid = " + hid, e);
             return;
         }
 
-        Optional<ChatContext> chatOptional = chatContextRepository.findByHidAndPersonnel(member.getHid(), personnel);
-        ChatContext chat = chatOptional.orElseGet(ChatContext::new);
+        ChatContext chat = new ChatContext();
 
         chat.setHid(member.getHid());
         chat.setSubId(subId);
@@ -155,16 +150,12 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional
     public void unsubscribe(String subId, String sessionId) {
-        Optional<ChatContext> optional = chatContextRepository.findBySubIdAndSessionId(subId, sessionId);
-        optional.ifPresent(c -> {
-            c.setActive(false);
-            chatContextRepository.save(c);
-        });
+        chatContextRepository.deleteBySubIdAndSessionId(subId, sessionId);
     }
 
     @Override
     public String getTopicPrefix() {
-        return "/topic/messages/";
+        return "/messages/";
     }
 
 }

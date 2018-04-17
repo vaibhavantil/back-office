@@ -79,15 +79,13 @@ export default class Dashboard extends React.Component {
     };
 
     componentDidMount() {
-        const { messages: { activeConnection } } = this.props;
+        const {
+            setActiveConnection,
+            messages: { activeConnection }
+        } = this.props;
         if (activeConnection) {
             this.subscribeSocket(activeConnection);
-        }
-    }
-
-    componentWillReceiveProps({ setActiveConnection, messages, client }) {
-        const { activeConnection } = messages;
-        if (client.id && !activeConnection) {
+        } else {
             this.socketConnect(setActiveConnection);
         }
     }

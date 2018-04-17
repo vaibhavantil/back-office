@@ -58,14 +58,10 @@ const App = () => (
                             />
                         )}
                     />
-                    <Route
+                    <Routes.PrivateRoute
                         path="/member_insurance"
-                        render={routeProps => (
-                            <Routes.MemberInsurancePageRoute
-                                {...routeProps}
-                                store={store}
-                            />
-                        )}
+                        store={store}
+                        component={Routes.MemberInsurancePageRoute}
                     />
                     <Redirect from="*" to="/dashboard" />
                 </Switch>

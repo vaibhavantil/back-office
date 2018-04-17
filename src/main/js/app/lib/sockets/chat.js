@@ -1,5 +1,6 @@
 import config from 'app/api/config';
 import { connect } from './index';
+import api from 'app/api';
 
 const connectError = { stompClient: null, subscription: null };
 
@@ -14,11 +15,11 @@ const responseHandler = (actions, response) => {
     actions.messageReceived(data.messages);
 };
 
-export const subscribe = (actions, id, stompClient) => {
+export const subscribe = (actions, id, user, stompClient) => {
     if (stompClient) {
         try {
             const subscription = stompClient.subscribe(
-                config.ws.messages + id,
+                `${config.ws.messagesPrefix}${user}${config.ws.messages}${id}`,
                 responseHandler.bind(this, actions)
             );
             stompClient.send(config.ws.history + id);
@@ -32,19 +33,18 @@ export const subscribe = (actions, id, stompClient) => {
 };
 
 /* eslint-disable no-undef */
-export const reconnect = (actions, id) => {
-    return new Promise((resolve, reject) => {
-        connect()
-            .then(connection => {
-                const { stompClient, subscription } = subscribe(
-                    actions,
-                    id,
-                    connection
-                );
-                resolve({ stompClient, subscription });
-            })
-            .catch(() => {
-                reject(connectError);
-            });
-    });
+export const reconnect = async (actions, id, user) => {
+    try {
+        const response = user ? user : await api(config.login.login);
+        const connection = await connect();
+        const { stompClient, subscription } = subscribe(
+            actions,
+            id,
+            user || response.data.id,
+            connection
+        );
+        return { stompClient, subscription };
+    } catch (error) {
+        return connectError;
+    }
 };
