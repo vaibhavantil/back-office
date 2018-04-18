@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.config.feign;
 
-import com.netflix.hystrix.exception.HystrixBadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

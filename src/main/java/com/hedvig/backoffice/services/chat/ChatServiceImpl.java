@@ -129,9 +129,11 @@ public class ChatServiceImpl implements ChatService {
             send(hid, personnel.getId(), Message.error(400, "member with hid " + hid + " not found"));
             log.warn("member with hid " + hid + " not found", e);
             return;
-        } catch (ExternalServiceException e) {
-            send(hid, personnel.getId(), Message.error(500, e.getMessage()));
-            log.error("can't fetch member hid = " + hid, e);
+        }
+
+        if (member == null) {
+            send(hid, personnel.getId(), Message.error(500, "member service unavailable"));
+            log.error("can't fetch member hid = " + hid);
             return;
         }
 
