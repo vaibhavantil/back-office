@@ -28,7 +28,7 @@ public class SystemSettingsServiceImpl implements SystemSettingsService {
         this.systemSettingRepository = systemSettingRepository;
 
         Algorithm algorithm = StringUtils.isBlank(jwtSecret) ? Algorithm.none() : Algorithm.HMAC256(jwtSecret);
-        accessToken = JWT.create().withIssuer("back-office").sign(algorithm);
+        accessToken = JWT.create().withIssuer("hedvig-internal").sign(algorithm);
     }
 
     @Override
