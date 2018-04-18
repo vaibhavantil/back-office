@@ -103,13 +103,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedMethods(Arrays.asList(corsMethods));
         configuration.setAllowCredentials(true);
 
-        CorsConfiguration chatConfiguration = new CorsConfiguration();
-        chatConfiguration.setAllowedOrigins(Collections.singletonList("*"));
-        chatConfiguration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", configuration);
-        source.registerCorsConfiguration("/chat/**", chatConfiguration);
 
         return source;
     }
