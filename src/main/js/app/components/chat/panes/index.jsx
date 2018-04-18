@@ -13,7 +13,7 @@ const TabContainer = styled(Tab.Pane)`
         flex-direction: column;
         min-width: 700px;
         height: ${props => (props.isChatTab ? '100%' : 'auto')};
-        margin-bottom: 50px;
+        margin-bottom: 50px !important;
     }
 `;
 
