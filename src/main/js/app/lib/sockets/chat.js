@@ -9,7 +9,11 @@ const responseHandler = (actions, response) => {
     const data = parsedRes.payload;
 
     if (parsedRes.type === 'ERROR') {
-        actions.errorReceived(data);
+        actions.showNotification({
+            message: data.message,
+            header: 'Messages',
+            type: data.code === 400 ? 'yellow' : 'red'
+        });
         return;
     }
     actions.messageReceived(data.messages);
