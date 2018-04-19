@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import moment from 'moment';
 import 'moment/locale/sv';
 import SelectMessage from './SelectMessage';
-import AudioMessage from './AudioMessage';
 import ImageMessage from './ImageMessage';
 import * as types from 'app/lib/messageTypes';
 import { Label } from 'semantic-ui-react';

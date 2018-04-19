@@ -24,6 +24,7 @@ export default withRouter(
         ...actions.insuranceActions,
         ...actions.messagesActions,
         ...actions.membersActions,
-        ...actions.clientActions
+        ...actions.clientActions,
+        ...actions.notificationsActions
     })(ChatPage)
 );
