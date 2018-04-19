@@ -51,7 +51,7 @@ function* cancelRequestFlow({ id }) {
                 showNotification({
                     message: 'Success',
                     header: 'Send cancellation email to existing insurer',
-                    success: true
+                    type: 'olive'
                 })
             )
         ];

@@ -11,7 +11,6 @@ const ChatPageContainer = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     width: 700px;
-    margin-bottom: 50px;
     height: 100%;
 `;
 
@@ -37,12 +36,12 @@ export default class Chat extends React.Component {
             messageReceived,
             match: { params: { id } },
             messages,
-            errorReceived,
+            showNotification,
             client
         } = this.props;
 
         const { stompClient, subscription } = subscribe(
-            { messageReceived, errorReceived },
+            { messageReceived, showNotification },
             id,
             client.id,
             messages.activeConnection
@@ -55,11 +54,11 @@ export default class Chat extends React.Component {
             messageReceived,
             match: { params: { id } },
             setActiveConnection,
-            errorReceived,
+            showNotification,
             client
         } = this.props;
 
-        reconnect({ messageReceived, errorReceived }, id, client.id).then(
+        reconnect({ messageReceived, showNotification }, id, client.id).then(
             reslut => {
                 const { stompClient, subscription } = reslut;
                 this.setState({ socket: stompClient, subscription });
@@ -129,7 +128,7 @@ Chat.propTypes = {
     match: PropTypes.object.isRequired,
     messages: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
-    errorReceived: PropTypes.func,
+    showNotification: PropTypes.func.isRequired,
     addMessage: PropTypes.func.isRequired,
     setActiveConnection: PropTypes.func.isRequired,
     memberRequest: PropTypes.func.isRequired,

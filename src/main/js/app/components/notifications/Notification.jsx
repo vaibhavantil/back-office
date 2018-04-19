@@ -18,14 +18,11 @@ export default class Notification extends React.Component {
     render() {
         const {
             closeHandler,
-            content: { header, id, message, success }
+            content: { header, id, message, type }
         } = this.props;
+        const msgType = type ? type : 'red';
         return (
-            <Message
-                onDismiss={closeHandler.bind(this, id)}
-                negative={!success}
-                positive={success}
-            >
+            <Message onDismiss={closeHandler.bind(this, id)} color={msgType}>
                 {header ? <Message.Header>{header}</Message.Header> : null}
                 <Message.Content>{message}</Message.Content>
             </Message>
