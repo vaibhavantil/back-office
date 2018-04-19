@@ -21,6 +21,9 @@ public interface ChatContextRepository extends CrudRepository<ChatContext, Strin
     @Query("delete from ChatContext c where c.sessionId = :sessionId")
     void deleteBySessionId(@Param("sessionId") String sessionId);
 
+    @Query("select c from ChatContext c where c.active = true")
+    List<ChatContext> findActiveChats();
+
     @Query("select distinct c.personnel from ChatContext c where c.hid = :hid and c.active = true")
     List<Personnel> findPersonnelsWithActiveChatsByHid(@Param("hid") String hid);
 

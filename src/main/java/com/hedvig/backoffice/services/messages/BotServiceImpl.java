@@ -2,11 +2,10 @@ package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
-import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
+import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
-import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +60,7 @@ public class BotServiceImpl implements BotService {
 
     private List<BotMessage> parseMessages(JsonNode root) {
         if (root == null) {
-            throw new ExternalServiceException("bot-service returned null");
+            throw new ExternalServiceException("bot-service internal error or service unavailable");
         }
 
         Iterable<Map.Entry<String, JsonNode>> iterable = root::fields;

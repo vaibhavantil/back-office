@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.chat;
 
 import com.google.common.collect.Sets;
+import com.hedvig.backoffice.domain.ChatContext;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.SystemSetting;
 import com.hedvig.backoffice.domain.SystemSettingType;
@@ -26,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Service
@@ -40,6 +42,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     private final Set<String> questionId;
 
     private ExecutorService executor;
+    private AtomicBoolean serviceUnavailable;
 
     @Autowired
     public ChatUpdatesServiceImpl(ChatService chatService,
@@ -55,6 +58,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         this.questionService = questionService;
         this.chatContextRepository = chatContextRepository;
         this.questionId = Sets.newHashSet(questionId);
+        this.serviceUnavailable = new AtomicBoolean(false);
 
         log.info("CHAT UPDATE SERVICE: ");
         log.info("question ids: " + Arrays.toString(questionId));
@@ -78,6 +82,17 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     @Override
     public void update() {
         List<BackOfficeMessage> fetched = botService.fetch(lastTimestamp(), systemSettingsService.getInternalAccessToken());
+
+        if (fetched == null) {
+            if (!serviceUnavailable.get()) {
+                serviceUnavailable.set(true);
+                sendErrorToAll();
+            }
+
+            return;
+        }
+
+        serviceUnavailable.set(false);
 
         if (fetched.size() == 0) {
             return;
@@ -150,5 +165,11 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         List<Personnel> personnels = chatContextRepository.findPersonnelsWithActiveChatsByHid(hid);
         Message m = Message.chat(messages);
         personnels.forEach(p -> chatService.send(hid, p.getId(), m));
+    }
+
+    private void sendErrorToAll() {
+        List<ChatContext> chats = chatContextRepository.findActiveChats();
+        Message m = Message.error(500, "bot-service unavailable");
+        chats.forEach(c -> chatService.send(c.getHid(), c.getPersonnel().getId(), m));
     }
 }
