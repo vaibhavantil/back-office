@@ -53,7 +53,7 @@ hystrix:
 intervals:
   tracker: 5000
   chat: 1000
-  claims: 5000
+  claims: 60000
 
 websocket:
   max-sile-size: 5242880
