@@ -8,6 +8,7 @@ import com.hedvig.backoffice.web.dto.assets.AssetDTO;
 import com.hedvig.common.constant.AssetState;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,19 +26,25 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
 
     private final UpdatesService updatesService;
 
+    private boolean enabled;
+
     @Autowired
     public AssetTrackerServiceImpl(
             AssetRepository assetRepository,
             AssetTrackerClient trackerClient,
-            UpdatesService updatesService) {
+            UpdatesService updatesService,
+            @Value("${tracker.enabled:false}") boolean enabled) {
         this.assetRepository = assetRepository;
         this.trackerClient = trackerClient;
         this.updatesService = updatesService;
+        this.enabled = enabled;
     }
 
     @Transactional
     @Override
     public void loadPendingAssetsFromTracker() {
+        if (!enabled) return;
+
         final List<Asset> importedAssets = trackerClient.findPendingAssets();
         if (importedAssets.size() > 0) {
             final List<String> importedIds = importedAssets
