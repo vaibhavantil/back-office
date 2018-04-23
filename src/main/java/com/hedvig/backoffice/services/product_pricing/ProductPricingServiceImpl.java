@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.product_pricing;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 public class ProductPricingServiceImpl implements ProductPricingService {
 
@@ -36,5 +37,10 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     @Override
     public void sendCancellationEmail(String memberId, String token) {
         client.sendCancellationEmail(memberId, token);
+    }
+
+    @Override
+    public void uploadCertificate(String memberId, MultipartFile file) {
+        // TODO implement
     }
 }

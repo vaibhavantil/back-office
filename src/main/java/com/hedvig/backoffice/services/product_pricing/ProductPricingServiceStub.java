@@ -5,14 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
+@Slf4j
 public class ProductPricingServiceStub implements ProductPricingService {
 
     private final static String INSURANCE_TEMPLATE = "{\n" +
@@ -100,5 +103,10 @@ public class ProductPricingServiceStub implements ProductPricingService {
         String i = insurances.computeIfAbsent(memberId, id -> INSURANCE_TEMPLATE);
         i = i.replace("\"cancellationEmailSent\": false", "\"cancellationEmailSent\": true");
         insurances.put(memberId, i);
+    }
+
+    @Override
+    public void uploadCertificate(String memberId, MultipartFile file) {
+        log.info("certificate uploaded: hid = " + memberId + ", name = " + file.getOriginalFilename());
     }
 }

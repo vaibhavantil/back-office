@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -93,5 +94,9 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PutMapping("/insurance/{hid}/certificate")
+    public ResponseEntity<?> insuranceSertificate(@PathVariable String hid, @RequestBody MultipartFile file) {
+        productPricingService.uploadCertificate(hid, file);
+        return ResponseEntity.noContent().build();
+    }
 }
