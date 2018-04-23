@@ -104,6 +104,10 @@ export default {
         cancel: {
             url: 'member/insurance',
             method: 'post'
+        },
+        cert: {
+            url: 'user/insurance',
+            method: 'put'
         }
     },
     insMembers: {
