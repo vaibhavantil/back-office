@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Form } from 'semantic-ui-react';
 import * as types from 'app/lib/messageTypes';
+
 const FileButton = styled.label`
     box-sizing: border-box;
     display: inline-block;

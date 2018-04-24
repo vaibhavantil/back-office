@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Tab, Header } from 'semantic-ui-react';
 import { subscribe, reconnect } from 'app/lib/sockets/chat';
 import { disconnect } from 'sockets';
-import memberPagePanes from './panes';
+import memberPagePanes from './tabs';
 
 const ChatPageContainer = styled.div`
     display: flex;
@@ -34,7 +34,9 @@ export default class Chat extends React.Component {
     subscribeSocket = () => {
         const {
             messageReceived,
-            match: { params: { id } },
+            match: {
+                params: { id }
+            },
             messages,
             showNotification,
             client
@@ -52,7 +54,9 @@ export default class Chat extends React.Component {
     reconnectSocket = () => {
         const {
             messageReceived,
-            match: { params: { id } },
+            match: {
+                params: { id }
+            },
             setActiveConnection,
             showNotification,
             client
@@ -76,7 +80,9 @@ export default class Chat extends React.Component {
 
     componentDidMount() {
         const {
-            match: { params: { id } },
+            match: {
+                params: { id }
+            },
             memberRequest,
             insuranceRequest,
             claimsByMember
@@ -100,7 +106,10 @@ export default class Chat extends React.Component {
     }
 
     render() {
-        const { messages, history: { location } } = this.props;
+        const {
+            messages,
+            history: { location }
+        } = this.props;
         const panes = memberPagePanes(
             this.props,
             this.addMessageHandler,
@@ -132,14 +141,8 @@ Chat.propTypes = {
     addMessage: PropTypes.func.isRequired,
     setActiveConnection: PropTypes.func.isRequired,
     memberRequest: PropTypes.func.isRequired,
-    error: PropTypes.object,
     clearMessagesList: PropTypes.func.isRequired,
     claimsByMember: PropTypes.func.isRequired,
     insuranceRequest: PropTypes.func.isRequired,
-    insurance: PropTypes.object.isRequired,
-    saveInsuranceDate: PropTypes.func.isRequired,
-    memberClaims: PropTypes.array,
-    history: PropTypes.object.isRequired,
-    sendCancelRequest: PropTypes.func.isRequired,
-    checkAuth: PropTypes.func.isRequired
+    history: PropTypes.object.isRequired
 };

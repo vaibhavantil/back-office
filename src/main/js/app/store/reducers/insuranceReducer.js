@@ -6,7 +6,8 @@ import {
     SAVE_INSURANCE_DATE,
     SAVE_DATE_SUCCESS,
     SEND_CANCEL_REQUEST,
-    SEND_CANCEL_REQUEST_SUCCESS
+    SEND_CANCEL_REQUEST_SUCCESS,
+    SEND_CERTIFICATE
 } from '../constants/members';
 
 export default function(state = initialState.insurance, action) {
@@ -14,6 +15,7 @@ export default function(state = initialState.insurance, action) {
         case SEND_CANCEL_REQUEST:
         case INSURANCE_REQUESTING:
         case SAVE_INSURANCE_DATE:
+        case SEND_CERTIFICATE:
             return {
                 ...state,
                 requesting: true,

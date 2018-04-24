@@ -2,7 +2,8 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import {
     INSURANCE_REQUESTING,
     SAVE_INSURANCE_DATE,
-    SEND_CANCEL_REQUEST
+    SEND_CANCEL_REQUEST,
+    SEND_CERTIFICATE
 } from 'constants/members';
 import api from 'app/api';
 import config from 'app/api/config';
@@ -60,11 +61,39 @@ function* cancelRequestFlow({ id }) {
     }
 }
 
+function* sendCertificateFlow({ data, hid }) {
+    try {
+        const path = `${hid}/certificate`;
+        yield call(api, config.insurance.cert, data, path);
+        yield [
+            put(sendCancelRequestSuccess()),
+            put(
+                showNotification({
+                    message: 'Success',
+                    header: 'Upload insurance certificate',
+                    type: 'olive'
+                })
+            )
+        ];
+    } catch (error) {
+        yield [
+            put(
+                showNotification({
+                    message: error.message,
+                    header: 'Insurance'
+                })
+            ),
+            put(sendCancelRequestSuccess())
+        ];
+    }
+}
+
 function* insuranceWatcher() {
     yield [
         takeLatest(INSURANCE_REQUESTING, requestFlow),
         takeLatest(SAVE_INSURANCE_DATE, saveDateFlow),
-        takeLatest(SEND_CANCEL_REQUEST, cancelRequestFlow)
+        takeLatest(SEND_CANCEL_REQUEST, cancelRequestFlow),
+        takeLatest(SEND_CERTIFICATE, sendCertificateFlow)
     ];
 }
 
