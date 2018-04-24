@@ -5,6 +5,7 @@ import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 
+@Slf4j
 public class ProductPricingServiceImpl implements ProductPricingService {
 
     private ProductPricingClient client;
@@ -63,6 +65,10 @@ public class ProductPricingServiceImpl implements ProductPricingService {
 
         Response response = client.newCall(request).execute();
         HttpStatus status = HttpStatus.valueOf(response.code());
+
+        if (!status.is2xxSuccessful()) {
+            log.error("insurance certificate not uploaded to product-pricing, code = " + response.code() + ", member id = " + memberId);
+        }
 
         if (status == HttpStatus.NOT_FOUND) {
             throw new ExternalServiceNotFoundException("member not found, id = " + memberId, "");
