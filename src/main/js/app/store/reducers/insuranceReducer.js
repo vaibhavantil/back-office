@@ -7,7 +7,8 @@ import {
     SAVE_DATE_SUCCESS,
     SEND_CANCEL_REQUEST,
     SEND_CANCEL_REQUEST_SUCCESS,
-    SEND_CERTIFICATE
+    SEND_CERTIFICATE,
+    SEND_CERTIFICATE_SUCCESS
 } from '../constants/members';
 
 export default function(state = initialState.insurance, action) {
@@ -51,6 +52,13 @@ export default function(state = initialState.insurance, action) {
                 ...state,
                 requesting: false
             };
+
+        case SEND_CERTIFICATE_SUCCESS:
+            return {
+                ...state,
+                requesting: false,
+                data: {...state.data, certificateUploaded: true}
+            }
         default:
             return state;
     }

@@ -40,6 +40,11 @@ export default class MemberInsuranceList extends React.Component {
                         ? item.cancellationEmailSent.toString()
                         : '-'}
                 </Table.Cell>
+                <Table.Cell>
+                    {item.certificateUploaded
+                        ? item.certificateUploaded.toString()
+                        : '-'}
+                </Table.Cell>
             </LinkRow>
         );
     };
@@ -76,16 +81,16 @@ export default class MemberInsuranceList extends React.Component {
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell
-                        width={5}
+                        width={4}
                         sorted={column === 'name' ? direction : null}
                         onClick={this.sortTable.bind(this, 'name')}
                     >
                         Name
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                        width={4}
-                        sorted={column === 'type' ? direction : null}
-                        onClick={this.sortTable.bind(this, 'type')}
+                        width={3}
+                        sorted={column === 'insuranceType' ? direction : null}
+                        onClick={this.sortTable.bind(this, 'insuranceType')}
                     >
                         Insurance type
                     </Table.HeaderCell>
@@ -97,19 +102,46 @@ export default class MemberInsuranceList extends React.Component {
                         Insurance active from
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                        width={4}
-                        sorted={column === 'status' ? direction : null}
-                        onClick={this.sortTable.bind(this, 'status')}
+                        width={3}
+                        sorted={column === 'insuranceStatus' ? direction : null}
+                        onClick={this.sortTable.bind(this, 'insuranceStatus')}
                     >
                         Insurance status
                     </Table.HeaderCell>
-                    <Table.HeaderCell>Cancellation email sent</Table.HeaderCell>
+                    <Table.HeaderCell
+                        width={6}
+                        sorted={
+                            column === 'cancellationEmailSent'
+                                ? direction
+                                : null
+                        }
+                        onClick={this.sortTable.bind(
+                            this,
+                            'cancellationEmailSent'
+                        )}
+                    >
+                        Cancellation email sent
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                        width={5}
+                        sorted={
+                            column === 'certificateUploaded' ? direction : null
+                        }
+                        onClick={this.sortTable.bind(
+                            this,
+                            'certificateUploaded'
+                        )}
+                    >
+                        Certificate uploaded
+                    </Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
         );
     };
     render() {
-        const { memberInsurance: { list } } = this.props;
+        const {
+            memberInsurance: { list }
+        } = this.props;
 
         return (
             <PaginatorList
