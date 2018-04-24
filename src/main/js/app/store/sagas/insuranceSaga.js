@@ -3,7 +3,8 @@ import {
     INSURANCE_REQUESTING,
     SAVE_INSURANCE_DATE,
     SEND_CANCEL_REQUEST,
-    SEND_CERTIFICATE
+    SEND_CERTIFICATE,
+    MEMBER_COMPANY_STATUS
 } from 'constants/members';
 import api from 'app/api';
 import config from 'app/api/config';
@@ -89,12 +90,45 @@ function* sendCertificateFlow({ data, hid }) {
     }
 }
 
+function* changeCompanyStatusFlow({ value, hid }) {
+    try {
+        const path = `${hid}/insuredAtOtherCompany`;
+        yield call(
+            api,
+            config.insurance.companyStatus,
+            { insuredAtOtherCompany: value },
+            path
+        );
+        yield [
+            put(sendCertificateSuccess()),
+            put(
+                showNotification({
+                    message: 'Success',
+                    header: '"Insured at other company" field changed',
+                    type: 'olive'
+                })
+            )
+        ];
+    } catch (error) {
+        yield [
+            put(
+                showNotification({
+                    message: error.message,
+                    header: 'Insurance'
+                })
+            ),
+            put(sendCancelRequestSuccess())
+        ];
+    }
+}
+
 function* insuranceWatcher() {
     yield [
         takeLatest(INSURANCE_REQUESTING, requestFlow),
         takeLatest(SAVE_INSURANCE_DATE, saveDateFlow),
         takeLatest(SEND_CANCEL_REQUEST, cancelRequestFlow),
-        takeLatest(SEND_CERTIFICATE, sendCertificateFlow)
+        takeLatest(SEND_CERTIFICATE, sendCertificateFlow),
+        takeLatest(MEMBER_COMPANY_STATUS, changeCompanyStatusFlow)
     ];
 }
 

@@ -106,8 +106,12 @@ export default {
             method: 'post'
         },
         cert: {
-            url: 'user/insurance',
+            url: 'member/insurance',
             method: 'put'
+        },
+        companyStatus: {
+            url: 'member/insurance',
+            method: 'post'
         }
     },
     insMembers: {

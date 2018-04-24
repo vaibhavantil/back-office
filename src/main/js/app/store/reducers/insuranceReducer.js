@@ -8,7 +8,8 @@ import {
     SEND_CANCEL_REQUEST,
     SEND_CANCEL_REQUEST_SUCCESS,
     SEND_CERTIFICATE,
-    SEND_CERTIFICATE_SUCCESS
+    SEND_CERTIFICATE_SUCCESS,
+    MEMBER_COMPANY_STATUS
 } from '../constants/members';
 
 export default function(state = initialState.insurance, action) {
@@ -17,6 +18,7 @@ export default function(state = initialState.insurance, action) {
         case INSURANCE_REQUESTING:
         case SAVE_INSURANCE_DATE:
         case SEND_CERTIFICATE:
+        case MEMBER_COMPANY_STATUS:
             return {
                 ...state,
                 requesting: true,
@@ -57,8 +59,9 @@ export default function(state = initialState.insurance, action) {
             return {
                 ...state,
                 requesting: false,
-                data: {...state.data, certificateUploaded: true}
-            }
+                data: { ...state.data, certificateUploaded: true }
+            };
+
         default:
             return state;
     }
