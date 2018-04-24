@@ -53,7 +53,7 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
 
     @Override
-    public void uploadCertificate(String memberId, String fileName, String contentType, byte[] data) throws IOException {
+    public void uploadCertificate(String memberId, String fileName, String contentType, byte[] data, String token) throws IOException {
         OkHttpClient client = new OkHttpClient();
         RequestBody body = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -61,10 +61,16 @@ public class ProductPricingServiceImpl implements ProductPricingService {
                         RequestBody.create(MediaType.parse(contentType), data))
                 .build();
 
-        Request request = new Request.Builder().url(baseUrl + "/_/insurance/memberId/certificate")
-                .put(body).build();
+        Request request = new Request.Builder()
+                .url(baseUrl + "/_/insurance/" + memberId + "/certificate")
+                .addHeader("Authorization", token)
+                .post(body).build();
 
         Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+            return;
+        }
+
         HttpStatus status = HttpStatus.valueOf(response.code());
 
         if (!status.is2xxSuccessful()) {

@@ -108,7 +108,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
     }
 
     @Override
-    public void uploadCertificate(String memberId, String fileName, String contentType, byte[] data) {
+    public void uploadCertificate(String memberId, String fileName, String contentType, byte[] data, String token) {
         log.info("certificate uploaded: hid = " + memberId + ", name = " + fileName);
         String i = insurances.computeIfAbsent(memberId, id -> INSURANCE_TEMPLATE);
         i = i.replace("\"certificateUploaded\": false", "\"certificateUploaded\": true");
