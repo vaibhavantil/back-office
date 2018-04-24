@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import styled from 'styled-components';
-import { Button, Table } from 'semantic-ui-react';
+import { Button, Radio, Table } from 'semantic-ui-react';
 import DateInput from 'components/shared/inputs/DateInput';
 
 const DateCell = styled(Table.Cell)`
@@ -94,12 +94,31 @@ export default class InsuranceTableRows extends React.Component {
         sendCertificate(formData, member.hid);
     };
 
+    changeCompanyStatus = (e, { value }) => {
+        const {
+            messages: { member },
+            changeCompanyStatus
+        } = this.props;
+        changeCompanyStatus(value, member.hid);
+    };
+
     render() {
         const { fields, activeDate, insurance } = this.props;
         const { cancelBtnIsVisible } = this.state;
         const certIsExist = insurance.data.certificateUploaded;
         return (
             <React.Fragment>
+                <Table.Row>
+                    <Table.Cell>Insured at other company</Table.Cell>
+                    <Table.Cell>
+                        <Radio
+                            toggle
+                            value={insurance.insuredAtOtherCompany}
+                            onChange={this.changeCompanyStatus}
+                            disabled={insurance.requesting}
+                        />
+                    </Table.Cell>
+                </Table.Row>
                 <Table.Row>
                     <Table.Cell>Insurance Mandate</Table.Cell>
                     <Table.Cell>
@@ -178,6 +197,7 @@ InsuranceTableRows.propTypes = {
     saveInsuranceDate: PropTypes.func.isRequired,
     sendCancelRequest: PropTypes.func.isRequired,
     sendCertificate: PropTypes.func.isRequired,
+    changeCompanyStatus: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
     activeDate: PropTypes.string
 };

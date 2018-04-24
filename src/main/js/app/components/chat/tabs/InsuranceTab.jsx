@@ -14,6 +14,7 @@ const InsuranceTab = props => {
         activeDate = activeDate ? activeDate : data.insuranceActiveFrom;
         fields = { ...data };
         delete fields.insuranceActiveFrom;
+        delete fields.insuredAtOtherCompany;
     }
 
     return fields ? (
