@@ -83,7 +83,7 @@ export default class InsuranceTableRows extends React.Component {
         } = this.props;
         // eslint-disable-next-line no-undef
         const formData = new FormData();
-        formData.set('certificate', e.target.files[0]);
+        formData.set('file', e.target.files[0]);
         sendCertificate(formData, member.hid);
     };
 
