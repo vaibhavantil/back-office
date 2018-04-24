@@ -17,7 +17,7 @@ const FileButton = styled.label`
     align-items: center;
     justify-content: center;
     height: 36px;
-    max-width: 100px;
+    width: 100px;
     cursor: pointer;
     background-color: #e0e1e2;
     color: #00000099 !important;
@@ -28,6 +28,13 @@ const FileButton = styled.label`
         background-color: #cacbcd;
         color: #000000cc !important;
     }
+`;
+
+const FlexCell = styled(Table.Cell)`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
 `;
 
 export default class InsuranceTableRows extends React.Component {
@@ -88,8 +95,9 @@ export default class InsuranceTableRows extends React.Component {
     };
 
     render() {
-        const { fields, activeDate } = this.props;
+        const { fields, activeDate, insurance } = this.props;
         const { cancelBtnIsVisible } = this.state;
+        const certIsExist = insurance.data.certificateUploaded;
         return (
             <React.Fragment>
                 <Table.Row>
@@ -100,7 +108,7 @@ export default class InsuranceTableRows extends React.Component {
                 </Table.Row>
                 <Table.Row>
                     <Table.Cell>Insurance certificate</Table.Cell>
-                    <Table.Cell>
+                    <FlexCell>
                         <input
                             type="file"
                             name="certFile"
@@ -112,8 +120,14 @@ export default class InsuranceTableRows extends React.Component {
                                 this.fileInput = input;
                             }}
                         />
+                        {certIsExist && (
+                            <span style={{ marginRight: '10px' }}>
+                                Certificate is already added
+                            </span>
+                        )}
+
                         <FileButton htmlFor="certFile">Choose file</FileButton>
-                    </Table.Cell>
+                    </FlexCell>
                 </Table.Row>
                 {fields.cancellationEmailSent || !cancelBtnIsVisible ? null : (
                     <Table.Row>

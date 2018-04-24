@@ -11,7 +11,8 @@ import {
     insuranceGetSuccess,
     insuranceGetError,
     saveDateSuccess,
-    sendCancelRequestSuccess
+    sendCancelRequestSuccess,
+    sendCertificateSuccess
 } from '../actions/insuranceActions';
 import { showNotification } from '../actions/notificationsActions';
 
@@ -66,7 +67,7 @@ function* sendCertificateFlow({ data, hid }) {
         const path = `${hid}/certificate`;
         yield call(api, config.insurance.cert, data, path);
         yield [
-            put(sendCancelRequestSuccess()),
+            put(sendCertificateSuccess()),
             put(
                 showNotification({
                     message: 'Success',

@@ -6,7 +6,8 @@ import {
     SAVE_DATE_SUCCESS,
     SEND_CANCEL_REQUEST,
     SEND_CANCEL_REQUEST_SUCCESS,
-    SEND_CERTIFICATE
+    SEND_CERTIFICATE,
+    SEND_CERTIFICATE_SUCCESS
 } from '../constants/members';
 
 export const insuranceRequest = id => ({
@@ -48,4 +49,8 @@ export const sendCertificate = (data, hid) => ({
     type: SEND_CERTIFICATE,
     data,
     hid
+});
+
+export const sendCertificateSuccess = () => ({
+    type: SEND_CERTIFICATE_SUCCESS
 });

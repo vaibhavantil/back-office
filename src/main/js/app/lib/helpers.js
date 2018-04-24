@@ -288,26 +288,41 @@ export const sortMemberInsList = (list, fieldName, isReverse) => {
                         : -1
             );
             break;
+
         case 'date':
             return sortMembersByDate(list, isReverse);
 
-        case 'type':
+        case 'insuranceType':
+        case 'insuranceStatus':
+        case 'personsInHouseHold':
             sortedList = list.sort(
-                (a, b) => (a.insuranceType > b.insuranceType ? 1 : -1)
+                (a, b) => (a[fieldName] > b[fieldName] ? 1 : -1)
             );
             break;
-
-        case 'status':
-            sortedList = list.sort(
-                (a, b) => (a.insuranceStatus > b.insuranceStatus ? 1 : -1)
-            );
-            break;
+        case 'cancellationEmailSent':
+            return sortMembersByBool(list, fieldName, isReverse);
 
         default:
             sortedList = list;
     }
     return isReverse ? sortedList.reverse() : sortedList;
 };
+
+function sortMembersByBool(list, fieldName, isReverse) {
+    const withoutVal = [];
+    const filteredList = list.filter(item => {
+        if (!item[fieldName]) {
+            withoutVal.push(item);
+        }
+        return !!item[fieldName];
+    });
+    const sortedList = filteredList.sort(
+        (a, b) => (a[fieldName] > b[fieldName] ? 1 : -1)
+    );
+    const resultList = isReverse ? sortedList.reverse() : sortedList;
+
+    return [...resultList, ...withoutVal];
+}
 
 function sortMembersByDate(list, isReverse) {
     const withoutDates = [];
