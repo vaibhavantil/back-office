@@ -8,7 +8,8 @@ import {
     SEND_CANCEL_REQUEST_SUCCESS,
     SEND_CERTIFICATE,
     SEND_CERTIFICATE_SUCCESS,
-    MEMBER_COMPANY_STATUS
+    MEMBER_COMPANY_STATUS,
+    MEMBER_COMPANY_STATUS_SUCCESS
 } from '../constants/members';
 
 export const insuranceRequest = id => ({
@@ -60,4 +61,9 @@ export const changeCompanyStatus = (value, hid) => ({
     type: MEMBER_COMPANY_STATUS,
     value,
     hid
+});
+
+export const changeCompanyStatusSuccess = (value) => ({
+    type: MEMBER_COMPANY_STATUS_SUCCESS,
+    value
 });
