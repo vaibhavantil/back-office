@@ -5,6 +5,7 @@ import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +78,10 @@ public class ProductPricingServiceImpl implements ProductPricingService {
         } else if (status.is5xxServerError()) {
             throw new ExternalServiceException("product pricing internal error");
         }
+    }
+
+    @Override
+    public void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto) {
+        // TODO
     }
 }

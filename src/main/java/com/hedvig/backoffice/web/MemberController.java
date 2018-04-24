@@ -6,6 +6,7 @@ import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -99,6 +101,12 @@ public class MemberController {
     public ResponseEntity<?> insuranceCertificate(@PathVariable String hid, @RequestBody MultipartFile file) throws IOException {
         byte[] data = file.getBytes();
         productPricingService.uploadCertificate(hid, file.getOriginalFilename(), file.getContentType(), data);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/insurance/{hid}/insuredAtOtherCompany")
+    public ResponseEntity<?> setInsuredAtOtherCompany(@PathVariable String hid, @RequestBody @Valid InsuredAtOtherCompanyDTO dto) {
+        productPricingService.setInsuredAtOtherCompany(hid, dto);
         return ResponseEntity.noContent().build();
     }
 }

@@ -2,7 +2,7 @@ package com.hedvig.backoffice.services.product_pricing;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
-import org.springframework.web.multipart.MultipartFile;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 
 import java.io.IOException;
 
@@ -14,5 +14,6 @@ public interface ProductPricingService {
     JsonNode search(String state, String query, String token);
     void sendCancellationEmail(String memberId, String token);
     void uploadCertificate(String memberId, String fileName, String contentType, byte[] data) throws IOException;
+    void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto);
 
 }

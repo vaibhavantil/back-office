@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +112,14 @@ public class ProductPricingServiceStub implements ProductPricingService {
         log.info("certificate uploaded: hid = " + memberId + ", name = " + fileName);
         String i = insurances.computeIfAbsent(memberId, id -> INSURANCE_TEMPLATE);
         i = i.replace("\"certificateUploaded\": false", "\"certificateUploaded\": true");
+        insurances.put(memberId, i);
+    }
+
+    @Override
+    public void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto) {
+        String i = insurances.computeIfAbsent(memberId, id -> INSURANCE_TEMPLATE);
+        i = i.replace("\"insuredAtOtherCompany\": " + (dto.isInsuredAtOtherCompany() ? "false" : "true"),
+                "\"insuredAtOtherCompany\": " + (dto.isInsuredAtOtherCompany() ? "true" : "false"));
         insurances.put(memberId, i);
     }
 }
