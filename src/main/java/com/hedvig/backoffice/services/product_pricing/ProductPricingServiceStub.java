@@ -34,6 +34,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
             "    \"insuredAtOtherCompany\": true,\n" +
             "    \"insuranceType\": \"BRF\",\n" +
             "    \"cancellationEmailSent\": false,\n" +
+            "    \"certificateUploaded\": false,\n" +
             "    \"insuranceActiveFrom\": null,\n" +
             "    \"insuranceActiveTo\": null\n" +
             "  }";
@@ -108,5 +109,8 @@ public class ProductPricingServiceStub implements ProductPricingService {
     @Override
     public void uploadCertificate(String memberId, String fileName, String contentType, byte[] data) {
         log.info("certificate uploaded: hid = " + memberId + ", name = " + fileName);
+        String i = insurances.computeIfAbsent(memberId, id -> INSURANCE_TEMPLATE);
+        i = i.replace("\"certificateUploaded\": false", "\"certificateUploaded\": true");
+        insurances.put(memberId, i);
     }
 }
