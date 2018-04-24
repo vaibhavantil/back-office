@@ -53,7 +53,8 @@ export default function(state = initialState.insurance, action) {
         case SEND_CANCEL_REQUEST_SUCCESS:
             return {
                 ...state,
-                requesting: false
+                requesting: false,
+                data: { ...state.data, cancellationEmailSent: true }
             };
 
         case SEND_CERTIFICATE_SUCCESS:
@@ -62,8 +63,6 @@ export default function(state = initialState.insurance, action) {
                 requesting: false,
                 data: { ...state.data, certificateUploaded: true }
             };
-        
-            
 
         case MEMBER_COMPANY_STATUS_SUCCESS:
             return {
@@ -71,7 +70,6 @@ export default function(state = initialState.insurance, action) {
                 requesting: false,
                 data: { ...state.data, insuredAtOtherCompany: action.value }
             };
-        
 
         default:
             return state;

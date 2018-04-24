@@ -37,11 +37,14 @@ const FlexCell = styled(Table.Cell)`
     align-items: center;
 `;
 
+const RowValue = styled.span`
+    margin-right: 10px;
+`;
+
 export default class InsuranceTableRows extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            cancelBtnIsVisible: true,
             datePickerDisabled: true,
             dateValue: null
         };
@@ -64,7 +67,6 @@ export default class InsuranceTableRows extends React.Component {
             sendCancelRequest
         } = this.props;
         sendCancelRequest(data.memberId);
-        this.setState({ cancelBtnIsVisible: false });
     };
 
     dateChangeHandler = (type, e, { value }) => {
@@ -103,8 +105,7 @@ export default class InsuranceTableRows extends React.Component {
     };
 
     render() {
-        const { fields, activeDate, insurance } = this.props;
-        const { cancelBtnIsVisible } = this.state;
+        const { activeDate, insurance } = this.props;
         const certIsExist = insurance.data.certificateUploaded;
         return (
             <React.Fragment>
@@ -140,35 +141,34 @@ export default class InsuranceTableRows extends React.Component {
                             }}
                         />
                         {certIsExist && (
-                            <span style={{ marginRight: '10px' }}>
-                                Certificate is already added
-                            </span>
+                            <RowValue>Certificate is already added</RowValue>
                         )}
 
                         <FileButton htmlFor="certFile">Choose file</FileButton>
                     </FlexCell>
                 </Table.Row>
-                {fields.cancellationEmailSent || !cancelBtnIsVisible ? null : (
-                    <Table.Row>
-                        <Table.Cell>
-                            Send cancellation email to existing insurer
-                        </Table.Cell>
-                        <Table.Cell>
+
+                <Table.Row>
+                    <Table.Cell>
+                        Send cancellation email to existing insurer
+                    </Table.Cell>
+                    <Table.Cell>
+                        {insurance.data.cancellationEmailSent ? (
+                            <RowValue>Already sent</RowValue>
+                        ) : (
                             <Button onClick={this.cancelInsuranceClick}>
                                 Send
                             </Button>
-                        </Table.Cell>
-                    </Table.Row>
-                )}
+                        )}
+                    </Table.Cell>
+                </Table.Row>
                 <Table.Row>
                     <Table.Cell>Insurance active from</Table.Cell>
                     <DateCell>
                         {this.state.datePickerDisabled ? (
                             <React.Fragment>
                                 {activeDate && (
-                                    <span style={{ marginRight: '10px' }}>
-                                        {activeDate}
-                                    </span>
+                                    <RowValue>{activeDate}</RowValue>
                                 )}
 
                                 <Button onClick={this.toggleEdit}>Edit</Button>
