@@ -9,7 +9,8 @@ import {
     SEND_CANCEL_REQUEST_SUCCESS,
     SEND_CERTIFICATE,
     SEND_CERTIFICATE_SUCCESS,
-    MEMBER_COMPANY_STATUS
+    MEMBER_COMPANY_STATUS,
+    MEMBER_COMPANY_STATUS_SUCCESS
 } from '../constants/members';
 
 export default function(state = initialState.insurance, action) {
@@ -61,6 +62,16 @@ export default function(state = initialState.insurance, action) {
                 requesting: false,
                 data: { ...state.data, certificateUploaded: true }
             };
+        
+            
+
+        case MEMBER_COMPANY_STATUS_SUCCESS:
+            return {
+                ...state,
+                requesting: false,
+                data: { ...state.data, insuredAtOtherCompany: action.value }
+            };
+        
 
         default:
             return state;

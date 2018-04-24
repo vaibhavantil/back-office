@@ -12,9 +12,17 @@ const InsuranceTab = props => {
     let fields;
     if (data) {
         activeDate = activeDate ? activeDate : data.insuranceActiveFrom;
-        fields = { ...data };
-        delete fields.insuranceActiveFrom;
-        delete fields.insuredAtOtherCompany;
+        /* eslint-disable no-unused-vars */
+        const {
+            insuranceActiveFrom,
+            insuredAtOtherCompany,
+            cancellationEmailSent,
+            certificateUploaded,
+            ...filteredFields
+        } = data;
+        /* eslint-enable */
+
+        fields = filteredFields;
     }
 
     return fields ? (

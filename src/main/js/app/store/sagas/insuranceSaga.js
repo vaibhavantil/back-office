@@ -13,7 +13,8 @@ import {
     insuranceGetError,
     saveDateSuccess,
     sendCancelRequestSuccess,
-    sendCertificateSuccess
+    sendCertificateSuccess,
+    changeCompanyStatusSuccess
 } from '../actions/insuranceActions';
 import { showNotification } from '../actions/notificationsActions';
 
@@ -100,7 +101,7 @@ function* changeCompanyStatusFlow({ value, hid }) {
             path
         );
         yield [
-            put(sendCertificateSuccess()),
+            put(changeCompanyStatusSuccess(value)),
             put(
                 showNotification({
                     message: 'Success',

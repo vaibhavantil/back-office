@@ -113,7 +113,7 @@ export default class InsuranceTableRows extends React.Component {
                     <Table.Cell>
                         <Radio
                             toggle
-                            value={insurance.insuredAtOtherCompany}
+                            checked={insurance.data.insuredAtOtherCompany}
                             onChange={this.changeCompanyStatus}
                             disabled={insurance.requesting}
                         />
