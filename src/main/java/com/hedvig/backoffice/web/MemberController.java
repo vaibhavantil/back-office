@@ -96,7 +96,7 @@ public class MemberController {
     }
 
     @PutMapping("/insurance/{hid}/certificate")
-    public ResponseEntity<?> insuranceSertificate(@PathVariable String hid, @RequestBody MultipartFile file) throws IOException {
+    public ResponseEntity<?> insuranceCertificate(@PathVariable String hid, @RequestBody MultipartFile file) throws IOException {
         byte[] data = file.getBytes();
         productPricingService.uploadCertificate(hid, file.getOriginalFilename(), file.getContentType(), data);
         return ResponseEntity.noContent().build();
