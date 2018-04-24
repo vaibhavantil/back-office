@@ -30,6 +30,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
             "    \"insuranceStatus\": \"PENDING\",\n" +
             "    \"insuranceState\": \"%s\",\n" +
             "    \"currentTotalPrice\": 139,\n" +
+            "    \"personsInHouseHold\": 5,\n" +
             "    \"newTotalPrice\": null,\n" +
             "    \"insuredAtOtherCompany\": true,\n" +
             "    \"insuranceType\": \"BRF\",\n" +
