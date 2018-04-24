@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.product_pricing;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,11 @@ public class ProductPricingClientFallback implements ProductPricingClient {
 
     @Override
     public void sendCancellationEmail(String memberId, String token) {
+        log.error("product-pricing service unavailable");
+    }
+
+    @Override
+    public void insuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto) {
         log.error("product-pricing service unavailable");
     }
 }

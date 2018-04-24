@@ -82,6 +82,6 @@ public class ProductPricingServiceImpl implements ProductPricingService {
 
     @Override
     public void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto) {
-        // TODO
+        client.insuredAtOtherCompany(memberId, dto);
     }
 }
