@@ -94,12 +94,12 @@ export default class InsuranceTableRows extends React.Component {
         sendCertificate(formData, member.hid);
     };
 
-    changeCompanyStatus = (e, { value }) => {
+    changeCompanyStatus = (e, { checked }) => {
         const {
             messages: { member },
             changeCompanyStatus
         } = this.props;
-        changeCompanyStatus(value, member.hid);
+        changeCompanyStatus(checked, member.hid);
     };
 
     render() {
