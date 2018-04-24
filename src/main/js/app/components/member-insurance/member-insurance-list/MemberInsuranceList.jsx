@@ -41,8 +41,8 @@ export default class MemberInsuranceList extends React.Component {
                         : '-'}
                 </Table.Cell>
                 <Table.Cell>
-                    {item.certificateUploaded
-                        ? item.certificateUploaded.toString()
+                    {item.personsInHouseHold
+                        ? item.personsInHouseHold.toString()
                         : '-'}
                 </Table.Cell>
             </LinkRow>
@@ -81,35 +81,35 @@ export default class MemberInsuranceList extends React.Component {
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell
-                        width={4}
+                        width={3}
                         sorted={column === 'name' ? direction : null}
                         onClick={this.sortTable.bind(this, 'name')}
                     >
                         Name
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                        width={3}
+                        width={1}
                         sorted={column === 'insuranceType' ? direction : null}
                         onClick={this.sortTable.bind(this, 'insuranceType')}
                     >
                         Insurance type
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                        width={4}
+                        width={3}
                         sorted={column === 'date' ? direction : null}
                         onClick={this.sortTable.bind(this, 'date')}
                     >
                         Insurance active from
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                        width={3}
+                        width={1}
                         sorted={column === 'insuranceStatus' ? direction : null}
                         onClick={this.sortTable.bind(this, 'insuranceStatus')}
                     >
                         Insurance status
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                        width={6}
+                        width={2}
                         sorted={
                             column === 'cancellationEmailSent'
                                 ? direction
@@ -123,16 +123,16 @@ export default class MemberInsuranceList extends React.Component {
                         Cancellation email sent
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                        width={5}
+                        width={2}
                         sorted={
-                            column === 'certificateUploaded' ? direction : null
+                            column === 'personsInHouseHold' ? direction : null
                         }
                         onClick={this.sortTable.bind(
                             this,
-                            'certificateUploaded'
+                            'personsInHouseHold'
                         )}
                     >
-                        Certificate uploaded
+                        Persons in house hold
                     </Table.HeaderCell>
                 </Table.Row>
             </Table.Header>

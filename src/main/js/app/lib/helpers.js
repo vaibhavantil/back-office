@@ -294,11 +294,11 @@ export const sortMemberInsList = (list, fieldName, isReverse) => {
 
         case 'insuranceType':
         case 'insuranceStatus':
+        case 'personsInHouseHold':
             sortedList = list.sort(
                 (a, b) => (a[fieldName] > b[fieldName] ? 1 : -1)
             );
             break;
-        case 'certificateUploaded':
         case 'cancellationEmailSent':
             return sortMembersByBool(list, fieldName, isReverse);
 
