@@ -8,7 +8,6 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -30,6 +29,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
             "    \"insuranceStatus\": \"PENDING\",\n" +
             "    \"insuranceState\": \"%s\",\n" +
             "    \"currentTotalPrice\": 139,\n" +
+            "    \"personsInHouseHold\": 5,\n" +
             "    \"newTotalPrice\": null,\n" +
             "    \"insuredAtOtherCompany\": true,\n" +
             "    \"insuranceType\": \"BRF\",\n" +
