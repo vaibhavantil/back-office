@@ -38,8 +38,6 @@ import java.util.Collections;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private boolean oauthEnabled;
-    private String[] corsOrigins;
-    private String[] corsMethods;
     private String[] hds;
 
     private OAuth2ClientContext clientContext;
@@ -52,8 +50,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           PersonnelService personnelService,
                           @Value("${oauth.enabled:true}") boolean oauthEnabled,
                           @Value("${oauth.hds}") String[] hds,
-                          @Value("${cors.origins}") String[] corsOrigins,
-                          @Value("${cors.methods}") String[] corsMethods,
                           AuthorizationCodeResourceDetails clientDetails,
                           ResourceServerProperties clientResource) {
 
@@ -63,9 +59,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.oauthEnabled = oauthEnabled;
         this.hds = hds;
 
-        this.corsOrigins = corsOrigins;
-        this.corsMethods = corsMethods;
-
         this.clientDetails = clientDetails;
         this.clientResource = clientResource;
     }
@@ -73,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http = http
-                .cors().and()
+                .cors().disable()
                 .csrf().disable()
                 .headers().frameOptions().disable()
                 .and().sessionManagement().maximumSessions(1).and()
@@ -93,20 +86,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/chat/**").authenticated();
         }
 
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(Arrays.asList(corsOrigins));
-        configuration.setAllowedMethods(Arrays.asList(corsMethods));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
-
-        return source;
     }
 
     private Filter ssoFilter(AuthorizationCodeResourceDetails clientDetails, ResourceServerProperties clientResource) {
