@@ -1,17 +1,27 @@
 package com.hedvig.backoffice.services.product_pricing;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
+import com.hedvig.backoffice.config.feign.ExternalServiceException;
+import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+
+import java.io.IOException;
 
 public class ProductPricingServiceImpl implements ProductPricingService {
 
     private ProductPricingClient client;
+    private String baseUrl;
 
     @Autowired
-    public ProductPricingServiceImpl(ProductPricingClient client) {
+    public ProductPricingServiceImpl(ProductPricingClient client,
+                                     @Value("${productPricing.baseUrl}") String baseUrl) {
         this.client = client;
+        this.baseUrl = baseUrl;
     }
 
     @Override
@@ -40,7 +50,26 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
 
     @Override
-    public void uploadCertificate(String memberId, MultipartFile file) {
-        // TODO implement
+    public void uploadCertificate(String memberId, String fileName, String contentType, byte[] data) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", fileName,
+                        RequestBody.create(MediaType.parse(contentType), data))
+                .build();
+
+        Request request = new Request.Builder().url(baseUrl + "/_/insurance/memberId/certificate")
+                .put(body).build();
+
+        Response response = client.newCall(request).execute();
+        HttpStatus status = HttpStatus.valueOf(response.code());
+
+        if (status == HttpStatus.NOT_FOUND) {
+            throw new ExternalServiceNotFoundException("member not found, id = " + memberId, "");
+        } else if (status.is4xxClientError()) {
+            throw new ExternalServiceBadRequestException("bad request, id = " + memberId, "");
+        } else if (status.is5xxServerError()) {
+            throw new ExternalServiceException("product pricing internal error");
+        }
     }
 }

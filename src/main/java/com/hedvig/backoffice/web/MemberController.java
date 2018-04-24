@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -95,8 +96,9 @@ public class MemberController {
     }
 
     @PutMapping("/insurance/{hid}/certificate")
-    public ResponseEntity<?> insuranceSertificate(@PathVariable String hid, @RequestBody MultipartFile file) {
-        productPricingService.uploadCertificate(hid, file);
+    public ResponseEntity<?> insuranceSertificate(@PathVariable String hid, @RequestBody MultipartFile file) throws IOException {
+        byte[] data = file.getBytes();
+        productPricingService.uploadCertificate(hid, file.getOriginalFilename(), file.getContentType(), data);
         return ResponseEntity.noContent().build();
     }
 }

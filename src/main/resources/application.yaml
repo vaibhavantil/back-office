@@ -20,9 +20,9 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   http:
-      multipart:
-        max-file-size: 512MB
-        max-request-size: 512MB
+    multipart:
+      max-file-size: 512MB
+      max-request-size: 512MB
   cloud:
     config:
       allow-override: false

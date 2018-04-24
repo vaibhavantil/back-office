@@ -106,7 +106,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
     }
 
     @Override
-    public void uploadCertificate(String memberId, MultipartFile file) {
-        log.info("certificate uploaded: hid = " + memberId + ", name = " + file.getOriginalFilename());
+    public void uploadCertificate(String memberId, String fileName, String contentType, byte[] data) {
+        log.info("certificate uploaded: hid = " + memberId + ", name = " + fileName);
     }
 }
