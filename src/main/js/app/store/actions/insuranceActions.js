@@ -9,7 +9,8 @@ import {
     SEND_CERTIFICATE,
     SEND_CERTIFICATE_SUCCESS,
     MEMBER_COMPANY_STATUS,
-    MEMBER_COMPANY_STATUS_SUCCESS
+    MEMBER_COMPANY_STATUS_SUCCESS,
+    SEND_CERTIFICATE_ERROR
 } from '../constants/members';
 
 export const insuranceRequest = id => ({
@@ -55,6 +56,10 @@ export const sendCertificate = (data, hid) => ({
 
 export const sendCertificateSuccess = () => ({
     type: SEND_CERTIFICATE_SUCCESS
+});
+
+export const insuranceError = () => ({
+    type: SEND_CERTIFICATE_ERROR
 });
 
 export const changeCompanyStatus = (value, hid) => ({

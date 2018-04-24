@@ -14,7 +14,8 @@ import {
     saveDateSuccess,
     sendCancelRequestSuccess,
     sendCertificateSuccess,
-    changeCompanyStatusSuccess
+    changeCompanyStatusSuccess,
+    insuranceError
 } from '../actions/insuranceActions';
 import { showNotification } from '../actions/notificationsActions';
 
@@ -40,7 +41,7 @@ function* saveDateFlow({ id, activationDate }) {
                     header: 'Insurance'
                 })
             ),
-            put(insuranceGetError(error.message))
+            put(insuranceError())
         ];
     }
 }
@@ -60,7 +61,15 @@ function* cancelRequestFlow({ id }) {
             )
         ];
     } catch (error) {
-        yield [put(insuranceGetError(error.message))];
+        yield [
+            put(
+                showNotification({
+                    message: error.message,
+                    header: 'Insurance'
+                })
+            ),
+            put(insuranceError())
+        ];
     }
 }
 
@@ -86,7 +95,7 @@ function* sendCertificateFlow({ data, hid }) {
                     header: 'Insurance'
                 })
             ),
-            put(sendCancelRequestSuccess())
+            put(insuranceError())
         ];
     }
 }
@@ -118,7 +127,7 @@ function* changeCompanyStatusFlow({ value, hid }) {
                     header: 'Insurance'
                 })
             ),
-            put(sendCancelRequestSuccess())
+            put(insuranceError())
         ];
     }
 }
