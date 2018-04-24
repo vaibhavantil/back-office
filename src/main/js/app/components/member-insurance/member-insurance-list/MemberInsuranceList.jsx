@@ -41,6 +41,11 @@ export default class MemberInsuranceList extends React.Component {
                         : '-'}
                 </Table.Cell>
                 <Table.Cell>
+                    {item.certificateUploaded
+                        ? item.certificateUploaded.toString()
+                        : '-'}
+                </Table.Cell>
+                <Table.Cell>
                     {item.personsInHouseHold
                         ? item.personsInHouseHold.toString()
                         : '-'}
@@ -88,21 +93,21 @@ export default class MemberInsuranceList extends React.Component {
                         Name
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                        width={1}
+                        width={2}
                         sorted={column === 'insuranceType' ? direction : null}
                         onClick={this.sortTable.bind(this, 'insuranceType')}
                     >
                         Insurance type
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                        width={3}
+                        width={2}
                         sorted={column === 'date' ? direction : null}
                         onClick={this.sortTable.bind(this, 'date')}
                     >
                         Insurance active from
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                        width={1}
+                        width={2}
                         sorted={column === 'insuranceStatus' ? direction : null}
                         onClick={this.sortTable.bind(this, 'insuranceStatus')}
                     >
@@ -121,6 +126,20 @@ export default class MemberInsuranceList extends React.Component {
                         )}
                     >
                         Cancellation email sent
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                        width={2}
+                        sorted={
+                            column === 'certificateUploaded'
+                                ? direction
+                                : null
+                        }
+                        onClick={this.sortTable.bind(
+                            this,
+                            'certificateUploaded'
+                        )}
+                    >
+                        Certificate uploaded
                     </Table.HeaderCell>
                     <Table.HeaderCell
                         width={2}

@@ -300,6 +300,7 @@ export const sortMemberInsList = (list, fieldName, isReverse) => {
             );
             break;
         case 'cancellationEmailSent':
+        case 'certificateUploaded':
             return sortMembersByBool(list, fieldName, isReverse);
 
         default:

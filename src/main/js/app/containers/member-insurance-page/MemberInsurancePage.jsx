@@ -10,7 +10,7 @@ const ListPage = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto 50px;
 `;
 
