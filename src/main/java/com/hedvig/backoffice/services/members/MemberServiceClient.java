@@ -21,7 +21,7 @@ public interface MemberServiceClient {
                            @PathVariable("query") String query,
                            @RequestHeader("Authorization") String token);
 
-    @GetMapping("/member/{id}")
+    @GetMapping("/i/member/{id}")
     MemberDTO member(@PathVariable("id") String id, @RequestHeader("Authorization") String token);
 
 }
