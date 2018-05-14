@@ -28,9 +28,10 @@ export const insuranceGetError = error => ({
     error
 });
 
-export const saveInsuranceDate = (activationDate, id) => ({
+export const saveInsuranceDate = (date, changeType, id) => ({
     type: SAVE_INSURANCE_DATE,
-    activationDate,
+    date,
+    changeType,
     id
 });
 
