@@ -3,6 +3,7 @@ package com.hedvig.backoffice.web;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
@@ -81,6 +82,14 @@ public class MemberController {
                                       @RequestBody InsuranceActivateDTO dto,
                                       @AuthenticationPrincipal Principal principal) {
         productPricingService.activate(hid, dto, personnelService.getIdToken(principal.getName()));
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/insurance/{hid}/cancel")
+    public ResponseEntity<?> cancel (@PathVariable String hid,
+                                      @RequestBody InsuranceCancellationDTO dto,
+                                      @AuthenticationPrincipal Principal principal) {
+        memberService.cancelInsurance(hid, dto, personnelService.getIdToken(principal.getName()));
         return ResponseEntity.noContent().build();
     }
 
