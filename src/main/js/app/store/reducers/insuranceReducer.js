@@ -4,7 +4,8 @@ import {
     INSURANCE_REQUEST_SUCCESS,
     INSURANCE_ERROR,
     SAVE_INSURANCE_DATE,
-    SAVE_DATE_SUCCESS,
+    SAVE_ACTIVATION_DATE_SUCCESS,
+    SAVE_CANCELLATION_DATE_SUCCESS,
     SEND_CANCEL_REQUEST,
     SEND_CANCEL_REQUEST_SUCCESS,
     SEND_CERTIFICATE,
@@ -44,11 +45,18 @@ export default function(state = initialState.insurance, action) {
                 error: [...state.error, action.error]
             };
 
-        case SAVE_DATE_SUCCESS:
+        case SAVE_ACTIVATION_DATE_SUCCESS:
             return {
                 ...state,
                 requesting: false,
-                data: { ...state.data, insuranceActiveFrom: action.date }
+                data: { ...state.data, insuranceActiveFrom: action.activationDate }
+            };
+
+        case SAVE_CANCELLATION_DATE_SUCCESS:
+            return {
+                ...state,
+                requesting: false,
+                data: { ...state.data, insuranceActiveTo: action.cancellationDate }
             };
 
         case SEND_CANCEL_REQUEST_SUCCESS:

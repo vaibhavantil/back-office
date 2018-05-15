@@ -3,7 +3,8 @@ import {
     INSURANCE_REQUEST_SUCCESS,
     INSURANCE_ERROR,
     SAVE_INSURANCE_DATE,
-    SAVE_DATE_SUCCESS,
+    SAVE_ACTIVATION_DATE_SUCCESS,
+    SAVE_CANCELLATION_DATE_SUCCESS,
     SEND_CANCEL_REQUEST,
     SEND_CANCEL_REQUEST_SUCCESS,
     SEND_CERTIFICATE,
@@ -35,9 +36,14 @@ export const saveInsuranceDate = (date, changeType, id) => ({
     id
 });
 
-export const saveDateSuccess = date => ({
-    type: SAVE_DATE_SUCCESS,
-    date
+export const saveActivationDateSuccess = activationDate => ({
+    type: SAVE_ACTIVATION_DATE_SUCCESS,
+    activationDate
+});
+
+export const saveCancellationDateSuccess = cancellationDate => ({
+    type: SAVE_CANCELLATION_DATE_SUCCESS,
+    cancellationDate
 });
 
 export const sendCancelRequest = id => ({
