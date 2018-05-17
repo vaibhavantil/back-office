@@ -31,5 +31,4 @@ public interface MemberServiceClient {
     void cancelInsurance (@PathVariable("memberId") String memberId,
                           @RequestBody InsuranceCancellationDTO dto,
                           @RequestHeader("Authorization") String token);
-    qq
 }
