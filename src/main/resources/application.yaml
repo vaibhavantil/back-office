@@ -5,6 +5,8 @@ server:
     timeout: 3600
     cookie:
       max-age: 3600
+      http-only: true
+      secure: true
 
 logging:
   level:
