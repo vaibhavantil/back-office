@@ -47,10 +47,18 @@ public class MemberController {
         return memberService.search("", "", personnelService.getIdToken(principal.getName()));
     }
 
-    @GetMapping("/{hid}")
-    public MemberDTO findOne(@PathVariable String hid, @AuthenticationPrincipal Principal principal) {
-        return Optional.ofNullable(memberService.findByHid(hid, personnelService.getIdToken(principal.getName())))
+    @GetMapping("/{memberId}")
+    public MemberDTO findOne(@PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+        return Optional.ofNullable(memberService.findByMemberId(memberId, personnelService.getIdToken(principal.getName())))
                 .orElseThrow(() -> new ExternalServiceException("member-service not available"));
+    }
+
+    @PostMapping("/{memberId}/edit")
+    public ResponseEntity<?> editMember(@PathVariable String memberId,
+                                      @RequestBody MemberDTO dto,
+                                      @AuthenticationPrincipal Principal principal) {
+        memberService.editMember(memberId, dto, personnelService.getIdToken(principal.getName()));
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/search")
@@ -60,27 +68,27 @@ public class MemberController {
         return memberService.search(status, query, personnelService.getIdToken(principal.getName()));
     }
 
-    @RequestMapping(path = "/mandate/{hid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> insuranceMandate(@PathVariable String hid, @AuthenticationPrincipal Principal principal) {
-        val mandate = productPricingService.insuranceContract(hid, personnelService.getIdToken(principal.getName()));
+    @RequestMapping(path = "/mandate/{memberId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> insuranceMandate(@PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+        val mandate = productPricingService.insuranceContract(memberId, personnelService.getIdToken(principal.getName()));
         val headers = new HttpHeaders();
-        val filename = "insurance-mandate-" + hid + ".pdf";
+        val filename = "insurance-mandate-" + memberId + ".pdf";
         headers.setContentDispositionFormData(filename, filename);
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
         return new ResponseEntity<>(mandate, headers, HttpStatus.OK);
     }
 
-    @GetMapping("/insurance/{hid}")
-    public JsonNode insurance(@PathVariable String hid, @AuthenticationPrincipal Principal principal) {
-        return Optional.ofNullable(productPricingService.insurance(hid, personnelService.getIdToken(principal.getName())))
+    @GetMapping("/insurance/{memberId}")
+    public JsonNode insurance(@PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+        return Optional.ofNullable(productPricingService.insurance(memberId, personnelService.getIdToken(principal.getName())))
                 .orElseThrow(() -> new ExternalServiceException("request to product-pricing service failed"));
     }
 
-    @PostMapping("/insurance/{hid}/activate")
-    public ResponseEntity<?> activate(@PathVariable String hid,
+    @PostMapping("/insurance/{memberId}/activate")
+    public ResponseEntity<?> activate(@PathVariable String memberId,
                                       @RequestBody InsuranceActivateDTO dto,
                                       @AuthenticationPrincipal Principal principal) {
-        productPricingService.activate(hid, dto, personnelService.getIdToken(principal.getName()));
+        productPricingService.activate(memberId, dto, personnelService.getIdToken(principal.getName()));
         return ResponseEntity.noContent().build();
     }
 
@@ -91,25 +99,25 @@ public class MemberController {
         return productPricingService.search(state, query, personnelService.getIdToken(principal.getName()));
     }
 
-    @PostMapping("/insurance/{hid}/sendCancellationEmail")
-    public ResponseEntity<?> sendCancellationEmail(@PathVariable String hid, @AuthenticationPrincipal Principal principal) {
-        productPricingService.sendCancellationEmail(hid, personnelService.getIdToken(principal.getName()));
+    @PostMapping("/insurance/{memberId}/sendCancellationEmail")
+    public ResponseEntity<?> sendCancellationEmail(@PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+        productPricingService.sendCancellationEmail(memberId, personnelService.getIdToken(principal.getName()));
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/insurance/{hid}/certificate")
-    public ResponseEntity<?> insuranceCertificate(@PathVariable String hid,
+    @PutMapping("/insurance/{memberId}/certificate")
+    public ResponseEntity<?> insuranceCertificate(@PathVariable String memberId,
                                                   @RequestBody MultipartFile file,
                                                   @AuthenticationPrincipal Principal principal) throws IOException {
         byte[] data = file.getBytes();
-        productPricingService.uploadCertificate(hid, file.getOriginalFilename(), file.getContentType(), data,
+        productPricingService.uploadCertificate(memberId, file.getOriginalFilename(), file.getContentType(), data,
                 personnelService.getIdToken(principal.getName()));
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/insurance/{hid}/insuredAtOtherCompany")
-    public ResponseEntity<?> setInsuredAtOtherCompany(@PathVariable String hid, @RequestBody @Valid InsuredAtOtherCompanyDTO dto) {
-        productPricingService.setInsuredAtOtherCompany(hid, dto);
+    @PostMapping("/insurance/{memberId}/insuredAtOtherCompany")
+    public ResponseEntity<?> setInsuredAtOtherCompany(@PathVariable String memberId, @RequestBody @Valid InsuredAtOtherCompanyDTO dto) {
+        productPricingService.setInsuredAtOtherCompany(memberId, dto);
         return ResponseEntity.noContent().build();
     }
 }

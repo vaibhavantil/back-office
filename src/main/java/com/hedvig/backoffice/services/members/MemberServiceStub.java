@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -59,11 +60,17 @@ public class MemberServiceStub implements MemberService {
     }
 
     @Override
-    public MemberDTO findByHid(String hid, String token) {
+    public MemberDTO findByMemberId(String memberId, String token) {
         return users.stream()
-                .filter(u -> u.getHid().equals(hid))
+                .filter(u -> u.getMemberId().toString().equals(memberId))
                 .findAny()
-                .orElse(new MemberDTO(Long.parseLong(hid)));
+                .orElse(new MemberDTO(Long.parseLong(memberId)));
     }
 
+    @Override
+    public void editMember(String memberId, MemberDTO memberDTO, String token){
+        users = users.stream()
+                    .map(o -> o.getMemberId().toString().equals(memberId) ? memberDTO : o)
+                    .collect(Collectors.toList());
+    }
 }

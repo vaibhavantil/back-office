@@ -26,8 +26,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDTO findByHid(String hid, String token) {
-        return client.member(hid, token);
+    public MemberDTO findByMemberId(String memberId, String token) {
+        return client.member(memberId, token);
+    }
+
+    @Override
+    public void editMember(String memberId, MemberDTO memberDTO, String token) {
+        if (!client.member(memberId, token).equals(memberDTO))
+            client.editMember(memberId, memberDTO, token);
     }
 
 }
