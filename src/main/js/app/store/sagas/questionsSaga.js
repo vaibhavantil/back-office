@@ -49,7 +49,7 @@ function* sendAnswerFlow({ data }) {
                     header: 'Questions'
                 })
             ),
-            put(answerError({ message: error.message, hid: data.id }))
+            put(answerError({ message: error.message, memberId: data.id }))
         ];
     }
 }
@@ -66,7 +66,7 @@ function* sendDoneMsgFlow({ data }) {
                     header: 'Questions'
                 })
             ),
-            put(answerError({ message: error.message, hid: data.id }))
+            put(answerError({ message: error.message, memberId: data.id }))
         ];
     }
 }

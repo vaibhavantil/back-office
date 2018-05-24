@@ -41,7 +41,7 @@ export default class AnswerForm extends React.Component {
     };
 
     render() {
-        const { hid, redirectClick, error } = this.props;
+        const { memberId, redirectClick, error } = this.props;
         return (
             <React.Fragment>
                 <Form>
@@ -57,17 +57,17 @@ export default class AnswerForm extends React.Component {
                             <Button
                                 style={{ marginBottom: '3px' }}
                                 content="Open Chat"
-                                onClick={redirectClick.bind(this, hid)}
+                                onClick={redirectClick.bind(this, memberId)}
                             />
                             <Button
                                 content="Send"
-                                onClick={this.answerClick.bind(this, hid)}
+                                onClick={this.answerClick.bind(this, memberId)}
                                 primary
                                 disabled={!this.state.answer.trim().length}
                             />
                             <Button
                                 content="Done"
-                                onClick={this.doneClick.bind(this, hid)}
+                                onClick={this.doneClick.bind(this, memberId)}
                                 primary
                             />
                         </div>
@@ -80,7 +80,7 @@ export default class AnswerForm extends React.Component {
 }
 
 AnswerForm.propTypes = {
-    hid: PropTypes.string.isRequired,
+    memberId: PropTypes.string.isRequired,
     sendAnswer: PropTypes.func.isRequired,
     sendDoneMsg: PropTypes.func.isRequired,
     redirectClick: PropTypes.func.isRequired,

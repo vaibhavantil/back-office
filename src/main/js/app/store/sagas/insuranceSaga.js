@@ -73,9 +73,9 @@ function* cancelRequestFlow({ id }) {
     }
 }
 
-function* sendCertificateFlow({ data, hid }) {
+function* sendCertificateFlow({ data, memberId }) {
     try {
-        const path = `${hid}/certificate`;
+        const path = `${memberId}/certificate`;
         yield call(api, config.insurance.cert, data, path);
         yield [
             put(sendCertificateSuccess()),
@@ -100,9 +100,9 @@ function* sendCertificateFlow({ data, hid }) {
     }
 }
 
-function* changeCompanyStatusFlow({ value, hid }) {
+function* changeCompanyStatusFlow({ value, memberId }) {
     try {
-        const path = `${hid}/insuredAtOtherCompany`;
+        const path = `${memberId}/insuredAtOtherCompany`;
         yield call(
             api,
             config.insurance.companyStatus,
