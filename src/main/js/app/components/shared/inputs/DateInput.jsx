@@ -8,7 +8,7 @@ import 'react-dates/initialize';
 import { SingleDatePicker } from 'react-dates';
 import { OPEN_UP } from 'react-dates/constants';
 import 'react-dates/lib/css/_datepicker';
-import { DATE } from 'app/lib/messageTypes';
+import { DATE, ACTIVATION_DATE, CANCELLATION_DATE } from 'app/lib/messageTypes';
 
 const WidgetContainer = styled.div`
     display: flex;
@@ -54,7 +54,7 @@ export default class DateInput extends React.Component {
             date: moment(date)
         });
 
-        this.props.changeHandler(DATE, null, {
+        this.props.changeHandler(this.props.changeType || DATE, null, {
             value: moment(date).toISOString()
         });
     };
@@ -95,6 +95,7 @@ export default class DateInput extends React.Component {
 
 DateInput.propTypes = {
     changeHandler: PropTypes.func.isRequired,
+    changeType: PropTypes.string,
     cleanupForm: PropTypes.bool,
     date: PropTypes.string,
     label: PropTypes.bool,

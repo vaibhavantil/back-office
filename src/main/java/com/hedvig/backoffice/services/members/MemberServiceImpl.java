@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.members;
 
+import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO findByHid(String hid, String token) {
         return client.member(hid, token);
+    }
+
+    @Override
+    public void cancelInsurance(String hid, InsuranceCancellationDTO dto, String token) {
+        client.cancelInsurance(hid, dto, token);
     }
 
 }

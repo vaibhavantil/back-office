@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.members;
 
+import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,6 +65,11 @@ public class MemberServiceStub implements MemberService {
                 .filter(u -> u.getHid().equals(hid))
                 .findAny()
                 .orElse(new MemberDTO(Long.parseLong(hid)));
+    }
+
+    @Override
+    public void cancelInsurance(String hid, InsuranceCancellationDTO dto, String token) {
+        logger.info("Insurance " + hid + " Cancelled at date " + dto.getCancellationDate().toString());
     }
 
 }

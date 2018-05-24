@@ -13,14 +13,6 @@ logging:
     com:
       hedvig: DEBUG
 
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/back-office
-    username: postgres
-    password: iambatman
-    platform: POSTGRESQL
-    driver-class-name: org.postgresql.Driver
-
   http:
     multipart:
       max-file-size: 16MB
@@ -29,8 +21,6 @@ spring:
     config:
       allow-override: false
 
-  profiles:
-    active: development
 
   jpa:
     hibernate:

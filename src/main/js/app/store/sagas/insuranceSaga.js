@@ -11,13 +11,15 @@ import config from 'app/api/config';
 import {
     insuranceGetSuccess,
     insuranceGetError,
-    saveDateSuccess,
+    saveActivationDateSuccess,
+    saveCancellationDateSuccess,
     sendCancelRequestSuccess,
     sendCertificateSuccess,
     changeCompanyStatusSuccess,
     insuranceError
 } from '../actions/insuranceActions';
 import { showNotification } from '../actions/notificationsActions';
+import { DATE, ACTIVATION_DATE, CANCELLATION_DATE } from 'app/lib/messageTypes';
 
 function* requestFlow({ id }) {
     try {
@@ -28,11 +30,22 @@ function* requestFlow({ id }) {
     }
 }
 
-function* saveDateFlow({ id, activationDate }) {
+function* saveDateFlow({ id, date, changeType }) {
     try {
-        const path = `${id}/activate`;
-        yield call(api, config.insurance.setDate, { activationDate }, path);
-        yield put(saveDateSuccess(activationDate));
+        switch (changeType) {
+          case ACTIVATION_DATE:
+            const activationPath = `${id}/activate`;
+            yield call(api, config.insurance.setDate, { activationDate: date }, activationPath);
+            yield put(saveActivationDateSuccess(date));
+            break;
+          case CANCELLATION_DATE:
+            const cancellationPath = `${id}/cancel`;
+            yield call(api, config.insurance.setDate, { cancellationDate: date }, cancellationPath);
+            yield put(saveCancellationDateSuccess(date));
+            break;
+          default:
+            throw "Function: saveDateFlow ErrorMessage: Not valid changeType";
+        }
     } catch (error) {
         yield [
             put(

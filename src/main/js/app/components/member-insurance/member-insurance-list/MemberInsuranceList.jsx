@@ -24,16 +24,20 @@ export default class MemberInsuranceList extends React.Component {
         history.push(`/members/${id}`, { to: 'insurance' });
     };
 
+    getFormattedDate = date => {
+        return date.isValid() ? date.format('DD MMMM YYYY') : '-';
+    };
+
     getTableRow = item => {
-        const date = moment(item.insuranceActiveFrom);
-        const formattedDate = date.isValid()
-            ? date.format('DD MMMM YYYY')
-            : '-';
+        const activationDate = moment(item.insuranceActiveFrom);
+        const cancellationDate = moment(item.insuranceActiveTo);
+
         return (
             <LinkRow onClick={this.linkClickHandler.bind(this, item.memberId)}>
                 <Table.Cell>{this.getMemberName(item)}</Table.Cell>
                 <Table.Cell>{item.insuranceType}</Table.Cell>
-                <Table.Cell>{formattedDate}</Table.Cell>
+                <Table.Cell>{this.getFormattedDate(activationDate)}</Table.Cell>
+                <Table.Cell>{this.getFormattedDate(cancellationDate)}</Table.Cell>
                 <Table.Cell>{item.insuranceStatus}</Table.Cell>
                 <Table.Cell>
                     {item.cancellationEmailSent
@@ -105,6 +109,13 @@ export default class MemberInsuranceList extends React.Component {
                         onClick={this.sortTable.bind(this, 'date')}
                     >
                         Insurance active from
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                        width={2}
+                        sorted={column === 'date' ? direction : null}
+                        onClick={this.sortTable.bind(this, 'date')}
+                    >
+                        Insurance active to
                     </Table.HeaderCell>
                     <Table.HeaderCell
                         width={2}
