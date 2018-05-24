@@ -20,10 +20,10 @@ public class Subscription {
     private long id;
 
     @NotNull
-    private String hid;
+    private String memberId;
 
-    public Subscription(String hid) {
-        this.hid = hid;
+    public Subscription(String memberId) {
+        this.memberId = memberId;
     }
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "subscription", cascade = CascadeType.REMOVE)

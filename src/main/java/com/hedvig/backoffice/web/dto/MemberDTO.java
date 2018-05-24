@@ -41,8 +41,4 @@ public class MemberDTO {
         this.memberId = memberId;
     }
 
-    public String getHid() {
-        return Long.toString(memberId);
-    }
-
 }

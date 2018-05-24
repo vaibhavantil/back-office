@@ -83,14 +83,14 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Transactional
     @Override
-    public QuestionGroupDTO answer(String hid, String message, Personnel personnel) throws QuestionNotFoundException {
-        QuestionGroup group = questionGroupRepository.findUnasweredByHid(hid).orElseThrow(() -> new QuestionNotFoundException(hid));
+    public QuestionGroupDTO answer(String memberId, String message, Personnel personnel) throws QuestionNotFoundException {
+        QuestionGroup group = questionGroupRepository.findUnasweredByMemberId(memberId).orElseThrow(() -> new QuestionNotFoundException(memberId));
         group.setAnswerDate(Instant.now());
         group.setAnswer(message);
         group.setPersonnel(personnel);
 
-        botService.answerQuestion(hid, message, personnelService.getIdToken(personnel));
-        expoNotificationService.sendNotification(hid, personnelService.getIdToken(personnel));
+        botService.answerQuestion(memberId, message, personnelService.getIdToken(personnel));
+        expoNotificationService.sendNotification(memberId, personnelService.getIdToken(personnel));
         questionGroupRepository.save(group);
         updatesService.changeOn(-1, UpdateType.QUESTIONS);
 
@@ -98,8 +98,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionGroupDTO done(String hid, Personnel personnel) throws QuestionNotFoundException {
-        QuestionGroup group = questionGroupRepository.findUnasweredByHid(hid).orElseThrow(() -> new QuestionNotFoundException(hid));
+    public QuestionGroupDTO done(String memberId, Personnel personnel) throws QuestionNotFoundException {
+        QuestionGroup group = questionGroupRepository.findUnasweredByMemberId(memberId).orElseThrow(() -> new QuestionNotFoundException(memberId));
         group.setAnswerDate(Instant.now());
         group.setAnswer("");
         group.setPersonnel(personnel);
@@ -118,7 +118,7 @@ public class QuestionServiceImpl implements QuestionService {
             Optional<Question> question = questionRepository.findById(message.getGlobalId());
             if (question.isPresent()) continue;
 
-            Subscription sub = subscriptionService.getOrCreateSubscription(message.getHid());
+            Subscription sub = subscriptionService.getOrCreateSubscription(message.getMemberId());
             QuestionGroup group = questionGroupRepository.findUnasweredBySub(sub).orElseGet(() -> new QuestionGroup(sub));
 
             group.addQuestion(question

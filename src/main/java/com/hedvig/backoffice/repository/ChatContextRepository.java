@@ -24,7 +24,7 @@ public interface ChatContextRepository extends CrudRepository<ChatContext, Strin
     @Query("select c from ChatContext c where c.active = true")
     List<ChatContext> findActiveChats();
 
-    @Query("select distinct c.personnel from ChatContext c where c.hid = :hid and c.active = true")
-    List<Personnel> findPersonnelsWithActiveChatsByHid(@Param("hid") String hid);
+    @Query("select distinct c.personnel from ChatContext c where c.memberId = :memberId and c.active = true")
+    List<Personnel> findPersonnelsWithActiveChatsByMemberId(@Param("memberId") String memberId);
 
 }

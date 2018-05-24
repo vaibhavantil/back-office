@@ -24,18 +24,18 @@ public class ChatController {
         this.personnelService = personnelService;
     }
 
-    @SubscribeMapping("/send/{hid}")
-    public void send(@DestinationVariable String hid, @RequestBody BackOfficeResponseDTO message, @AuthenticationPrincipal String principalId) {
-        chatService.append(hid, message.getMsg(), principalId, personnelService.getIdToken(principalId));
+    @SubscribeMapping("/send/{memberId}")
+    public void send(@DestinationVariable String memberId, @RequestBody BackOfficeResponseDTO message, @AuthenticationPrincipal String principalId) {
+        chatService.append(memberId, message.getMsg(), principalId, personnelService.getIdToken(principalId));
     }
 
-    @SubscribeMapping("/history/{hid}")
-    public void messages(@DestinationVariable String hid, @AuthenticationPrincipal String principalId) {
-        chatService.messages(hid, principalId, personnelService.getIdToken(principalId));
+    @SubscribeMapping("/history/{memberId}")
+    public void messages(@DestinationVariable String memberId, @AuthenticationPrincipal String principalId) {
+        chatService.messages(memberId, principalId, personnelService.getIdToken(principalId));
     }
 
-    @SubscribeMapping("/history/{hid}/{count}")
-    public void messages(@DestinationVariable String hid, @DestinationVariable int count, @AuthenticationPrincipal String principalId) {
-        chatService.messages(hid, count, principalId, personnelService.getIdToken(principalId));
+    @SubscribeMapping("/history/{memberId}/{count}")
+    public void messages(@DestinationVariable String memberId, @DestinationVariable int count, @AuthenticationPrincipal String principalId) {
+        chatService.messages(memberId, count, principalId, personnelService.getIdToken(principalId));
     }
 }

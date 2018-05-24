@@ -106,20 +106,20 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<BotMessage> messages(String hid, String token) {
-        List<BotMessage> current = messages.computeIfAbsent(hid, k -> new ArrayList<>());
+    public List<BotMessage> messages(String memberId, String token) {
+        List<BotMessage> current = messages.computeIfAbsent(memberId, k -> new ArrayList<>());
         Instant time = new Date().toInstant();
-        Instant timestamp = timestamps.computeIfAbsent(hid, k -> new Date().toInstant());
+        Instant timestamp = timestamps.computeIfAbsent(memberId, k -> new Date().toInstant());
 
         if (time.minusSeconds(5).isAfter(timestamp)) {
-            timestamps.put(hid, new Date().toInstant());
+            timestamps.put(memberId, new Date().toInstant());
             String type = typeNames.get(current.size() % typeNames.size());
 
             try {
                 current.add(new BotMessage(String.format(STUB_MESSAGE_TEMPLATE,
                         increment.addAndGet(1),
                         current.size(),
-                        hid,
+                        memberId,
                         type,
                         "Test message " + current.size(),
                         typesTemplates.get(type),
@@ -133,8 +133,8 @@ public class BotServiceStub implements BotService {
     }
 
     @Override
-    public List<BotMessage> messages(String hid, int count, String token) {
-        List<BotMessage> all = messages(hid, token);
+    public List<BotMessage> messages(String memberId, int count, String token) {
+        List<BotMessage> all = messages(memberId, token);
         if (all.size() <= count) {
             return all;
         }
@@ -148,28 +148,28 @@ public class BotServiceStub implements BotService {
                 .entrySet()
                 .stream()
                 .flatMap(e -> {
-                    String hid = e.getKey();
+                    String memberId = e.getKey();
                     List<BotMessage> messages = e.getValue();
                     return messages
                             .stream()
                             .filter(Objects::nonNull)
                             .filter(m -> m.getTimestamp().isAfter(timestamp))
-                            .map(m -> new BackOfficeMessage(hid, m.getMessage()));
+                            .map(m -> new BackOfficeMessage(memberId, m.getMessage()));
                 })
                 .collect(Collectors.toList());
 
     }
 
     @Override
-    public void response(String hid, String message, String token) {
-        answerQuestion(hid, message, token);
+    public void response(String memberId, String message, String token) {
+        answerQuestion(memberId, message, token);
     }
 
     @Override
-    public void answerQuestion(String hid, String answer, String token) {
-        List<BotMessage> current = messages.computeIfAbsent(hid, k -> new ArrayList<>());
+    public void answerQuestion(String memberId, String answer, String token) {
+        List<BotMessage> current = messages.computeIfAbsent(memberId, k -> new ArrayList<>());
         try {
-            appendMessage(hid, new BotMessage(String.format(STUB_MESSAGE_TEMPLATE,
+            appendMessage(memberId, new BotMessage(String.format(STUB_MESSAGE_TEMPLATE,
                     increment.addAndGet(1),
                     current.size(),
                     "1",
@@ -182,8 +182,8 @@ public class BotServiceStub implements BotService {
         }
     }
 
-    private void appendMessage(String hid, BotMessage bm) {
-        List<BotMessage> msg = messages.computeIfAbsent(hid, k -> new ArrayList<>());
+    private void appendMessage(String memberId, BotMessage bm) {
+        List<BotMessage> msg = messages.computeIfAbsent(memberId, k -> new ArrayList<>());
         bm.setGlobalId(increment.addAndGet(1));
         bm.setMessageId((long) msg.size());
         msg.add(bm);
@@ -191,11 +191,11 @@ public class BotServiceStub implements BotService {
 
     @Scheduled(fixedDelay = 1000)
     public void addMessage() {
-        subscriptionRepository.findActiveSubscriptions().forEach(s -> messages(s.getHid(), ""));
+        subscriptionRepository.findActiveSubscriptions().forEach(s -> messages(s.getMemberId(), ""));
     }
 
 	@Override
-	public PushTokenDTO pushTokenId(String hid, String token) {
+	public PushTokenDTO pushTokenId(String memberId, String token) {
 		return new PushTokenDTO(null);
 	}
 }

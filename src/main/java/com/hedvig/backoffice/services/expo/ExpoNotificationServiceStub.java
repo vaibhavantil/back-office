@@ -8,8 +8,8 @@ public class ExpoNotificationServiceStub implements ExpoNotificationService {
     private static Logger logger = LoggerFactory.getLogger(ExpoNotificationServiceStub.class);
 
 	@Override
-	public void sendNotification(String hid, String token) {
-        logger.info(String.format("Attempting to send push notification to hid %s", hid));
+	public void sendNotification(String memberId, String token) {
+        logger.info(String.format("Attempting to send push notification to memberId %s", memberId));
 	}
 
 }

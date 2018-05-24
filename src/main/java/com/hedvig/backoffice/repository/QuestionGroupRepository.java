@@ -16,8 +16,8 @@ public interface QuestionGroupRepository extends JpaRepository<QuestionGroup, Lo
     @Query("select g from QuestionGroup g where g.answer is null and g.subscription = :subscription")
     Optional<QuestionGroup> findUnasweredBySub(@Param("subscription") Subscription subscription);
 
-    @Query("select g from QuestionGroup g where g.answer is null and g.subscription.hid = :hid")
-    Optional<QuestionGroup> findUnasweredByHid(@Param("hid") String hid);
+    @Query("select g from QuestionGroup g where g.answer is null and g.subscription.memberId = :memberId")
+    Optional<QuestionGroup> findUnasweredByMemberId(@Param("memberId") String memberId);
 
     @Query("select g from QuestionGroup g where g.answer is not null order by g.date")
     List<QuestionGroup> answered();

@@ -17,14 +17,14 @@ import java.util.List;
         fallback = BotServiceClientFallback.class)
 public interface BotServiceClient {
 
-    @GetMapping("/_/member/{hid}/push-token")
-    PushTokenDTO getPushTokenByHid(@PathVariable("hid") String hid, @RequestHeader("Authorization") String token);
+    @GetMapping("/_/member/{memberId}/push-token")
+    PushTokenDTO getPushTokenByMemberId(@PathVariable("memberId") String memberId, @RequestHeader("Authorization") String token);
 
     @GetMapping("/messages")
-    JsonNode messages(@RequestHeader("hedvig.token") String hid, @RequestHeader("Authorization") String token);
+    JsonNode messages(@RequestHeader("hedvig.token") String memberId, @RequestHeader("Authorization") String token);
 
     @GetMapping("/messages/{count}")
-    JsonNode messages(@RequestHeader("hedvig.token") String hid, @PathVariable("count") int count, @RequestHeader("Authorization") String token);
+    JsonNode messages(@RequestHeader("hedvig.token") String memberId, @PathVariable("count") int count, @RequestHeader("Authorization") String token);
 
     @GetMapping("/_/messages/{time}")
     List<BackOfficeMessage> fetch(@PathVariable("time") long time, @RequestHeader("Authorization") String token);

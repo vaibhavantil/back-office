@@ -112,8 +112,8 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
                 continue;
             }
 
-            List<BotMessage> messagesForHid = messages.computeIfAbsent(backOfficeMessage.getUserId(), key -> new ArrayList<>());
-            messagesForHid.add(message);
+            List<BotMessage> messagesForMemberId = messages.computeIfAbsent(backOfficeMessage.getUserId(), key -> new ArrayList<>());
+            messagesForMemberId.add(message);
 
             if (questionId.contains(message.getId()) && !message.isBotMessage()) {
                 questions.add(message);
@@ -161,15 +161,15 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         questionService.addNewQuestions(questions);
     }
 
-    private void sendMessages(String hid, List<BotMessage> messages) {
-        List<Personnel> personnels = chatContextRepository.findPersonnelsWithActiveChatsByHid(hid);
+    private void sendMessages(String memberId, List<BotMessage> messages) {
+        List<Personnel> personnels = chatContextRepository.findPersonnelsWithActiveChatsByMemberId(memberId);
         Message m = Message.chat(messages);
-        personnels.forEach(p -> chatService.send(hid, p.getId(), m));
+        personnels.forEach(p -> chatService.send(memberId, p.getId(), m));
     }
 
     private void sendErrorToAll() {
         List<ChatContext> chats = chatContextRepository.findActiveChats();
         Message m = Message.error(500, "bot-service unavailable");
-        chats.forEach(c -> chatService.send(c.getHid(), c.getPersonnel().getId(), m));
+        chats.forEach(c -> chatService.send(c.getMemberId(), c.getPersonnel().getId(), m));
     }
 }

@@ -32,14 +32,14 @@ public class BotServiceImpl implements BotService {
     }
 
     @Override
-    public List<BotMessage> messages(String hid, String token) {
-        JsonNode root = botServiceClient.messages(hid, token);
+    public List<BotMessage> messages(String memberId, String token) {
+        JsonNode root = botServiceClient.messages(memberId, token);
         return parseMessages(root);
     }
 
     @Override
-    public List<BotMessage> messages(String hid, int count, String token) {
-        JsonNode root = botServiceClient.messages(hid, count, token);
+    public List<BotMessage> messages(String memberId, int count, String token) {
+        JsonNode root = botServiceClient.messages(memberId, count, token);
         return parseMessages(root);
     }
 
@@ -49,13 +49,13 @@ public class BotServiceImpl implements BotService {
     }
 
     @Override
-    public void response(String hid, String message, String token) {
-        botServiceClient.response(new BackOfficeResponseDTO(hid, message), token);
+    public void response(String memberId, String message, String token) {
+        botServiceClient.response(new BackOfficeResponseDTO(memberId, message), token);
     }
 
     @Override
-    public void answerQuestion(String hid, String answer, String token) {
-        botServiceClient.answer(new BackOfficeResponseDTO(hid, answer), token);
+    public void answerQuestion(String memberId, String answer, String token) {
+        botServiceClient.answer(new BackOfficeResponseDTO(memberId, answer), token);
     }
 
     private List<BotMessage> parseMessages(JsonNode root) {
@@ -80,7 +80,7 @@ public class BotServiceImpl implements BotService {
     }
 
 	@Override
-	public PushTokenDTO pushTokenId(String hid, String token) {
-        return botServiceClient.getPushTokenByHid(hid, token);
+	public PushTokenDTO pushTokenId(String memberId, String token) {
+        return botServiceClient.getPushTokenByMemberId(memberId, token);
 	}
 }

@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -60,47 +58,47 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void send(String hid, String personnelId, Message message) {
-        template.convertAndSendToUser(personnelId, getTopicPrefix() + hid, message.toJson());
+    public void send(String memberId, String personnelId, Message message) {
+        template.convertAndSendToUser(personnelId, getTopicPrefix() + memberId, message.toJson());
     }
 
     @Override
-    public void append(String hid, String message, String personnelId, String token) {
+    public void append(String memberId, String message, String personnelId, String token) {
         try {
-            botService.response(hid, message, token);
-            expoNotificationService.sendNotification(hid, token);
+            botService.response(memberId, message, token);
+            expoNotificationService.sendNotification(memberId, token);
         } catch (ExternalServiceBadRequestException e) {
-            send(hid, personnelId, Message.error(400, e.getMessage()));
-            log.error("chat not updated hid = " + hid, e);
+            send(memberId, personnelId, Message.error(400, e.getMessage()));
+            log.error("chat not updated memberId = " + memberId, e);
         } catch (ExternalServiceException e) {
-            send(hid, personnelId, Message.error(500, e.getMessage()));
-            log.error("chat not updated hid = " + hid, e);
+            send(memberId, personnelId, Message.error(500, e.getMessage()));
+            log.error("chat not updated memberId = " + memberId, e);
         }
     }
 
     @Override
-    public void messages(String hid, String personnelId, String token) {
+    public void messages(String memberId, String personnelId, String token) {
         try {
-            send(hid, personnelId, Message.chat(botService.messages(hid, token)));
+            send(memberId, personnelId, Message.chat(botService.messages(memberId, token)));
         } catch (ExternalServiceBadRequestException e) {
-            send(hid, personnelId, Message.error(400, e.getMessage()));
-            log.error("chat not updated hid = " + hid, e);
+            send(memberId, personnelId, Message.error(400, e.getMessage()));
+            log.error("chat not updated memberId = " + memberId, e);
         } catch (ExternalServiceException e) {
-            send(hid, personnelId, Message.error(500, e.getMessage()));
-            log.error("can't fetch member hid = " + hid, e);
+            send(memberId, personnelId, Message.error(500, e.getMessage()));
+            log.error("can't fetch member memberId = " + memberId, e);
         }
     }
 
     @Override
-    public void messages(String hid, int count, String personnelId, String token) {
+    public void messages(String memberId, int count, String personnelId, String token) {
         try {
-            send(hid, personnelId, Message.chat(botService.messages(hid, count, token)));
+            send(memberId, personnelId, Message.chat(botService.messages(memberId, count, token)));
         } catch (ExternalServiceBadRequestException e) {
-            send(hid, personnelId, Message.error(400, e.getMessage()));
-            log.error("chat not updated hid = " + hid, e);
+            send(memberId, personnelId, Message.error(400, e.getMessage()));
+            log.error("chat not updated memberId = " + memberId, e);
         } catch (ExternalServiceException e) {
-            send(hid, personnelId, Message.error(500, e.getMessage()));
-            log.error("can't fetch member hid = " + hid, e);
+            send(memberId, personnelId, Message.error(500, e.getMessage()));
+            log.error("can't fetch member memberId = " + memberId, e);
         }
     }
 
@@ -112,41 +110,41 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public void subscribe(String hid, String subId, String sessionId, String principalId) {
+    public void subscribe(String memberId, String subId, String sessionId, String principalId) {
         Personnel personnel;
         try {
             personnel = personnelService.getPersonnel(principalId);
         } catch (AuthorizationException e) {
-            send(hid, principalId, Message.error(400, "Not authorized"));
-            log.warn("member not authorized hid = " + hid);
+            send(memberId, principalId, Message.error(400, "Not authorized"));
+            log.warn("member not authorized memberId = " + memberId);
             return;
         }
 
         MemberDTO member;
         try {
-            member = memberService.findByHid(hid, personnelService.getIdToken(personnel));
+            member = memberService.findByMemberId(memberId, personnelService.getIdToken(personnel));
         } catch (ExternalServiceBadRequestException e) {
-            send(hid, personnel.getId(), Message.error(400, "member with hid " + hid + " not found"));
-            log.warn("member with hid " + hid + " not found", e);
+            send(memberId, personnel.getId(), Message.error(400, "member with memberId " + memberId + " not found"));
+            log.warn("member with memberId " + memberId + " not found", e);
             return;
         }
 
         if (member == null) {
-            send(hid, personnel.getId(), Message.error(500, "member service unavailable"));
-            log.error("can't fetch member hid = " + hid);
+            send(memberId, personnel.getId(), Message.error(500, "member service unavailable"));
+            log.error("can't fetch member memberId = " + memberId);
             return;
         }
 
         ChatContext chat = new ChatContext();
 
-        chat.setHid(member.getHid());
+        chat.setMemberId(member.getMemberId().toString());
         chat.setSubId(subId);
         chat.setSessionId(sessionId);
         chat.setActive(true);
         chat.setTimestamp(new Date().toInstant());
         chat.setPersonnel(personnel);
 
-        Subscription sub = subscriptionService.getOrCreateSubscription(member.getHid());
+        Subscription sub = subscriptionService.getOrCreateSubscription(member.getMemberId().toString());
 
         chat.setSubscription(sub);
         chatContextRepository.save(chat);

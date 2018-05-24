@@ -42,21 +42,21 @@ public class QuestionController {
         return questionService.notAnswered();
     }
 
-    @PostMapping("/answer/{hid}")
-    public QuestionGroupDTO answer(@PathVariable String hid,
+    @PostMapping("/answer/{memberId}")
+    public QuestionGroupDTO answer(@PathVariable String memberId,
                                     @Valid @RequestBody BackOfficeResponseDTO message,
                                     @AuthenticationPrincipal String principal)
             throws AuthorizationException, QuestionNotFoundException {
 
         Personnel personnel = personnelRepository.findById(principal).orElseThrow(AuthorizationException::new);
-        return questionService.answer(hid, message.getMsg(), personnel);
+        return questionService.answer(memberId, message.getMsg(), personnel);
     }
 
-    @PostMapping("/done/{hid}")
-    public QuestionGroupDTO done(@PathVariable String hid, @AuthenticationPrincipal String principal)
+    @PostMapping("/done/{memberId}")
+    public QuestionGroupDTO done(@PathVariable String memberId, @AuthenticationPrincipal String principal)
             throws QuestionNotFoundException, AuthorizationException {
         Personnel personnel = personnelRepository.findById(principal).orElseThrow(AuthorizationException::new);
-        return questionService.done(hid, personnel);
+        return questionService.done(memberId, personnel);
     }
 
 }

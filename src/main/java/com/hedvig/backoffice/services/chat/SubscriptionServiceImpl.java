@@ -16,9 +16,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public Subscription getOrCreateSubscription(String hid) {
-        return subscriptionRepository.findByHid(hid).orElseGet(() -> {
-            Subscription newSub = new Subscription(hid);
+    public Subscription getOrCreateSubscription(String memberId) {
+        return subscriptionRepository.findByMemberId(memberId).orElseGet(() -> {
+            Subscription newSub = new Subscription(memberId);
             subscriptionRepository.save(newSub);
             return newSub;
         });

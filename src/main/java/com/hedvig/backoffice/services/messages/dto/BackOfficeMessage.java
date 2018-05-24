@@ -15,7 +15,7 @@ public class BackOfficeMessage {
 
     public BotMessage toBotMessage() throws BotMessageException {
         val message = new BotMessage(msg);
-        message.setHid(userId);
+        message.setMemberId(userId);
         return message;
     }
 

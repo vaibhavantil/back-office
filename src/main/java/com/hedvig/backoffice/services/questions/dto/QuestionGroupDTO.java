@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class QuestionGroupDTO {
 
     private Long id;
-    private String hid;
+    private String memberId;
     private Long date;
     private Long answerDate;
     private String answer;
@@ -25,7 +25,7 @@ public class QuestionGroupDTO {
     public static QuestionGroupDTO fromDomain(QuestionGroup group) {
         return new QuestionGroupDTO(
                 group.getId(),
-                group.getSubscription().getHid(),
+                group.getSubscription().getMemberId(),
                 Optional.ofNullable(group.getDate()).map(Instant::toEpochMilli).orElse(null),
                 Optional.ofNullable(group.getAnswerDate()).map(Instant::toEpochMilli).orElse(null),
                 group.getAnswer(),
