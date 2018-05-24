@@ -99,7 +99,7 @@ public class MemberController {
 
     @PutMapping("/insurance/{hid}/certificate")
     public ResponseEntity<?> insuranceCertificate(@PathVariable String hid,
-                                                  @RequestBody MultipartFile file,
+                                                  @RequestParam MultipartFile file,
                                                   @AuthenticationPrincipal Principal principal) throws IOException {
         byte[] data = file.getBytes();
         productPricingService.uploadCertificate(hid, file.getOriginalFilename(), file.getContentType(), data,
