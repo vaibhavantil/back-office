@@ -9,9 +9,11 @@ const InsuranceTab = props => {
         insurance: { data }
     } = props;
     let activeDate;
+    let cancellationDate;
     let fields;
     if (data) {
         activeDate = activeDate ? activeDate : data.insuranceActiveFrom;
+        cancellationDate = cancellationDate ? cancellationDate : data.insuranceActiveTo;
         /* eslint-disable no-unused-vars */
         const {
             insuranceActiveFrom,
@@ -31,6 +33,7 @@ const InsuranceTab = props => {
                 <TableFields fields={fields} />
                 <InsuranceTableRows
                     activeDate={activeDate}
+                    cancellationDate={cancellationDate}
                     fields={fields}
                     {...props}
                 />

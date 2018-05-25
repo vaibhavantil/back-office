@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.members;
 
+import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,11 @@ public class MemberServiceClientFallback implements MemberServiceClient {
 
     @Override
     public void editMember(String memberId, MemberDTO memberDTO, String token){
+        log.error("request to member-service failed");
+    }
+
+    @Override
+    public void cancelInsurance(String id, InsuranceCancellationDTO dto, String token) {
         log.error("request to member-service failed");
     }
 }

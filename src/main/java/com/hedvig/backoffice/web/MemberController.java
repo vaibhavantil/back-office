@@ -3,6 +3,7 @@ package com.hedvig.backoffice.web;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
@@ -92,6 +93,14 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/insurance/{hid}/cancel")
+    public ResponseEntity<?> cancel (@PathVariable String hid,
+                                      @RequestBody InsuranceCancellationDTO dto,
+                                      @AuthenticationPrincipal Principal principal) {
+        memberService.cancelInsurance(hid, dto, personnelService.getIdToken(principal.getName()));
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/insurance/search")
     public JsonNode serachInsurance(@RequestParam(name = "state", defaultValue = "", required = false) String state,
                                     @RequestParam(name = "query", defaultValue = "", required = false) String query,
@@ -107,7 +116,7 @@ public class MemberController {
 
     @PutMapping("/insurance/{memberId}/certificate")
     public ResponseEntity<?> insuranceCertificate(@PathVariable String memberId,
-                                                  @RequestBody MultipartFile file,
+                                                  @RequestParam MultipartFile file,
                                                   @AuthenticationPrincipal Principal principal) throws IOException {
         byte[] data = file.getBytes();
         productPricingService.uploadCertificate(memberId, file.getOriginalFilename(), file.getContentType(), data,

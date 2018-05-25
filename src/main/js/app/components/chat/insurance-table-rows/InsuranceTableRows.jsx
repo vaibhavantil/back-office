@@ -4,6 +4,7 @@ import moment from "moment";
 import styled from "styled-components";
 import { Button, Radio, Table } from "semantic-ui-react";
 import DateInput from "components/shared/inputs/DateInput";
+import { DATE, ACTIVATION_DATE, CANCELLATION_DATE } from 'app/lib/messageTypes';
 
 const DateCell = styled(Table.Cell)`
   &&& {
@@ -45,8 +46,10 @@ export default class InsuranceTableRows extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      datePickerDisabled: true,
-      dateValue: null
+        activationDatePickerDisabled: true,
+        cancellationDatePickerDisabled: true,
+        activationDateValue: null,
+        cancellationDateValue: null
     };
   }
 
@@ -55,9 +58,13 @@ export default class InsuranceTableRows extends React.Component {
       messages: { member },
       saveInsuranceDate
     } = this.props;
-    if (this.state.dateValue) {
-      saveInsuranceDate(this.state.dateValue, member.memberId);
-      this.setState({ datePickerDisabled: true });
+        if (this.state.activationDateValue && !this.state.activationDatePickerDisabled) {
+            saveInsuranceDate(this.state.activationDateValue, ACTIVATION_DATE, member.hid);
+            this.setState({ activationDatePickerDisabled: true });
+        }
+        if (this.state.cancellationDateValue && !this.state.cancellationDatePickerDisabled) {
+            saveInsuranceDate(this.state.cancellationDateValue, CANCELLATION_DATE, member.hid);
+            this.setState({ cancellationDatePickerDisabled: true });
     }
   };
 
@@ -70,11 +77,31 @@ export default class InsuranceTableRows extends React.Component {
   };
 
   dateChangeHandler = (type, e, { value }) => {
-    this.setState({ dateValue: moment(value).format("YYYY-MM-DD") });
+        switch (type) {
+          case ACTIVATION_DATE:
+            this.setState({ activationDateValue: moment(value).format('YYYY-MM-DD') });
+            break;
+          case CANCELLATION_DATE:
+            this.setState({ cancellationDateValue: moment(value).format('YYYY-MM-DD') });
+            break;
+          default:
+            console.warn("Class: InsuranceTableRows Function: dateChangeHandler Message: Not avaialable case");
+
+        }
+
   };
 
-  toggleEdit = () => {
-    this.setState({ datePickerDisabled: !this.state.datePickerDisabled });
+    toggleEdit = (changeType) => {
+        switch (changeType) {
+          case ACTIVATION_DATE:
+            this.setState({ activationDatePickerDisabled: !this.state.activationDatePickerDisabled });
+            break;
+          case CANCELLATION_DATE:
+            this.setState({ cancellationDatePickerDisabled: !this.state.cancellationDatePickerDisabled });
+            break;
+        default:
+          console.warn("Class: InsuranceTableRows Function: toggleEdit Message: Not avaialable case");
+      }
   };
 
   downloadClick = () => {
@@ -105,7 +132,7 @@ export default class InsuranceTableRows extends React.Component {
   };
 
   render() {
-    const { activeDate, insurance } = this.props;
+    const { activeDate, cancellationDate, insurance } = this.props;
     const certIsExist = insurance.data.certificateUploaded;
     return (
       <React.Fragment>
@@ -159,19 +186,43 @@ export default class InsuranceTableRows extends React.Component {
         <Table.Row>
           <Table.Cell>Insurance active from</Table.Cell>
           <DateCell>
-            {this.state.datePickerDisabled ? (
+            {this.state.activationDatePickerDisabled ? (
               <React.Fragment>
                 {activeDate && <RowValue>{activeDate}</RowValue>}
-
-                <Button onClick={this.toggleEdit}>Edit</Button>
+                                <Button onClick={(e) => this.toggleEdit(ACTIVATION_DATE)}>Edit</Button>
               </React.Fragment>
             ) : (
               <React.Fragment>
                 <DateInput changeHandler={this.dateChangeHandler} />
+                                    changeType={ACTIVATION_DATE}
                 <Button onClick={this.saveNewDate} primary>
                   Save
                 </Button>
-                <Button onClick={this.toggleEdit}>Close</Button>
+                <Button onClick={(e) => this.toggleEdit(ACTIVATION_DATE)}>Close</Button>
+              </React.Fragment>
+                        )}
+         </DateCell>
+                </Table.Row>
+                <Table.Row>
+                    <Table.Cell>Insurance active to</ Table.Cell>
+                    <DateCell>
+                        {this.state.cancellationDatePickerDisabled ? (
+                            <React.Fragment>
+                                {cancellationDate && (
+                                    <RowValue>{cancellationDate}</RowValue>
+                                )}
+                                <Button onClick={(e) => this.toggleEdit(CANCELLATION_DATE)}>Edit</Button>
+                            </React.Fragment>
+                        ) : (
+                            <React.Fragment>
+                                <DateInput
+                                    changeType={CANCELLATION_DATE}
+                                    changeHandler={this.dateChangeHandler}
+                                />
+                                <Button onClick={this.saveNewDate} primary>
+                                    Save
+                                </Button>
+                                <Button onClick={(e) => this.toggleEdit(CANCELLATION_DATE)}>Close</Button>
               </React.Fragment>
             )}
           </DateCell>
@@ -189,5 +240,6 @@ InsuranceTableRows.propTypes = {
   sendCertificate: PropTypes.func.isRequired,
   changeCompanyStatus: PropTypes.func.isRequired,
   fields: PropTypes.object.isRequired,
-  activeDate: PropTypes.string
+    activeDate: PropTypes.string,
+    cancellationDate: PropTypes.string
 };

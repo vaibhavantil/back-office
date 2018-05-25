@@ -5,19 +5,13 @@ server:
     timeout: 3600
     cookie:
       max-age: 3600
+      http-only: true
+      secure: true
 
 logging:
   level:
     com:
       hedvig: DEBUG
-
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/back-office
-    username: postgres
-    password: iambatman
-    platform: POSTGRESQL
-    driver-class-name: org.postgresql.Driver
 
   http:
     multipart:
@@ -27,8 +21,6 @@ spring:
     config:
       allow-override: false
 
-  profiles:
-    active: development
 
   jpa:
     hibernate:
