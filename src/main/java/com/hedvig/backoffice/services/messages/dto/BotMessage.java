@@ -35,7 +35,7 @@ public class BotMessage {
 
     private String id;
 
-    private String hid;
+    private String memberId;
 
     public BotMessage(String message) throws BotMessageException {
         this(message, false);
@@ -78,8 +78,8 @@ public class BotMessage {
         header.put("messageId", messageId);
     }
 
-    public void setHid(String hid) {
-        this.hid = hid;
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
     }
 
     private void parseFields(boolean newMessage) throws BotMessageException {

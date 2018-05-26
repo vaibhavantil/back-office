@@ -12,8 +12,8 @@ import java.util.Optional;
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
 
-    @Query("select s from Subscription s where s.hid = :hid")
-    Optional<Subscription> findByHid(@Param("hid") String hid);
+    @Query("select s from Subscription s where s.memberId = :memberId")
+    Optional<Subscription> findByMemberId(@Param("memberId") String memberId);
 
     @Query("select s from Subscription s where s.chats.size > 0")
     List<Subscription> findActiveSubscriptions();

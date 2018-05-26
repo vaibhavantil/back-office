@@ -4,6 +4,7 @@ src/main/resources/static/
 src/main/resources/application-development.yaml
 !src/main/resources/static/test/**
 target/
+src/main/resources/application-development.yaml
 
 ### IntelliJ IDEA ###
 .idea

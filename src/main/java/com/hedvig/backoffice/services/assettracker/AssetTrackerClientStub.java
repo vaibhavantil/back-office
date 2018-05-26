@@ -47,7 +47,7 @@ public class AssetTrackerClientStub implements AssetTrackerClient {
             generation.incrementAndGet();
 
             List<String> memberIds = memberService.search("", "", settingsService.getInternalAccessToken()).stream()
-                    .map(MemberDTO::getHid).collect(Collectors.toList());
+                    .map(o -> o.getMemberId().toString()).collect(Collectors.toList());
 
             return IntStream.range(0, 15).mapToObj(i -> {
                 val id = UUID.randomUUID().toString();

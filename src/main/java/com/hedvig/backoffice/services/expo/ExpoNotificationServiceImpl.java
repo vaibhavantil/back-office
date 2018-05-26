@@ -19,11 +19,11 @@ public class ExpoNotificationServiceImpl implements ExpoNotificationService {
     }
 
     @Override
-    public void sendNotification(String hid, String token) {
+    public void sendNotification(String memberId, String token) {
         try {
-            val pushToken = botService.pushTokenId(hid, token);
+            val pushToken = botService.pushTokenId(memberId, token);
             if (pushToken == null || pushToken.getToken() == null) {
-                logger.error("Member does not have push token, id = " + hid);
+                logger.error("Member does not have push token, id = " + memberId);
                 return;
             }
 
@@ -32,9 +32,9 @@ public class ExpoNotificationServiceImpl implements ExpoNotificationService {
                 "Hedvig",
                 "Hej! Hedvig har svarat på din fråga"
             );
-            logger.info("Attempting  to send push to user with id: {}, body: {}", hid, dto.toString());
+            logger.info("Attempting  to send push to user with id: {}, body: {}", memberId, dto.toString());
             val result = expoClient.sendPush(dto);
-            logger.info("Got result from expo for push notification to user with id: {}, body: {}", hid, result);
+            logger.info("Got result from expo for push notification to user with id: {}, body: {}", memberId, result);
         } catch (Exception e) {
             logger.error("Error, could not send push notification through expo", e);
         }

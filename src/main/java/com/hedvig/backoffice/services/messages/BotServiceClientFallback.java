@@ -14,19 +14,19 @@ import java.util.List;
 public class BotServiceClientFallback implements BotServiceClient {
 
     @Override
-    public PushTokenDTO getPushTokenByHid(String hid, String token) {
+    public PushTokenDTO getPushTokenByMemberId(String memberId, String token) {
         log.error("request to bot-service failed");
         return new PushTokenDTO(null);
     }
 
     @Override
-    public JsonNode messages(String hid, String token) {
+    public JsonNode messages(String memberId, String token) {
         log.error("request to bot-service failed");
         return null;
     }
 
     @Override
-    public JsonNode messages(String hid, int count, String token) {
+    public JsonNode messages(String memberId, int count, String token) {
         log.error("request to bot-service failed");
         return null;
     }

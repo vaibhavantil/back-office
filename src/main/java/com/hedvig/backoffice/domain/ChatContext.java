@@ -23,7 +23,7 @@ public class ChatContext {
     private Long id;
 
     @NotNull
-    private String hid;
+    private String memberId;
 
     @NotNull
     private String subId;

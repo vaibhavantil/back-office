@@ -19,9 +19,14 @@ public class MemberServiceClientFallback implements MemberServiceClient {
     }
 
     @Override
-    public MemberDTO member(String id, String token) {
+    public MemberDTO member(String memberId, String token) {
         log.error("request to member-service failed");
         return null;
+    }
+
+    @Override
+    public void editMember(String memberId, MemberDTO memberDTO, String token){
+        log.error("request to member-service failed");
     }
 
     @Override

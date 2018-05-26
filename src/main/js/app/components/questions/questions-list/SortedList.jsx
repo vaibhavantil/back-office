@@ -68,7 +68,7 @@ export default class SortedList extends React.Component {
                                 />
                                 {!question.answer && question.answer !== '' ? (
                                     <AnswerForm
-                                        hid={question.hid}
+                                        memberId={question.memberId}
                                         sendAnswer={sendAnswer}
                                         sendDoneMsg={sendDoneMsg}
                                         redirectClick={this.chatRedirectClick}
@@ -84,7 +84,7 @@ export default class SortedList extends React.Component {
                                     items={question.questions}
                                     onChangePage={this.onChangePage.bind(
                                         this,
-                                        question.hid
+                                        question.memberId
                                     )}
                                     pageSize={10}
                                 />

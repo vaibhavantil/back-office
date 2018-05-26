@@ -6,6 +6,7 @@ import com.hedvig.backoffice.web.dto.MemberDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,8 +25,13 @@ public interface MemberServiceClient {
                            @PathVariable("query") String query,
                            @RequestHeader("Authorization") String token);
 
-    @GetMapping("/i/member/{id}")
-    MemberDTO member(@PathVariable("id") String id, @RequestHeader("Authorization") String token);
+    @GetMapping("/i/member/{memberId}")
+    MemberDTO member(@PathVariable("memberId") String memberId, @RequestHeader("Authorization") String token);
+
+    @PostMapping("/i/member/{memberId}/edit")
+    void editMember(@PathVariable("memberId") String memberId,
+                    @RequestBody MemberDTO dto, 
+                    @RequestHeader("Authorization") String token);
 
     @PostMapping("/i/member/{memberId}/memberCancelInsurance")
     void cancelInsurance (@PathVariable("memberId") String memberId,

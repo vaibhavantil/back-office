@@ -60,11 +60,11 @@ public class MemberServiceStub implements MemberService {
     }
 
     @Override
-    public MemberDTO findByHid(String hid, String token) {
+    public MemberDTO findByMemberId(String memberId, String token) {
         return users.stream()
-                .filter(u -> u.getHid().equals(hid))
+                .filter(u -> u.getMemberId().toString().equals(memberId))
                 .findAny()
-                .orElse(new MemberDTO(Long.parseLong(hid)));
+                .orElse(new MemberDTO(Long.parseLong(memberId)));
     }
 
     @Override
@@ -72,4 +72,10 @@ public class MemberServiceStub implements MemberService {
         logger.info("Insurance " + hid + " Cancelled at date " + dto.getCancellationDate().toString());
     }
 
+    @Override
+    public void editMember(String memberId, MemberDTO memberDTO, String token){
+        users = users.stream()
+                    .map(o -> o.getMemberId().toString().equals(memberId) ? memberDTO : o)
+                    .collect(Collectors.toList());
+    }
 }

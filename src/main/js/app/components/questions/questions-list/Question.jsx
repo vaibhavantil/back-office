@@ -6,13 +6,13 @@ import Message from 'components/chat/messages/Message';
 
 const Question = ({ activeList, question, membersList }) => {
 
-    const memberInfo = getMemberInfo(membersList, question.hid);
+    const memberInfo = getMemberInfo(membersList, question.memberId);
 
     return (
         <React.Fragment>
             <Header>Questions from: {memberInfo}</Header>
-            {activeList[question.hid] &&
-                activeList[question.hid].map(data => (
+            {activeList[question.memberId] &&
+                activeList[question.memberId].map(data => (
                     <div key={data.id}>
                         <Message
                             content={data.message.body}

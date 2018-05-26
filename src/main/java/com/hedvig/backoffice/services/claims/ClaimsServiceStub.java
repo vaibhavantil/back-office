@@ -39,7 +39,7 @@ public class ClaimsServiceStub implements ClaimsService {
         List<String> memberIds = memberService
                 .search("", "", settingsService.getInternalAccessToken())
                 .stream()
-                .map(MemberDTO::getHid)
+                .map(o -> o.getMemberId().toString())
                 .collect(Collectors.toList());
 
         claims = IntStream.range(0, 10).mapToObj(i -> {

@@ -26,8 +26,8 @@ public class SubscribeEventListener implements ApplicationListener<SessionSubscr
         String subId = (String) headers.getHeader("simpSubscriptionId");
         int index = destination.indexOf(chatService.getTopicPrefix());
         if (index >= 0) {
-            String hid = destination.substring(index + chatService.getTopicPrefix().length());
-            chatService.subscribe(hid, subId, headers.getSessionId(), headers.getUser().getName());
+            String memberId = destination.substring(index + chatService.getTopicPrefix().length());
+            chatService.subscribe(memberId, subId, headers.getSessionId(), headers.getUser().getName());
         }
     }
 
