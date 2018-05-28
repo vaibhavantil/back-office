@@ -114,7 +114,7 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/insurance/{memberId}/certificate")
+    @PostMapping("/insurance/{memberId}/certificate")
     public ResponseEntity<?> insuranceCertificate(@PathVariable String memberId,
                                                   @RequestParam MultipartFile file,
                                                   @AuthenticationPrincipal Principal principal) throws IOException {

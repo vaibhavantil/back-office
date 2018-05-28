@@ -111,7 +111,7 @@ export default {
     },
     cert: {
       url: "member/insurance",
-      method: "put"
+      method: "post"
     },
     companyStatus: {
       url: "member/insurance",
