@@ -8,6 +8,7 @@ import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,9 +81,8 @@ public class MemberController {
     }
 
     @GetMapping("/insurance/{memberId}")
-    public JsonNode insurance(@PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
-        return Optional.ofNullable(productPricingService.insurance(memberId, personnelService.getIdToken(principal.getName())))
-                .orElseThrow(() -> new ExternalServiceException("request to product-pricing service failed"));
+    public InsuranceStatusDTO insurance(@PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+        return productPricingService.insurance(memberId, personnelService.getIdToken(principal.getName()));
     }
 
     @PostMapping("/insurance/{memberId}/activate")
@@ -102,7 +102,7 @@ public class MemberController {
     }
 
     @GetMapping("/insurance/search")
-    public JsonNode serachInsurance(@RequestParam(name = "state", defaultValue = "", required = false) String state,
+    public List<InsuranceStatusDTO> serachInsurance(@RequestParam(name = "state", defaultValue = "", required = false) String state,
                                     @RequestParam(name = "query", defaultValue = "", required = false) String query,
                                     @AuthenticationPrincipal Principal principal) {
         return productPricingService.search(state, query, personnelService.getIdToken(principal.getName()));
