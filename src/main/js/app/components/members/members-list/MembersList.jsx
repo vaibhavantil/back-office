@@ -26,12 +26,21 @@ export default class MembersList extends React.Component {
   linkClickHandler = id => history.push(`/members/${id}`);
 
   getTableRow = item => {
-    const date = moment(item.birthDate);
-    const formattedDate = date.isValid() ? date.format("DD MMMM YYYY") : "-";
+    const birthDate = moment(item.birthDate);
+    const formattedBirthDateDate = birthDate.isValid()
+      ? birthDate.format("DD MMMM YYYY")
+      : "-";
+
+    const signUpDate = moment(item.signUpDate);
+    const formattedsignUpDate = signUpDate.isValid()
+      ? signUpDate.format("DD MMMM YYYY")
+      : "-";
+
     return (
       <LinkRow onClick={this.linkClickHandler.bind(this, item.memberId)}>
         <Table.Cell>{this.getMemberName(item)}</Table.Cell>
-        <Table.Cell>{formattedDate}</Table.Cell>
+        <Table.Cell>{formattedBirthDateDate}</Table.Cell>
+        <Table.Cell>{formattedsignUpDate}</Table.Cell>
       </LinkRow>
     );
   };
@@ -77,6 +86,12 @@ export default class MembersList extends React.Component {
             onClick={this.sortTable.bind(this, "birthday")}
           >
             Birthday
+          </Table.HeaderCell>
+          <Table.HeaderCell
+            sorted={column === "signUpDate" ? direction : null}
+            onClick={this.sortTable.bind(this, "signUpDate")}
+          >
+            SignUp Date
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
