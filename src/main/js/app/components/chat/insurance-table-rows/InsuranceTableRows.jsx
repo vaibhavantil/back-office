@@ -59,11 +59,11 @@ export default class InsuranceTableRows extends React.Component {
       saveInsuranceDate
     } = this.props;
         if (this.state.activationDateValue && !this.state.activationDatePickerDisabled) {
-            saveInsuranceDate(this.state.activationDateValue, ACTIVATION_DATE, member.hid);
+            saveInsuranceDate(this.state.activationDateValue, ACTIVATION_DATE, member.memberId);
             this.setState({ activationDatePickerDisabled: true });
         }
         if (this.state.cancellationDateValue && !this.state.cancellationDatePickerDisabled) {
-            saveInsuranceDate(this.state.cancellationDateValue, CANCELLATION_DATE, member.hid);
+            saveInsuranceDate(this.state.cancellationDateValue, CANCELLATION_DATE, member.memberId);
             this.setState({ cancellationDatePickerDisabled: true });
     }
   };

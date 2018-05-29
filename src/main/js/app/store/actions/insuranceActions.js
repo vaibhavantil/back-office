@@ -34,7 +34,7 @@ export const saveInsuranceDate = (date, changeType, id) => ({
   type: SAVE_INSURANCE_DATE,
     date,
     changeType,
-  id
+    id
 });
 
 export const saveActivationDateSuccess = activationDate => ({
