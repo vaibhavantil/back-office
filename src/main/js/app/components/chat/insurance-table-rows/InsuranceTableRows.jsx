@@ -193,8 +193,7 @@ export default class InsuranceTableRows extends React.Component {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <DateInput changeHandler={this.dateChangeHandler} />
-                                    changeType={ACTIVATION_DATE}
+                <DateInput changeHandler={this.dateChangeHandler} changeType={ACTIVATION_DATE} />
                 <Button onClick={this.saveNewDate} primary>
                   Save
                 </Button>
