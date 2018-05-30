@@ -3,6 +3,7 @@ package com.hedvig.backoffice.web.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -38,7 +39,7 @@ public class MemberDTO {
 
     private LocalDate birthDate;
 
-    private LocalDate signUpDate;
+    private Instant registeredOn;
 
     public MemberDTO(long memberId) {
         this.memberId = memberId;
