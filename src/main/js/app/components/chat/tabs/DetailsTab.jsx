@@ -23,6 +23,7 @@ export default class DetailsTab extends React.Component {
       case "status":
       case "ssn":
       case "birthdate":
+      case "registeredon":
         return true;
       default:
         return false;
