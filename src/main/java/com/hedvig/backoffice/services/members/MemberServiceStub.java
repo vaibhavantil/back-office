@@ -7,8 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -28,8 +27,8 @@ public class MemberServiceStub implements MemberService {
 
         long minBirthDay = LocalDate.of(1970, 1, 1).toEpochDay();
         long maxBirthDay = LocalDate.of(2010, 12, 31).toEpochDay();
-        long minSignedDay =  LocalDate.of(2011, 1, 3).toEpochDay();
-        long maxSignedDay = LocalDate.of(2018, 12, 31).toEpochDay();
+        long minRegisteredOnDay =  LocalDate.of(2011, 1, 3).toEpochDay();
+        long maxRegisteredOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
 
         users = IntStream.range(0, testMemberIds.length + 100).mapToObj(i -> {
             long id = i < testMemberIds.length ? testMemberIds[i] : RandomUtils.nextInt();
@@ -41,9 +40,10 @@ public class MemberServiceStub implements MemberService {
             LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
             user.setBirthDate(randomDate);
             if (user.getStatus().equals(statuses[2])){
-                long randomSignedDate  = ThreadLocalRandom.current().nextLong(minSignedDay, maxSignedDay);
-                LocalDate randomSignedLocalDate = LocalDate.ofEpochDay(randomSignedDate);
-                user.setSignUpDate(randomSignedLocalDate);
+                long randomRegisteredOnDate  = ThreadLocalRandom.current().nextLong(minRegisteredOnDay, maxRegisteredOnDay);
+                LocalDate randomRegisteredOnLocalDate = LocalDate.ofEpochDay(randomRegisteredOnDate);
+                LocalTime randomRegisteredOnLocalTime = LocalTime.ofNanoOfDay(randomRegisteredOnDate * RandomUtils.nextInt(0, 1000000));
+                user.setRegisteredOn(Instant.from(ZonedDateTime.of(LocalDateTime.of(randomRegisteredOnLocalDate, randomRegisteredOnLocalTime), ZoneId.of("Europe/Stockholm"))));
             }
 
             return user;
