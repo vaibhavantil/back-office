@@ -247,20 +247,6 @@ export const sortMembersList = (list, fieldName, isReverse) => {
         (a, b) => (a.firstName + a.lastName > b.firstName + b.lastName ? 1 : -1)
       );
       break;
-    case "birthday":
-      sortedList = list.sort((a, b) => {
-        if (a.birthDate === null) {
-          return 1;
-        } else if (b.birthDate === null) {
-          return -1;
-        } else if (a.birthDate === b.birthDate) {
-          return 0;
-        } else
-          return isReverse === false
-            ? moment(b.birthDate).diff(moment(a.birthDate))
-            : moment(a.birthDate).diff(moment(b.birthDate));
-      });
-      return sortedList;
     case "signedOn":
       sortedList = list.sort((a, b) => {
         if (a.signedOn === null) {
