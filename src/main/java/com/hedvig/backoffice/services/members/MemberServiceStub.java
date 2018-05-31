@@ -27,8 +27,8 @@ public class MemberServiceStub implements MemberService {
 
         long minBirthDay = LocalDate.of(1970, 1, 1).toEpochDay();
         long maxBirthDay = LocalDate.of(2010, 12, 31).toEpochDay();
-        long minRegisteredOnDay =  LocalDate.of(2011, 1, 3).toEpochDay();
-        long maxRegisteredOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
+        long minSignedOnDay =  LocalDate.of(2011, 1, 3).toEpochDay();
+        long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
 
         users = IntStream.range(0, testMemberIds.length + 100).mapToObj(i -> {
             long id = i < testMemberIds.length ? testMemberIds[i] : RandomUtils.nextInt();
@@ -40,10 +40,10 @@ public class MemberServiceStub implements MemberService {
             LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
             user.setBirthDate(randomDate);
             if (user.getStatus().equals(statuses[2])){
-                long randomRegisteredOnDate  = ThreadLocalRandom.current().nextLong(minRegisteredOnDay, maxRegisteredOnDay);
-                LocalDate randomRegisteredOnLocalDate = LocalDate.ofEpochDay(randomRegisteredOnDate);
-                LocalTime randomRegisteredOnLocalTime = LocalTime.ofNanoOfDay(randomRegisteredOnDate * RandomUtils.nextInt(0, 1000000));
-                user.setRegisteredOn(Instant.from(ZonedDateTime.of(LocalDateTime.of(randomRegisteredOnLocalDate, randomRegisteredOnLocalTime), ZoneId.of("Europe/Stockholm"))));
+                long randomSignedOnDate  = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
+                LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
+                LocalTime randomSignedOnLocalTime = LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
+                user.setSignedOn(Instant.from(ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime), ZoneId.of("Europe/Stockholm"))));
             }
 
             return user;

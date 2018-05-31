@@ -31,16 +31,16 @@ export default class MembersList extends React.Component {
       ? birthDate.format("DD MMMM YYYY")
       : "-";
 
-    const registeredOn = moment(item.registeredOn);
-    const formattedregisteredOn = registeredOn.isValid()
-      ? registeredOn.format("DD MMMM YYYY HH:MM")
+    const signedOn = moment(item.signedOn);
+    const formattedsignedOn = signedOn.isValid()
+      ? signedOn.format("DD MMMM YYYY HH:MM")
       : "-";
 
     return (
       <LinkRow onClick={this.linkClickHandler.bind(this, item.memberId)}>
         <Table.Cell>{this.getMemberName(item)}</Table.Cell>
         <Table.Cell>{formattedBirthDateDate}</Table.Cell>
-        <Table.Cell>{formattedregisteredOn}</Table.Cell>
+        <Table.Cell>{formattedsignedOn}</Table.Cell>
       </LinkRow>
     );
   };
@@ -88,8 +88,8 @@ export default class MembersList extends React.Component {
             Birthday
           </Table.HeaderCell>
           <Table.HeaderCell
-            sorted={column === "registeredOn" ? direction : null}
-            onClick={this.sortTable.bind(this, "registeredOn")}
+            sorted={column === "signedOn" ? direction : null}
+            onClick={this.sortTable.bind(this, "signedOn")}
           >
             Registration Date
           </Table.HeaderCell>

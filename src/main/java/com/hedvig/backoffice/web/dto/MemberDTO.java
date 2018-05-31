@@ -39,7 +39,7 @@ public class MemberDTO {
 
     private LocalDate birthDate;
 
-    private Instant registeredOn;
+    private Instant signedOn;
 
     public MemberDTO(long memberId) {
         this.memberId = memberId;

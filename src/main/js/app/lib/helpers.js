@@ -261,18 +261,18 @@ export const sortMembersList = (list, fieldName, isReverse) => {
             : moment(a.birthDate).diff(moment(b.birthDate));
       });
       return sortedList;
-    case "registeredOn":
+    case "signedOn":
       sortedList = list.sort((a, b) => {
-        if (a.registeredOn === null) {
+        if (a.signedOn === null) {
           return 1;
-        } else if (b.registeredOn === null) {
+        } else if (b.signedOn === null) {
           return -1;
-        } else if (a.registeredOn === b.registeredOn) {
+        } else if (a.signedOn === b.signedOn) {
           return 0;
         } else
           return isReverse === false
-            ? moment(b.registeredOn).diff(moment(a.registeredOn))
-            : moment(a.registeredOn).diff(moment(b.registeredOn));
+            ? moment(b.signedOn).diff(moment(a.signedOn))
+            : moment(a.signedOn).diff(moment(b.signedOn));
       });
       return sortedList;
     default:
