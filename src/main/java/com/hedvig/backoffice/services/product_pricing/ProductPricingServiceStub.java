@@ -12,10 +12,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.time.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -26,17 +28,28 @@ public class ProductPricingServiceStub implements ProductPricingService {
 
     @Autowired
     public ProductPricingServiceStub(ObjectMapper mapper) {
+        long minSignedOnDay =  LocalDate.of(2011, 1, 3).toEpochDay();
+        long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
         String[] states = { "QUOTE", "SIGNED", "TERMINATED" };
         List<String> safetyIncreasers= Arrays.asList("Brandvarnare", "Säkerhetsdörr");
 
         insurances = IntStream.range(0, MemberServiceStub.testMemberIds.length).mapToObj(i -> {
+
             String memberId = Long.toString(MemberServiceStub.testMemberIds[i]);
+            String insuranceState = states[RandomUtils.nextInt(0, states.length)];
 
             InsuranceStatusDTO insurance = new InsuranceStatusDTO(UUID.randomUUID().toString(),
                     memberId, ("Firstname" + memberId), ("Lastname" + memberId), safetyIncreasers,
-                    "PENDING", states[RandomUtils.nextInt(0, states.length)], RandomUtils.nextInt(0,9),
+                    "PENDING", insuranceState, RandomUtils.nextInt(0,9),
                     new BigDecimal(Math.random()), null, true, "BRF",
-                    null, null, false, false);
+                    null, null, false, false, null);
+
+            if (insurance.getInsuranceState().equals(states[1])) {
+                long randomSignedOnDate = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
+                LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
+                LocalTime randomSignedOnLocalTime = LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
+                insurance.setSignedOn(Instant.from(ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime), ZoneId.of("Europe/Stockholm"))));
+            }
 
             return insurance;
         }).collect(Collectors.toList());

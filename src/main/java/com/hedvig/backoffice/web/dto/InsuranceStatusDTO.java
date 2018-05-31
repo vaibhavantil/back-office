@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,4 +43,6 @@ public class InsuranceStatusDTO {
     private boolean certificateUploaded;
 
     private boolean cancellationEmailSent;
+
+    private Instant signedOn;
 }
