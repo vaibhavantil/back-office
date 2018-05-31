@@ -108,7 +108,7 @@ export default class MemberInsuranceList extends React.Component {
             sorted={column === "signedOn" ? direction : null}
             onClick={this.sortTable.bind(this, "signedOn")}
           >
-            Sign Up
+            Sign up
           </Table.HeaderCell>
           <Table.HeaderCell
             width={3}
