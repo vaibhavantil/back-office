@@ -45,4 +45,6 @@ public class InsuranceStatusDTO {
     private boolean cancellationEmailSent;
 
     private Instant signedOn;
+
+    private String certificateUrl;
 }

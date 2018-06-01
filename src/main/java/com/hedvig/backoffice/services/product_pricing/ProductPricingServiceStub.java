@@ -42,13 +42,16 @@ public class ProductPricingServiceStub implements ProductPricingService {
                     memberId, ("Firstname" + memberId), ("Lastname" + memberId), safetyIncreasers,
                     "PENDING", insuranceState, RandomUtils.nextInt(0,9),
                     new BigDecimal(Math.random()), null, true, "BRF",
-                    null, null, false, false, null);
+                    null, null, false, false, null, null);
 
             if (insurance.getInsuranceState().equals(states[1])) {
                 long randomSignedOnDate = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
                 LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
                 LocalTime randomSignedOnLocalTime = LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
                 insurance.setSignedOn(Instant.from(ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime), ZoneId.of("Europe/Stockholm"))));
+
+                insurance.setCertificateUploaded(true);
+                insurance.setCertificateUrl("http://www.olympiacos.org/en");
             }
 
             return insurance;

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import styled from "styled-components";
-import { Button, Radio, Table } from "semantic-ui-react";
+import { Button, Radio, Table, Icon } from "semantic-ui-react";
 import DateInput from "components/shared/inputs/DateInput";
 import { DATE, ACTIVATION_DATE, CANCELLATION_DATE } from "app/lib/messageTypes";
 
@@ -181,20 +181,35 @@ export default class InsuranceTableRows extends React.Component {
         <Table.Row>
           <Table.Cell>Insurance certificate</Table.Cell>
           <FlexCell>
-            <input
-              type="file"
-              name="certFile"
-              id="certFile"
-              multiple={false}
-              onChange={this.changeHandler}
-              style={{ display: "none" }}
-              ref={input => {
-                this.fileInput = input;
-              }}
-            />
-            {certIsExist && <RowValue>Certificate is already added</RowValue>}
-
-            <FileButton htmlFor="certFile">Choose file</FileButton>
+            {certIsExist ? (
+              <React.Fragment>
+                <RowValue>Certificate is already added</RowValue>
+                <Button
+                  icon
+                  onClick={e => {
+                    e.preventDefault();
+                    window.location.assign(insurance.data.certificateUrl);
+                  }}
+                >
+                  <Icon name="anchor" />
+                </Button>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <input
+                  type="file"
+                  name="certFile"
+                  id="certFile"
+                  multiple={false}
+                  onChange={this.changeHandler}
+                  style={{ display: "none" }}
+                  ref={input => {
+                    this.fileInput = input;
+                  }}
+                />
+                <FileButton htmlFor="certFile">Choose file</FileButton>
+              </React.Fragment>
+            )}
           </FlexCell>
         </Table.Row>
 
