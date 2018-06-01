@@ -247,14 +247,20 @@ export const sortMembersList = (list, fieldName, isReverse) => {
         (a, b) => (a.firstName + a.lastName > b.firstName + b.lastName ? 1 : -1)
       );
       break;
-    case "birthday":
-      sortedList = list.sort(
-        (a, b) =>
-          a.birthDate && b.birthDate
-            ? moment(a.birthDate).diff(moment(b.birthDate))
-            : 0
-      );
-      break;
+    case "signedOn":
+      sortedList = list.sort((a, b) => {
+        if (a.signedOn === null) {
+          return 1;
+        } else if (b.signedOn === null) {
+          return -1;
+        } else if (a.signedOn === b.signedOn) {
+          return 0;
+        } else
+          return isReverse === false
+            ? moment(a.signedOn).diff(moment(b.signedOn))
+            : moment(b.signedOn).diff(moment(a.signedOn));
+      });
+      return sortedList;
     default:
       sortedList = list;
   }
@@ -282,7 +288,10 @@ export const sortMemberInsList = (list, fieldName, isReverse) => {
       break;
 
     case "date":
-      return sortMembersByDate(list, isReverse);
+    case "signedOn":
+    case "insuranceActiveFrom":
+    case "insuranceActiveTo":
+      return sortMembersByDate(list, fieldName, isReverse);
 
     case "insuranceType":
     case "insuranceStatus":
@@ -315,19 +324,19 @@ function sortMembersByBool(list, fieldName, isReverse) {
   return [...resultList, ...withoutVal];
 }
 
-function sortMembersByDate(list, isReverse) {
+function sortMembersByDate(list, fieldName, isReverse) {
   const withoutDates = [];
 
   const withDates = list.filter(item => {
-    if (!item.insuranceActiveFrom) {
+    if (!item[fieldName]) {
       withoutDates.push(item);
     }
-    return !!item.insuranceActiveFrom;
+    return !!item[fieldName];
   });
 
   const sortedDates = withDates.sort((a, b) => {
-    const dateA = moment(a.insuranceActiveFrom || "10000-01-01");
-    const dateB = moment(b.insuranceActiveFrom || "10000-01-01");
+    const dateA = moment(a[fieldName] || "10000-01-01");
+    const dateB = moment(b[fieldName] || "10000-01-01");
     return dateA.diff(dateB);
   });
   const resultList = isReverse ? sortedDates.reverse() : sortedDates;

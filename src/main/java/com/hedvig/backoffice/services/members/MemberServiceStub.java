@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
+import java.time.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -25,8 +25,10 @@ public class MemberServiceStub implements MemberService {
     public MemberServiceStub() {
         String[] statuses = { "INITIATED", "ONBOARDING", "SIGNED", "INACTIVATED" };
 
-        long minDay = LocalDate.of(1970, 1, 1).toEpochDay();
-        long maxDay = LocalDate.of(2018, 12, 31).toEpochDay();
+        long minBirthDay = LocalDate.of(1970, 1, 1).toEpochDay();
+        long maxBirthDay = LocalDate.of(2010, 12, 31).toEpochDay();
+        long minSignedOnDay =  LocalDate.of(2011, 1, 3).toEpochDay();
+        long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
 
         users = IntStream.range(0, testMemberIds.length + 100).mapToObj(i -> {
             long id = i < testMemberIds.length ? testMemberIds[i] : RandomUtils.nextInt();
@@ -34,9 +36,15 @@ public class MemberServiceStub implements MemberService {
             user.setFirstName("Test user " + id);
             user.setStatus(statuses[RandomUtils.nextInt(0, 4)]);
 
-            long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
+            long randomDay = ThreadLocalRandom.current().nextLong(minBirthDay, maxBirthDay);
             LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
             user.setBirthDate(randomDate);
+            if (user.getStatus().equals(statuses[2])){
+                long randomSignedOnDate  = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
+                LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
+                LocalTime randomSignedOnLocalTime = LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
+                user.setSignedOn(Instant.from(ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime), ZoneId.of("Europe/Stockholm"))));
+            }
 
             return user;
         }).collect(Collectors.toList());

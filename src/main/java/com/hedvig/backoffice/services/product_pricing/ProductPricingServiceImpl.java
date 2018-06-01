@@ -6,6 +6,7 @@ import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 public class ProductPricingServiceImpl implements ProductPricingService {
@@ -33,7 +35,7 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
 
     @Override
-    public JsonNode insurance(String memberId, String token) {
+    public InsuranceStatusDTO insurance(String memberId, String token) {
         return client.insurance(memberId, token);
     }
 
@@ -43,7 +45,7 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
 
     @Override
-    public JsonNode search(String state, String query, String token) {
+    public List<InsuranceStatusDTO> search(String state, String query, String token) {
         return client.search(state, query, token);
     }
 

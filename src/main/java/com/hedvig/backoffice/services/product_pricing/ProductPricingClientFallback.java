@@ -3,8 +3,11 @@ package com.hedvig.backoffice.services.product_pricing;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -17,7 +20,7 @@ public class ProductPricingClientFallback implements ProductPricingClient {
     }
 
     @Override
-    public JsonNode insurance(String memberId, String token) {
+    public InsuranceStatusDTO insurance(String memberId, String token) {
         log.error("product-pricing service unavailable");
         return null;
     }
@@ -28,7 +31,7 @@ public class ProductPricingClientFallback implements ProductPricingClient {
     }
 
     @Override
-    public JsonNode search(String state, String query, String token) {
+    public List<InsuranceStatusDTO> search(String state, String query, String token) {
         log.error("product-pricing service unavailable");
         return null;
     }
