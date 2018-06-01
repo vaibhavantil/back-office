@@ -1,8 +1,7 @@
 package com.hedvig.backoffice.config;
 
 import ch.qos.logback.access.tomcat.LogbackValve;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.apache.catalina.Valve;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,17 +17,15 @@ public class LogBackAccess {
     }
 
     @Bean
-    public EmbeddedServletContainerFactory servletContainer() {
-        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
+    public Valve logbackValve() {
 
         LogbackValve logbackValve = new LogbackValve();
 
         // point to logback-access.xml
         logbackValve.setFilename("logback-access.xml");
 
-        tomcat.addContextValves(logbackValve);
 
-        return tomcat;
+        return logbackValve;
     }
 
 }

@@ -1,7 +1,9 @@
 package com.hedvig.backoffice;
 
+import ch.qos.logback.access.tomcat.LogbackValve;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hedvig.backoffice.security.SecureFilter;
+import org.apache.catalina.Valve;
 import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -17,6 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
+
+import java.util.List;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -46,9 +50,14 @@ public class BackOfficeApplication {
     private boolean httpsRedirect;
 
 	@Bean
-    public EmbeddedServletContainerFactory servletContainer() {
+    public EmbeddedServletContainerFactory servletContainer(List<Valve> valves) {
         TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
         tomcat.addAdditionalTomcatConnectors(httpConnector());
+
+        for(Valve v : valves) {
+            tomcat.addContextValves(v);
+        }
+
         return tomcat;
     }
 
