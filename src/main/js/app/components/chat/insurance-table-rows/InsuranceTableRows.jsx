@@ -183,16 +183,25 @@ export default class InsuranceTableRows extends React.Component {
           <FlexCell>
             {certIsExist ? (
               <React.Fragment>
-                <RowValue>Certificate is already added</RowValue>
                 <Button
-                  icon
+                  content="View existing"
                   onClick={e => {
                     e.preventDefault();
                     window.location.assign(insurance.data.certificateUrl);
                   }}
-                >
-                  <Icon name="anchor" />
-                </Button>
+                />
+                <input
+                  type="file"
+                  name="certFile"
+                  id="certFile"
+                  multiple={false}
+                  onChange={this.changeHandler}
+                  style={{ display: "none" }}
+                  ref={input => {
+                    this.fileInput = input;
+                  }}
+                />
+                <FileButton htmlFor="certFile">Upload new</FileButton>
               </React.Fragment>
             ) : (
               <React.Fragment>
@@ -207,7 +216,7 @@ export default class InsuranceTableRows extends React.Component {
                     this.fileInput = input;
                   }}
                 />
-                <FileButton htmlFor="certFile">Choose file</FileButton>
+                <Button htmlFor="certFile">Upload file</Button>
               </React.Fragment>
             )}
           </FlexCell>

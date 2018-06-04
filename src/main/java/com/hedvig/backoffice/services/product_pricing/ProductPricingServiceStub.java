@@ -51,7 +51,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
                 insurance.setSignedOn(Instant.from(ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime), ZoneId.of("Europe/Stockholm"))));
 
                 insurance.setCertificateUploaded(true);
-                insurance.setCertificateUrl("http://www.olympiacos.org/en");
+                insurance.setCertificateUrl("http://hedvigeleonora.se/");
             }
 
             return insurance;
