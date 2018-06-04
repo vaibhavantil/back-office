@@ -39,10 +39,13 @@ public class MemberServiceStub implements MemberService {
             long randomDay = ThreadLocalRandom.current().nextLong(minBirthDay, maxBirthDay);
             LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
             user.setBirthDate(randomDate);
+
+            long randomSignedOnDate  = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
+            LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
+            LocalTime randomSignedOnLocalTime = LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
+            user.setCreatedOn(Instant.from(ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime), ZoneId.of("Europe/Stockholm"))));
+
             if (user.getStatus().equals(statuses[2])){
-                long randomSignedOnDate  = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
-                LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
-                LocalTime randomSignedOnLocalTime = LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
                 user.setSignedOn(Instant.from(ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime), ZoneId.of("Europe/Stockholm"))));
             }
 

@@ -31,9 +31,15 @@ export default class MembersList extends React.Component {
       ? signedOn.format("DD MMMM YYYY HH:MM")
       : "-";
 
+    const createdOn = moment(item.createdOn);
+    const formattedCreatedOn = createdOn.isValid()
+      ? createdOn.format("DD MMMM YYYY HH:MM")
+      : "-";
+
     return (
       <LinkRow onClick={this.linkClickHandler.bind(this, item.memberId)}>
         <Table.Cell>{this.getMemberName(item)}</Table.Cell>
+        <Table.Cell>{formattedCreatedOn}</Table.Cell>
         <Table.Cell>{formattedsignedOn}</Table.Cell>
       </LinkRow>
     );
@@ -74,6 +80,12 @@ export default class MembersList extends React.Component {
             onClick={this.sortTable.bind(this, "name")}
           >
             Name
+          </Table.HeaderCell>
+          <Table.HeaderCell
+            sorted={column === "createdOn" ? direction : null}
+            onClick={this.sortTable.bind(this, "createdOn")}
+          >
+            Created
           </Table.HeaderCell>
           <Table.HeaderCell
             sorted={column === "signedOn" ? direction : null}
