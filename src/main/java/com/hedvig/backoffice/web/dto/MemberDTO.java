@@ -41,6 +41,8 @@ public class MemberDTO {
 
     private Instant signedOn;
 
+    private Instant createdOn;
+
     public MemberDTO(long memberId) {
         this.memberId = memberId;
     }

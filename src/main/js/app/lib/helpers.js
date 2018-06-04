@@ -248,19 +248,8 @@ export const sortMembersList = (list, fieldName, isReverse) => {
       );
       break;
     case "signedOn":
-      sortedList = list.sort((a, b) => {
-        if (a.signedOn === null) {
-          return 1;
-        } else if (b.signedOn === null) {
-          return -1;
-        } else if (a.signedOn === b.signedOn) {
-          return 0;
-        } else
-          return isReverse === false
-            ? moment(a.signedOn).diff(moment(b.signedOn))
-            : moment(b.signedOn).diff(moment(a.signedOn));
-      });
-      return sortedList;
+    case "createdOn":
+      return sortMembersByDate(list, fieldName, isReverse);
     default:
       sortedList = list;
   }

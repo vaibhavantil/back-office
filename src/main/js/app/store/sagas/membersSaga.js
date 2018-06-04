@@ -13,7 +13,7 @@ import {
 } from "../actions/membersActions";
 import { showNotification } from "../actions/notificationsActions";
 
-const fieldName = "signedOn";
+const fieldName = "createdOn";
 const isDescendingOrder = true;
 
 function* membersRequestFlow() {
