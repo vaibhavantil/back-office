@@ -91,7 +91,7 @@ export default class MembersList extends React.Component {
             sorted={column === "signedOn" ? direction : null}
             onClick={this.sortTable.bind(this, "signedOn")}
           >
-            Sign up date
+            Sign up
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
