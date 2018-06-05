@@ -216,7 +216,7 @@ export default class InsuranceTableRows extends React.Component {
                     this.fileInput = input;
                   }}
                 />
-                <Button htmlFor="certFile">Upload file</Button>
+                <FileButton htmlFor="certFile">Upload file</FileButton>
               </React.Fragment>
             )}
           </FlexCell>
