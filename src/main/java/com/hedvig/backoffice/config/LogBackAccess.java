@@ -23,6 +23,7 @@ public class LogBackAccess {
 
         // point to logback-access.xml
         logbackValve.setFilename("logback-access.xml");
+        logbackValve.setAsyncSupported(true);
 
 
         return logbackValve;
