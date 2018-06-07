@@ -36,11 +36,8 @@ public class ClaimsServiceStub implements ClaimsService {
             throw new UncheckedIOException(e);
         }
 
-        List<String> memberIds = memberService
-                .search("", "", settingsService.getInternalAccessToken())
-                .stream()
-                .map(o -> o.getMemberId().toString())
-                .collect(Collectors.toList());
+        List<String> memberIds = memberService.listAllMembers(0,0,null,null,settingsService.getInternalAccessToken())
+            .getContent().stream().map(o -> o.getMemberId().toString()).collect(Collectors.toList());
 
         claims = IntStream.range(0, 10).mapToObj(i -> {
             String id = UUID.randomUUID().toString();

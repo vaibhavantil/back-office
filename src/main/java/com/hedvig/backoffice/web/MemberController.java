@@ -12,6 +12,7 @@ import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,103 +31,146 @@ import java.util.Optional;
 @RequestMapping(path = {"/api/user", "/api/member"})
 public class MemberController {
 
-    private final MemberService memberService;
-    private final ProductPricingService productPricingService;
-    private final PersonnelService personnelService;
+  private final MemberService memberService;
+  private final ProductPricingService productPricingService;
+  private final PersonnelService personnelService;
 
+  @Autowired
+  public MemberController(
+      MemberService memberService,
+      ProductPricingService productPricingService,
+      PersonnelService personnelService) {
+    this.memberService = memberService;
+    this.productPricingService = productPricingService;
+    this.personnelService = personnelService;
+  }
 
-    @Autowired
-    public MemberController(MemberService memberService,
-                            ProductPricingService productPricingService,
-                            PersonnelService personnelService) {
-        this.memberService = memberService;
-        this.productPricingService = productPricingService;
-        this.personnelService = personnelService;
-    }
+  @GetMapping
+  public Page<MemberDTO> list(
+      @RequestParam(name = "pageNumber", required = false) int pageNumber,
+      @RequestParam(name = "pageSize", required = false) int pageSize,
+      @RequestParam(name = "direction", required = false) String direction,
+      @RequestParam(name = "orderBy", required = false) String orderBy,
+      @AuthenticationPrincipal Principal principal) {
+    return memberService.listAllMembers(
+        pageNumber, pageSize, direction, orderBy, personnelService.getIdToken(principal.getName()));
+  }
 
-    @GetMapping
-    public List<MemberDTO> list(@AuthenticationPrincipal Principal principal) {
-        return memberService.search("", "", personnelService.getIdToken(principal.getName()));
-    }
+  @GetMapping("/{memberId}")
+  public MemberDTO findOne(
+      @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+    return Optional.ofNullable(
+            memberService.findByMemberId(
+                memberId, personnelService.getIdToken(principal.getName())))
+        .orElseThrow(() -> new ExternalServiceException("member-service not available"));
+  }
 
-    @GetMapping("/{memberId}")
-    public MemberDTO findOne(@PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
-        return Optional.ofNullable(memberService.findByMemberId(memberId, personnelService.getIdToken(principal.getName())))
-                .orElseThrow(() -> new ExternalServiceException("member-service not available"));
-    }
+  @PostMapping("/{memberId}/edit")
+  public ResponseEntity<?> editMember(
+      @PathVariable String memberId,
+      @RequestBody MemberDTO dto,
+      @AuthenticationPrincipal Principal principal) {
+    memberService.editMember(memberId, dto, personnelService.getIdToken(principal.getName()));
+    return ResponseEntity.noContent().build();
+  }
 
-    @PostMapping("/{memberId}/edit")
-    public ResponseEntity<?> editMember(@PathVariable String memberId,
-                                      @RequestBody MemberDTO dto,
-                                      @AuthenticationPrincipal Principal principal) {
-        memberService.editMember(memberId, dto, personnelService.getIdToken(principal.getName()));
-        return ResponseEntity.noContent().build();
-    }
+  @GetMapping("/search")
+  public Page<MemberDTO> search(
+      @RequestParam(name = "status", defaultValue = "", required = false) String status,
+      @RequestParam(name = "query", defaultValue = "", required = false) String query,
+      @RequestParam(name = "pageNumber", required = false) int pageNumber,
+      @RequestParam(name = "pageSize", required = false) int pageSize,
+      @RequestParam(name = "direction", required = false) String direction,
+      @RequestParam(name = "orderBy", required = false) String orderBy,
+      @AuthenticationPrincipal Principal principal) {
+    return memberService.search(
+        status,
+        query,
+        pageNumber,
+        pageSize,
+        direction,
+        orderBy,
+        personnelService.getIdToken(principal.getName()));
+  }
 
-    @GetMapping("/search")
-    public List<MemberDTO> search(@RequestParam(name = "status", defaultValue = "", required = false) String status,
-                                  @RequestParam(name = "query", defaultValue = "", required = false) String query,
-                                  @AuthenticationPrincipal Principal principal) {
-        return memberService.search(status, query, personnelService.getIdToken(principal.getName()));
-    }
+  @RequestMapping(
+      path = "/mandate/{memberId}",
+      method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_PDF_VALUE)
+  public ResponseEntity<byte[]> insuranceMandate(
+      @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+    val mandate =
+        productPricingService.insuranceContract(
+            memberId, personnelService.getIdToken(principal.getName()));
+    val headers = new HttpHeaders();
+    val filename = "insurance-mandate-" + memberId + ".pdf";
+    headers.setContentDispositionFormData(filename, filename);
+    headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+    return new ResponseEntity<>(mandate, headers, HttpStatus.OK);
+  }
 
-    @RequestMapping(path = "/mandate/{memberId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> insuranceMandate(@PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
-        val mandate = productPricingService.insuranceContract(memberId, personnelService.getIdToken(principal.getName()));
-        val headers = new HttpHeaders();
-        val filename = "insurance-mandate-" + memberId + ".pdf";
-        headers.setContentDispositionFormData(filename, filename);
-        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-        return new ResponseEntity<>(mandate, headers, HttpStatus.OK);
-    }
+  @GetMapping("/insurance/{memberId}")
+  public InsuranceStatusDTO insurance(
+      @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+    return productPricingService.insurance(
+        memberId, personnelService.getIdToken(principal.getName()));
+  }
 
-    @GetMapping("/insurance/{memberId}")
-    public InsuranceStatusDTO insurance(@PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
-        return productPricingService.insurance(memberId, personnelService.getIdToken(principal.getName()));
-    }
+  @PostMapping("/insurance/{memberId}/activate")
+  public ResponseEntity<?> activate(
+      @PathVariable String memberId,
+      @RequestBody InsuranceActivateDTO dto,
+      @AuthenticationPrincipal Principal principal) {
+    productPricingService.activate(memberId, dto, personnelService.getIdToken(principal.getName()));
+    return ResponseEntity.noContent().build();
+  }
 
-    @PostMapping("/insurance/{memberId}/activate")
-    public ResponseEntity<?> activate(@PathVariable String memberId,
-                                      @RequestBody InsuranceActivateDTO dto,
-                                      @AuthenticationPrincipal Principal principal) {
-        productPricingService.activate(memberId, dto, personnelService.getIdToken(principal.getName()));
-        return ResponseEntity.noContent().build();
-    }
+  @PostMapping("/insurance/{hid}/cancel")
+  public ResponseEntity<?> cancel(
+      @PathVariable String hid,
+      @RequestBody InsuranceCancellationDTO dto,
+      @AuthenticationPrincipal Principal principal) {
+    memberService.cancelInsurance(hid, dto, personnelService.getIdToken(principal.getName()));
+    return ResponseEntity.noContent().build();
+  }
 
-    @PostMapping("/insurance/{hid}/cancel")
-    public ResponseEntity<?> cancel (@PathVariable String hid,
-                                      @RequestBody InsuranceCancellationDTO dto,
-                                      @AuthenticationPrincipal Principal principal) {
-        memberService.cancelInsurance(hid, dto, personnelService.getIdToken(principal.getName()));
-        return ResponseEntity.noContent().build();
-    }
+  @GetMapping("/insurance/search")
+  public List<InsuranceStatusDTO> serachInsurance(
+      @RequestParam(name = "state", defaultValue = "", required = false) String state,
+      @RequestParam(name = "query", defaultValue = "", required = false) String query,
+      @AuthenticationPrincipal Principal principal) {
+    return productPricingService.search(
+        state, query, personnelService.getIdToken(principal.getName()));
+  }
 
-    @GetMapping("/insurance/search")
-    public List<InsuranceStatusDTO> serachInsurance(@RequestParam(name = "state", defaultValue = "", required = false) String state,
-                                    @RequestParam(name = "query", defaultValue = "", required = false) String query,
-                                    @AuthenticationPrincipal Principal principal) {
-        return productPricingService.search(state, query, personnelService.getIdToken(principal.getName()));
-    }
+  @PostMapping("/insurance/{memberId}/sendCancellationEmail")
+  public ResponseEntity<?> sendCancellationEmail(
+      @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+    productPricingService.sendCancellationEmail(
+        memberId, personnelService.getIdToken(principal.getName()));
+    return ResponseEntity.noContent().build();
+  }
 
-    @PostMapping("/insurance/{memberId}/sendCancellationEmail")
-    public ResponseEntity<?> sendCancellationEmail(@PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
-        productPricingService.sendCancellationEmail(memberId, personnelService.getIdToken(principal.getName()));
-        return ResponseEntity.noContent().build();
-    }
+  @PostMapping("/insurance/{memberId}/certificate")
+  public ResponseEntity<?> insuranceCertificate(
+      @PathVariable String memberId,
+      @RequestParam MultipartFile file,
+      @AuthenticationPrincipal Principal principal)
+      throws IOException {
+    byte[] data = file.getBytes();
+    productPricingService.uploadCertificate(
+        memberId,
+        file.getOriginalFilename(),
+        file.getContentType(),
+        data,
+        personnelService.getIdToken(principal.getName()));
+    return ResponseEntity.noContent().build();
+  }
 
-    @PostMapping("/insurance/{memberId}/certificate")
-    public ResponseEntity<?> insuranceCertificate(@PathVariable String memberId,
-                                                  @RequestParam MultipartFile file,
-                                                  @AuthenticationPrincipal Principal principal) throws IOException {
-        byte[] data = file.getBytes();
-        productPricingService.uploadCertificate(memberId, file.getOriginalFilename(), file.getContentType(), data,
-                personnelService.getIdToken(principal.getName()));
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/insurance/{memberId}/insuredAtOtherCompany")
-    public ResponseEntity<?> setInsuredAtOtherCompany(@PathVariable String memberId, @RequestBody @Valid InsuredAtOtherCompanyDTO dto) {
-        productPricingService.setInsuredAtOtherCompany(memberId, dto);
-        return ResponseEntity.noContent().build();
-    }
+  @PostMapping("/insurance/{memberId}/insuredAtOtherCompany")
+  public ResponseEntity<?> setInsuredAtOtherCompany(
+      @PathVariable String memberId, @RequestBody @Valid InsuredAtOtherCompanyDTO dto) {
+    productPricingService.setInsuredAtOtherCompany(memberId, dto);
+    return ResponseEntity.noContent().build();
+  }
 }
