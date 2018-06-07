@@ -50,6 +50,8 @@ public class ProductPricingServiceStub implements ProductPricingService {
                 LocalTime randomSignedOnLocalTime = LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
                 insurance.setSignedOn(Instant.from(ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime), ZoneId.of("Europe/Stockholm"))));
 
+                insurance.setInsuranceActiveFrom(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime));
+
                 insurance.setCertificateUploaded(true);
                 insurance.setCertificateUrl("http://hedvigeleonora.se/");
             }
