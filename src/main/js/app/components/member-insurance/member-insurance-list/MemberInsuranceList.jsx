@@ -28,14 +28,10 @@ export default class MemberInsuranceList extends React.Component {
     return date.isValid() ? date.format("DD MMMM YYYY") : "-";
   };
 
-  getFormattedDateTime = datetime => {
-    return datetime.isValid() ? datetime.format("DD MMMM YYYY HH:MM") : "-";
-  };
-
   getTableRow = item => {
     const activationDate = moment(item.insuranceActiveFrom);
     const cancellationDate = moment(item.insuranceActiveTo);
-    const signedOnDate = moment(item.signedOn);
+    const signedOnDate = moment(item.signedOn).local();
 
     return (
       <LinkRow onClick={this.linkClickHandler.bind(this, item.memberId)}>

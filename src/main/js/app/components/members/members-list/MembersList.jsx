@@ -26,12 +26,12 @@ export default class MembersList extends React.Component {
   linkClickHandler = id => history.push(`/members/${id}`);
 
   getTableRow = item => {
-    const signedOn = moment(item.signedOn);
+    const signedOn = moment(item.signedOn).local();
     const formattedsignedOn = signedOn.isValid()
       ? signedOn.format("DD MMMM YYYY HH:mm")
       : "-";
 
-    const createdOn = moment(item.createdOn);
+    const createdOn = moment(item.createdOn).local();
     const formattedCreatedOn = createdOn.isValid()
       ? createdOn.format("DD MMMM YYYY HH:mm")
       : "-";
