@@ -249,7 +249,41 @@ export const sortMembersList = (list, fieldName, isReverse) => {
       break;
     case "signedOn":
     case "createdOn":
-      return sortMembersByDate(list, fieldName, isReverse);
+      return sortListByDate(list, fieldName, isReverse);
+    default:
+      sortedList = list;
+  }
+  return isReverse ? sortedList.reverse() : sortedList;
+};
+
+/**
+ * Sort claims table (ClaimsList page)
+ * @param {array} list ClaimsList
+ * @param {string} fieldName clicked column name
+ * @param {bool} isReverse
+ */
+export const sortClaimsList = (list, fieldName, isReverse) => {
+  console.log("LIST", list);
+  console.log("fieldName", fieldName);
+  console.log("isReserve", isReverse);
+  let sortedList = null;
+
+  switch (fieldName) {
+    case "type":
+    case "status":
+    case "reserves":
+      sortedList = list.sort(
+        (a, b) =>
+          `${a.memberFirstName}${a.memberLastName}` >
+          `${b.memberFirstName}${b.memberLastName}`
+            ? 1
+            : -1
+      );
+      break;
+
+    case "date":
+      return sortListByDate(list, fieldName, isReverse);
+
     default:
       sortedList = list;
   }
@@ -280,7 +314,7 @@ export const sortMemberInsList = (list, fieldName, isReverse) => {
     case "signedOn":
     case "insuranceActiveFrom":
     case "insuranceActiveTo":
-      return sortMembersByDate(list, fieldName, isReverse);
+      return sortListByDate(list, fieldName, isReverse);
 
     case "insuranceType":
     case "insuranceStatus":
@@ -313,7 +347,7 @@ function sortMembersByBool(list, fieldName, isReverse) {
   return [...resultList, ...withoutVal];
 }
 
-function sortMembersByDate(list, fieldName, isReverse) {
+function sortListByDate(list, fieldName, isReverse) {
   const withoutDates = [];
 
   const withDates = list.filter(item => {

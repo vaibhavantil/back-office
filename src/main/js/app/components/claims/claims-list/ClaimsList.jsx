@@ -1,54 +1,117 @@
-import React from 'react';
-import moment from 'moment';
-import PropTypes from 'prop-types';
-import { Table } from 'semantic-ui-react';
-import { LinkRow } from 'components/shared';
-import PaginatorList from 'components/shared/paginator-list/PaginatorList';
-import { history } from 'app/store';
+import React from "react";
+import moment from "moment";
+import PropTypes from "prop-types";
+import { Table } from "semantic-ui-react";
+import { LinkRow } from "components/shared";
+import PaginatorList from "components/shared/paginator-list/PaginatorList";
+import { history } from "app/store";
 
-const linkClickHandler = id => history.replace(`/claims/${id}`);
+export default class ClaimsList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      column: null,
+      direction: null
+    };
+  }
 
-export const TableRow = ({ item }) => {
+  linkClickHandler = id => history.push(`/claims/${id}`);
+
+  sortTable = clickedColumn => {
+    const { column, direction } = this.state;
+
+    if (column !== clickedColumn) {
+      this.setState({
+        column: clickedColumn,
+        direction: "ascending"
+      });
+      this.props.sortClaimsList(clickedColumn, false);
+      return;
+    }
+    this.setState(
+      {
+        direction: direction === "ascending" ? "descending" : "ascending"
+      },
+      () => {
+        this.props.sortClaimsList(
+          clickedColumn,
+          this.state.direction === "descending"
+        );
+      }
+    );
+  };
+
+  getTableHeader = () => {
+    const { column, direction } = this.state;
+    return (
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell
+            width={6}
+            sorted={column === "date" ? direction : null}
+            onClick={this.sortTable.bind(this, "date")}
+          >
+            Date
+          </Table.HeaderCell>
+          <Table.HeaderCell
+            width={6}
+            sorted={column === "type" ? direction : null}
+            onClick={this.sortTable.bind(this, "type")}
+          >
+            Type
+          </Table.HeaderCell>
+          <Table.HeaderCell
+            width={6}
+            sorted={column === "status" ? direction : null}
+            onClick={this.sortTable.bind(this, "status")}
+          >
+            Status
+          </Table.HeaderCell>
+          <Table.HeaderCell
+            width={6}
+            sorted={column === "reserves" ? direction : null}
+            onClick={this.sortTable.bind(this, "reserves")}
+          >
+            Reserves
+          </Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+    );
+  };
+
+  getTableRow = item => {
     const date = moment(item.date);
     const formattedDate = date.isValid()
-        ? date.format('HH:mm DD MMMM YYYY')
-        : '-';
+      ? date.format("DD MMMM YYYY HH:mm")
+      : "-";
     return (
-        <LinkRow onClick={linkClickHandler.bind(this, item.id)}>
-            <Table.Cell>{formattedDate}</Table.Cell>
-            <Table.Cell>{item.type}</Table.Cell>
-            <Table.Cell>{item.state}</Table.Cell>
-            <Table.Cell>{item.reserve}</Table.Cell>
-        </LinkRow>
+      <LinkRow onClick={this.linkClickHandler.bind(this, item.id)}>
+        <Table.Cell>{formattedDate}</Table.Cell>
+        <Table.Cell>{item.type}</Table.Cell>
+        <Table.Cell>{item.state}</Table.Cell>
+        <Table.Cell>{item.reserve}</Table.Cell>
+      </LinkRow>
     );
-};
+  };
 
-export const TableHeader = () => (
-    <Table.Header>
-        <Table.Row>
-            <Table.HeaderCell>Date</Table.HeaderCell>
-            <Table.HeaderCell>Type</Table.HeaderCell>
-            <Table.HeaderCell>Status</Table.HeaderCell>
-            <Table.HeaderCell>Reserves</Table.HeaderCell>
-        </Table.Row>
-    </Table.Header>
-);
-
-TableRow.propTypes = {
-    item: PropTypes.object.isRequired
-};
-
-const ClaimsList = ({ claims }) => (
-    <PaginatorList
-        list={claims}
-        itemContent={item => <TableRow item={item} />}
-        tableHeader={<TableHeader />}
+  render() {
+    const {
+      claims: { list }
+    } = this.props;
+    return (
+      <PaginatorList
+        list={list}
+        itemContent={item => this.getTableRow(item)}
+        tableHeader={this.getTableHeader()}
+        pageSize={20}
+        isSortable={true}
         keyName="id"
-    />
-);
+      />
+    );
+  }
+}
 
 ClaimsList.propTypes = {
-    claims: PropTypes.array.isRequired
+  claims: PropTypes.object.isRequired,
+  sortClaimsList: PropTypes.func.isRequired
 };
-
-export default ClaimsList;
