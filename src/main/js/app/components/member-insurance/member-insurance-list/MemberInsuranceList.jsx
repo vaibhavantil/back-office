@@ -29,8 +29,9 @@ export default class MemberInsuranceList extends React.Component {
   };
 
   getTableRow = item => {
-    const activationDate = moment(item.insuranceActiveFrom);
-    const cancellationDate = moment(item.insuranceActiveTo);
+    //FIXME : we need to remove Z after insuranceActiveFrom and insuranceActiveTo when we will change the type of datetime from backend.
+    const activationDate = moment(item.insuranceActiveFrom + "Z").local();
+    const cancellationDate = moment(item.insuranceActiveTo + "Z").local();
     const signedOnDate = moment(item.signedOn).local();
 
     return (
