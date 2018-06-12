@@ -156,6 +156,14 @@ export default class InsuranceTableRows extends React.Component {
     changeCompanyStatus(checked, member.memberId);
   };
 
+  getFormattedDate = date => {
+    //FIXME : we need to remove Z after insuranceActiveFrom and insuranceActiveTo when we will change the type of datetime from backend.
+    const dateToBeFormated = moment(date + "Z").local();
+    return dateToBeFormated.isValid()
+      ? dateToBeFormated.format("DD MMMM YYYY")
+      : "-";
+  };
+
   render() {
     const { activeDate, cancellationDate, insurance } = this.props;
     const certIsExist = insurance.data.certificateUploaded;
@@ -237,7 +245,9 @@ export default class InsuranceTableRows extends React.Component {
           <DateCell>
             {this.state.activationDatePickerDisabled ? (
               <React.Fragment>
-                {activeDate && <RowValue>{activeDate}</RowValue>}
+                {activeDate && (
+                  <RowValue>{this.getFormattedDate(activeDate)}</RowValue>
+                )}
                 <Button onClick={e => this.toggleEdit(ACTIVATION_DATE)}>
                   Edit
                 </Button>
@@ -263,7 +273,9 @@ export default class InsuranceTableRows extends React.Component {
           <DateCell>
             {this.state.cancellationDatePickerDisabled ? (
               <React.Fragment>
-                {cancellationDate && <RowValue>{cancellationDate}</RowValue>}
+                {cancellationDate && (
+                  <RowValue>{this.getFormattedDate(cancellationDate)}</RowValue>
+                )}
                 <Button onClick={e => this.toggleEdit(CANCELLATION_DATE)}>
                   Edit
                 </Button>
