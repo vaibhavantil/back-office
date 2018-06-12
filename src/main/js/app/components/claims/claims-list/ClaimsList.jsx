@@ -62,15 +62,15 @@ export default class ClaimsList extends React.Component {
           </Table.HeaderCell>
           <Table.HeaderCell
             width={6}
-            sorted={column === "status" ? direction : null}
-            onClick={this.sortTable.bind(this, "status")}
+            sorted={column === "state" ? direction : null}
+            onClick={this.sortTable.bind(this, "state")}
           >
-            Status
+            State
           </Table.HeaderCell>
           <Table.HeaderCell
             width={6}
-            sorted={column === "reserves" ? direction : null}
-            onClick={this.sortTable.bind(this, "reserves")}
+            sorted={column === "reserve" ? direction : null}
+            onClick={this.sortTable.bind(this, "reserve")}
           >
             Reserves
           </Table.HeaderCell>
