@@ -263,27 +263,16 @@ export const sortMembersList = (list, fieldName, isReverse) => {
  * @param {bool} isReverse
  */
 export const sortClaimsList = (list, fieldName, isReverse) => {
-  console.log("LIST", list);
-  console.log("fieldName", fieldName);
-  console.log("isReserve", isReverse);
   let sortedList = null;
 
   switch (fieldName) {
     case "type":
-    case "status":
-    case "reserves":
-      sortedList = list.sort(
-        (a, b) =>
-          `${a.memberFirstName}${a.memberLastName}` >
-          `${b.memberFirstName}${b.memberLastName}`
-            ? 1
-            : -1
-      );
-      break;
-
+    case "state":
+      return sortListByText(list, fieldName, isReverse);
+    case "reserve":
+      return sortListByNumber(list, fieldName, isReverse);
     case "date":
       return sortListByDate(list, fieldName, isReverse);
-
     default:
       sortedList = list;
   }
@@ -345,6 +334,44 @@ function sortMembersByBool(list, fieldName, isReverse) {
   const resultList = isReverse ? sortedList.reverse() : sortedList;
 
   return [...resultList, ...withoutVal];
+}
+
+function sortListByText(list, fieldName, isReverse) {
+  const withoutText = [];
+
+  const withText = list.filter(item => {
+    if (!item[fieldName]) {
+      withoutText.push(item);
+    }
+    return !!item[fieldName];
+  });
+
+  const sortedTexts = withText.sort((a, b) => {
+    return a[fieldName].toUpperCase() > b[fieldName].toUpperCase()
+      ? 1
+      : a[fieldName].toUpperCase() < b[fieldName].toUpperCase()
+        ? -1
+        : 0;
+  });
+  const resultList = isReverse ? sortedTexts.reverse() : sortedTexts;
+  return [...resultList, ...withoutText];
+}
+
+function sortListByNumber(list, fieldName, isReverse) {
+  const withoutNumbers = [];
+
+  const withNumbers = list.filter(item => {
+    if (!item[fieldName] || isNaN(item[fieldName])) {
+      withoutNumbers.push(item);
+    }
+    return !!item[fieldName];
+  });
+
+  const sortedNumbers = withNumbers.sort((a, b) => {
+    return a > b;
+  });
+  const resultList = isReverse ? sortedNumbers.reverse() : sortedNumbers;
+  return [...resultList, ...withoutNumbers];
 }
 
 function sortListByDate(list, fieldName, isReverse) {
