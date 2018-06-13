@@ -14,9 +14,11 @@ export const claimsRequest = () => ({
   type: CLAIMS_REQUESTING
 });
 
-export const claimsRequestSuccess = claims => ({
+export const claimsRequestSuccess = (claims, fieldName, isDescendingOrder) => ({
   type: CLAIMS_REQUEST_SUCCESS,
-  claims
+  claims,
+  fieldName,
+  isDescendingOrder
 });
 
 export const claimUpdateSuccess = (reqType, data) => ({

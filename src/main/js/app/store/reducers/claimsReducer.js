@@ -24,7 +24,11 @@ export default function(state = initialState.claims, action) {
     case CLAIMS_REQUEST_SUCCESS:
       return {
         ...state,
-        list: action.claims,
+        list: sortClaimsList(
+          action.claims,
+          action.fieldName,
+          action.isDescendingOrder
+        ),
         requesting: false
       };
 
