@@ -6,7 +6,11 @@ import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.concurrent.ThreadLocalRandom;
 import lombok.val;
+import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -26,6 +30,8 @@ public class ClaimsServiceStub implements ClaimsService {
     private List<ClaimType> types;
 
     public ClaimsServiceStub(MemberService memberService, SystemSettingsService settingsService) {
+        long minSignedOnDay =  LocalDate.of(2011, 1, 3).toEpochDay();
+        long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
         try {
             val resource = new ClassPathResource("claim_types.json").getInputStream();
             val mapper = new ObjectMapper();
@@ -58,8 +64,15 @@ public class ClaimsServiceStub implements ClaimsService {
             claim.setEvents(new ArrayList<>());
             claim.setData(new ArrayList<>());
             claim.setAssets(new ArrayList<>());
-            claim.setDate(LocalDateTime.now());
-            claim.setRegistrationDate(LocalDateTime.now());
+
+            long randomSignedOnDate = ThreadLocalRandom
+                .current().nextLong(minSignedOnDay, maxSignedOnDay);
+            LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
+            LocalTime randomSignedOnLocalTime = LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils
+                .nextInt(0, 1000000));
+
+            claim.setDate(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime));
+            claim.setRegistrationDate(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime));
 
             return claim;
         }).collect(Collectors.toList());
