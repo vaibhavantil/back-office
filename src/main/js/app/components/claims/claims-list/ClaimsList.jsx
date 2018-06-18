@@ -15,7 +15,9 @@ export default class ClaimsList extends React.Component {
     };
   }
 
-  linkClickHandler = id => history.push(`/claims/${id}`);
+  linkClickHandler = (id, userId) => {
+    history.push(`/claims/${id}/members/${userId}`);
+  };
 
   sortTable = clickedColumn => {
     const { column, direction } = this.state;
@@ -85,7 +87,7 @@ export default class ClaimsList extends React.Component {
       ? date.format("DD MMMM YYYY HH:mm")
       : "-";
     return (
-      <LinkRow onClick={this.linkClickHandler.bind(this, item.id)}>
+      <LinkRow onClick={this.linkClickHandler.bind(this, item.id, item.userId)}>
         <Table.Cell>{formattedDate}</Table.Cell>
         <Table.Cell>{item.type}</Table.Cell>
         <Table.Cell>{item.state}</Table.Cell>

@@ -1,26 +1,28 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Header } from 'semantic-ui-react';
-import PaginatorList from 'components/shared/paginator-list/PaginatorList';
-import {
-    TableRow,
-    TableHeader
-} from 'components/claims/claims-list/ClaimsList';
+import React from "react";
+import PropTypes from "prop-types";
+import { Header } from "semantic-ui-react";
+import ClaimsList from "components/claims/claims-list/ClaimsList";
 
-const ClaimsTab = ({ memberClaims }) =>
-    memberClaims.length ? (
-        <PaginatorList
-            list={memberClaims}
-            itemContent={item => <TableRow item={item} />}
-            tableHeader={<TableHeader />}
-            keyName="id"
-        />
+export default class ClaimsTab extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    const { memberClaims, sortClaimsList } = this.props;
+
+    return memberClaims.length ? (
+      <ClaimsList
+        claims={{ list: memberClaims }}
+        sortClaimsList={sortClaimsList}
+      />
     ) : (
-        <Header>Claims list is empty</Header>
+      <Header>Claims list is empty</Header>
     );
+  }
+}
 
 ClaimsTab.propTypes = {
-    memberClaims: PropTypes.array
+  memberClaims: PropTypes.array,
+  sortClaimsList: PropTypes.func
 };
-
-export default ClaimsTab;
