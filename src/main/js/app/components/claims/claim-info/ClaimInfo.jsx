@@ -1,12 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Grid, Segment, Form, Card, Table } from "semantic-ui-react";
+import { Grid, Segment, Form, Card } from "semantic-ui-react";
 import moment from "moment";
 import { claimStatus } from "app/lib/selectOptions";
 import ClaimTypeFields from "./ClaimTypeFields";
 import { getMemberFullName } from "app/lib/helpers";
-import TableFields from "components/shared/table-fields/TableFields";
 
 const DetailsSegment = styled(Segment)`
   &&& {
