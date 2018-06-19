@@ -82,7 +82,7 @@ export default class ClaimsList extends React.Component {
   };
 
   getTableRow = item => {
-    const date = moment(item.date);
+    const date = moment(item.date).local();
     const formattedDate = date.isValid()
       ? date.format("DD MMMM YYYY HH:mm")
       : "-";
