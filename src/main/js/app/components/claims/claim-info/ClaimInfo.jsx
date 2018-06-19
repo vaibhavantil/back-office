@@ -28,9 +28,7 @@ export default class ClaimInfo extends React.Component {
   }
 
   getRegistrationDate = date => {
-    return `Registration date: ${moment(date).format("DD MMMM YYYY")} ${moment(
-      date
-    ).format("HH:mm")}`;
+    return `Registration date: ${moment(date).format("DD MMMM YYYY HH:mm")}`;
   };
 
   statusChangeHandler = (e, { value }) => {

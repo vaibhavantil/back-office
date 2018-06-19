@@ -11,7 +11,7 @@ export default class ClaimsTab extends React.Component {
   render() {
     const { memberClaims, sortClaimsList } = this.props;
 
-    return memberClaims.length ? (
+    return memberClaims.length > 0 ? (
       <ClaimsList
         claims={{ list: memberClaims }}
         sortClaimsList={sortClaimsList}
