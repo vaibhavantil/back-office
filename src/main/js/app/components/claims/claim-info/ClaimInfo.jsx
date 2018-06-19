@@ -1,107 +1,113 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Grid, Segment, Form } from 'semantic-ui-react';
-import moment from 'moment';
-import { claimStatus } from 'app/lib/selectOptions';
-import ClaimTypeFields from './ClaimTypeFields';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { Grid, Segment, Form, Card } from "semantic-ui-react";
+import moment from "moment";
+import { claimStatus } from "app/lib/selectOptions";
+import ClaimTypeFields from "./ClaimTypeFields";
+import { getMemberFullName } from "app/lib/helpers";
 
 const DetailsSegment = styled(Segment)`
-    &&& {
-        padding: 30px;
-    }
+  &&& {
+    padding: 30px;
+  }
 `;
 
 export const FormSelect = styled(Form.Select)`
-    &&& {
-        width: 196px;
-    }
+  &&& {
+    width: 196px;
+  }
 `;
 
 export default class ClaimInfo extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            status: 'OPEN'
-        };
-    }
-
-    statusChangeHandler = (e, { value }) => {
-        const { match: { params }, claimUpdate } = this.props;
-        this.setState({ status: value });
-        claimUpdate(params.id, { state: value }, 'state');
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: "OPEN"
     };
+  }
 
-    componentDidMount() {
-        const { memberRequest, claimDetails: { data } } = this.props;
-        if (data.userId) {
-            memberRequest(data.userId);
-        }
-        this.setState({ status: data.state });
-    }
+  getRegistrationDate = date => {
+    return `Registration date: ${moment(date).format("DD MMMM YYYY HH:mm")}`;
+  };
 
-    render() {
-        const {
-            member,
-            types,
-            match,
-            claimDetails: { data },
-            claimUpdate,
-            claimDetailsUpdate
-        } = this.props;
-        const { status } = this.state;
-        return (
-            <React.Fragment>
-                <DetailsSegment>
-                    <Grid>
-                        <Grid.Row>
-                            Registration date:{' '}
-                            {moment(data.date).format('HH:mm DD MMMM YYYY')}
-                        </Grid.Row>
-                        <Grid.Row>
-                            Member: {member && member.firstName}
-                        </Grid.Row>
-                        <Grid.Row>
-                            <a href={data.audioURL} target="_blank">
-                                file
-                            </a>
-                        </Grid.Row>
-                        <Grid.Row>
-                            <Form>
-                                <FormSelect
-                                    onChange={this.statusChangeHandler}
-                                    options={claimStatus}
-                                    placeholder="Status"
-                                    label="Status"
-                                    value={status}
-                                    selection
-                                />
-                            </Form>
-                        </Grid.Row>
-                    </Grid>
-                </DetailsSegment>
-                <Segment>
-                    {types.length && (
-                        <ClaimTypeFields
-                            claimId={match.params.id}
-                            types={types}
-                            claimInfo={data}
-                            claimTypeUpdate={claimUpdate}
-                            claimDetailsUpdate={claimDetailsUpdate}
-                        />
-                    )}
-                </Segment>
-            </React.Fragment>
-        );
-    }
+  statusChangeHandler = (e, { value }) => {
+    const {
+      match: { params },
+      claimUpdate
+    } = this.props;
+    this.setState({ status: value });
+    claimUpdate(params.id, { state: value }, "state");
+  };
+
+  componentDidMount() {
+    const {
+      claimDetails: { data }
+    } = this.props;
+    this.setState({ status: data.state });
+  }
+
+  render() {
+    const {
+      member,
+      types,
+      match,
+      claimDetails: { data },
+      claimUpdate,
+      claimDetailsUpdate
+    } = this.props;
+    const { status } = this.state;
+    return (
+      <React.Fragment>
+        <DetailsSegment>
+          <Grid>
+            <Grid.Row>
+              <Card
+                fluid={true}
+                header={member ? getMemberFullName(member) : "Member Name"}
+                description={this.getRegistrationDate(data.date)}
+              />
+            </Grid.Row>
+            <Grid.Row>
+              <a href={data.audioURL} target="_blank">
+                Link to claim file
+              </a>
+            </Grid.Row>
+            <Grid.Row>
+              <Form>
+                <FormSelect
+                  onChange={this.statusChangeHandler}
+                  options={claimStatus}
+                  placeholder="Status"
+                  label="Status"
+                  value={status}
+                  selection
+                />
+              </Form>
+            </Grid.Row>
+          </Grid>
+        </DetailsSegment>
+        <Segment>
+          {types.length && (
+            <ClaimTypeFields
+              claimId={match.params.id}
+              types={types}
+              claimInfo={data}
+              claimTypeUpdate={claimUpdate}
+              claimDetailsUpdate={claimDetailsUpdate}
+            />
+          )}
+        </Segment>
+      </React.Fragment>
+    );
+  }
 }
 
 ClaimInfo.propTypes = {
-    member: PropTypes.object,
-    claimUpdate: PropTypes.func.isRequired,
-    match: PropTypes.object.isRequired,
-    types: PropTypes.array.isRequired,
-    memberRequest: PropTypes.func.isRequired,
-    claimDetails: PropTypes.object.isRequired,
-    claimDetailsUpdate: PropTypes.func.isRequired
+  member: PropTypes.object.isRequired,
+  claimUpdate: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired,
+  types: PropTypes.array.isRequired,
+  claimDetails: PropTypes.object.isRequired,
+  claimDetailsUpdate: PropTypes.func.isRequired
 };

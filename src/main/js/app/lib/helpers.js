@@ -198,6 +198,20 @@ String.prototype.capitalize = function() {
 };
 
 /**
+ * Returns string with member first+last name || member Id
+ * @param {member object} members
+ */
+export const getMemberFullName = member => {
+  if (member) {
+    if (member.firstName) {
+      return `${member.firstName} ${member.lastName || ""}`;
+    } else {
+      return `${member.memberId ? "Member-" + member.memberId : "No id"}`;
+    }
+  }
+};
+
+/**
  * Returns string splitted by words
  * @param {string} field
  * @example 'memberFirstName' -> 'Member first name'
