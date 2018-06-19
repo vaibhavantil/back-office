@@ -1,10 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Grid, Segment, Form } from "semantic-ui-react";
+import { Grid, Segment, Form, Card, Table } from "semantic-ui-react";
 import moment from "moment";
 import { claimStatus } from "app/lib/selectOptions";
 import ClaimTypeFields from "./ClaimTypeFields";
+import { getMemberFullName } from "app/lib/helpers";
+import TableFields from "components/shared/table-fields/TableFields";
 
 const DetailsSegment = styled(Segment)`
   &&& {
@@ -25,6 +27,12 @@ export default class ClaimInfo extends React.Component {
       status: "OPEN"
     };
   }
+
+  getRegistrationDate = date => {
+    return `Registration date: ${moment(date).format("DD MMMM YYYY")} ${moment(
+      date
+    ).format("HH:mm")}`;
+  };
 
   statusChangeHandler = (e, { value }) => {
     const {
@@ -57,13 +65,15 @@ export default class ClaimInfo extends React.Component {
         <DetailsSegment>
           <Grid>
             <Grid.Row>
-              Registration date:{" "}
-              {moment(data.date).format("HH:mm DD MMMM YYYY")}
+              <Card
+                fluid={true}
+                header={member ? getMemberFullName(member) : "Member Name"}
+                description={this.getRegistrationDate(data.date)}
+              />
             </Grid.Row>
-            <Grid.Row>Member: {member && member.firstName}</Grid.Row>
             <Grid.Row>
               <a href={data.audioURL} target="_blank">
-                file
+                Link to claim file
               </a>
             </Grid.Row>
             <Grid.Row>
