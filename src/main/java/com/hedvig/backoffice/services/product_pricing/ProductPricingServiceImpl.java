@@ -92,4 +92,9 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     public void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto) {
         client.insuredAtOtherCompany(memberId, dto);
     }
+
+    @Override
+    public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
+        return null;
+    }
 }

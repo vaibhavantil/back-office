@@ -102,10 +102,16 @@ public class MemberController {
     }
 
     @GetMapping("/insurance/search")
-    public List<InsuranceStatusDTO> serachInsurance(@RequestParam(name = "state", defaultValue = "", required = false) String state,
+    public List<InsuranceStatusDTO> searchInsurance(@RequestParam(name = "state", defaultValue = "", required = false) String state,
                                     @RequestParam(name = "query", defaultValue = "", required = false) String query,
                                     @AuthenticationPrincipal Principal principal) {
         return productPricingService.search(state, query, personnelService.getIdToken(principal.getName()));
+    }
+
+    @GetMapping("/insurance/{memberId}/insurances")
+    public List<InsuranceStatusDTO> getInsurancesByMember(@PathVariable String memberId,
+        @AuthenticationPrincipal Principal principal) {
+        return productPricingService.getInsurancesByMember(memberId, personnelService.getIdToken(principal.getName()));
     }
 
     @PostMapping("/insurance/{memberId}/sendCancellationEmail")

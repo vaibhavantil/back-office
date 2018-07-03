@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.services.product_pricing;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
@@ -17,5 +16,5 @@ public interface ProductPricingService {
     void sendCancellationEmail(String memberId, String token);
     void uploadCertificate(String memberId, String fileName, String contentType, byte[] data, String token) throws IOException;
     void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto);
-
+    List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token);
 }
