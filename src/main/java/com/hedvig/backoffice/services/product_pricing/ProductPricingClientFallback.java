@@ -45,4 +45,10 @@ public class ProductPricingClientFallback implements ProductPricingClient {
     public void insuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto) {
         log.error("product-pricing service unavailable");
     }
+
+  @Override
+  public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
+    log.error("product-pricing service unavailable");
+    return null;
+  }
 }

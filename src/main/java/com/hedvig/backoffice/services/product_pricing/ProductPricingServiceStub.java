@@ -6,6 +6,7 @@ import com.hedvig.backoffice.services.members.MemberServiceStub;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
+import lombok.Builder.ObtainVia;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -104,5 +105,10 @@ public class ProductPricingServiceStub implements ProductPricingService {
     @Override
     public void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto) {
         this.insurance(memberId, "").setInsuredAtOtherCompany(dto.isInsuredAtOtherCompany());
+    }
+
+    @Override
+    public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
+        return insurances;
     }
 }
