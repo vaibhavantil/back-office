@@ -2,8 +2,10 @@ package com.hedvig.backoffice.services.product_pricing;
 
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 
+import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import java.io.IOException;
 import java.util.List;
 
@@ -17,4 +19,6 @@ public interface ProductPricingService {
     void uploadCertificate(String memberId, String fileName, String contentType, byte[] data, String token) throws IOException;
     void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto);
     List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token);
+    void createmodifiedProduct(String memberId, InsuranceModificationDTO changeRequest, String token);
+    void modifyProduct(String memberId,ModifyInsuranceRequestDTO request, String token);
 }

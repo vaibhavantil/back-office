@@ -6,7 +6,9 @@ import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
+import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +97,17 @@ public class ProductPricingServiceImpl implements ProductPricingService {
 
     @Override
     public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
-        return null;
+        return client.getInsurancesByMember(memberId, token);
+    }
+
+    @Override
+    public void createmodifiedProduct(String memberId, InsuranceModificationDTO changeRequest,
+        String token) {
+        client.createmodifiedProduct(memberId, changeRequest, token);
+    }
+
+    @Override
+    public void modifyProduct(String memberId, ModifyInsuranceRequestDTO request, String token) {
+        client.modifyProduct(memberId, request, token);
     }
 }
