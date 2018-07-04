@@ -81,9 +81,11 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     @Scheduled(fixedDelayString = "${intervals.chat}")
     @Override
     public void update() {
+        log.info("Starting ChatUpdatesServiceImpl.update()");
         List<BackOfficeMessage> fetched = botService.fetch(lastTimestamp(), systemSettingsService.getInternalAccessToken());
 
         if (fetched == null) {
+            log.error("Was unable to fetch messages");
             if (!serviceUnavailable.get()) {
                 serviceUnavailable.set(true);
                 sendErrorToAll();
@@ -95,6 +97,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         serviceUnavailable.set(false);
 
         if (fetched.size() == 0) {
+            log.info("Zero messages since last update");
             return;
         }
 
@@ -128,11 +131,12 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
             systemSettingsService.update(SystemSettingType.BOT_SERVICE_LAST_TIMESTAMP, lastTimestamp.plusMillis(1).toString());
         }
 
-        if (log.isDebugEnabled()) {
-            log.info("bot-service: fetched " + fetched.size() + " messages and " + questions.size() + " questions");
-        }
+        //if (log.isDebugEnabled()) {
+        log.info("bot-service: fetched " + fetched.size() + " messages and " + questions.size() + " questions");
+        //}
 
         if (questions.size() > 0) {
+            log.info("Adding questions: ", questions.toString());
             CompletableFuture
                     .runAsync(() -> addQuestions(questions), executor)
                     .exceptionally(e -> {
@@ -140,6 +144,8 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
                         return null;
                     });
         }
+
+        log.info("Sending messages: ", messages.toString());
 
         messages.forEach((k, v) -> CompletableFuture
                 .runAsync(() -> sendMessages(k, v))
