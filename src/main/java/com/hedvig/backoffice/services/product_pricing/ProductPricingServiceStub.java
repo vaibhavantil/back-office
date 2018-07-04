@@ -40,10 +40,10 @@ public class ProductPricingServiceStub implements ProductPricingService {
             String insuranceState = states[RandomUtils.nextInt(0, states.length)];
 
             InsuranceStatusDTO insurance = new InsuranceStatusDTO(UUID.randomUUID().toString(),
-                    memberId, ("Firstname" + memberId), ("Lastname" + memberId), safetyIncreasers,
+                    memberId, ("Firstname" + memberId), ("Lastname" + memberId), "Street", "City", "ZipCode", 0, (float)50, safetyIncreasers,
                     "PENDING", insuranceState, RandomUtils.nextInt(0,9),
                     new BigDecimal(Math.random()), null, true, "BRF",
-                    null, null, false, false, null, null);
+                    null, null, false, null, false, null);
 
             if (insurance.getInsuranceState().equals(states[1])) {
                 long randomSignedOnDate = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
