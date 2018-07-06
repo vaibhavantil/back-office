@@ -128,6 +128,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         }
 
         if (lastTimestamp != null) {
+            log.info("Messages found - updating timestamp to: {} + 1", lastTimestamp.toString());
             systemSettingsService.update(SystemSettingType.BOT_SERVICE_LAST_TIMESTAMP, lastTimestamp.plusMillis(1).toString());
         }
 
@@ -136,7 +137,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         //}
 
         if (questions.size() > 0) {
-            log.info("Adding questions: ", questions.toString());
+            log.info("Adding questions: {}", questions.toString());
             CompletableFuture
                     .runAsync(() -> addQuestions(questions), executor)
                     .exceptionally(e -> {
@@ -145,7 +146,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
                     });
         }
 
-        log.info("Sending messages: ", messages.toString());
+        log.info("Sending messages: {}", messages.toString());
 
         messages.forEach((k, v) -> CompletableFuture
                 .runAsync(() -> sendMessages(k, v))
