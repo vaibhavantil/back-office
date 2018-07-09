@@ -30,7 +30,7 @@ public class ExpoNotificationServiceImpl implements ExpoNotificationService {
             val dto = new ExpoPushDTO(
                 pushToken.getToken(),
                 "Hedvig",
-                "Hej! Hedvig har svarat på din fråga"
+                "Hej, du har ett nytt meddelande från Hedvig!"
             );
             logger.info("Attempting  to send push to user with id: {}, body: {}", memberId, dto.toString());
             val result = expoClient.sendPush(dto);
