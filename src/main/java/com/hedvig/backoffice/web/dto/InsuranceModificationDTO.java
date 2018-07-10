@@ -23,5 +23,5 @@ public class InsuranceModificationDTO {
   public String houseType;
   public Integer personsInHouseHold;
 
-  public List<String> safetyIncreasers;
+  public List<SafetyIncreaserType> safetyIncreasers;
 }
