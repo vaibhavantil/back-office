@@ -30,7 +30,7 @@ public class InsuranceStatusDTO {
 
   private Float livingSpace;
 
-  private List<String> safetyIncreasers;
+  private List<SafetyIncreaserType> safetyIncreasers;
 
   private String insuranceStatus;
 
