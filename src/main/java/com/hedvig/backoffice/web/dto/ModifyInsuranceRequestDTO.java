@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.web.dto;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,9 +10,9 @@ import lombok.Data;
 public class ModifyInsuranceRequestDTO {
 
   public UUID insuranceIdToBeReplaced;
-  public ZonedDateTime terminationDate;
+  public LocalDate terminationDate;
   public UUID insuranceIdToReplace;
-  public ZonedDateTime activationDate;
+  public LocalDate activationDate;
   public String memberId;
 
 }
