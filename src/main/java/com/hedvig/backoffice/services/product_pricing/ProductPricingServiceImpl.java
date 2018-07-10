@@ -101,9 +101,9 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
 
     @Override
-    public void createmodifiedProduct(String memberId, InsuranceModificationDTO changeRequest,
+    public InsuranceStatusDTO createmodifiedProduct(String memberId, InsuranceModificationDTO changeRequest,
         String token) {
-        client.createmodifiedProduct(memberId, changeRequest, token);
+       return client.createmodifiedProduct(memberId, changeRequest, token);
     }
 
     @Override

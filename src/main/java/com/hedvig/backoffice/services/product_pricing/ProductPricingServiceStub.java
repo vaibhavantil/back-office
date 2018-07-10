@@ -8,6 +8,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyD
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
+import com.hedvig.backoffice.web.dto.SafetyIncreaserType;
 import lombok.Builder.ObtainVia;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
@@ -34,7 +35,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
     long minSignedOnDay = LocalDate.of(2011, 1, 3).toEpochDay();
     long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
     String[] states = {"QUOTE", "SIGNED", "TERMINATED"};
-    List<String> safetyIncreasers = Arrays.asList("Brandvarnare", "Säkerhetsdörr");
+    List<SafetyIncreaserType> safetyIncreasers = Arrays.asList(SafetyIncreaserType.SAFETY_DOOR, SafetyIncreaserType.BURGLAR_ALARM);
 
     insurances =
         IntStream.range(0, MemberServiceStub.testMemberIds.length)
@@ -155,7 +156,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
-  public void createmodifiedProduct(
+  public InsuranceStatusDTO createmodifiedProduct(
       String memberId, InsuranceModificationDTO changeRequest, String token) {
     Optional<InsuranceStatusDTO> current =
         insurances
@@ -195,8 +196,11 @@ public class ProductPricingServiceStub implements ProductPricingService {
 
       insurances.add(updated);
 
+      return updated;
+
     } else
       log.error("createmodifiedProduct, no product foudn with id {}", changeRequest.idToBeReplaced);
+    return null;
   }
 
   @Override
@@ -218,10 +222,10 @@ public class ProductPricingServiceStub implements ProductPricingService {
 
       InsuranceStatusDTO c = current.get();
       InsuranceStatusDTO u = updated.get();
-      c.setInsuranceActiveTo(request.terminationDate.toLocalDateTime());
+      c.setInsuranceActiveTo(request.terminationDate.atStartOfDay());
 
       u.setInsuranceState("SIGNED");
-      u.setInsuranceActiveFrom(request.activationDate.toLocalDateTime());
+      u.setInsuranceActiveFrom(request.activationDate.atStartOfDay());
     }
   }
 }

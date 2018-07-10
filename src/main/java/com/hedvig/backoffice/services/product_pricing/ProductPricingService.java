@@ -19,6 +19,6 @@ public interface ProductPricingService {
     void uploadCertificate(String memberId, String fileName, String contentType, byte[] data, String token) throws IOException;
     void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto);
     List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token);
-    void createmodifiedProduct(String memberId, InsuranceModificationDTO changeRequest, String token);
+    InsuranceStatusDTO createmodifiedProduct(String memberId, InsuranceModificationDTO changeRequest, String token);
     void modifyProduct(String memberId,ModifyInsuranceRequestDTO request, String token);
 }

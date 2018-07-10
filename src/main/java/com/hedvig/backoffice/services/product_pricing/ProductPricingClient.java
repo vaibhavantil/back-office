@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.services.product_pricing;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
@@ -49,8 +48,8 @@ public interface ProductPricingClient {
     List<InsuranceStatusDTO> getInsurancesByMember(@PathVariable("memberId") String memberId, @RequestHeader("Authorization") String token);
 
     @PostMapping("/_/insurance/{memberId}/createmodifiedProduct")
-    void createmodifiedProduct(@PathVariable("memberId") String memberId, @RequestBody InsuranceModificationDTO changeRequest, @RequestHeader("Authorization") String token);
+    InsuranceStatusDTO createmodifiedProduct(@PathVariable("memberId") String memberId, @RequestBody InsuranceModificationDTO changeRequest, @RequestHeader("Authorization") String token);
 
     @PostMapping("/_/insurance/{memberId}/modifyProduct")
-    void modifyProduct( @PathVariable("memberID") String memberId, @RequestBody ModifyInsuranceRequestDTO request, @RequestHeader("Authorization") String token);
+    void modifyProduct( @PathVariable("memberId") String memberId, @RequestBody ModifyInsuranceRequestDTO request, @RequestHeader("Authorization") String token);
 }
