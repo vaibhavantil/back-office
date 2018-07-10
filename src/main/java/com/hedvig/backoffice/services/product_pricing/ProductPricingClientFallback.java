@@ -54,9 +54,10 @@ public class ProductPricingClientFallback implements ProductPricingClient {
   }
 
   @Override
-  public void createmodifiedProduct(
+  public InsuranceStatusDTO createmodifiedProduct(
       String memberId, InsuranceModificationDTO changeRequest, String token) {
     log.error("product-pricing service unavailable");
+    return null;
   }
 
   @Override
