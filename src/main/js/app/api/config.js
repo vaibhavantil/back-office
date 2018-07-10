@@ -116,6 +116,18 @@ export default {
     companyStatus: {
       url: "member/insurance",
       method: "post"
+    },
+    getInsurancesByMember: {
+      url: "member/insurance",
+      method: "get"
+    },
+    createModifiedInsurance: {
+      url: "member/insurance",
+      method: "post"
+    },
+    modifyProduct: {
+      url: "member/insurance",
+      method: "post"
     }
   },
   insMembers: {
