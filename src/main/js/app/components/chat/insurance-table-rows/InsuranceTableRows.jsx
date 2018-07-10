@@ -2,9 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import styled from "styled-components";
-import { Button, Radio, Table, Icon } from "semantic-ui-react";
+import { Button, Radio, Table } from "semantic-ui-react";
 import DateInput from "components/shared/inputs/DateInput";
-import { DATE, ACTIVATION_DATE, CANCELLATION_DATE } from "app/lib/messageTypes";
+import { ACTIVATION_DATE, CANCELLATION_DATE } from "app/lib/messageTypes";
 
 const DateCell = styled(Table.Cell)`
   &&& {
