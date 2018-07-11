@@ -2,7 +2,7 @@ package com.hedvig.backoffice.web.dto;
 
 import java.util.List;
 import java.util.UUID;
-import lombok.AllArgsConstructor;ann
+import lombok.AllArgsConstructor;
 import lombok.Value;
 
 @Value
