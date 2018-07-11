@@ -2,10 +2,10 @@ package com.hedvig.backoffice.web.dto;
 
 import java.util.List;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.AllArgsConstructor;ann
+import lombok.Value;
 
-@Data
+@Value
 @AllArgsConstructor
 public class InsuranceModificationDTO {
 
