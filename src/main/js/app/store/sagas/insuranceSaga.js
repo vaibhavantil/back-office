@@ -57,6 +57,11 @@ function* createModifiedInsuranceFlow({ memberId, modifiedDetails }) {
   try {
     const path = `${memberId}/createmodifiedProduct`;
 
+    if (!modifiedDetails.livingSpace) {
+      let error = { message: "Livingspace is empty" };
+      throw error;
+    }
+
     const response = yield call(
       api,
       config.insurance.createModifiedInsurance,
