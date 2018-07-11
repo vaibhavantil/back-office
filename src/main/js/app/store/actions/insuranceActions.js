@@ -2,8 +2,9 @@ import {
   INSURANCE_REQUESTING,
   INSURANCE_REQUEST_SUCCESS,
   INSURANCE_ERROR,
+  INSURANCES_LIST_REQUESTING,
+  INSURANCES_LIST_REQUEST_SUCCESS,
   SAVE_INSURANCE_DATE,
-  SAVE_DATE_SUCCESS,
   SAVE_ACTIVATION_DATE_SUCCESS,
   SAVE_CANCELLATION_DATE_SUCCESS,
   SEND_CANCEL_REQUEST,
@@ -12,7 +13,11 @@ import {
   SEND_CERTIFICATE_SUCCESS,
   MEMBER_COMPANY_STATUS,
   MEMBER_COMPANY_STATUS_SUCCESS,
-  SEND_CERTIFICATE_ERROR
+  SEND_CERTIFICATE_ERROR,
+  MEMBER_CREATE_MODIFIED_INSURANCE,
+  MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS,
+  MODIFY_INSURANCE,
+  MODIFY_INSURANCE_SUCCESS
 } from "../constants/members";
 
 export const insuranceRequest = id => ({
@@ -20,9 +25,19 @@ export const insuranceRequest = id => ({
   id
 });
 
+export const insurancesListRequest = id => ({
+  type: INSURANCES_LIST_REQUESTING,
+  id
+});
+
 export const insuranceGetSuccess = insurance => ({
   type: INSURANCE_REQUEST_SUCCESS,
   insurance
+});
+
+export const insurancesListGetSuccess = list => ({
+  type: INSURANCES_LIST_REQUEST_SUCCESS,
+  list
 });
 
 export const insuranceGetError = error => ({
@@ -32,19 +47,19 @@ export const insuranceGetError = error => ({
 
 export const saveInsuranceDate = (date, changeType, id) => ({
   type: SAVE_INSURANCE_DATE,
-    date,
-    changeType,
-    id
+  date,
+  changeType,
+  id
 });
 
 export const saveActivationDateSuccess = activationDate => ({
-    type: SAVE_ACTIVATION_DATE_SUCCESS,
-    activationDate
+  type: SAVE_ACTIVATION_DATE_SUCCESS,
+  activationDate
 });
 
 export const saveCancellationDateSuccess = cancellationDate => ({
-    type: SAVE_CANCELLATION_DATE_SUCCESS,
-    cancellationDate
+  type: SAVE_CANCELLATION_DATE_SUCCESS,
+  cancellationDate
 });
 
 export const sendCancelRequest = id => ({
@@ -79,4 +94,25 @@ export const changeCompanyStatus = (value, memberId) => ({
 export const changeCompanyStatusSuccess = value => ({
   type: MEMBER_COMPANY_STATUS_SUCCESS,
   value
+});
+
+export const createModifiedInsurance = (memberId, modifiedDetails) => ({
+  type: MEMBER_CREATE_MODIFIED_INSURANCE,
+  modifiedDetails,
+  memberId
+});
+
+export const createModifiedInsuranceSuccess = updatedProduct => ({
+  type: MEMBER_CREATE_MODIFIED_INSURANCE_SUCCESS,
+  updatedProduct
+});
+
+export const modifyInsurance = (memberId, request) => ({
+  type: MODIFY_INSURANCE,
+  memberId,
+  request
+});
+
+export const modifyInsuranceSuccess = () => ({
+  type: MODIFY_INSURANCE_SUCCESS
 });

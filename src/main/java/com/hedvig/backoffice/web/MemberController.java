@@ -8,8 +8,10 @@ import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
+import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -102,10 +104,16 @@ public class MemberController {
     }
 
     @GetMapping("/insurance/search")
-    public List<InsuranceStatusDTO> serachInsurance(@RequestParam(name = "state", defaultValue = "", required = false) String state,
+    public List<InsuranceStatusDTO> searchInsurance(@RequestParam(name = "state", defaultValue = "", required = false) String state,
                                     @RequestParam(name = "query", defaultValue = "", required = false) String query,
                                     @AuthenticationPrincipal Principal principal) {
         return productPricingService.search(state, query, personnelService.getIdToken(principal.getName()));
+    }
+
+    @GetMapping("/insurance/{memberId}/insurances")
+    public List<InsuranceStatusDTO> getInsurancesByMember(@PathVariable String memberId,
+        @AuthenticationPrincipal Principal principal) {
+        return productPricingService.getInsurancesByMember(memberId, personnelService.getIdToken(principal.getName()));
     }
 
     @PostMapping("/insurance/{memberId}/sendCancellationEmail")
@@ -129,4 +137,16 @@ public class MemberController {
         productPricingService.setInsuredAtOtherCompany(memberId, dto);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/insurance/{memberId}/createmodifiedProduct")
+    public ResponseEntity<InsuranceStatusDTO> createmodifiedProduct(@PathVariable("memberId") String memberId, @RequestBody @Valid InsuranceModificationDTO changeRequest,@AuthenticationPrincipal Principal principal){
+        return ResponseEntity.ok(productPricingService.createmodifiedProduct(memberId, changeRequest, principal.getName()));
+    }
+
+    @PostMapping("/insurance/{memberId}/modifyProduct")
+    public ResponseEntity<?> modifyProduct( @PathVariable("memberId") String memberId, @RequestBody ModifyInsuranceRequestDTO request, @AuthenticationPrincipal Principal principal){
+        productPricingService.modifyProduct(memberId, request, principal.getName());
+        return ResponseEntity.noContent().build();
+    }
+
 }

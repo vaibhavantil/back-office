@@ -12,39 +12,49 @@ import java.util.List;
 @AllArgsConstructor
 public class InsuranceStatusDTO {
 
-    private String productId;
+  private String productId;
 
-    private String memberId;
+  private String memberId;
 
-    private String memberFirstName;
+  private String memberFirstName;
 
-    private String memberLastName;
+  private String memberLastName;
 
-    private List<String> safetyIncreasers;
+  private String street;
 
-    private String insuranceStatus;
+  private String city;
 
-    private String insuranceState;
+  private String zipCode;
 
-    private int personsInHouseHold;
+  private Integer floor;
 
-    private BigDecimal currentTotalPrice;
+  private Float livingSpace;
 
-    private BigDecimal newTotalPrice;
+  private List<SafetyIncreaserType> safetyIncreasers;
 
-    private Boolean insuredAtOtherCompany;
+  private String insuranceStatus;
 
-    private String insuranceType;
+  private String insuranceState;
 
-    private LocalDateTime insuranceActiveFrom;
+  private Integer personsInHouseHold;
 
-    private LocalDateTime insuranceActiveTo;
+  private BigDecimal currentTotalPrice;
 
-    private boolean certificateUploaded;
+  private BigDecimal newTotalPrice;
 
-    private boolean cancellationEmailSent;
+  private Boolean insuredAtOtherCompany;
 
-    private Instant signedOn;
+  private String insuranceType;
 
-    private String certificateUrl;
+  private LocalDateTime insuranceActiveFrom;
+
+  private LocalDateTime insuranceActiveTo;
+
+  private boolean certificateUploaded;
+
+  private String certificateUrl;
+
+  private boolean cancellationEmailSent;
+
+  private Instant signedOn;
 }

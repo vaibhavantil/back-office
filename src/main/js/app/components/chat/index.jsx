@@ -85,6 +85,7 @@ export default class Chat extends React.Component {
       },
       memberRequest,
       insuranceRequest,
+      insurancesListRequest,
       claimsByMember
     } = this.props;
 
@@ -97,6 +98,7 @@ export default class Chat extends React.Component {
     memberRequest(id);
     insuranceRequest(id);
     claimsByMember(id);
+    insurancesListRequest(id);
   }
 
   componentWillUnmount() {
@@ -144,5 +146,6 @@ Chat.propTypes = {
   clearMessagesList: PropTypes.func.isRequired,
   claimsByMember: PropTypes.func.isRequired,
   insuranceRequest: PropTypes.func.isRequired,
+  insurancesListRequest: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired
 };
