@@ -125,6 +125,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
         }
 
         if (lastTimestamp != null) {
+            log.info("Messages found - updating timestamp to: {} + 1", lastTimestamp.toString());
             systemSettingsService.update(SystemSettingType.BOT_SERVICE_LAST_TIMESTAMP, lastTimestamp.plusMillis(1).toString());
         }
 
