@@ -138,7 +138,7 @@ export default class InsuranceTab extends React.Component {
                       size="medium"
                       onClick={this.handleOpen}
                     >
-                      <Icon name="edit" /> Create modified Insurnance
+                      <Icon name="edit" /> Create modified insurance
                     </Button>
                   }
                   open={this.state.modalOpen}
