@@ -1,5 +1,6 @@
 !.mvn/wrapper/maven-wrapper.jar
 node_modules/
+yarn-error.log
 src/main/resources/static/
 src/main/resources/application-development.yaml
 !src/main/resources/static/test/**
