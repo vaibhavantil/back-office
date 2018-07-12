@@ -48,5 +48,4 @@ public class SystemSettingsController {
     public List<PersonnelDTO> personnelList() {
         return personnelService.list();
     }
-
 }

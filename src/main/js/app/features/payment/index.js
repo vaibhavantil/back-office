@@ -3,6 +3,8 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import { Table } from 'semantic-ui-react'
 
+import { history } from 'app/store'
+
 const query = gql`
 query MonthlyPaymentsQuery($year: Int!, $month: Int!) {
     getMonthlyPayments(year: $year, month: $month) {
@@ -14,15 +16,17 @@ query MonthlyPaymentsQuery($year: Int!, $month: Int!) {
 `
 
 const Checkmark = () => (
-    <i className="fas fa-check-circle" />
+    <i className="fas fa-check-circle" style={{color:'#00ff00'}} />
 )
 
 const Cross = () => (
-    <i className="fas fa-times-circle" />
+    <i className="fas fa-times-circle" style={{color:'#ff0000'}}/>
 )
 
+const goToMember = (memberId) => () => history.push(`/members/${memberId}`)
+
 const MonthlyPaymentsTable = ({monthlyPayments}) => (
-    <Table celled>
+    <Table celled selectable compact>
         <Table.Header>
             <Table.Row>
                 <Table.HeaderCell>memberId</Table.HeaderCell>
@@ -33,7 +37,7 @@ const MonthlyPaymentsTable = ({monthlyPayments}) => (
         <Table.Body>
             {monthlyPayments.map(monthlyPayment => (
                 <Table.Row key={`${monthlyPayment.memberId}:${monthlyPayment.price}`}>
-                    <Table.Cell>{monthlyPayment.memberId}</Table.Cell>
+                    <Table.Cell onClick={goToMember(monthlyPayment.memberId)}>{monthlyPayment.memberId}</Table.Cell>
                     <Table.Cell>{monthlyPayment.price} SEK</Table.Cell>
                     <Table.Cell>{monthlyPayment.directDebitStatus ? <Checkmark /> : <Cross /> }</Table.Cell>
                 </Table.Row>
