@@ -3,17 +3,20 @@ schema {
 }
 
 type QueryType {
-    getMonthlyPayments(year: Int!, month: Int!): [MonthlySubscription]
+    getMonthlyPayments(month: YearMonth!): [MonthlySubscription]
     getMember(id: ID): Member
 }
 
 type MonthlySubscription {
     memberId: ID
     directDebitStatus: Boolean
-    price: Int
+    amount: MonetaryAmount
     member: Member
 }
 
 type Member {
     memberId: ID
 }
+
+scalar YearMonth
+scalar MonetaryAmount
