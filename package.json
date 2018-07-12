@@ -15,11 +15,15 @@
   "homepage": "https://github.com/HedvigInsurance/asset-tracker",
   "dependencies": {
     "@stomp/stompjs": "^4.0.0",
+    "apollo-boost": "^0.1.10",
     "axios": "^0.17.1",
+    "graphql": "^0.13.2",
+    "graphql-tag": "^2.9.2",
     "history": "^4.7.2",
     "moment": "^2.20.1",
     "moment-range": "^3.1.0",
     "react": "^16.2.0",
+    "react-apollo": "^2.1.9",
     "react-dates": "^16.0.1",
     "react-dom": "^16.2.0",
     "react-google-button": "^0.5.1",
@@ -81,7 +85,8 @@
     "start": "./target/node/yarn/dist/bin/yarn run webpack-dev-server --config webpack.dev.js --progress --inline --hot --profile --port=9060 --watch-content-base",
     "webpack-dev-server": "./target/node/node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "webpack": "webpack --config webpack.dev.js --watch",
-    "test": "node_modules/.bin/jest"
+    "test": "node_modules/.bin/jest",
+    "webpack:prod": "webpack --config webpack.prod.js --watch"
   },
   "jest": {
     "verbose": true,

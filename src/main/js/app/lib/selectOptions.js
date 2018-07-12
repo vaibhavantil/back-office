@@ -42,6 +42,11 @@ export const routesList = [
         text: 'Claims',
         route: '/claims',
         type: 'CLAIMS'
+    },
+    {
+        text: 'Payments',
+        route: '/payments',
+        type: 'PAYMENTS'
     }
 ];
 

@@ -1,0 +1,13 @@
+schema {
+    query: QueryType
+}
+
+type QueryType {
+    getMonthlyPayments(year: Int!, month: Int!): [MonthlySubscription]
+}
+
+type MonthlySubscription {
+    memberId: ID
+    directDebitStatus: Boolean
+    price: Int
+}

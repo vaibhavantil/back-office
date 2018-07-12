@@ -1,6 +1,5 @@
 package com.hedvig.backoffice;
 
-import ch.qos.logback.access.tomcat.LogbackValve;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hedvig.backoffice.security.SecureFilter;
 import org.apache.catalina.Valve;

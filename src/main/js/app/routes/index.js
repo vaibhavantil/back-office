@@ -6,6 +6,7 @@ import DashboardPageRoute from './DashboardPageRoute';
 import ClaimsPageRoute from './ClaimsPageRoute';
 import QuestionsPageRoute from './QuestionsPageRoute';
 import MemberInsurancePageRoute from './MemberInsurancePageRoute';
+import PaymentsPageRoute from './PaymentsPageRoute';
 import PrivateRoute from './PrivateRoute';
 
 export default {
@@ -17,5 +18,6 @@ export default {
     ClaimsPageRoute,
     QuestionsPageRoute,
     MemberInsurancePageRoute,
+    PaymentsPageRoute,
     PrivateRoute
 };

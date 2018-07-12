@@ -3,15 +3,18 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router, Route, Switch, Redirect } from 'react-router';
+import { ApolloProvider } from 'react-apollo'
 import Routes from './routes';
 import Store from './store';
 import { history } from './store';
 import Navigation from './components/shared/navigation';
 import Notifications from './containers/notification-service/NotificationService';
+import apolloClient from './api/apollo'
 
 const store = Store.configureStore();
 
 const App = () => (
+    <ApolloProvider client={apolloClient}>
     <Provider store={store}>
         <Router history={history}>
             <React.Fragment>
@@ -63,12 +66,18 @@ const App = () => (
                         store={store}
                         component={Routes.MemberInsurancePageRoute}
                     />
+                    <Routes.PrivateRoute
+                        path="/payments"
+                        store={store}
+                        component={Routes.PaymentsPageRoute}
+                    />
                     <Redirect from="*" to="/dashboard" />
                 </Switch>
                 <Notifications />
             </React.Fragment>
         </Router>
     </Provider>
+</ApolloProvider>
 );
 
 export default App;
