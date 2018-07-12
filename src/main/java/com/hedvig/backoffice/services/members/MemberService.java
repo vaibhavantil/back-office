@@ -4,7 +4,6 @@ import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface MemberService {
 

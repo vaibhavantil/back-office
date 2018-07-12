@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.services.product_pricing;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
@@ -9,6 +8,8 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyD
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
+import com.hedvig.backoffice.web.graphql.types.MonthlySubscription;
+
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
+import java.time.YearMonth;
 import java.util.List;
 
 @Slf4j
@@ -110,4 +112,9 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     public void modifyProduct(String memberId, ModifyInsuranceRequestDTO request, String token) {
         client.modifyProduct(memberId, request, token);
     }
+
+	@Override
+	public List<MonthlySubscription> getMonthlyPayments(YearMonth month) {
+		return null;
+	}
 }

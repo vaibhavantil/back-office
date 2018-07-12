@@ -6,7 +6,10 @@ import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
+import com.hedvig.backoffice.web.graphql.types.MonthlySubscription;
+
 import java.io.IOException;
+import java.time.YearMonth;
 import java.util.List;
 
 public interface ProductPricingService {
@@ -21,4 +24,5 @@ public interface ProductPricingService {
     List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token);
     InsuranceStatusDTO createmodifiedProduct(String memberId, InsuranceModificationDTO changeRequest, String token);
     void modifyProduct(String memberId,ModifyInsuranceRequestDTO request, String token);
+	List<MonthlySubscription> getMonthlyPayments(YearMonth month);
 }

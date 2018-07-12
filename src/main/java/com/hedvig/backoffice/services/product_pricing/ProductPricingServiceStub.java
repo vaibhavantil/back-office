@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.product_pricing;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
@@ -9,10 +10,12 @@ import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.SafetyIncreaserType;
-import lombok.Builder.ObtainVia;
+import com.hedvig.backoffice.web.graphql.types.MonthlySubscription;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -24,6 +27,8 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import javax.money.Monetary;
 
 @Slf4j
 public class ProductPricingServiceStub implements ProductPricingService {
@@ -228,4 +233,9 @@ public class ProductPricingServiceStub implements ProductPricingService {
       u.setInsuranceActiveFrom(request.activationDate.atStartOfDay());
     }
   }
+
+@Override
+public List<MonthlySubscription> getMonthlyPayments(YearMonth month) {
+	return Lists.newArrayList(new MonthlySubscription("123456", true, Money.of(100, Monetary.getCurrency("SEK"))));
+}
 }

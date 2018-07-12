@@ -1,17 +1,19 @@
 package com.hedvig.backoffice.web.graphql.types;
 
+import javax.money.MonetaryAmount;
+
 import lombok.Data;
 
 @Data
 public class MonthlySubscription {
     String memberId;
     Boolean directDebitStatus;
-    Integer price;
+    MonetaryAmount amount;
     Member member;
 
-    public MonthlySubscription(String memberId, Boolean directDebitStatus, Integer price) {
+    public MonthlySubscription(String memberId, Boolean directDebitStatus, MonetaryAmount amount) {
         this.memberId = memberId;
         this.directDebitStatus = directDebitStatus;
-        this.price = price;
+        this.amount = amount;
     }
 }
