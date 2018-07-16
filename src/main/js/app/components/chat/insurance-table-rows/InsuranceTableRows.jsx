@@ -56,6 +56,7 @@ export default class InsuranceTableRows extends React.Component {
   saveNewDate = () => {
     const {
       messages: { member },
+      insurance,
       saveInsuranceDate
     } = this.props;
     if (
@@ -65,7 +66,8 @@ export default class InsuranceTableRows extends React.Component {
       saveInsuranceDate(
         this.state.activationDateValue,
         ACTIVATION_DATE,
-        member.memberId
+        member.memberId,
+        insurance.data.productId
       );
       this.setState({ activationDatePickerDisabled: true });
     }
@@ -76,7 +78,8 @@ export default class InsuranceTableRows extends React.Component {
       saveInsuranceDate(
         this.state.cancellationDateValue,
         CANCELLATION_DATE,
-        member.memberId
+        member.memberId,
+        insurance.data.productId
       );
       this.setState({ cancellationDatePickerDisabled: true });
     }

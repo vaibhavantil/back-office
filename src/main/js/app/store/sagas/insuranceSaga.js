@@ -122,11 +122,11 @@ function* modifyInsuranceFlow({ memberId, request }) {
   }
 }
 
-function* saveDateFlow({ id, date, changeType }) {
+function* saveDateFlow({ memberId, insuranceId, date, changeType }) {
   try {
     switch (changeType) {
-      case ACTIVATION_DATE:
-        const activationPath = `${id}/activate`;
+      case ACTIVATION_DATE: {
+        const activationPath = `${memberId}/activate`;
         yield call(
           api,
           config.insurance.setDate,
@@ -135,16 +135,22 @@ function* saveDateFlow({ id, date, changeType }) {
         );
         yield put(saveActivationDateSuccess(date));
         break;
-      case CANCELLATION_DATE:
-        const cancellationPath = `${id}/cancel`;
+      }
+      case CANCELLATION_DATE: {
+        const cancellationPath = `${memberId}/cancel`;
         yield call(
           api,
           config.insurance.setDate,
-          { cancellationDate: date },
+          {
+            memberId,
+            insuranceId,
+            cancellationDate: date
+          },
           cancellationPath
         );
         yield put(saveCancellationDateSuccess(date));
         break;
+      }
       default:
         throw "Function: saveDateFlow ErrorMessage: Not valid changeType";
     }
