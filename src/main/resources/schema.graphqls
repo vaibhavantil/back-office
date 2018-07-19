@@ -4,19 +4,37 @@ schema {
 
 type QueryType {
     getMonthlyPayments(month: YearMonth!): [MonthlySubscription]
-    getMember(id: ID): Member
+    getMember(id: ID!): Member
 }
 
 type MonthlySubscription {
     memberId: ID
-    directDebitStatus: Boolean
     amount: MonetaryAmount
     member: Member
 }
 
 type Member {
     memberId: ID
+    firstName: String
+    lastName: String
+    transactions: [Transaction]
+    directDebitStatus: DirectDebitStatus
 }
 
+type Transaction {
+    amount: MonetaryAmount
+    timestamp: Instant
+    type: String
+    status: String
+}
+
+type DirectDebitStatus {
+    activated: Boolean
+}
+
+# A String-representation of `java.time.YearMonth`. ex: `"2018-06"`
 scalar YearMonth
+# An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100,  "currency": "SEK"}`
 scalar MonetaryAmount
+# An epoch-representation of `java.time.Instant`. ex: `1531914777`
+scalar Instant

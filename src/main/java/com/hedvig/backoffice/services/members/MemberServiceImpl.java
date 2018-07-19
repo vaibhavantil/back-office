@@ -42,4 +42,8 @@ public class MemberServiceImpl implements MemberService {
         client.cancelInsurance(hid, dto, token);
     }
 
+	@Override
+	public List<MemberDTO> getMembersByIds(List<String> ids) {
+		return null;
+	}
 }

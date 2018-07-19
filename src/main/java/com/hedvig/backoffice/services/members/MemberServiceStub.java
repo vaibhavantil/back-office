@@ -89,4 +89,12 @@ public class MemberServiceStub implements MemberService {
                     .map(o -> o.getMemberId().toString().equals(memberId) ? memberDTO : o)
                     .collect(Collectors.toList());
     }
+
+	@Override
+	public List<MemberDTO> getMembersByIds(List<String> ids) {
+        return users
+            .stream()
+            .filter(u -> ids.contains(u.getMemberId().toString()))
+            .collect(Collectors.toList());
+	}
 }

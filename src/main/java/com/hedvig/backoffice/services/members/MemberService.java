@@ -11,4 +11,5 @@ public interface MemberService {
     MemberDTO findByMemberId(String memberId, String token);
     void editMember(String memberId, MemberDTO memberDTO, String token);
     void cancelInsurance(String hid, InsuranceCancellationDTO dto, String token);
+    List<MemberDTO> getMembersByIds(List<String> ids);
 }
