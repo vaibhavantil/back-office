@@ -2,15 +2,22 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import { Table } from 'semantic-ui-react'
+import moment from 'moment'
 
 import { history } from 'app/store'
 
 const query = gql`
-query MonthlyPaymentsQuery($year: Int!, $month: Int!) {
-    getMonthlyPayments(year: $year, month: $month) {
-        memberId
-        directDebitStatus
-        price
+query MonthlyPaymentsQuery($month: YearMonth!) {
+    getMonthlyPayments(month: $month) {
+        amount
+        member {
+            memberId
+            firstName
+            lastName
+            directDebitStatus {
+                activated
+            }
+        }
     }
 }
 `
@@ -30,16 +37,18 @@ const MonthlyPaymentsTable = ({monthlyPayments}) => (
         <Table.Header>
             <Table.Row>
                 <Table.HeaderCell>memberId</Table.HeaderCell>
+                <Table.HeaderCell>Full name</Table.HeaderCell>
                 <Table.HeaderCell>Subscription cost</Table.HeaderCell>
                 <Table.HeaderCell>Direct Debit activated?</Table.HeaderCell>
             </Table.Row>
         </Table.Header>
         <Table.Body>
             {monthlyPayments.map(monthlyPayment => (
-                <Table.Row key={`${monthlyPayment.memberId}:${monthlyPayment.price}`}>
-                    <Table.Cell onClick={goToMember(monthlyPayment.memberId)}>{monthlyPayment.memberId}</Table.Cell>
-                    <Table.Cell>{monthlyPayment.price} SEK</Table.Cell>
-                    <Table.Cell>{monthlyPayment.directDebitStatus ? <Checkmark /> : <Cross /> }</Table.Cell>
+                <Table.Row key={`${monthlyPayment.member.memberId}:${monthlyPayment.amount.amount}`}>
+                    <Table.Cell onClick={goToMember(monthlyPayment.member.memberId)}>{monthlyPayment.member.memberId}</Table.Cell>
+                    <Table.Cell>{monthlyPayment.member.firstName} {monthlyPayment.member.lastName}</Table.Cell>
+                    <Table.Cell>{monthlyPayment.amount.amount} {monthlyPayment.amount.currency}</Table.Cell>
+                    <Table.Cell>{monthlyPayment.member.directDebitStatus.activated ? <Checkmark /> : <Cross /> }</Table.Cell>
                 </Table.Row>
             ))}
         </Table.Body>
@@ -49,7 +58,7 @@ const MonthlyPaymentsTable = ({monthlyPayments}) => (
 class Payment extends React.Component {
     constructor(props) {
         super(props);
-        this.variables = { year: 2018, month: 7 }; // TODO Generate this based on actual dates and allow user to check different dates
+        this.variables = { month: moment().format('YYYY-MM')};
     }
 
     render(){

@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.graphql.dataloaders;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -26,6 +27,7 @@ public class MemberBatchLoader implements BatchLoader<String, Member> {
                 .getMembersByIds(keys)
                 .stream()
                 .map(m -> new Member(m.getMemberId().toString(), m.getFirstName(), m.getLastName()))
+                .sorted(Comparator.comparing(item -> keys.indexOf(item.getMemberId())))
                 .collect(Collectors.toList());
         });
 	}
