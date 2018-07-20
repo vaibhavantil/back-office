@@ -44,6 +44,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public List<MemberDTO> getMembersByIds(List<String> ids) {
-		return null;
+        return client.getMembers(ids);
 	}
 }

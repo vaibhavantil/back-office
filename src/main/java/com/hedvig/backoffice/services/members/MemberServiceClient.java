@@ -12,28 +12,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(
-        name = "member-service",
-        url = "${memberservice.baseUrl}",
-        configuration = FeignConfig.class,
-        fallback = MemberServiceClientFallback.class)
+@FeignClient(name = "member-service", url = "${memberservice.baseUrl}", configuration = FeignConfig.class, fallback = MemberServiceClientFallback.class)
 public interface MemberServiceClient {
 
     @GetMapping("/i/member/search?status={status}&query={query}")
-    List<MemberDTO> search(@PathVariable("status") String status,
-                           @PathVariable("query") String query,
-                           @RequestHeader("Authorization") String token);
+    List<MemberDTO> search(@PathVariable("status") String status, @PathVariable("query") String query,
+            @RequestHeader("Authorization") String token);
 
     @GetMapping("/i/member/{memberId}")
     MemberDTO member(@PathVariable("memberId") String memberId, @RequestHeader("Authorization") String token);
 
     @PostMapping("/i/member/{memberId}/edit")
-    void editMember(@PathVariable("memberId") String memberId,
-                    @RequestBody MemberDTO dto, 
-                    @RequestHeader("Authorization") String token);
+    void editMember(@PathVariable("memberId") String memberId, @RequestBody MemberDTO dto,
+            @RequestHeader("Authorization") String token);
 
     @PostMapping("/i/member/{memberId}/memberCancelInsurance")
-    void cancelInsurance (@PathVariable("memberId") String memberId,
-                          @RequestBody InsuranceCancellationDTO dto,
-                          @RequestHeader("Authorization") String token);
+    void cancelInsurance(@PathVariable("memberId") String memberId, @RequestBody InsuranceCancellationDTO dto,
+            @RequestHeader("Authorization") String token);
+
+    @GetMapping("/i/member/many/{memberIds}")
+    List<MemberDTO> getMembers(@PathVariable("memberIds") List<String> memberIds);
 }

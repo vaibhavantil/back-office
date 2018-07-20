@@ -33,4 +33,10 @@ public class MemberServiceClientFallback implements MemberServiceClient {
     public void cancelInsurance(String id, InsuranceCancellationDTO dto, String token) {
         log.error("request to member-service failed");
     }
+
+	@Override
+	public List<MemberDTO> getMembers(List<String> memberIds) {
+        log.error("request to member-service failed");
+        return null;
+	}
 }
