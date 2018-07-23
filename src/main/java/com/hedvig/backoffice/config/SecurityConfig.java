@@ -77,7 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http.authorizeRequests()
                     .antMatchers("/api/login/google").permitAll()
                     .antMatchers("/api/**").authenticated()
-                    .antMatchers("/chat/**").authenticated();
+                    .antMatchers("/chat/**").authenticated()
+                    .antMatchers("/graphiql").authenticated();
         }
 
     }

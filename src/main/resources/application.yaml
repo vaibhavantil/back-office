@@ -93,3 +93,15 @@ oauth:
       scope: profile, email
     resource:
       userInfoUri: https://www.googleapis.com/userinfo/v2/me
+
+graphql:
+  servlet:
+    mapping: /api/graphql
+    enabled: true
+    corsEnabled: false
+
+graphiql:
+  mapping: /graphiql
+  endpoint: /api/graphql
+  enabled: true
+  pageTitle: BackOffice GraphiQL
