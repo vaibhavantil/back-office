@@ -4,12 +4,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.money.CurrencyContext;
-import javax.money.CurrencyContextBuilder;
-import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 
-import org.javamoney.moneta.CurrencyUnitBuilder;
 import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Component;
 
@@ -45,10 +41,9 @@ public class MonetaryAmountScalar extends GraphQLScalarType {
 
 		@Override
 		public MonetaryAmount parseValue(Object input) throws CoercingParseValueException {
-            CurrencyContext currencyContext = CurrencyContextBuilder.of("Scalars").build();
             try {
                 Map<String, Object> in = (HashMap<String, Object>) input; // TODO Validate this better
-                return Money.of((BigDecimal) in.get("amount"), CurrencyUnitBuilder.of((String) in.get("currency"), currencyContext).build());
+                return Money.of((BigDecimal) in.get("amount"), (String) in.get("currency"));
             } catch (Exception e) {
                 throw new CoercingParseValueException("Could not parse value", e);
             }
@@ -56,17 +51,16 @@ public class MonetaryAmountScalar extends GraphQLScalarType {
 
 		@Override
 		public MonetaryAmount parseLiteral(Object input) throws CoercingParseLiteralException {
-            CurrencyContext currencyContext = CurrencyContextBuilder.of("Scalars").build();
             try {
                 ObjectValue in = (ObjectValue) input;
                 BigDecimal amount = null;
-                CurrencyUnit currency = null;
+                String currency = null;
                 for (ObjectField field : in.getObjectFields()) {
                     if (field.getName().equals("amount")) {
                         amount = ((FloatValue) field.getValue()).getValue();
                     }
                     if (field.getName().equals("currency")) {
-                        currency = CurrencyUnitBuilder.of(((StringValue) field.getValue()).getValue(), currencyContext).build();
+                        currency = ((StringValue)field.getValue()).getValue();
                     }
 
                 }

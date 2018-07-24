@@ -7,6 +7,7 @@ import DetailsTab from "./DetailsTab";
 import ClaimsTab from "./ClaimsTab";
 import InsuranceTab from "./InsuranceTab";
 import InsuranceListTab from "./InsuranceListTab";
+import PaymentsTab from './PaymentsTab';
 
 const TabContainer = styled(Tab.Pane)`
   &&& {
@@ -63,6 +64,12 @@ const memberPagePanes = (props, addMessage, socket) => {
     panes.push({
       menuItem: "All Insurances",
       render: () => <TabItem props={props} TabContent={InsuranceListTab} />
+    });
+  }
+  if (!insurance.error.length && insurance.data) {
+    panes.push({
+      menuItem: "Payments",
+      render: () => <TabItem props={props} TabContent={PaymentsTab} />
     });
   }
   return panes;

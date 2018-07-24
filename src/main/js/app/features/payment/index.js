@@ -5,6 +5,7 @@ import { Table } from 'semantic-ui-react'
 import moment from 'moment'
 
 import { history } from 'app/store'
+import { Checkmark, Cross } from 'components/icons'
 
 const query = gql`
 query MonthlyPaymentsQuery($month: YearMonth!) {
@@ -21,14 +22,6 @@ query MonthlyPaymentsQuery($month: YearMonth!) {
     }
 }
 `
-
-const Checkmark = () => (
-    <i className="fas fa-check-circle" style={{color:'#00ff00'}} />
-)
-
-const Cross = () => (
-    <i className="fas fa-times-circle" style={{color:'#ff0000'}}/>
-)
 
 const goToMember = (memberId) => () => history.push(`/members/${memberId}`)
 

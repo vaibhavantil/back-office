@@ -1,5 +1,6 @@
 schema {
     query: QueryType
+    mutation: MutationType
 }
 
 type QueryType {
@@ -7,8 +8,11 @@ type QueryType {
     getMember(id: ID!): Member
 }
 
+type MutationType {
+    chargeMember(id: ID!, amount: MonetaryAmount!): Member
+}
+
 type MonthlySubscription {
-    memberId: ID
     amount: MonetaryAmount
     member: Member
 }
@@ -22,6 +26,7 @@ type Member {
 }
 
 type Transaction {
+    id: ID
     amount: MonetaryAmount
     timestamp: Instant
     type: String

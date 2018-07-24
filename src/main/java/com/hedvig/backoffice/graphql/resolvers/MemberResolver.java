@@ -28,6 +28,7 @@ public class MemberResolver implements GraphQLResolver<Member> {
             .getTransactionsByMemberId(member.getMemberId())
             .stream()
             .map(transactionDTO -> new Transaction(
+                transactionDTO.getId(),
                 transactionDTO.getAmount(),
                 transactionDTO.getTimestamp(),
                 transactionDTO.getType(),
