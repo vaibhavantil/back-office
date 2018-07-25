@@ -16,23 +16,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class GraphQLQuery implements GraphQLQueryResolver {
 
-    private final ProductPricingService productPricingService;
-	private MemberLoader memberLoader;
+  private final ProductPricingService productPricingService;
+  private MemberLoader memberLoader;
 
-    public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader) {
-        this.productPricingService = productPricingService;
-        this.memberLoader = memberLoader;
-    }
+  public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader) {
+    this.productPricingService = productPricingService;
+    this.memberLoader = memberLoader;
+  }
 
-    public List<MonthlySubscription> getMonthlyPayments(YearMonth month) {
-        return productPricingService
-            .getMonthlyPayments(month)
-            .stream()
-            .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getAmount()))
-            .collect(Collectors.toList());
-    }
-    public CompletableFuture<Member> getMember(String id) {
-        return memberLoader
-            .load(id);
-    }
+  public List<MonthlySubscription> getMonthlyPayments(YearMonth month) {
+    return productPricingService
+        .getMonthlyPayments(month)
+        .stream()
+        .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getAmount()))
+        .collect(Collectors.toList());
+  }
+
+  public CompletableFuture<Member> getMember(String id) {
+    return memberLoader.load(id);
+  }
 }
