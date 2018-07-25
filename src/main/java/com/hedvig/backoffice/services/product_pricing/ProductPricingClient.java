@@ -54,6 +54,6 @@ public interface ProductPricingClient {
     @PostMapping("/_/insurance/{memberId}/modifyProduct")
     void modifyProduct( @PathVariable("memberId") String memberId, @RequestBody ModifyInsuranceRequestDTO request, @RequestHeader("Authorization") String token);
 
-    @GetMapping("/_/insurance/monthlyBilling?year={year}&month={month")
+    @GetMapping("/_/insurance/monthlyBilling?year={year}&month={month}")
     List<MonthlySubscriptionDTO> getMonthlySubscriptions(@PathVariable("year") int year, @PathVariable("month") int month);
 }
