@@ -7,5 +7,5 @@ import lombok.Value;
 @Value
 public class MonthlySubscriptionDTO {
     String memberId;
-    MonetaryAmount amount;
+    MonetaryAmount subscription;
 }
