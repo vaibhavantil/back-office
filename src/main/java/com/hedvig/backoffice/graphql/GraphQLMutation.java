@@ -13,16 +13,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GraphQLMutation implements GraphQLMutationResolver {
-    private MemberLoader memberLoader;
-	private PaymentService paymentService;
+  private MemberLoader memberLoader;
+  private PaymentService paymentService;
 
-	public GraphQLMutation(PaymentService paymentService, MemberLoader memberLoader) {
-        this.paymentService = paymentService;
-        this.memberLoader = memberLoader;
-    }
+  public GraphQLMutation(PaymentService paymentService, MemberLoader memberLoader) {
+    this.paymentService = paymentService;
+    this.memberLoader = memberLoader;
+  }
 
-    public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount) {
-        paymentService.chargeMember(id, amount);
-        return memberLoader.load(id);
-    }
+  public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount) {
+    paymentService.chargeMember(id, amount);
+    return memberLoader.load(id);
+  }
 }
