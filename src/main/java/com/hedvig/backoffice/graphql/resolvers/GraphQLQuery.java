@@ -11,6 +11,7 @@ import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.MonthlySubscription;
 
+import lombok.val;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,10 +26,11 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   }
 
   public List<MonthlySubscription> getMonthlyPayments(YearMonth month) {
+
     return productPricingService
         .getMonthlyPayments(month)
         .stream()
-        .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getAmount()))
+        .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getSubscription()))
         .collect(Collectors.toList());
   }
 
