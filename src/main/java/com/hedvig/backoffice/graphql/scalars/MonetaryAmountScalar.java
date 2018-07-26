@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.graphql.scalars;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +25,8 @@ public class MonetaryAmountScalar extends GraphQLScalarType {
     public MonetaryAmountScalar() {
         super("MonetaryAmount", "An object representation of `javax.money.MonetaryAmount`", new Coercing<MonetaryAmount, Map<String, Object>>() {
 
-		@Override
-		public Map<String, Object> serialize(Object dataFetcherResult) throws CoercingSerializeException {
+    @Override
+    public Map<String, Object> serialize(Object dataFetcherResult) throws CoercingSerializeException {
             if (dataFetcherResult == null) {
                 return null;
             }
@@ -37,20 +38,20 @@ public class MonetaryAmountScalar extends GraphQLScalarType {
             serialized.put("amount", ((MonetaryAmount)dataFetcherResult).getNumber().doubleValueExact());
             serialized.put("currency", ((MonetaryAmount)dataFetcherResult).getCurrency().toString());
             return serialized;
-		}
+    }
 
-		@Override
-		public MonetaryAmount parseValue(Object input) throws CoercingParseValueException {
+    @Override
+    public MonetaryAmount parseValue(Object input) throws CoercingParseValueException {
             try {
                 Map<String, Object> in = (HashMap<String, Object>) input; // TODO Validate this better
-                return Money.of((BigDecimal) in.get("amount"), (String) in.get("currency"));
+                return Money.of(BigDecimal.valueOf( (Integer) in.get("amount")), (String) in.get("currency"));
             } catch (Exception e) {
                 throw new CoercingParseValueException("Could not parse value", e);
             }
-		}
+    }
 
-		@Override
-		public MonetaryAmount parseLiteral(Object input) throws CoercingParseLiteralException {
+    @Override
+    public MonetaryAmount parseLiteral(Object input) throws CoercingParseLiteralException {
             try {
                 ObjectValue in = (ObjectValue) input;
                 BigDecimal amount = null;
@@ -68,7 +69,7 @@ public class MonetaryAmountScalar extends GraphQLScalarType {
             } catch (Exception e) {
                 throw new CoercingParseValueException("Could not parse value", e);
             }
-		}
+    }
     });
     }
 }
