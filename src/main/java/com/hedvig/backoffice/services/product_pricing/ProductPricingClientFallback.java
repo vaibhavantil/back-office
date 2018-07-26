@@ -68,7 +68,7 @@ public class ProductPricingClientFallback implements ProductPricingClient {
 
     @Override
     public List<MonthlySubscriptionDTO> getMonthlySubscriptions(int year, int month) {
-        log.error("product-pricing service unavailable");
+        log.error("product-pricing service getMonthlySubscriptions something went wrong");
         return null;
     }
 }
