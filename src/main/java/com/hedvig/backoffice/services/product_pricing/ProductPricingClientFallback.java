@@ -71,22 +71,4 @@ public class ProductPricingClientFallback implements ProductPricingClient {
         log.error("product-pricing service getMonthlySubscriptions something went wrong");
         return null;
   }
-
-  @Override
-  public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
-    log.error("product-pricing service unavailable");
-    return null;
-  }
-
-  @Override
-  public InsuranceStatusDTO createmodifiedProduct(
-      String memberId, InsuranceModificationDTO changeRequest, String token) {
-    log.error("product-pricing service unavailable");
-    return null;
-  }
-
-  @Override
-  public void modifyProduct(String memberId, ModifyInsuranceRequestDTO request, String token) {
-    log.error("product-pricing service unavailable");
-  }
 }
