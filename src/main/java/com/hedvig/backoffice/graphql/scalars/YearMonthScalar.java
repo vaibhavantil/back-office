@@ -16,8 +16,8 @@ public class YearMonthScalar extends GraphQLScalarType {
     public YearMonthScalar() {
         super("YearMonth", "A string-representation of `java.time.YearMonth`", new Coercing<YearMonth, String>() {
 
-		@Override
-		public String serialize(Object dataFetcherResult) throws CoercingSerializeException {
+    @Override
+    public String serialize(Object dataFetcherResult) throws CoercingSerializeException {
             if (dataFetcherResult == null) {
                 return null;
             }
@@ -27,25 +27,25 @@ public class YearMonthScalar extends GraphQLScalarType {
             }
 
             return ((YearMonth) dataFetcherResult).toString();
-		}
+    }
 
-		@Override
-		public YearMonth parseValue(Object input) throws CoercingParseValueException {
-			try {
+    @Override
+    public YearMonth parseValue(Object input) throws CoercingParseValueException {
+      try {
                 return YearMonth.parse((String) input);
             } catch (Exception e) {
                 throw new CoercingParseValueException("Could not parse value", e);
             }
-		}
+    }
 
-		@Override
-		public YearMonth parseLiteral(Object input) throws CoercingParseLiteralException {
+    @Override
+    public YearMonth parseLiteral(Object input) throws CoercingParseLiteralException {
             try {
                 return YearMonth.parse(((StringValue) input).getValue());
             } catch (Exception e) {
                 throw new CoercingParseLiteralException("Could not parse literal", e);
             }
-		}
+    }
     });
     }
 }
