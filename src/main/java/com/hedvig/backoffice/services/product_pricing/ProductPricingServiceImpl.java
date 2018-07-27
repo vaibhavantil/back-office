@@ -104,6 +104,22 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   @Override
   public void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto) {
     client.insuredAtOtherCompany(memberId, dto);
+    }
+
+    @Override
+    public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
+        return client.getInsurancesByMember(memberId, token);
+    }
+
+    @Override
+    public InsuranceStatusDTO createmodifiedProduct(String memberId, InsuranceModificationDTO changeRequest,
+        String token) {
+       return client.createmodifiedProduct(memberId, changeRequest, token);
+    }
+
+    @Override
+    public void modifyProduct(String memberId, ModifyInsuranceRequestDTO request, String token) {
+        client.modifyProduct(memberId, request, token);
   }
 
   @Override

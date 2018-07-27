@@ -24,5 +24,5 @@ public interface ProductPricingService {
     List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token);
     InsuranceStatusDTO createmodifiedProduct(String memberId, InsuranceModificationDTO changeRequest, String token);
     void modifyProduct(String memberId,ModifyInsuranceRequestDTO request, String token);
-	List<MonthlySubscriptionDTO> getMonthlyPayments(YearMonth month);
+    List<MonthlySubscriptionDTO> getMonthlyPayments(YearMonth month);
 }
