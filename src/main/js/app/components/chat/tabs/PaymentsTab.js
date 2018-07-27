@@ -1,7 +1,7 @@
 import React from "react";
 import gql from "graphql-tag";
 import { Query, Mutation } from "react-apollo";
-import { Table, Form, Button } from "semantic-ui-react";
+import { Table, Form, Button, Input, Label } from "semantic-ui-react";
 
 import { Checkmark, Cross } from "components/icons";
 
@@ -68,7 +68,9 @@ class PaymentsTab extends React.Component {
     super(props);
     this.variables = { id: props.match.params.id };
     this.state = {
-      amount: 0
+      amount: 0,
+      confirming: false,
+      confirmed: false
     };
   }
 
@@ -86,7 +88,17 @@ class PaymentsTab extends React.Component {
         }
       }
     });
-    this.setState({ amount: null });
+    this.setState({ amount: 0, confirming: false, confirmed: false });
+  };
+
+  handleConfirmation = () => {
+    this.setState({ confirming: true });
+  };
+
+  handleConfirmationChange = e => {
+    if (e.target.value.replace(/ /g, "").toLowerCase() === "jagälskartech") {
+      this.setState({ confirming: false, confirmed: true });
+    }
   };
 
   render() {
@@ -116,18 +128,50 @@ class PaymentsTab extends React.Component {
                   <Mutation mutation={chargeMemberMutation}>
                     {chargeMember => (
                       <div>
-                        <Form onSubmit={this.handleChargeSubmit(chargeMember)}>
+                        <Form>
                           <Form.Input
                             onChange={this.handleChange}
                             label="Amount"
                             placeholder="ex. 100"
                           />
-                          <Button type="submit">Charge</Button>
+                          <br />
+                          {!this.state.confirmed && (
+                            <Button onClick={this.handleConfirmation}>
+                              Charge
+                            </Button>
+                          )}
+                          {this.state.confirming && (
+                            <React.Fragment>
+                              <br />
+                              <br />
+                              <Input
+                                onChange={this.handleConfirmationChange}
+                                focus
+                                label="Type jag älskar tech to confirm"
+                                placeholder="jag älskar tech"
+                              />
+                              <br />
+                            </React.Fragment>
+                          )}
+                          {this.state.confirmed && (
+                            <React.Fragment>
+                              Success!! Press execute, to execute the order
+                              <br />
+                              <br />
+                              <Button
+                                positive
+                                onClick={this.handleChargeSubmit(chargeMember)}
+                              >
+                                Execute
+                              </Button>
+                            </React.Fragment>
+                          )}
                         </Form>
                       </div>
                     )}
                   </Mutation>
                 )}
+                <br />
                 <p>Transactions:</p>
                 <MemberTransactionsTable
                   transactions={data.getMember.transactions}
