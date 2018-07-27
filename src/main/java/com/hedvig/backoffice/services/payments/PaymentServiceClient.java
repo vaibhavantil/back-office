@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
     name="payment-service",
     url="${paymentService.baseUrl}",
     configuration=FeignConfig.class,
-    fallback=PaymentServiceClientFallback.class
+    //fallback=PaymentServiceClientFallback.class
 )
 public interface PaymentServiceClient {
     @GetMapping("/_/members/directDebitStatus/{memberIds}")
