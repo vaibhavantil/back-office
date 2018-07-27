@@ -68,7 +68,7 @@ class PaymentsTab extends React.Component {
     super(props);
     this.variables = { id: props.match.params.id };
     this.state = {
-      amount: 0,
+      amount: null,
       confirming: false,
       confirmed: false
     };
@@ -88,7 +88,7 @@ class PaymentsTab extends React.Component {
         }
       }
     });
-    this.setState({ amount: 0, confirming: false, confirmed: false });
+    this.setState({ amount: null, confirming: false, confirmed: false });
   };
 
   handleConfirmation = () => {
