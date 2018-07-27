@@ -41,6 +41,9 @@ hystrix:
       execution:
         timeout:
           enabled: false
+  threadpool:
+    default:
+      maximumSize: 300
 
 intervals:
   tracker: 5000
