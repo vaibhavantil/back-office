@@ -12,6 +12,9 @@ import com.hedvig.backoffice.services.expo.ExpoNotificationServiceStub;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.BotServiceImpl;
 import com.hedvig.backoffice.services.messages.BotServiceStub;
+import com.hedvig.backoffice.services.payments.PaymentService;
+import com.hedvig.backoffice.services.payments.PaymentServiceImpl;
+import com.hedvig.backoffice.services.payments.PaymentServiceStub;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.MemberServiceImpl;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
@@ -86,5 +89,13 @@ public class ExternalServicesConfig {
         return stub
                 ? factory.createBean(ProductPricingServiceStub.class)
                 : factory.createBean(ProductPricingServiceImpl.class);
+    }
+
+    @Bean
+    public PaymentService paymentService(@Value("${paymentService.stub:false}") boolean stub) {
+        val factory = context.getAutowireCapableBeanFactory();
+        return stub 
+            ? factory.createBean(PaymentServiceStub.class)
+            : factory.createBean(PaymentServiceImpl.class);
     }
 }

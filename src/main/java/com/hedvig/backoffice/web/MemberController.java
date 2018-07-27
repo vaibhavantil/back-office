@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.web;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;

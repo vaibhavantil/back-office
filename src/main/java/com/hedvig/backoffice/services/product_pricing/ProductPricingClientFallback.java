@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.product_pricing;
 
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
@@ -45,23 +46,29 @@ public class ProductPricingClientFallback implements ProductPricingClient {
   @Override
   public void insuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto) {
     log.error("product-pricing service unavailable");
-  }
+    }
 
-  @Override
-  public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
-    log.error("product-pricing service unavailable");
-    return null;
-  }
+    @Override
+    public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
+        log.error("product-pricing service unavailable");
+        return null;
+    }
 
-  @Override
-  public InsuranceStatusDTO createmodifiedProduct(
-      String memberId, InsuranceModificationDTO changeRequest, String token) {
-    log.error("product-pricing service unavailable");
-    return null;
-  }
+    @Override
+    public InsuranceStatusDTO createmodifiedProduct(String memberId, InsuranceModificationDTO changeRequest,
+            String token) {
+        log.error("product-pricing service unavailable");
+        return null;
+    }
 
-  @Override
-  public void modifyProduct(String memberId, ModifyInsuranceRequestDTO request, String token) {
-    log.error("product-pricing service unavailable");
+    @Override
+    public void modifyProduct(String memberId, ModifyInsuranceRequestDTO request, String token) {
+        log.error("product-pricing service unavailable");
+    }
+
+    @Override
+    public List<MonthlySubscriptionDTO> getMonthlySubscriptions(int year, int month) {
+        log.error("product-pricing service getMonthlySubscriptions something went wrong");
+        return null;
   }
 }

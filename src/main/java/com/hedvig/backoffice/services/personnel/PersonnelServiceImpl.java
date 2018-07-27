@@ -8,7 +8,6 @@ import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.repository.PersonnelRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.web.dto.PersonnelDTO;
-import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -22,7 +21,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class PersonnelServiceImpl implements PersonnelService {
 

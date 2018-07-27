@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.product_pricing;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
@@ -52,4 +53,7 @@ public interface ProductPricingClient {
 
     @PostMapping("/_/insurance/{memberId}/modifyProduct")
     void modifyProduct( @PathVariable("memberId") String memberId, @RequestBody ModifyInsuranceRequestDTO request, @RequestHeader("Authorization") String token);
+
+    @GetMapping("/_/insurance/monthlyBilling?year={year}&month={month}")
+    List<MonthlySubscriptionDTO> getMonthlySubscriptions(@PathVariable("year") int year, @PathVariable("month") int month);
 }
