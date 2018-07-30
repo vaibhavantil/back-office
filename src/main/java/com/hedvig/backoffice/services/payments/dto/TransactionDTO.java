@@ -8,10 +8,10 @@ import lombok.Value;
 
 @Value
 public class TransactionDTO {
-    UUID id;
-    BigDecimal amount;
-    String currency;
-    Instant timestamp;
-    String type;
-    String status;
+  UUID id;
+  BigDecimal amount;
+  String currency;
+  Instant timestamp;
+  String transactionType;
+  String transactionStatus;
 }
