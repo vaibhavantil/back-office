@@ -5,7 +5,7 @@ import { Table, Form, Button, Input, Label } from "semantic-ui-react";
 
 import { Checkmark, Cross } from "components/icons";
 
-const query = gql`
+const GET_MEMBER_QUERY = gql`
   query GetMemberTransactions($id: ID!) {
     getMember(id: $id) {
       directDebitStatus {
@@ -22,7 +22,7 @@ const query = gql`
   }
 `;
 
-const chargeMemberMutation = gql`
+const CHARGE_MEMBER_MUTATION = gql`
   mutation ChargeMember($id: ID!, $amount: MonetaryAmount!) {
     chargeMember(id: $id, amount: $amount) {
       transactions {
@@ -101,10 +101,22 @@ class PaymentsTab extends React.Component {
     }
   };
 
+  handleUpdate = (cache, data) => {
+    const { transactions } = data.chargeMember;
+    cache.writeQuery({
+      query: GET_MEMBER_QUERY,
+      data: {
+        getMember: {
+          transactions
+        }
+      }
+    });
+  }
+
   render() {
     return (
       <React.Fragment>
-        <Query query={query} variables={this.variables}>
+        <Query query={GET_MEMBER_QUERY} variables={this.variables}>
           {({ loading, error, data }) => {
             if (error) {
               return <div>Error!</div>;
@@ -125,7 +137,7 @@ class PaymentsTab extends React.Component {
                   )}
                 </p>
                 {data.getMember.directDebitStatus.activated && (
-                  <Mutation mutation={chargeMemberMutation}>
+                  <Mutation mutation={CHARGE_MEMBER_MUTATION} update={this.handleUpdate}>
                     {chargeMember => (
                       <div>
                         <Form>
