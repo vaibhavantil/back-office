@@ -126,7 +126,13 @@ export default class Chat extends React.Component {
           panes={panes}
           renderActiveOnly={true}
           defaultActiveIndex={
-            routeData === "insurance" ? 3 : routeData === "details" ? 0 : 1
+            routeData === "insurance"
+              ? 3
+              : routeData === "payments"
+                ? 5
+                : routeData === "details"
+                  ? 0
+                  : 1
           }
         />
       </ChatPageContainer>

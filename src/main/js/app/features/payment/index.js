@@ -30,7 +30,8 @@ const query = gql`
   }
 `;
 
-const goToMember = memberId => () => history.push(`/members/${memberId}`);
+const goToMember = memberId => () =>
+  history.push(`/members/${memberId}`, { to: "payments" });
 
 const MonthlyPaymentsTable = ({ monthlyPayments }) => (
   <Table celled selectable compact>
@@ -49,7 +50,10 @@ const MonthlyPaymentsTable = ({ monthlyPayments }) => (
             monthlyPayment.amount.amount
           }`}
         >
-          <Table.Cell onClick={goToMember(monthlyPayment.member.memberId)}>
+          <Table.Cell
+            selectable
+            onClick={goToMember(monthlyPayment.member.memberId)}
+          >
             {monthlyPayment.member.memberId}
           </Table.Cell>
           <Table.Cell>
