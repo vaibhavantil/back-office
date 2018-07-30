@@ -101,8 +101,8 @@ class PaymentsTab extends React.Component {
     }
   };
 
-  handleUpdate = (cache, data) => {
-    const { transactions } = data.chargeMember;
+  handleUpdate = (cache, result) => {
+    const { transactions } = result.data.chargeMember;
     cache.writeQuery({
       query: GET_MEMBER_QUERY,
       data: {
