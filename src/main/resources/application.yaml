@@ -33,7 +33,7 @@ logging:
 
 feign:
   hystrix:
-    enabled: true
+    enabled: false
 
 hystrix:
   command:
@@ -41,9 +41,6 @@ hystrix:
       execution:
         timeout:
           enabled: false
-  threadpool:
-    default:
-      maximumSize: 300
 
 intervals:
   tracker: 5000
