@@ -1,5 +1,9 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
+import com.hedvig.backoffice.graphql.types.MonthlySubscription;
+import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -15,30 +19,40 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MemberResolver implements GraphQLResolver<Member> {
-    private final PaymentService paymentService;
-	private final DirectDebitStatusLoader directDebitStatusLoader;
+  private final PaymentService paymentService;
+  private final DirectDebitStatusLoader directDebitStatusLoader;
+  private final ProductPricingService productPricingService;
 
-	public MemberResolver(PaymentService paymentService, DirectDebitStatusLoader directDebitStatusLoader) {
-        this.paymentService = paymentService;
-        this.directDebitStatusLoader = directDebitStatusLoader;
-    }
+  public MemberResolver(
+      PaymentService paymentService,
+      DirectDebitStatusLoader directDebitStatusLoader,
+      ProductPricingService productPricingService) {
+    this.paymentService = paymentService;
+    this.directDebitStatusLoader = directDebitStatusLoader;
+    this.productPricingService = productPricingService;
+  }
 
-    public List<Transaction> getTransactions(Member member) {
-        return paymentService
-            .getTransactionsByMemberId(member.getMemberId())
-            .stream()
-            .map(transactionDTO -> new Transaction(
-                transactionDTO.getId(),
-                transactionDTO.getAmount(),
-                transactionDTO.getTimestamp(),
-                transactionDTO.getType(),
-                transactionDTO.getStatus()
-            ))
-            .collect(Collectors.toList());
-    }
+  public List<Transaction> getTransactions(Member member) {
+    return paymentService
+        .getTransactionsByMemberId(member.getMemberId())
+        .stream()
+        .map(
+            transactionDTO ->
+                new Transaction(
+                    transactionDTO.getId(),
+                    transactionDTO.getAmount(),
+                    transactionDTO.getTimestamp(),
+                    transactionDTO.getType(),
+                    transactionDTO.getStatus()))
+        .collect(Collectors.toList());
+  }
 
-    public CompletableFuture<DirectDebitStatus> getDirectDebitStatus(Member member) {
-        return directDebitStatusLoader
-            .load(member.getMemberId());
-    }
+  public MonthlySubscription getMonthlySubscription(Member member, YearMonth period) {
+    return new MonthlySubscription(
+        productPricingService.getMonthlyPaymentsByMember(period, member.getMemberId()));
+  }
+
+  public CompletableFuture<DirectDebitStatus> getDirectDebitStatus(Member member) {
+    return directDebitStatusLoader.load(member.getMemberId());
+  }
 }

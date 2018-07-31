@@ -23,6 +23,7 @@ type Member {
     lastName: String
     transactions: [Transaction]
     directDebitStatus: DirectDebitStatus
+    monthlySubscription(month: YearMonth!): MonthlySubscription
 }
 
 type Transaction {

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class MonthlySubscriptionResolver implements GraphQLResolver<MonthlySubscription> {
     private final MemberLoader memberLoader;
 
-	public MonthlySubscriptionResolver(MemberLoader memberLoader) {
+  public MonthlySubscriptionResolver(MemberLoader memberLoader) {
         this.memberLoader = memberLoader;
     }
     public CompletableFuture<Member> getMember(MonthlySubscription monthlySubscription) {
