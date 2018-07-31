@@ -126,4 +126,9 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   public List<MonthlySubscriptionDTO> getMonthlyPayments(YearMonth month) {
     return client.getMonthlySubscriptions(month.getYear(), month.getMonthValue());
   }
+
+  @Override
+  public MonthlySubscriptionDTO getMonthlyPaymentsByMember(YearMonth month, String memberId) {
+    return client.getMonthlySubscriptionByMember(month.getYear(), month.getMonthValue(), memberId);
+  }
 }

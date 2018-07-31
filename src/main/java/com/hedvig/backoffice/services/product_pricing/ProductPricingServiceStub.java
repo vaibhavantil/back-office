@@ -40,8 +40,8 @@ public class ProductPricingServiceStub implements ProductPricingService {
     long minSignedOnDay = LocalDate.of(2011, 1, 3).toEpochDay();
     long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
     String[] states = {"QUOTE", "SIGNED", "TERMINATED"};
-        List<SafetyIncreaserType> safetyIncreasers = Arrays.asList(SafetyIncreaserType.SAFETY_DOOR,
-                SafetyIncreaserType.BURGLAR_ALARM);
+    List<SafetyIncreaserType> safetyIncreasers =
+        Arrays.asList(SafetyIncreaserType.SAFETY_DOOR, SafetyIncreaserType.BURGLAR_ALARM);
     insurances =
         IntStream.range(0, MemberServiceStub.testMemberIds.length)
             .mapToObj(
@@ -150,65 +150,100 @@ public class ProductPricingServiceStub implements ProductPricingService {
   @Override
   public void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto) {
     this.insurance(memberId, "").setInsuredAtOtherCompany(dto.isInsuredAtOtherCompany());
+  }
+
+  @Override
+  public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
+    return insurances
+        .stream()
+        .filter(x -> x.getMemberId().equals(memberId))
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public InsuranceStatusDTO createmodifiedProduct(
+      String memberId, InsuranceModificationDTO changeRequest, String token) {
+    Optional<InsuranceStatusDTO> current =
+        insurances
+            .stream()
+            .filter(x -> x.getProductId().equals(changeRequest.idToBeReplaced.toString()))
+            .findFirst();
+
+    if (current.isPresent()) {
+
+      InsuranceStatusDTO c = current.get();
+
+      InsuranceStatusDTO updated =
+          new InsuranceStatusDTO(
+              UUID.randomUUID().toString(),
+              changeRequest.memberId,
+              c.getMemberFirstName(),
+              c.getMemberLastName(),
+              changeRequest.street,
+              changeRequest.city,
+              changeRequest.zipCode,
+              changeRequest.floor,
+              changeRequest.livingSpace,
+              changeRequest.safetyIncreasers,
+              c.getInsuranceStatus(),
+              "QUOTE",
+              changeRequest.personsInHouseHold,
+              c.getCurrentTotalPrice(),
+              c.getNewTotalPrice(),
+              c.getInsuredAtOtherCompany(),
+              changeRequest.getHouseType(),
+              null,
+              null,
+              false,
+              c.getCertificateUrl(),
+              c.isCancellationEmailSent(),
+              c.getSignedOn());
+
+      insurances.add(updated);
+
+      return updated;
+
+    } else
+      log.error("createmodifiedProduct, no product foudn with id {}", changeRequest.idToBeReplaced);
+    return null;
+  }
+
+  @Override
+  public void modifyProduct(String memberId, ModifyInsuranceRequestDTO request, String token) {
+
+    Optional<InsuranceStatusDTO> current =
+        insurances
+            .stream()
+            .filter(x -> x.getProductId().equals(request.insuranceIdToBeReplaced.toString()))
+            .findFirst();
+
+    Optional<InsuranceStatusDTO> updated =
+        insurances
+            .stream()
+            .filter(x -> x.getProductId().equals(request.insuranceIdToReplace.toString()))
+            .findFirst();
+
+    if (current.isPresent() && updated.isPresent()) {
+
+      InsuranceStatusDTO c = current.get();
+      InsuranceStatusDTO u = updated.get();
+      c.setInsuranceActiveTo(request.terminationDate.atStartOfDay());
+
+      u.setInsuranceState("SIGNED");
+      u.setInsuranceActiveFrom(request.activationDate.atStartOfDay());
     }
+  }
 
-    @Override
-    public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
-        return insurances.stream().filter(x -> x.getMemberId().equals(memberId)).collect(Collectors.toList());
-    }
+  @Override
+  public List<MonthlySubscriptionDTO> getMonthlyPayments(YearMonth month) {
+    return Lists.newArrayList(
+        new MonthlySubscriptionDTO("123456", Money.of(100, Monetary.getCurrency("SEK"))),
+        new MonthlySubscriptionDTO("3267661", Money.of(200, Monetary.getCurrency("SEK"))));
+  }
 
-    @Override
-    public InsuranceStatusDTO createmodifiedProduct(String memberId, InsuranceModificationDTO changeRequest,
-            String token) {
-        Optional<InsuranceStatusDTO> current = insurances.stream()
-                .filter(x -> x.getProductId().equals(changeRequest.idToBeReplaced.toString())).findFirst();
-
-        if (current.isPresent()) {
-
-            InsuranceStatusDTO c = current.get();
-
-            InsuranceStatusDTO updated = new InsuranceStatusDTO(UUID.randomUUID().toString(), changeRequest.memberId,
-                    c.getMemberFirstName(), c.getMemberLastName(), changeRequest.street, changeRequest.city,
-                    changeRequest.zipCode, changeRequest.floor, changeRequest.livingSpace,
-                    changeRequest.safetyIncreasers, c.getInsuranceStatus(), "QUOTE", changeRequest.personsInHouseHold,
-                    c.getCurrentTotalPrice(), c.getNewTotalPrice(), c.getInsuredAtOtherCompany(),
-                    changeRequest.getHouseType(), null, null, false, c.getCertificateUrl(), c.isCancellationEmailSent(),
-                    c.getSignedOn());
-
-            insurances.add(updated);
-
-            return updated;
-
-        } else
-            log.error("createmodifiedProduct, no product foudn with id {}", changeRequest.idToBeReplaced);
-        return null;
-    }
-
-    @Override
-    public void modifyProduct(String memberId, ModifyInsuranceRequestDTO request, String token) {
-
-        Optional<InsuranceStatusDTO> current = insurances.stream()
-                .filter(x -> x.getProductId().equals(request.insuranceIdToBeReplaced.toString())).findFirst();
-
-        Optional<InsuranceStatusDTO> updated = insurances.stream()
-                .filter(x -> x.getProductId().equals(request.insuranceIdToReplace.toString())).findFirst();
-
-        if (current.isPresent() && updated.isPresent()) {
-
-            InsuranceStatusDTO c = current.get();
-            InsuranceStatusDTO u = updated.get();
-            c.setInsuranceActiveTo(request.terminationDate.atStartOfDay());
-
-            u.setInsuranceState("SIGNED");
-            u.setInsuranceActiveFrom(request.activationDate.atStartOfDay());
-        }
-    }
-
-    @Override
-    public List<MonthlySubscriptionDTO> getMonthlyPayments(YearMonth month) {
-        return Lists.newArrayList(
-            new MonthlySubscriptionDTO("123456", Money.of(100, Monetary.getCurrency("SEK"))),
-            new MonthlySubscriptionDTO("3267661", Money.of(200, Monetary.getCurrency("SEK")))
-        );
+  @Override
+  public MonthlySubscriptionDTO getMonthlyPaymentsByMember(YearMonth month, String memberId) {
+    return new MonthlySubscriptionDTO(
+        memberId, Money.of(RandomUtils.nextLong(), Monetary.getCurrency("SEK")));
   }
 }

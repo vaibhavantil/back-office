@@ -19,8 +19,7 @@ import java.util.List;
 @FeignClient(
         name = "product-pricing-service",
         url = "${productPricing.baseUrl}",
-        configuration = FeignConfig.class,
-        fallback = ProductPricingClientFallback.class)
+        configuration = FeignConfig.class)
 public interface ProductPricingClient {
     @GetMapping("/_/insurance/contract/{memberId}")
     byte[] insuranceContract(@PathVariable("memberId") String memberId, @RequestHeader("Authorization") String token);
@@ -56,4 +55,7 @@ public interface ProductPricingClient {
 
     @GetMapping("/_/insurance/monthlyBilling?year={year}&month={month}")
     List<MonthlySubscriptionDTO> getMonthlySubscriptions(@PathVariable("year") int year, @PathVariable("month") int month);
+
+    @GetMapping("/_/insurance/{memberId}/monthlyBilling?year={year}&month={month}")
+    MonthlySubscriptionDTO getMonthlySubscriptionByMember(@PathVariable("year") int year, @PathVariable("month") int month, @PathVariable("memberId") String memberId);
 }
