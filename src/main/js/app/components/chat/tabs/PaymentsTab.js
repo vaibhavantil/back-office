@@ -20,7 +20,11 @@ const transactionDateSorter = (a, b) => {
 };
 
 const GET_MEMBER_QUERY = gql`
-  query GetMemberTransactions($id: ID!, $month: YearMonth!) {
+  query GetMemberTransactions(
+    $id: ID!
+    $currentMonth: YearMonth!
+    $previousMonth: YearMonth!
+  ) {
     getMember(id: $id) {
       directDebitStatus {
         activated
@@ -32,7 +36,10 @@ const GET_MEMBER_QUERY = gql`
         type
         status
       }
-      monthlySubscription(month: $month) {
+      currentMonth: monthlySubscription(month: $currentMonth) {
+        amount
+      }
+      previousMonth: monthlySubscription(month: $previousMonth) {
         amount
       }
     }
@@ -87,7 +94,10 @@ class PaymentsTab extends React.Component {
     super(props);
     this.variables = {
       id: props.match.params.id,
-      month: moment().format("YYYY-MM")
+      currentMonth: moment().format("YYYY-MM"),
+      previousMonth: moment()
+        .subtract(1, "month")
+        .format("YYYY-MM")
     };
     this.state = {
       amount: null,
@@ -159,9 +169,16 @@ class PaymentsTab extends React.Component {
                   )}
                 </p>
                 <p>
-                  Subscrtiption cost for {this.variables.month} is :{" "}
-                  {data.getMember.monthlySubscription.amount.amount}{" "}
-                  {data.getMember.monthlySubscription.amount.currency}
+                  Subscrtiption cost for this month({
+                    this.variables.currentMonth
+                  }) is : {data.getMember.currentMonth.amount.amount}{" "}
+                  {data.getMember.currentMonth.amount.currency}
+                </p>
+                <p>
+                  Subscrtiption cost for the previous month ({
+                    this.variables.previousMonth
+                  }) is : {data.getMember.previousMonth.amount.amount}{" "}
+                  {data.getMember.previousMonth.amount.currency}
                 </p>
                 {data.getMember.directDebitStatus.activated && (
                   <Mutation
