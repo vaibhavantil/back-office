@@ -7,6 +7,7 @@ import "react-month-picker-input/dist/react-month-picker-input.css";
 import styled from "styled-components";
 import { history } from "app/store";
 import { Checkmark, Cross } from "components/icons";
+import moment from "moment";
 
 const DatePickerContainer = styled.div`
   display: flex;
@@ -79,7 +80,9 @@ class Payment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: null
+      date: moment().format("YYYY-MM"),
+      defaultYear: Number(moment().format("YYYY")),
+      defaultMonth: Number(moment().format("MM")) - 1
     };
   }
 
@@ -96,7 +99,12 @@ class Payment extends React.Component {
     return (
       <React.Fragment>
         <DatePickerContainer>
-          <MonthPickerInput onChange={this.onDateChange} closeOnSelect={true} />
+          <MonthPickerInput
+            onChange={this.onDateChange}
+            year={this.state.defaultYear}
+            month={this.state.defaultMonth}
+            closeOnSelect={true}
+          />
         </DatePickerContainer>
         {this.state.date && (
           <React.Fragment>

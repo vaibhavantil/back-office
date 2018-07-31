@@ -2,12 +2,11 @@ import React from "react";
 import gql from "graphql-tag";
 import { Query, Mutation } from "react-apollo";
 import { Table, Form, Button, Input } from "semantic-ui-react";
-import moment from 'moment';
+import moment from "moment";
 
 import { Checkmark, Cross } from "components/icons";
 
 const transactionDateSorter = (a, b) => {
-
   const aDate = new Date(a.timestamp);
   const bDate = new Date(b.timestamp);
 
@@ -18,10 +17,10 @@ const transactionDateSorter = (a, b) => {
     return -1;
   }
   return 0;
-}
+};
 
 const GET_MEMBER_QUERY = gql`
-  query GetMemberTransactions($id: ID!) {
+  query GetMemberTransactions($id: ID!, $month: YearMonth!) {
     getMember(id: $id) {
       directDebitStatus {
         activated
@@ -32,6 +31,9 @@ const GET_MEMBER_QUERY = gql`
         timestamp
         type
         status
+      }
+      monthlySubscription(month: $month) {
+        amount
       }
     }
   }
@@ -69,7 +71,9 @@ const MemberTransactionsTable = ({ transactions }) => (
           <Table.Cell>
             {transaction.amount.amount} {transaction.amount.currency}
           </Table.Cell>
-          <Table.Cell>{moment(transaction.timestamp).format('YYYY-MM-DD HH:mm:ss')}</Table.Cell>
+          <Table.Cell>
+            {moment(transaction.timestamp).format("YYYY-MM-DD HH:mm:ss")}
+          </Table.Cell>
           <Table.Cell>{transaction.type}</Table.Cell>
           <Table.Cell>{transaction.status}</Table.Cell>
         </Table.Row>
@@ -81,7 +85,10 @@ const MemberTransactionsTable = ({ transactions }) => (
 class PaymentsTab extends React.Component {
   constructor(props) {
     super(props);
-    this.variables = { id: props.match.params.id };
+    this.variables = {
+      id: props.match.params.id,
+      month: moment().format("YYYY-MM")
+    };
     this.state = {
       amount: null,
       confirming: false,
@@ -111,7 +118,7 @@ class PaymentsTab extends React.Component {
   };
 
   handleConfirmationChange = e => {
-    if (e.target.value.replace(/ /g, "").toLowerCase() === "jagälskartech") {
+    if (e.target.value.replace(/ /g, "").toLowerCase() === "tech") {
       this.setState({ confirming: false, confirmed: true });
     }
   };
@@ -126,7 +133,7 @@ class PaymentsTab extends React.Component {
         }
       }
     });
-  }
+  };
 
   render() {
     return (
@@ -151,8 +158,16 @@ class PaymentsTab extends React.Component {
                     <Cross />
                   )}
                 </p>
+                <p>
+                  Subscrtiption cost for {this.variables.month} is :{" "}
+                  {data.getMember.monthlySubscription.amount.amount}{" "}
+                  {data.getMember.monthlySubscription.amount.currency}
+                </p>
                 {data.getMember.directDebitStatus.activated && (
-                  <Mutation mutation={CHARGE_MEMBER_MUTATION} update={this.handleUpdate}>
+                  <Mutation
+                    mutation={CHARGE_MEMBER_MUTATION}
+                    update={this.handleUpdate}
+                  >
                     {chargeMember => (
                       <div>
                         <Form>
@@ -174,8 +189,8 @@ class PaymentsTab extends React.Component {
                               <Input
                                 onChange={this.handleConfirmationChange}
                                 focus
-                                label="Type jag älskar tech to confirm"
-                                placeholder="jag älskar tech"
+                                label="Type tech to confirm"
+                                placeholder="tech"
                               />
                               <br />
                             </React.Fragment>
@@ -201,7 +216,10 @@ class PaymentsTab extends React.Component {
                 <br />
                 <p>Transactions:</p>
                 <MemberTransactionsTable
-                  transactions={data.getMember.transactions.slice().sort(transactionDateSorter).reverse()}
+                  transactions={data.getMember.transactions
+                    .slice()
+                    .sort(transactionDateSorter)
+                    .reverse()}
                 />
               </div>
             );
