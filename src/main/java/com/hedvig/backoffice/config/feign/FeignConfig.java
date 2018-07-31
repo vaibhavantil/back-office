@@ -1,27 +1,15 @@
 package com.hedvig.backoffice.config.feign;
 
 import feign.Request;
-import feign.codec.Decoder;
-import feign.codec.Encoder;
 import feign.codec.ErrorDecoder;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
-import org.springframework.cloud.netflix.feign.support.ResponseEntityDecoder;
-import org.springframework.cloud.netflix.feign.support.SpringDecoder;
-import org.springframework.cloud.netflix.feign.support.SpringEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.zalando.jackson.datatype.money.MoneyModule;
 
 import java.io.IOException;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 public class FeignConfig {
@@ -69,28 +57,5 @@ public class FeignConfig {
   @Bean
   public feign.Logger.Level feignLogger() {
     return feign.Logger.Level.NONE;
-  }
-
-  @Bean
-  public Decoder decoderMoney() {
-    HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter(objectMapper());
-    ObjectFactory<HttpMessageConverters> objectFactory =
-        () -> new HttpMessageConverters(jacksonConverter);
-    return new ResponseEntityDecoder(new SpringDecoder(objectFactory));
-  }
-
-  @Bean
-  public Encoder encoder() {
-    HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter(objectMapper());
-    ObjectFactory<HttpMessageConverters> objectFactory =
-        () -> new HttpMessageConverters(jacksonConverter);
-    return new SpringEncoder(objectFactory);
-  }
-
-  private ObjectMapper objectMapper() {
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.registerModule(new MoneyModule().withQuotedDecimalNumbers());
-    objectMapper.findAndRegisterModules(); // Call it magic, call it true...
-    return objectMapper;
   }
 }

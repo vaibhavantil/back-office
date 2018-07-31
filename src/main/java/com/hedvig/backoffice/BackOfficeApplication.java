@@ -31,14 +31,6 @@ public class BackOfficeApplication {
 		SpringApplication.run(BackOfficeApplication.class, args);
 	}
 
-	@Bean
-	public Jackson2ObjectMapperBuilder objectMapperBuilder() {
-		Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
-		builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-		return builder;
-	}
-
     @Value("${server.port:8443}")
     private int defaultPost;
 

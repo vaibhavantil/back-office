@@ -19,8 +19,8 @@ public class PaymentServiceStub implements PaymentService {
   @Override
   public List<Transaction> getTransactionsByMemberId(String memberId) {
     return Lists.newArrayList(
-        new Transaction(
-            UUID.randomUUID(), Money.of(100, "SEK"), Instant.now(), "CHARGE", "COMPLETED"));
+        new Transaction(UUID.randomUUID(), Money.of(100, "SEK"), Instant.now().minusSeconds(100), "CHARGE", "COMPLETED"),
+        new Transaction(UUID.randomUUID(), Money.of(200, "SEK"), Instant.now(), "CHARGE", "INITIATED"));
   }
 
   @Override

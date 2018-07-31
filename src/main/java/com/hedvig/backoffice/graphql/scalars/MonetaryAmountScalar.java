@@ -1,12 +1,11 @@
 package com.hedvig.backoffice.graphql.scalars;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.money.MonetaryAmount;
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Component;
 
@@ -22,32 +21,27 @@ import graphql.schema.GraphQLScalarType;
 
 @Component
 public class MonetaryAmountScalar extends GraphQLScalarType {
-    public MonetaryAmountScalar() {
+    public MonetaryAmountScalar(ObjectMapper objectMapper) {
         super("MonetaryAmount", "An object representation of `javax.money.MonetaryAmount`", new Coercing<MonetaryAmount, Map<String, Object>>() {
 
     @Override
     public Map<String, Object> serialize(Object dataFetcherResult) throws CoercingSerializeException {
-            if (dataFetcherResult == null) {
-                return null;
-            }
-
-            if (!((dataFetcherResult) instanceof MonetaryAmount)) {
-                throw new CoercingSerializeException(String.format("dataFetcherResult is of wring tpye: Expected %s, got %s", MonetaryAmount.class.toString(), dataFetcherResult.getClass().toString()));
-            }
-            Map<String, Object> serialized = new HashMap<String, Object>();
-            serialized.put("amount", ((MonetaryAmount)dataFetcherResult).getNumber().doubleValueExact());
-            serialized.put("currency", ((MonetaryAmount)dataFetcherResult).getCurrency().toString());
-            return serialized;
+        try {
+            return objectMapper.convertValue(dataFetcherResult, new TypeReference<Map<String, Object>>() {});
+        } catch (Exception e) {
+            throw new CoercingSerializeException("Could not serialize value", e);
+        }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public MonetaryAmount parseValue(Object input) throws CoercingParseValueException {
-            try {
-                Map<String, Object> in = (HashMap<String, Object>) input; // TODO Validate this better
-                return Money.of(BigDecimal.valueOf( (Integer) in.get("amount")), (String) in.get("currency"));
-            } catch (Exception e) {
-                throw new CoercingParseValueException("Could not parse value", e);
-            }
+        try {
+            Map<String, Object> in = (Map<String, Object>) input;
+            return Money.of(BigDecimal.valueOf( (Integer) in.get("amount")), (String) in.get("currency"));
+        } catch (Exception e) {
+            throw new CoercingParseValueException("Could not parse value", e);
+        }
     }
 
     @Override

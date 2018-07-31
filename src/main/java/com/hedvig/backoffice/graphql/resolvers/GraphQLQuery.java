@@ -11,7 +11,6 @@ import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.MonthlySubscription;
 
-import lombok.val;
 import org.springframework.stereotype.Component;
 
 @Component
