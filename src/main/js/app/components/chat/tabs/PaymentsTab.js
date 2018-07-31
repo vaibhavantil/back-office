@@ -1,7 +1,9 @@
 import React from "react";
 import gql from "graphql-tag";
 import { Query, Mutation } from "react-apollo";
-import { Table, Form, Button, Input, Label } from "semantic-ui-react";
+import { Table, Form, Button, Input } from "semantic-ui-react";
+import moment from 'moment';
+import sortBy from 'lodash/sortBy';
 
 import { Checkmark, Cross } from "components/icons";
 
@@ -37,7 +39,7 @@ const CHARGE_MEMBER_MUTATION = gql`
 `;
 
 const MemberTransactionsTable = ({ transactions }) => (
-  <Table celled selectable compact>
+  <Table celled selectable compact striped>
     <Table.Header>
       <Table.Row>
         <Table.HeaderCell>ID</Table.HeaderCell>
@@ -54,7 +56,7 @@ const MemberTransactionsTable = ({ transactions }) => (
           <Table.Cell>
             {transaction.amount.amount} {transaction.amount.currency}
           </Table.Cell>
-          <Table.Cell>{transaction.timestamp}</Table.Cell>
+          <Table.Cell>{moment(transaction.timestamp).format('YYYY-MM-DD HH:mm:SS')}</Table.Cell>
           <Table.Cell>{transaction.type}</Table.Cell>
           <Table.Cell>{transaction.status}</Table.Cell>
         </Table.Row>
@@ -186,7 +188,7 @@ class PaymentsTab extends React.Component {
                 <br />
                 <p>Transactions:</p>
                 <MemberTransactionsTable
-                  transactions={data.getMember.transactions}
+                  transactions={sortBy(data.getMember.transactions, ['timestamp']).reverse()}
                 />
               </div>
             );
