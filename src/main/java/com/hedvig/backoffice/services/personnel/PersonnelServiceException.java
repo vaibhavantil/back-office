@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class PersonnelServiceException extends Exception {
 
-    public PersonnelServiceException(String msg) {
-        super(msg);
-    }
-
+  public PersonnelServiceException(String msg) {
+    super(msg);
+  }
 }

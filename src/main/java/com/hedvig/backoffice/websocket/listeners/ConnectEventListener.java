@@ -13,25 +13,24 @@ import org.springframework.web.socket.messaging.SessionConnectEvent;
 @Component
 public class ConnectEventListener implements ApplicationListener<SessionConnectEvent> {
 
-    private static Logger logger = LoggerFactory.getLogger(ConnectEventListener.class);
+  private static Logger logger = LoggerFactory.getLogger(ConnectEventListener.class);
 
-    private final UpdatesService updatesService;
+  private final UpdatesService updatesService;
 
-    @Autowired
-    public ConnectEventListener(UpdatesService updatesService) {
-        this.updatesService = updatesService;
+  @Autowired
+  public ConnectEventListener(UpdatesService updatesService) {
+    this.updatesService = updatesService;
+  }
+
+  @Override
+  public void onApplicationEvent(SessionConnectEvent event) {
+    StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
+    if (headers.getUser() != null) {
+      try {
+        updatesService.subscribe(headers.getUser().getName(), headers.getSessionId());
+      } catch (AuthorizationException e) {
+        logger.error("updates initialization error", e);
+      }
     }
-
-    @Override
-    public void onApplicationEvent(SessionConnectEvent event) {
-        StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
-        if (headers.getUser() != null) {
-            try {
-                updatesService.subscribe(headers.getUser().getName(), headers.getSessionId());
-            } catch (AuthorizationException e) {
-                logger.error("updates initialization error", e);
-            }
-        }
-    }
+  }
 }
-

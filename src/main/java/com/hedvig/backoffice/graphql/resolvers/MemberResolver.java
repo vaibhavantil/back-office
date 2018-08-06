@@ -1,20 +1,17 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
+import com.coxautodev.graphql.tools.GraphQLResolver;
+import com.hedvig.backoffice.graphql.dataloaders.DirectDebitStatusLoader;
+import com.hedvig.backoffice.graphql.types.DirectDebitStatus;
+import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.MonthlySubscription;
+import com.hedvig.backoffice.graphql.types.Transaction;
+import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
-import com.coxautodev.graphql.tools.GraphQLResolver;
-import com.hedvig.backoffice.services.payments.PaymentService;
-import com.hedvig.backoffice.graphql.dataloaders.DirectDebitStatusLoader;
-import com.hedvig.backoffice.graphql.types.DirectDebitStatus;
-import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.graphql.types.Transaction;
-
 import org.springframework.stereotype.Component;
 
 @Component

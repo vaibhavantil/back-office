@@ -4,7 +4,7 @@ import lombok.Value;
 
 @Value
 class ExpoPushDTO {
-    private String to;
-    private String title;
-    private String body;
+  private String to;
+  private String title;
+  private String body;
 }

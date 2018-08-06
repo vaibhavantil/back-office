@@ -4,5 +4,5 @@ import lombok.Value;
 
 @Value
 public class PushTokenDTO {
-    public String token;
+  public String token;
 }

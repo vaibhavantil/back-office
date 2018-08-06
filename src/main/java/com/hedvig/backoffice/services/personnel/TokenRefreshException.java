@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_GATEWAY)
 public class TokenRefreshException extends RuntimeException {
 
-    public TokenRefreshException(Throwable t) {
-        super(t);
-    }
+  public TokenRefreshException(Throwable t) {
+    super(t);
+  }
 
-    public TokenRefreshException() {
-        super();
-    }
+  public TokenRefreshException() {
+    super();
+  }
 }

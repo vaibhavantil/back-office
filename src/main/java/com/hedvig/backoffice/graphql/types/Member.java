@@ -4,7 +4,7 @@ import lombok.Value;
 
 @Value
 public class Member {
-    String memberId;
-    String firstName;
-    String lastName;
+  String memberId;
+  String firstName;
+  String lastName;
 }

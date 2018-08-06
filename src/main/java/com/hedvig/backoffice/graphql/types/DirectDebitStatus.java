@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class DirectDebitStatus {
-    String memberId;
-    Boolean activated;
+  String memberId;
+  Boolean activated;
 }

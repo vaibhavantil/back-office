@@ -1,16 +1,14 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
+import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
+import com.hedvig.backoffice.graphql.types.Member;
+import com.hedvig.backoffice.graphql.types.MonthlySubscription;
+import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
-import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.graphql.types.MonthlySubscription;
-
 import org.springframework.stereotype.Component;
 
 @Component

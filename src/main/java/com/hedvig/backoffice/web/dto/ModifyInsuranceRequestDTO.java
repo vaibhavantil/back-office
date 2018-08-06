@@ -14,5 +14,4 @@ public class ModifyInsuranceRequestDTO {
   public UUID insuranceIdToReplace;
   public LocalDate activationDate;
   public String memberId;
-
 }

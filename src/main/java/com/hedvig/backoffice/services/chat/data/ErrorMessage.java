@@ -5,7 +5,6 @@ import lombok.Value;
 @Value
 public class ErrorMessage implements MessagePayload {
 
-    private int code;
-    private String message;
-
+  private int code;
+  private String message;
 }

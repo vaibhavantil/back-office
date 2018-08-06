@@ -15,27 +15,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 @MessageMapping("/messages")
 public class ChatController {
 
-    private final ChatService chatService;
-    private final PersonnelService personnelService;
+  private final ChatService chatService;
+  private final PersonnelService personnelService;
 
-    @Autowired
-    public ChatController(ChatService chatService, PersonnelService personnelService) {
-        this.chatService = chatService;
-        this.personnelService = personnelService;
-    }
+  @Autowired
+  public ChatController(ChatService chatService, PersonnelService personnelService) {
+    this.chatService = chatService;
+    this.personnelService = personnelService;
+  }
 
-    @SubscribeMapping("/send/{memberId}")
-    public void send(@DestinationVariable String memberId, @RequestBody BackOfficeResponseDTO message, @AuthenticationPrincipal String principalId) {
-        chatService.append(memberId, message.getMsg(), principalId, personnelService.getIdToken(principalId));
-    }
+  @SubscribeMapping("/send/{memberId}")
+  public void send(
+      @DestinationVariable String memberId,
+      @RequestBody BackOfficeResponseDTO message,
+      @AuthenticationPrincipal String principalId) {
+    chatService.append(
+        memberId, message.getMsg(), principalId, personnelService.getIdToken(principalId));
+  }
 
-    @SubscribeMapping("/history/{memberId}")
-    public void messages(@DestinationVariable String memberId, @AuthenticationPrincipal String principalId) {
-        chatService.messages(memberId, principalId, personnelService.getIdToken(principalId));
-    }
+  @SubscribeMapping("/history/{memberId}")
+  public void messages(
+      @DestinationVariable String memberId, @AuthenticationPrincipal String principalId) {
+    chatService.messages(memberId, principalId, personnelService.getIdToken(principalId));
+  }
 
-    @SubscribeMapping("/history/{memberId}/{count}")
-    public void messages(@DestinationVariable String memberId, @DestinationVariable int count, @AuthenticationPrincipal String principalId) {
-        chatService.messages(memberId, count, principalId, personnelService.getIdToken(principalId));
-    }
+  @SubscribeMapping("/history/{memberId}/{count}")
+  public void messages(
+      @DestinationVariable String memberId,
+      @DestinationVariable int count,
+      @AuthenticationPrincipal String principalId) {
+    chatService.messages(memberId, count, principalId, personnelService.getIdToken(principalId));
+  }
 }

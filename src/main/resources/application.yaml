@@ -21,7 +21,6 @@ logging:
     config:
       allow-override: false
 
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -107,7 +106,7 @@ graphiql:
   pageTitle: BackOffice GraphiQL
 
 
-spring: 
+spring:
   jackson:
     serialization:
       write_dates_as_timestamps: false

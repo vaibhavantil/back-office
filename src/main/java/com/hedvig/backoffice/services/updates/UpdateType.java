@@ -1,5 +1,8 @@
 package com.hedvig.backoffice.services.updates;
 
 public enum UpdateType {
-    ASSETS, MEMBERS, CLAIMS, QUESTIONS
+  ASSETS,
+  MEMBERS,
+  CLAIMS,
+  QUESTIONS
 }

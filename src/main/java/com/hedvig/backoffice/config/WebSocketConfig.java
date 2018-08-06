@@ -13,38 +13,36 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
-    private int maxFileSize;
+  private int maxFileSize;
 
-    public WebSocketConfig(@Value("${websocket.max-sile-size}") int maxFileSize) {
-        this.maxFileSize = maxFileSize;
-    }
+  public WebSocketConfig(@Value("${websocket.max-sile-size}") int maxFileSize) {
+    this.maxFileSize = maxFileSize;
+  }
 
-    @Override
-    protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
-        messages
-                .simpDestMatchers("/topic/**", "/user/**").authenticated()
-                .anyMessage().authenticated();
-    }
+  @Override
+  protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
+    messages.simpDestMatchers("/topic/**", "/user/**").authenticated().anyMessage().authenticated();
+  }
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic", "/user");
-        config.setApplicationDestinationPrefixes("/app");
-    }
+  @Override
+  public void configureMessageBroker(MessageBrokerRegistry config) {
+    config.enableSimpleBroker("/topic", "/user");
+    config.setApplicationDestinationPrefixes("/app");
+  }
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat").setAllowedOrigins("*").withSockJS();
-    }
+  @Override
+  public void registerStompEndpoints(StompEndpointRegistry registry) {
+    registry.addEndpoint("/chat").setAllowedOrigins("*").withSockJS();
+  }
 
-    @Override
-    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
-        registration.setSendBufferSizeLimit(maxFileSize);
-        registration.setMessageSizeLimit(maxFileSize);
-    }
+  @Override
+  public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+    registration.setSendBufferSizeLimit(maxFileSize);
+    registration.setMessageSizeLimit(maxFileSize);
+  }
 
-    @Override
-    protected boolean sameOriginDisabled() {
-        return true;
-    }
+  @Override
+  protected boolean sameOriginDisabled() {
+    return true;
+  }
 }

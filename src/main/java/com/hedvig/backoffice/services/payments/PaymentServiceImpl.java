@@ -1,13 +1,11 @@
 package com.hedvig.backoffice.services.payments;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.money.MonetaryAmount;
-
 import com.hedvig.backoffice.services.payments.dto.ChargeRequestDTO;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.payments.dto.Transaction;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.money.MonetaryAmount;
 
 public class PaymentServiceImpl implements PaymentService {
 

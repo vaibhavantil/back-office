@@ -1,13 +1,10 @@
 package com.hedvig.backoffice.services.product_pricing.dto;
 
-import lombok.Value;
-
 import javax.validation.constraints.NotNull;
+import lombok.Value;
 
 @Value
 public class InsuredAtOtherCompanyDTO {
 
-    @NotNull
-    private boolean insuredAtOtherCompany;
-
+  @NotNull private boolean insuredAtOtherCompany;
 }
