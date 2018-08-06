@@ -9,11 +9,10 @@ import lombok.Data;
 @AllArgsConstructor
 public class SystemSettingDTO {
 
-    private SystemSettingType type;
-    private String value;
+  private SystemSettingType type;
+  private String value;
 
-    public static SystemSettingDTO fromDomain(SystemSetting setting) {
-        return new SystemSettingDTO(setting.getType(), setting.getValue());
-    }
-
+  public static SystemSettingDTO fromDomain(SystemSetting setting) {
+    return new SystemSettingDTO(setting.getType(), setting.getValue());
+  }
 }

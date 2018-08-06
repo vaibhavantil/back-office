@@ -4,8 +4,8 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(name="expo", url="https://exp.host/--/api/v2")
+@FeignClient(name = "expo", url = "https://exp.host/--/api/v2")
 public interface ExpoClient {
-    @RequestMapping(method = RequestMethod.POST, value="/push/send")
-    String sendPush(ExpoPushDTO push);
+  @RequestMapping(method = RequestMethod.POST, value = "/push/send")
+  String sendPush(ExpoPushDTO push);
 }

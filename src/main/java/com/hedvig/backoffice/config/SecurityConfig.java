@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.hedvig.backoffice.security.OAuth2Filter;
 import com.hedvig.backoffice.security.OAuth2SuccessHandler;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import javax.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
@@ -23,92 +24,105 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import javax.servlet.Filter;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @EnableOAuth2Client
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private boolean oauthEnabled;
-    private String[] hds;
+  private boolean oauthEnabled;
+  private String[] hds;
 
-    private OAuth2ClientContext clientContext;
-    private PersonnelService personnelService;
-    private AuthorizationCodeResourceDetails clientDetails;
-    private ResourceServerProperties clientResource;
+  private OAuth2ClientContext clientContext;
+  private PersonnelService personnelService;
+  private AuthorizationCodeResourceDetails clientDetails;
+  private ResourceServerProperties clientResource;
 
-    @Autowired
-    public SecurityConfig(OAuth2ClientContext clientContext,
-                          PersonnelService personnelService,
-                          @Value("${oauth.enabled:true}") boolean oauthEnabled,
-                          @Value("${oauth.hds}") String[] hds,
-                          AuthorizationCodeResourceDetails clientDetails,
-                          ResourceServerProperties clientResource) {
+  @Autowired
+  public SecurityConfig(
+      OAuth2ClientContext clientContext,
+      PersonnelService personnelService,
+      @Value("${oauth.enabled:true}") boolean oauthEnabled,
+      @Value("${oauth.hds}") String[] hds,
+      AuthorizationCodeResourceDetails clientDetails,
+      ResourceServerProperties clientResource) {
 
-        this.clientContext = clientContext;
-        this.personnelService = personnelService;
+    this.clientContext = clientContext;
+    this.personnelService = personnelService;
 
-        this.oauthEnabled = oauthEnabled;
-        this.hds = hds;
+    this.oauthEnabled = oauthEnabled;
+    this.hds = hds;
 
-        this.clientDetails = clientDetails;
-        this.clientResource = clientResource;
+    this.clientDetails = clientDetails;
+    this.clientResource = clientResource;
+  }
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http =
+        http.cors()
+            .disable()
+            .csrf()
+            .disable()
+            .headers()
+            .frameOptions()
+            .disable()
+            .and()
+            .sessionManagement()
+            .maximumSessions(1)
+            .and()
+            .and()
+            .logout()
+            .logoutSuccessUrl("/login/oauth")
+            .logoutUrl("/api/logout")
+            .and()
+            .addFilterBefore(
+                ssoFilter(clientDetails, clientResource), BasicAuthenticationFilter.class);
+
+    http = http.authorizeRequests().antMatchers("/").permitAll().and();
+
+    if (oauthEnabled) {
+      http.authorizeRequests()
+          .antMatchers("/api/login/google")
+          .permitAll()
+          .antMatchers("/api/**")
+          .authenticated()
+          .antMatchers("/chat/**")
+          .authenticated()
+          .antMatchers("/graphiql")
+          .authenticated();
     }
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http = http
-                .cors().disable()
-                .csrf().disable()
-                .headers().frameOptions().disable()
-                .and().sessionManagement().maximumSessions(1).and()
-                .and().logout().logoutSuccessUrl("/login/oauth").logoutUrl("/api/logout")
-                .and()
-                .addFilterBefore(ssoFilter(clientDetails, clientResource), BasicAuthenticationFilter.class);
+  private Filter ssoFilter(
+      AuthorizationCodeResourceDetails clientDetails, ResourceServerProperties clientResource) {
+    OAuth2Filter filter = new OAuth2Filter("/api/login/google", Sets.newHashSet(hds));
 
-        http = http
-                .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .and();
+    OAuth2RestTemplate template = new OAuth2RestTemplate(clientDetails, clientContext);
+    filter.setRestTemplate(template);
 
-        if (oauthEnabled) {
-            http.authorizeRequests()
-                    .antMatchers("/api/login/google").permitAll()
-                    .antMatchers("/api/**").authenticated()
-                    .antMatchers("/chat/**").authenticated()
-                    .antMatchers("/graphiql").authenticated();
-        }
+    UserInfoTokenServices tokenServices =
+        new UserInfoTokenServices(clientResource.getUserInfoUri(), clientDetails.getClientId());
+    tokenServices.setRestTemplate(template);
+    filter.setOauthTokenServices(tokenServices);
 
-    }
+    filter.setAuthenticationSuccessHandler(successHandler());
+    filter.setAuthenticationFailureHandler(
+        new SimpleUrlAuthenticationFailureHandler("/api/logout"));
 
-    private Filter ssoFilter(AuthorizationCodeResourceDetails clientDetails, ResourceServerProperties clientResource) {
-        OAuth2Filter filter = new OAuth2Filter("/api/login/google", Sets.newHashSet(hds));
+    return filter;
+  }
 
-        OAuth2RestTemplate template = new OAuth2RestTemplate(clientDetails, clientContext);
-        filter.setRestTemplate(template);
+  @Bean
+  public OAuth2SuccessHandler successHandler() {
+    return new OAuth2SuccessHandler(personnelService, "/login/process");
+  }
 
-        UserInfoTokenServices tokenServices = new UserInfoTokenServices(clientResource.getUserInfoUri(), clientDetails.getClientId());
-        tokenServices.setRestTemplate(template);
-        filter.setOauthTokenServices(tokenServices);
-
-        filter.setAuthenticationSuccessHandler(successHandler());
-        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler( "/api/logout"));
-
-        return filter;
-    }
-
-    @Bean
-    public OAuth2SuccessHandler successHandler() {
-        return new OAuth2SuccessHandler(personnelService, "/login/process");
-    }
-
-    @Bean
-    public FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(filter);
-        registration.setOrder(-100);
-        return registration;
-    }
+  @Bean
+  public FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
+    FilterRegistrationBean registration = new FilterRegistrationBean();
+    registration.setFilter(filter);
+    registration.setOrder(-100);
+    return registration;
+  }
 }

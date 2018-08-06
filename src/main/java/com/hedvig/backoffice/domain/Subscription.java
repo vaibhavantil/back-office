@@ -1,13 +1,17 @@
 package com.hedvig.backoffice.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -15,18 +19,14 @@ import java.util.Set;
 @NoArgsConstructor
 public class Subscription {
 
-    @Id
-    @GeneratedValue
-    private long id;
+  @Id @GeneratedValue private long id;
 
-    @NotNull
-    private String memberId;
+  @NotNull private String memberId;
 
-    public Subscription(String memberId) {
-        this.memberId = memberId;
-    }
+  public Subscription(String memberId) {
+    this.memberId = memberId;
+  }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "subscription", cascade = CascadeType.REMOVE)
-    private Set<ChatContext> chats = new HashSet<>();
-
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "subscription", cascade = CascadeType.REMOVE)
+  private Set<ChatContext> chats = new HashSet<>();
 }

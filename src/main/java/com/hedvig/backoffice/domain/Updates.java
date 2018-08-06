@@ -1,12 +1,15 @@
 package com.hedvig.backoffice.domain;
 
 import com.hedvig.backoffice.services.updates.UpdateType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -14,28 +17,20 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class Updates {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+  @Id @GeneratedValue private Long id;
 
-    @NotNull
-    private UpdateType type;
+  @NotNull private UpdateType type;
 
-    @ManyToOne
-    private UpdateContext context;
+  @ManyToOne private UpdateContext context;
 
-    @NotNull
-    @OneToOne
-    private Personnel personnel;
+  @NotNull @OneToOne private Personnel personnel;
 
-    @NotNull
-    private Long count;
+  @NotNull private Long count;
 
-    public Updates(UpdateType type, UpdateContext context, Long count) {
-        this.type = type;
-        this.context = context;
-        this.count = count;
-        this.personnel = context.getPersonnel();
-    }
-
+  public Updates(UpdateType type, UpdateContext context, Long count) {
+    this.type = type;
+    this.context = context;
+    this.count = count;
+    this.personnel = context.getPersonnel();
+  }
 }

@@ -6,12 +6,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BotMessageException extends Exception {
 
-    public BotMessageException(String msg) {
-        super(msg);
-    }
+  public BotMessageException(String msg) {
+    super(msg);
+  }
 
-    public BotMessageException(Throwable t) {
-        super(t);
-    }
-
+  public BotMessageException(Throwable t) {
+    super(t);
+  }
 }

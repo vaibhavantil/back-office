@@ -11,15 +11,14 @@ import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.SafetyIncreaserType;
-import lombok.Builder.ObtainVia;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.javamoney.moneta.Money;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.math.BigDecimal;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +26,12 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 import javax.money.Monetary;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.javamoney.moneta.Money;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 public class ProductPricingServiceStub implements ProductPricingService {

@@ -2,11 +2,9 @@ package com.hedvig.backoffice.services.members;
 
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
-import lombok.val;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class MemberServiceImpl implements MemberService {
 

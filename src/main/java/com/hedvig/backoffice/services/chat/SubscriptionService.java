@@ -4,6 +4,5 @@ import com.hedvig.backoffice.domain.Subscription;
 
 public interface SubscriptionService {
 
-    Subscription getOrCreateSubscription(String memberId);
-
+  Subscription getOrCreateSubscription(String memberId);
 }

@@ -9,11 +9,10 @@ import lombok.Value;
 @AllArgsConstructor
 public class UpdatesDTO {
 
-    private UpdateType type;
-    private long count;
+  private UpdateType type;
+  private long count;
 
-    public static UpdatesDTO fromDomain(Updates updates) {
-        return new UpdatesDTO(updates.getType(), updates.getCount());
-    }
-
+  public static UpdatesDTO fromDomain(Updates updates) {
+    return new UpdatesDTO(updates.getType(), updates.getCount());
+  }
 }

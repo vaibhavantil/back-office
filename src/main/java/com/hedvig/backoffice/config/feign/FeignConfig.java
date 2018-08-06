@@ -2,14 +2,13 @@ package com.hedvig.backoffice.config.feign;
 
 import feign.Request;
 import feign.codec.ErrorDecoder;
+import java.io.IOException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-
-import java.io.IOException;
 
 @Configuration
 public class FeignConfig {

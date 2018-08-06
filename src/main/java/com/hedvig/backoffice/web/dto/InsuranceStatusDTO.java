@@ -1,12 +1,11 @@
 package com.hedvig.backoffice.web.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 @Data
 @AllArgsConstructor

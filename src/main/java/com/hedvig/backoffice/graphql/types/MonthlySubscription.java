@@ -2,7 +2,6 @@ package com.hedvig.backoffice.graphql.types;
 
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import javax.money.MonetaryAmount;
-
 import lombok.Value;
 
 @Value

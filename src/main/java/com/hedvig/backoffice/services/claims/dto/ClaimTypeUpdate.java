@@ -5,6 +5,5 @@ import lombok.Data;
 @Data
 public class ClaimTypeUpdate extends ClaimBackOffice {
 
-    private String type;
-
+  private String type;
 }

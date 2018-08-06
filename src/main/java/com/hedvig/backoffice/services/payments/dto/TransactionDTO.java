@@ -2,7 +2,6 @@ package com.hedvig.backoffice.services.payments.dto;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-
 import java.util.UUID;
 import lombok.Value;
 
