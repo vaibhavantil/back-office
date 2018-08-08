@@ -27,6 +27,13 @@ import {
 import { showNotification } from "../actions/notificationsActions";
 import { ACTIVATION_DATE, CANCELLATION_DATE } from "app/lib/messageTypes";
 
+const STUDENT_BRF = "STUDENT_BRF";
+const STUDENT_RENT = "STUDENT_RENT";
+const BRF = "BRF";
+const RENT = "RENT";
+const SUBLET_BRF = "SUBLET_BRF";
+const SUBLET_RENT = "SUBLET_RENT";
+
 function* requestFlow({ id }) {
   try {
     const { data } = yield call(api, config.insurance.get, null, id);
@@ -60,6 +67,53 @@ function* createModifiedInsuranceFlow({ memberId, modifiedDetails }) {
     if (!modifiedDetails.livingSpace) {
       let error = { message: "Livingspace is empty" };
       throw error;
+    }
+
+    if (
+      modifiedDetails.insuranceType != BRF &&
+      modifiedDetails.insuranceType != RENT &&
+      modifiedDetails.insuranceType != STUDENT_RENT &&
+      modifiedDetails.insuranceType != STUDENT_RENT &&
+      modifiedDetails.insuranceType != SUBLET_BRF &&
+      modifiedDetails.insuranceType != SUBLET_RENT
+    ) {
+      let error = {
+        message:
+          "Insurance type should be BRF, RENT, STUDENT_BRF, STUDENT_RENT, SUBLET_BRF or SUBLET_RENT"
+      };
+      throw error;
+    }
+
+    if (
+      modifiedDetails.insuranceType === STUDENT_BRF ||
+      modifiedDetails.insuranceType === STUDENT_RENT
+    ) {
+      let shouldThrow = false;
+      let error = {
+        message: "Cannot apply student policy"
+      };
+      if (+modifiedDetails.livingSpace > 50) {
+        error = {
+          message:
+            error.message + " ,livingspace should be equal or less than 50 m2 "
+        };
+        shouldThrow = true;
+      }
+      if (+modifiedDetails.personsInHouseHold > 2) {
+        error = {
+          message: error.message + " ,the household size less than 3 people "
+        };
+        shouldThrow = true;
+      }
+      if (!modifiedDetails.isStudent) {
+        error = {
+          message: error.message + " ,the IsStudent box should be selected. "
+        };
+        shouldThrow = true;
+      }
+      if (shouldThrow) {
+        throw error;
+      }
     }
 
     const response = yield call(
