@@ -72,7 +72,7 @@ function* createModifiedInsuranceFlow({ memberId, modifiedDetails }) {
     if (
       modifiedDetails.insuranceType != BRF &&
       modifiedDetails.insuranceType != RENT &&
-      modifiedDetails.insuranceType != STUDENT_RENT &&
+      modifiedDetails.insuranceType != STUDENT_BRF &&
       modifiedDetails.insuranceType != STUDENT_RENT &&
       modifiedDetails.insuranceType != SUBLET_BRF &&
       modifiedDetails.insuranceType != SUBLET_RENT
