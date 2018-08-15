@@ -163,7 +163,6 @@ function* modifyInsuranceFlow({ memberId, request }) {
     );
 
     yield put(modifyInsuranceSuccess(response.data));
-    saveDateFlow;
   } catch (error) {
     yield [
       put(
