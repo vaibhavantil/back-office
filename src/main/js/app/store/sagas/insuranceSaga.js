@@ -184,7 +184,7 @@ function* saveDateFlow({ memberId, insuranceId, date, changeType }) {
         yield call(
           api,
           config.insurance.setDate,
-          { activationDate: date },
+          { insuranceId, activationDate: date },
           activationPath
         );
         yield put(saveActivationDateSuccess(date));
