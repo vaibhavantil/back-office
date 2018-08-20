@@ -20,7 +20,7 @@ public class ExpoNotificationServiceImpl implements ExpoNotificationService {
   @Override
   public void sendNotification(String memberId, String token) {
     try {
-      val pushToken = botService.pushTokenId(memberId, token);
+      val pushToken = botService.getExpoPushToken(memberId, token);
       if (pushToken == null || pushToken.getToken() == null) {
         logger.error("Member does not have push token, id = " + memberId);
         return;

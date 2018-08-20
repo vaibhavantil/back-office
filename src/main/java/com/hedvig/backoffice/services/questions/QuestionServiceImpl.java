@@ -10,6 +10,7 @@ import com.hedvig.backoffice.services.chat.SubscriptionService;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.notification.NotificationService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.updates.UpdateType;
@@ -18,13 +19,12 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import lombok.val;
 
 @Service
-@Slf4j
 public class QuestionServiceImpl implements QuestionService {
 
   private final QuestionRepository questionRepository;
@@ -34,6 +34,7 @@ public class QuestionServiceImpl implements QuestionService {
   private final BotService botService;
   private final ExpoNotificationService expoNotificationService;
   private final PersonnelService personnelService;
+  private final NotificationService notificationService;
 
   @Autowired
   public QuestionServiceImpl(
@@ -43,7 +44,7 @@ public class QuestionServiceImpl implements QuestionService {
       UpdatesService updatesService,
       BotService botService,
       ExpoNotificationService expoNotificationService,
-      PersonnelService personnelService) {
+      PersonnelService personnelService, NotificationService notificationService) {
 
     this.questionRepository = questionRepository;
     this.questionGroupRepository = questionGroupRepository;
@@ -52,6 +53,7 @@ public class QuestionServiceImpl implements QuestionService {
     this.botService = botService;
     this.expoNotificationService = expoNotificationService;
     this.personnelService = personnelService;
+    this.notificationService = notificationService;
   }
 
   @Override
@@ -94,7 +96,7 @@ public class QuestionServiceImpl implements QuestionService {
     group.setPersonnel(personnel);
 
     botService.answerQuestion(memberId, message, personnelService.getIdToken(personnel));
-    expoNotificationService.sendNotification(memberId, personnelService.getIdToken(personnel));
+    sendNotification(memberId, personnelService.getIdToken(personnel));
     questionGroupRepository.save(group);
     updatesService.changeOn(-1, UpdateType.QUESTIONS);
 
@@ -143,5 +145,15 @@ public class QuestionServiceImpl implements QuestionService {
 
     long count = Optional.ofNullable(questionGroupRepository.notAnsweredCount()).orElse(0L);
     updatesService.set(count, UpdateType.QUESTIONS);
+  }
+
+  private void sendNotification(String memberId, String personnelToken) {
+    val firebaseToken = botService.getFirebasePushToken(memberId, personnelToken);
+    if (firebaseToken.isPresent()) {
+      notificationService.sendPushNotification(memberId, personnelToken);
+      return;
+    }
+
+    expoNotificationService.sendNotification(memberId, personnelToken);
   }
 }

@@ -3,7 +3,8 @@ package com.hedvig.backoffice.services.messages;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
-import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
+import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
+import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,9 +14,9 @@ import org.springframework.stereotype.Component;
 public class BotServiceClientFallback implements BotServiceClient {
 
   @Override
-  public PushTokenDTO getPushTokenByMemberId(String memberId, String token) {
+  public ExpoPushTokenDTO getPushTokenByMemberId(String memberId, String token) {
     log.error("request to bot-service failed");
-    return new PushTokenDTO(null);
+    return new ExpoPushTokenDTO(null);
   }
 
   @Override
@@ -44,5 +45,11 @@ public class BotServiceClientFallback implements BotServiceClient {
   @Override
   public void answer(BackOfficeResponseDTO answer, String token) {
     log.error("request to bot-service failed");
+  }
+
+  @Override
+  public FirebasePushTokenDTO getFirebasePushToken(String memberId, String token) {
+    log.error("request to bot-service failed");
+    return null;
   }
 }

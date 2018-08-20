@@ -3,7 +3,8 @@ package com.hedvig.backoffice.services.messages;
 import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
-import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
+import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
+import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,19 +13,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @Slf4j
 public class BotServiceStub implements BotService {
-
-  private static Logger logger = LoggerFactory.getLogger(BotServiceStub.class);
 
   private static final String STUB_MESSAGE_TEMPLATE =
       "{"
@@ -125,8 +123,8 @@ public class BotServiceStub implements BotService {
 
     this.subscriptionRepository = subscriptionRepository;
 
-    logger.info("BOT SERVICE:");
-    logger.info("class: " + BotServiceStub.class.getName());
+    log.info("BOT SERVICE:");
+    log.info("class: " + BotServiceStub.class.getName());
   }
 
   @Override
@@ -152,7 +150,7 @@ public class BotServiceStub implements BotService {
                     typesTemplates.get(type),
                     time.toString())));
       } catch (BotMessageException e) {
-        logger.error("error creating message", e);
+        log.error("error creating message", e);
       }
     }
 
@@ -209,7 +207,7 @@ public class BotServiceStub implements BotService {
                   typesTemplates.get("text"),
                   new Date().toInstant())));
     } catch (BotMessageException e) {
-      logger.error("message not created", e);
+      log.error("message not created", e);
     }
   }
 
@@ -226,7 +224,12 @@ public class BotServiceStub implements BotService {
   }
 
   @Override
-  public PushTokenDTO pushTokenId(String memberId, String token) {
-    return new PushTokenDTO(null);
+  public ExpoPushTokenDTO getExpoPushToken(String memberId, String token) {
+    return new ExpoPushTokenDTO(null);
+  }
+
+  @Override
+  public Optional<FirebasePushTokenDTO> getFirebasePushToken(String memberId, String token) {
+    return Optional.of(new FirebasePushTokenDTO(null));
   }
 }
