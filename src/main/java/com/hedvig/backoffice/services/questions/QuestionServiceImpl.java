@@ -10,7 +10,7 @@ import com.hedvig.backoffice.services.chat.SubscriptionService;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
-import com.hedvig.backoffice.services.notification.NotificationService;
+import com.hedvig.backoffice.services.notificationService.NotificationService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.updates.UpdateType;
@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import lombok.val;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -44,7 +43,8 @@ public class QuestionServiceImpl implements QuestionService {
       UpdatesService updatesService,
       BotService botService,
       ExpoNotificationService expoNotificationService,
-      PersonnelService personnelService, NotificationService notificationService) {
+      PersonnelService personnelService,
+      NotificationService notificationService) {
 
     this.questionRepository = questionRepository;
     this.questionGroupRepository = questionGroupRepository;
@@ -148,9 +148,8 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   private void sendNotification(String memberId, String personnelToken) {
-    val firebaseToken = botService.getFirebasePushToken(memberId, personnelToken);
-    if (firebaseToken.isPresent()) {
-      notificationService.sendPushNotification(memberId, personnelToken);
+    if (notificationService.getFirebaseToken(memberId).isPresent()) {
+      notificationService.sendPushNotification(memberId);
       return;
     }
 
