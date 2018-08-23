@@ -72,7 +72,8 @@
             "service": "${springAppName:-}",
             "thread": "%thread",
             "logger": "%logger",
-            "message": "%message"
+            "message": "%message",
+            "user": "%X{userName}"
             }
           </pattern>
         </pattern>
