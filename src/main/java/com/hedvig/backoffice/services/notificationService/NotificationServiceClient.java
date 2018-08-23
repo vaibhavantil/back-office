@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@FeignClient(name = "notification-service", url = "${notificationService.baseUrl}")
+@FeignClient(name = "notification-service", url = "${notificationService.baseUrl}:notification-service")
 public interface NotificationServiceClient {
   @PostMapping("/_/notifications/{memberId}/push/send")
   ResponseEntity<?> sendPushNotification(@PathVariable(name = "memberId") String memberId);
