@@ -1,14 +1,12 @@
 package com.hedvig.backoffice.websocket.listeners;
 
 import com.hedvig.backoffice.services.chat.ChatService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
-@Slf4j
 @Component
 public class SubscribeEventListener implements ApplicationListener<SessionSubscribeEvent> {
 

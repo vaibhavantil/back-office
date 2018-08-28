@@ -11,6 +11,7 @@ import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.messages.BotService;
+import com.hedvig.backoffice.services.notificationService.NotificationService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import java.util.Date;
@@ -37,6 +38,8 @@ public class ChatServiceImpl implements ChatService {
 
   private final SubscriptionService subscriptionService;
 
+  private final NotificationService notificationService;
+
   public ChatServiceImpl(
       SimpMessagingTemplate template,
       BotService botService,
@@ -44,7 +47,8 @@ public class ChatServiceImpl implements ChatService {
       ChatContextRepository chatContextRepository,
       PersonnelService personnelService,
       ExpoNotificationService expoNotificationService,
-      SubscriptionService subscriptionService) {
+      SubscriptionService subscriptionService,
+      NotificationService notificationService) {
 
     this.template = template;
     this.botService = botService;
@@ -53,6 +57,7 @@ public class ChatServiceImpl implements ChatService {
     this.personnelService = personnelService;
     this.expoNotificationService = expoNotificationService;
     this.subscriptionService = subscriptionService;
+    this.notificationService = notificationService;
   }
 
   @Override
@@ -64,7 +69,7 @@ public class ChatServiceImpl implements ChatService {
   public void append(String memberId, String message, String personnelId, String token) {
     try {
       botService.response(memberId, message, token);
-      expoNotificationService.sendNotification(memberId, token);
+      sendNotification(memberId, token);
     } catch (ExternalServiceBadRequestException e) {
       send(memberId, personnelId, Message.error(400, e.getMessage()));
       log.error("chat not updated memberId = " + memberId, e);
@@ -160,5 +165,14 @@ public class ChatServiceImpl implements ChatService {
   @Override
   public String getTopicPrefix() {
     return "/messages/";
+  }
+
+  private void sendNotification(String memberId, String personnelToken) {
+    if (notificationService.getFirebaseToken(memberId).isPresent()) {
+      notificationService.sendPushNotification(memberId);
+      return;
+    }
+
+    expoNotificationService.sendNotification(memberId, personnelToken);
   }
 }

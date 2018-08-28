@@ -5,29 +5,29 @@ import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
-import com.hedvig.backoffice.services.messages.dto.PushTokenDTO;
+import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
+import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class BotServiceImpl implements BotService {
-
-  private static Logger logger = LoggerFactory.getLogger(BotServiceImpl.class);
-
   private BotServiceClient botServiceClient;
 
   @Autowired
   private BotServiceImpl(BotServiceClient botServiceClient) {
     this.botServiceClient = botServiceClient;
 
-    logger.info("BOT SERVICE:");
-    logger.info("class: " + BotServiceImpl.class.getName());
+    log.info("BOT SERVICE:");
+    log.info("class: " + BotServiceImpl.class.getName());
   }
 
   @Override
@@ -70,7 +70,7 @@ public class BotServiceImpl implements BotService {
               try {
                 return new BotMessage(e.getValue().toString());
               } catch (BotMessageException ex) {
-                logger.error(ex.getMessage(), ex);
+                log.error(ex.getMessage(), ex);
                 return null;
               }
             })
@@ -79,7 +79,19 @@ public class BotServiceImpl implements BotService {
   }
 
   @Override
-  public PushTokenDTO pushTokenId(String memberId, String token) {
+  public ExpoPushTokenDTO getExpoPushToken(String memberId, String token) {
     return botServiceClient.getPushTokenByMemberId(memberId, token);
+  }
+
+  @Override
+  public Optional<FirebasePushTokenDTO> getFirebasePushToken(String memberId, String token) {
+    try {
+      return Optional.of(botServiceClient.getFirebasePushToken(memberId, token));
+    } catch (FeignException e) {
+      if (e.status() != 404) {
+        log.error("Request to bot-service failed: {}", e);
+      }
+      return Optional.empty();
+    }
   }
 }
