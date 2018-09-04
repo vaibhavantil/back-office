@@ -44,7 +44,7 @@ export default class NewNote extends React.Component {
         return (
             <Form onSubmit={this.createClickHandler}>
                 <Form.Group>
-                    <Form.Input
+                    <Form.TextArea
                         onChange={this.textChangeHandler}
                         placeholder="Note text..."
                         value={text}
