@@ -48,7 +48,6 @@ export default class NewNote extends React.Component {
                     placeholder="Note text..."
                     value={text}
                 />
-                <Form.Button primary content="Add" />
                 <FileInput
                     changeHandler={this.fileChangeHandler}
                     cleanupForm={cleanupForm}
