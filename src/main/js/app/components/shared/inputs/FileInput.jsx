@@ -9,7 +9,7 @@ const FileButton = styled.label`
     display: inline-block;
     width: 75px;
     cursor: pointer;
-    background-color: #2185d0;
+    background-color: rgb(202, 203, 205);
     color: #fff !important;
     text-align: center;
     border-radius: 0.28571429rem;
