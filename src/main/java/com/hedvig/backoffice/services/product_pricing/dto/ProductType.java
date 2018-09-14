@@ -7,5 +7,5 @@ public enum ProductType {
   SUBLET_RENTAL,
   SUBLET_BRF,
   STUDENT_BRF,
-  STUDENT_RENT,
+  STUDENT_RENT
 }
