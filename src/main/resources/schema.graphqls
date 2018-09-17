@@ -5,7 +5,6 @@ schema {
 
 type QueryType {
     getMonthlyPayments(month: YearMonth!): [MonthlySubscription]
-    getMonthlyBordereau(month: YearMonth!,  type: ProductType!): [MonthlyBordereau]
     getMember(id: ID!): Member
 }
 
@@ -16,13 +15,6 @@ type MutationType {
 type MonthlySubscription {
     amount: MonetaryAmount
     member: Member
-}
-
-type MonthlyBordereau {
-  member: Member
-  expectedSubscription: MonetaryAmount
-  earnedSubscription: MonetaryAmount
-  productType: ProductType
 }
 
 type Member {
@@ -44,15 +36,6 @@ type Transaction {
 
 type DirectDebitStatus {
     activated: Boolean
-}
-
-enum ProductType{
-  BRF
-  RENT
-  SUBLET_RENTAL
-  SUBLET_BRF
-  STUDENT_BRF
-  STUDENT_RENT
 }
 
 # A String-representation of `java.time.YearMonth`. ex: `"2018-06"`
