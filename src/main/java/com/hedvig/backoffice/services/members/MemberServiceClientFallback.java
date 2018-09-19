@@ -1,10 +1,12 @@
 package com.hedvig.backoffice.services.members;
 
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
+import com.hedvig.backoffice.services.members.dto.MemberSanctionStatus;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -35,6 +37,12 @@ public class MemberServiceClientFallback implements MemberServiceClient {
 
   @Override
   public List<MemberDTO> getMembers(List<String> memberIds) {
+    log.error("request to member-service failed");
+    return null;
+  }
+
+  @Override
+  public ResponseEntity<MemberSanctionStatus> getMemberSanctionStatus(String memberId) {
     log.error("request to member-service failed");
     return null;
   }
