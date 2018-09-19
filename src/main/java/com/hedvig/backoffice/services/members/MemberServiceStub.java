@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.members;
 
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
+import com.hedvig.backoffice.services.members.dto.MemberSanctionStatus;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -36,40 +37,40 @@ public class MemberServiceStub implements MemberService {
     long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
 
     users =
-        IntStream.range(0, testMemberIds.length + 100)
-            .mapToObj(
-                i -> {
-                  long id = i < testMemberIds.length ? testMemberIds[i] : RandomUtils.nextInt();
-                  MemberDTO user = new MemberDTO(id);
-                  user.setFirstName("Test user " + id);
-                  user.setStatus(statuses[RandomUtils.nextInt(0, 4)]);
+      IntStream.range(0, testMemberIds.length + 100)
+        .mapToObj(
+          i -> {
+            long id = i < testMemberIds.length ? testMemberIds[i] : RandomUtils.nextInt();
+            MemberDTO user = new MemberDTO(id);
+            user.setFirstName("Test user " + id);
+            user.setStatus(statuses[RandomUtils.nextInt(0, 4)]);
 
-                  long randomDay = ThreadLocalRandom.current().nextLong(minBirthDay, maxBirthDay);
-                  LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
-                  user.setBirthDate(randomDate);
+            long randomDay = ThreadLocalRandom.current().nextLong(minBirthDay, maxBirthDay);
+            LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
+            user.setBirthDate(randomDate);
 
-                  long randomSignedOnDate =
-                      ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
-                  LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
-                  LocalTime randomSignedOnLocalTime =
-                      LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
-                  user.setCreatedOn(
-                      Instant.from(
-                          ZonedDateTime.of(
-                              LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime),
-                              ZoneId.of("Europe/Stockholm"))));
+            long randomSignedOnDate =
+              ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
+            LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
+            LocalTime randomSignedOnLocalTime =
+              LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
+            user.setCreatedOn(
+              Instant.from(
+                ZonedDateTime.of(
+                  LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime),
+                  ZoneId.of("Europe/Stockholm"))));
 
-                  if (user.getStatus().equals(statuses[2])) {
-                    user.setSignedOn(
-                        Instant.from(
-                            ZonedDateTime.of(
-                                LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime),
-                                ZoneId.of("Europe/Stockholm"))));
-                  }
+            if (user.getStatus().equals(statuses[2])) {
+              user.setSignedOn(
+                Instant.from(
+                  ZonedDateTime.of(
+                    LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime),
+                    ZoneId.of("Europe/Stockholm"))));
+            }
 
-                  return user;
-                })
-            .collect(Collectors.toList());
+            return user;
+          })
+        .collect(Collectors.toList());
 
     logger.info("MEMBER SERVICE:");
     logger.info("class: " + MemberServiceStub.class.getName());
@@ -82,13 +83,13 @@ public class MemberServiceStub implements MemberService {
     }
 
     List<MemberDTO> result =
-        users
-            .stream()
-            .filter(
-                u ->
-                    (StringUtils.isNotBlank(query) && u.getFirstName().contains(query))
-                        || (StringUtils.isNotBlank(status) && u.getStatus().contains(status)))
-            .collect(Collectors.toList());
+      users
+        .stream()
+        .filter(
+          u ->
+            (StringUtils.isNotBlank(query) && u.getFirstName().contains(query))
+              || (StringUtils.isNotBlank(status) && u.getStatus().contains(status)))
+        .collect(Collectors.toList());
 
     return result;
   }
@@ -96,10 +97,10 @@ public class MemberServiceStub implements MemberService {
   @Override
   public MemberDTO findByMemberId(String memberId, String token) {
     return users
-        .stream()
-        .filter(u -> u.getMemberId().toString().equals(memberId))
-        .findAny()
-        .orElse(new MemberDTO(Long.parseLong(memberId)));
+      .stream()
+      .filter(u -> u.getMemberId().toString().equals(memberId))
+      .findAny()
+      .orElse(new MemberDTO(Long.parseLong(memberId)));
   }
 
   @Override
@@ -110,17 +111,22 @@ public class MemberServiceStub implements MemberService {
   @Override
   public void editMember(String memberId, MemberDTO memberDTO, String token) {
     users =
-        users
-            .stream()
-            .map(o -> o.getMemberId().toString().equals(memberId) ? memberDTO : o)
-            .collect(Collectors.toList());
+      users
+        .stream()
+        .map(o -> o.getMemberId().toString().equals(memberId) ? memberDTO : o)
+        .collect(Collectors.toList());
   }
 
   @Override
   public List<MemberDTO> getMembersByIds(List<String> ids) {
     return users
-        .stream()
-        .filter(u -> ids.contains(u.getMemberId().toString()))
-        .collect(Collectors.toList());
+      .stream()
+      .filter(u -> ids.contains(u.getMemberId().toString()))
+      .collect(Collectors.toList());
+  }
+
+  @Override
+  public MemberSanctionStatus getMemberSanctionStatus(String memberId) {
+    return MemberSanctionStatus.values()[RandomUtils.nextInt(0, 3)];
   }
 }
