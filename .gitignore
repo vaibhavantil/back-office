@@ -22,3 +22,6 @@ package-lock.json
 .vscode
 .sts4-cache
 .factorypath
+
+# jEnv
+.java-version

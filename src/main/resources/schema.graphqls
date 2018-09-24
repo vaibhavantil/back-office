@@ -6,6 +6,7 @@ schema {
 type QueryType {
     getMonthlyPayments(month: YearMonth!): [MonthlySubscription]
     getMember(id: ID!): Member
+    getClaim(id: ID!): Claim
 }
 
 type MutationType {
@@ -38,9 +39,47 @@ type DirectDebitStatus {
     activated: Boolean
 }
 
+type Claim {
+  id: ID
+  member: Member
+  recordingUrl: String
+  state: ClaimState
+  type: String
+  reserves: MonetaryAmount
+  registrationDate: ZonedDateTime
+  notes: [ClaimNote]
+  payments: [ClaimPayment]
+  events: [ClaimEvent]
+}
+
+type ClaimNote {
+  text: String
+  url: String
+}
+
+type ClaimPayment {
+  amount: MonetaryAmount
+  note: String
+  type: String
+  transaction: Transaction
+}
+
+type ClaimEvent {
+  text: String
+  date: ZonedDateTime
+}
+
+enum ClaimState {
+  OPEN
+  CLOSED
+  REOPENED
+}
+
 # A String-representation of `java.time.YearMonth`. ex: `"2018-06"`
 scalar YearMonth
 # An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100,  "currency": "SEK"}`
 scalar MonetaryAmount
 # An epoch-representation of `java.time.Instant`. ex: `1531914777`
 scalar Instant
+# A String-representation of `java.time.ZonedDateTime`, ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"`
+scalar ZonedDateTime

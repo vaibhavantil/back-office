@@ -4,6 +4,7 @@ import com.hedvig.backoffice.services.payments.dto.ChargeRequestDTO;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.payments.dto.Transaction;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.money.MonetaryAmount;
 
@@ -17,11 +18,7 @@ public class PaymentServiceImpl implements PaymentService {
 
   @Override
   public List<Transaction> getTransactionsByMemberId(String memberId) {
-    return paymentServiceClient
-        .getTransactions(memberId)
-        .getTransactions()
-        .entrySet()
-        .stream()
+    return paymentServiceClient.getTransactions(memberId).getTransactions().entrySet().stream()
         .map(entry -> Transaction.fromTransactionDTO(entry.getKey(), entry.getValue()))
         .collect(Collectors.toList());
   }
@@ -39,5 +36,10 @@ public class PaymentServiceImpl implements PaymentService {
   @Override
   public void chargeMember(String memberId, MonetaryAmount amount) {
     paymentServiceClient.chargeMember(memberId, new ChargeRequestDTO(amount));
+  }
+
+  @Override
+  public Transaction getTransactionById(UUID id) {
+    return null;
   }
 }

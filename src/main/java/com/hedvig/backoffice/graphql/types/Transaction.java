@@ -12,4 +12,9 @@ public class Transaction {
   Instant timestamp;
   String type;
   String status;
+
+  public static Transaction fromDTO(com.hedvig.backoffice.services.payments.dto.Transaction dto) {
+    return new Transaction(dto.getId(), dto.getAmount(), dto.getTimestamp(), dto.getType(),
+        dto.getStatus());
+  }
 }

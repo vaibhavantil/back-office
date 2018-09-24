@@ -20,8 +20,7 @@ public class MemberResolver implements GraphQLResolver<Member> {
   private final DirectDebitStatusLoader directDebitStatusLoader;
   private final ProductPricingService productPricingService;
 
-  public MemberResolver(
-      PaymentService paymentService,
+  public MemberResolver(PaymentService paymentService,
       DirectDebitStatusLoader directDebitStatusLoader,
       ProductPricingService productPricingService) {
     this.paymentService = paymentService;
@@ -30,18 +29,8 @@ public class MemberResolver implements GraphQLResolver<Member> {
   }
 
   public List<Transaction> getTransactions(Member member) {
-    return paymentService
-        .getTransactionsByMemberId(member.getMemberId())
-        .stream()
-        .map(
-            transactionDTO ->
-                new Transaction(
-                    transactionDTO.getId(),
-                    transactionDTO.getAmount(),
-                    transactionDTO.getTimestamp(),
-                    transactionDTO.getType(),
-                    transactionDTO.getStatus()))
-        .collect(Collectors.toList());
+    return paymentService.getTransactionsByMemberId(member.getMemberId()).stream()
+        .map(dto -> Transaction.fromDTO(dto)).collect(Collectors.toList());
   }
 
   public MonthlySubscription getMonthlySubscription(Member member, YearMonth period) {

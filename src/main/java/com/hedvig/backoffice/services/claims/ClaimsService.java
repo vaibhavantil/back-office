@@ -10,6 +10,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface ClaimsService {
 
@@ -36,4 +37,6 @@ public interface ClaimsService {
   Map<String, Long> statistics(String token);
 
   long totalClaims(String token);
+
+  List<Claim> getClaimsByIds(List<UUID> ids);
 }

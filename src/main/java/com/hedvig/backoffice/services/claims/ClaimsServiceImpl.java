@@ -10,6 +10,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,5 +93,10 @@ public class ClaimsServiceImpl implements ClaimsService {
 
     return stat.getOrDefault(ClaimState.OPEN.name(), 0L)
         + stat.getOrDefault(ClaimState.REOPENED.name(), 0L);
+  }
+
+  @Override
+  public List<Claim> getClaimsByIds(List<UUID> ids) {
+    throw new RuntimeException("Not implemented yet :(");
   }
 }

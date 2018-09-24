@@ -14,7 +14,9 @@
   },
   "homepage": "https://github.com/HedvigInsurance/asset-tracker",
   "dependencies": {
+    "@material-ui/core": "^3.1.1",
     "@stomp/stompjs": "^4.0.0",
+    "@types/react": "^16.4.14",
     "apollo-boost": "^0.1.10",
     "axios": "^0.17.1",
     "graphql": "^0.13.2",
@@ -38,6 +40,8 @@
     "semantic-ui-react": "^0.77.1",
     "sockjs-client": "^1.1.4",
     "styled-components": "3.1.0",
+    "ts-loader": "3",
+    "typescript": "^3.0.3",
     "webpack": "^3.10.0",
     "websocket": "^1.0.25",
     "ws": "^3.3.3"
