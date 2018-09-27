@@ -8,6 +8,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimEvent;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -65,15 +67,18 @@ public class ClaimsServiceStub implements ClaimsService {
       note.setText("Testnote 123");
       val notes = Lists.newArrayList(note);
 
-      val event = new ClaimEvent();
-      event.setType("com.hedvig.claims.events.NoteAddedEvent");
+      val payment = new ClaimPayment();
+      payment.setAmount(BigDecimal.valueOf(100));
+      payment.setPaymentType(ClaimPaymentType.Trustly);
+      payment.setTransactionId(Optional.empty());
+      val payments = Lists.newArrayList(payment);
 
       Claim claim = new Claim();
       claim.setId(id);
       claim.setUserId(memberId);
       claim.setState(ClaimState.OPEN);
-      claim.setAudioURL("http://78.media.tumblr.com/tumblr_ll313eVnI91qjahcpo1_1280.jpg");
-      claim.setPayments(new ArrayList<>());
+      claim.setAudioURL("http://techslides.com/demos/samples/sample.aac");
+      claim.setPayments(payments);
       claim.setNotes(notes);
       claim.setEvents(new ArrayList<>());
       claim.setData(new ArrayList<>());

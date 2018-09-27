@@ -1,25 +1,44 @@
 import * as React from "react";
-import { Query } from "react-apollo";
+import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
-
 import Grid from '@material-ui/core/Grid'
+
+import { MemberInformation } from './components/MemberInformation'
+import { ClaimInformation } from "./components/ClaimInformation";
+import { Notes } from "./components/Notes";
+import { Events } from "./components/Events";
+import { ClaimType } from "./components/ClaimType";
+import { ClaimPayments } from "./components/ClaimPayments";
+
 
 const CLAIM_PAGE_QUERY = gql`
   query ClaimPage($id: ID!) {
-    getClaim(id: $id) {
+    claim(id: $id) {
       member {
         firstName
         lastName
+        personalNumber
+        address
+        postalNumber
+        city
         directDebitStatus {
           activated
         }
       }
       registrationDate
       recordingUrl
-      type
+      state
+      # type {
+      #   id
+      #   requirements {
+      #     name
+      #     mandatory
+      #     fulfilled
+      #     value
+      #   }
+      # }
       notes {
         text
-        url
       }
       reserves
       payments {
@@ -33,6 +52,44 @@ const CLAIM_PAGE_QUERY = gql`
       events {
         text
         date
+      }
+      __typename
+    }
+  }
+`
+
+const UPDATE_STATE_QUERY = gql`
+  query UpdateClaimState($id: ID!) {
+    claim(id: $id) {
+      state
+    }
+  }
+`
+
+
+const UPDATE_CLAIM_STATE_MUTATION = gql`
+  mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
+    updateClaimState(id: $id, state: $state) {
+      state
+    }
+  }
+`
+
+const ADD_CLAIM_NOTE_QUERY = gql`
+  query AddClaimQuery($id: ID!) {
+    claim(id: $id) {
+      notes {
+        text
+      }
+    }
+  }
+`
+
+const ADD_CLAIM_NOTE_MUTATION = gql`
+  mutation AddClaimNote($id: ID!, $note: ClaimNoteInput!) {
+    addClaimNote(id: $id, note: $note) {
+      notes {
+        text
       }
     }
   }
@@ -57,10 +114,42 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
         return <div>Error: <pre>{JSON.stringify(error, null, 2)}</pre></div>
       }
 
+      const { member, recordingUrl, registrationDate, state, notes, events, payments } = data.claim
+
       return (
-        <Grid container>
+        <Grid container spacing={16}>
           <Grid item>
             <div>Claim id: {match.params.id}<pre>{JSON.stringify(data, null, 2)}</pre></div>
+          </Grid>
+          <Grid item>
+            <MemberInformation member={member} />
+          </Grid>
+          <Grid item>
+            <Mutation mutation={UPDATE_CLAIM_STATE_MUTATION} update={(cache, { data: updateData }) => {
+              cache.writeQuery({ query: UPDATE_STATE_QUERY, variables: { id: match.params.id }, data: { getClaim: { state: updateData.updateClaimState.state, __typename: data.getClaim.__typename } } })
+            }}>
+              {(updateClaimState) => (
+                <ClaimInformation recordingUrl={recordingUrl} registrationDate={registrationDate} state={state} updateState={(newState) => updateClaimState({ variables: { id: match.params.id, state: newState } })} />
+              )}
+            </Mutation>
+          </Grid>
+          {/* <Grid item>
+            <ClaimType type={type} />
+          </Grid> */}
+          <Grid item>
+            <ClaimPayments payments={payments} />
+          </Grid>
+          <Grid item>
+            <Mutation mutation={ADD_CLAIM_NOTE_MUTATION} update={(cache, { data: updateData }) => {
+              cache.writeQuery({ query: ADD_CLAIM_NOTE_QUERY, variables: { id: match.params.id }, data: { getClaim: { notes: updateData.addClaimNote.notes, __typename: data.getClaim.__typename } } })
+            }}>
+              {(addClaimNote) => (
+                <Notes notes={notes} addClaimNote={(note) => addClaimNote({ variables: { id: match.params.id, note } })} />
+              )}
+            </Mutation>
+          </Grid>
+          <Grid item>
+            <Events events={events} />
           </Grid>
         </Grid>
       );

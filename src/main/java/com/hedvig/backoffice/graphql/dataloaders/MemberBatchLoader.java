@@ -20,14 +20,10 @@ public class MemberBatchLoader implements BatchLoader<String, Member> {
 
   @Override
   public CompletionStage<List<Member>> load(List<String> keys) {
-    return CompletableFuture.supplyAsync(
-        () -> {
-          return memberService
-              .getMembersByIds(keys)
-              .stream()
-              .map(m -> new Member(m.getMemberId().toString(), m.getFirstName(), m.getLastName()))
-              .sorted(Comparator.comparing(item -> keys.indexOf(item.getMemberId())))
-              .collect(Collectors.toList());
-        });
+    return CompletableFuture.supplyAsync(() -> {
+      return memberService.getMembersByIds(keys).stream().map(m -> Member.fromDTO(m))
+          .sorted(Comparator.comparing(item -> keys.indexOf(item.getMemberId())))
+          .collect(Collectors.toList());
+    });
   }
 }

@@ -1,12 +1,19 @@
 package com.hedvig.backoffice.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
+import com.hedvig.backoffice.graphql.types.Claim;
+import com.hedvig.backoffice.graphql.types.ClaimNoteInput;
+import com.hedvig.backoffice.graphql.types.ClaimState;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import graphql.schema.DataFetchingEnvironment;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import javax.money.MonetaryAmount;
 import lombok.extern.slf4j.Slf4j;
@@ -19,28 +26,49 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final MemberLoader memberLoader;
   private final PaymentService paymentService;
   private final PersonnelService personnelService;
+  private final ClaimLoader claimLoader;
+  private final ClaimsService claimsService;
 
-  public GraphQLMutation(
-      PaymentService paymentService, PersonnelService personnelService, MemberLoader memberLoader) {
+  public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
+      MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
+    this.claimLoader = claimLoader;
+    this.claimsService = claimsService;
   }
 
-  public CompletableFuture<Member> chargeMember(
-      String id, MonetaryAmount amount, DataFetchingEnvironment env) throws AuthorizationException {
-    log.info(
-        "Personnel with email '{}' attempting to charge member '{}' the amount '{}'",
-        getEmail(env),
-        id,
-        amount.toString());
+  public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount,
+      DataFetchingEnvironment env) throws AuthorizationException {
+    log.info("Personnel with email '{}' attempting to charge member '{}' the amount '{}'",
+        GraphQLConfiguration.getEmail(env, personnelService), id, amount.toString());
     paymentService.chargeMember(id, amount);
     return memberLoader.load(id);
   }
 
-  private String getEmail(DataFetchingEnvironment env) throws AuthorizationException {
-    GraphQLRequestContext context = env.getContext();
-    val personnel = personnelService.getPersonnel(context.getUserPrincipal().getName());
-    return personnel.getEmail();
+  public CompletableFuture<Claim> updateClaimState(UUID id, ClaimState claimState,
+      DataFetchingEnvironment env) throws AuthorizationException {
+    log.info("Personnel with email '{}' updating claim status",
+        GraphQLConfiguration.getEmail(env, personnelService));
+    val stateChangeDto = new ClaimStateUpdate();
+    stateChangeDto.setClaimID(id.toString());
+    stateChangeDto
+        .setState(com.hedvig.backoffice.services.claims.ClaimState.valueOf(claimState.toString()));
+    claimsService.changeState(stateChangeDto,
+        GraphQLConfiguration.getIdToken(env, personnelService));
+    return claimLoader.load(id);
   }
+
+  public CompletableFuture<Claim> addClaimNote(UUID id, ClaimNoteInput note,
+      DataFetchingEnvironment env) throws AuthorizationException {
+    log.info("Personnell with email '{} adding claim note'",
+        GraphQLConfiguration.getEmail(env, personnelService));
+    val noteDto = new com.hedvig.backoffice.services.claims.dto.ClaimNote();
+    noteDto.setText(note.getText());
+    noteDto.setFileURL(note.getUrl());
+    noteDto.setClaimID(id.toString());
+    claimsService.addNote(noteDto, GraphQLConfiguration.getIdToken(env, personnelService));
+    return claimLoader.load(id);
+  }
+
 }

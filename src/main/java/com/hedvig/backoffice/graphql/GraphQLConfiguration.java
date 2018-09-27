@@ -2,12 +2,18 @@ package com.hedvig.backoffice.graphql;
 
 import graphql.execution.instrumentation.Instrumentation;
 import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentation;
+import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
+import com.coxautodev.graphql.tools.SchemaParserDictionary;
+import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.services.personnel.PersonnelService;
 import lombok.val;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 @Configuration
 public class GraphQLConfiguration {
@@ -23,5 +29,33 @@ public class GraphQLConfiguration {
   @Bean
   Instrumentation instrumentation(DataLoaderRegistry dataLoaderRegistry) {
     return new DataLoaderDispatcherInstrumentation(dataLoaderRegistry);
+  }
+
+  public static String getIdToken(DataFetchingEnvironment env, PersonnelService personnelService) {
+    GraphQLRequestContext context = env.getContext();
+    return personnelService.getIdToken(context.getUserPrincipal().getName());
+  }
+
+  public static String getEmail(DataFetchingEnvironment env, PersonnelService personnelService)
+      throws AuthorizationException {
+    GraphQLRequestContext context = env.getContext();
+    val personnel = personnelService.getPersonnel(context.getUserPrincipal().getName());
+    return personnel.getEmail();
+  }
+
+  @Bean
+  SchemaParserDictionary schemaParserDictionary() throws ClassNotFoundException {
+
+    val schemaParserDictionary = new SchemaParserDictionary();
+
+    val scanner = new ClassPathScanningCandidateComponentProvider(false);
+    scanner.addIncludeFilter(new AnnotationTypeFilter(UnionType.class));
+
+    for (val beanDefinition : scanner
+        .findCandidateComponents(this.getClass().getPackage().getName())) {
+      schemaParserDictionary.add(Class.forName(beanDefinition.getBeanClassName()));
+    }
+
+    return schemaParserDictionary;
   }
 }

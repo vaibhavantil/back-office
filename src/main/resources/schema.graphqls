@@ -4,13 +4,15 @@ schema {
 }
 
 type QueryType {
-    getMonthlyPayments(month: YearMonth!): [MonthlySubscription]
-    getMember(id: ID!): Member
-    getClaim(id: ID!): Claim
+    monthlyPayments(month: YearMonth!): [MonthlySubscription]
+    member(id: ID!): Member
+    claim(id: ID!): Claim
 }
 
 type MutationType {
     chargeMember(id: ID!, amount: MonetaryAmount!): Member
+    updateClaimState(id: ID!, state: ClaimState!): Claim
+    addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
 }
 
 type MonthlySubscription {
@@ -22,6 +24,10 @@ type Member {
     memberId: ID
     firstName: String
     lastName: String
+    personalNumber: String
+    address: String
+    postalNumber: String
+    city: String
     transactions: [Transaction]
     directDebitStatus: DirectDebitStatus
     monthlySubscription(month: YearMonth!): MonthlySubscription
@@ -44,9 +50,9 @@ type Claim {
   member: Member
   recordingUrl: String
   state: ClaimState
-  type: String
+  type: ClaimType
   reserves: MonetaryAmount
-  registrationDate: ZonedDateTime
+  registrationDate: Instant
   notes: [ClaimNote]
   payments: [ClaimPayment]
   events: [ClaimEvent]
@@ -54,7 +60,35 @@ type Claim {
 
 type ClaimNote {
   text: String
-  url: String
+}
+
+input ClaimNoteInput {
+  text: String!
+}
+
+union ClaimType = FireClaim | TheftClaim | AccidentalDamageClaim
+
+type FireClaim {
+  location: String
+  date: LocalDate
+  item: String
+  report: Boolean
+}
+
+type TheftClaim {
+  location: String
+  date: LocalDate
+  item: String
+  policeReport: String
+  receipt: String
+}
+
+type AccidentalDamageClaim {
+  location: String
+  date: LocalDate
+  item: String
+  policeReport: String
+  receipt: String
 }
 
 type ClaimPayment {
@@ -66,7 +100,7 @@ type ClaimPayment {
 
 type ClaimEvent {
   text: String
-  date: ZonedDateTime
+  date: Instant
 }
 
 enum ClaimState {
@@ -83,3 +117,5 @@ scalar MonetaryAmount
 scalar Instant
 # A String-representation of `java.time.ZonedDateTime`, ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"`
 scalar ZonedDateTime
+# A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"`
+scalar LocalDate

@@ -28,18 +28,18 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.claimLoader = claimLoader;
   }
 
-  public List<MonthlySubscription> getMonthlyPayments(YearMonth month) {
+  public List<MonthlySubscription> monthlyPayments(YearMonth month) {
 
     return productPricingService.getMonthlyPayments(month).stream()
         .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getSubscription()))
         .collect(Collectors.toList());
   }
 
-  public CompletableFuture<Member> getMember(String id) {
+  public CompletableFuture<Member> member(String id) {
     return memberLoader.load(id);
   }
 
-  public CompletableFuture<Claim> getClaim(UUID id) {
+  public CompletableFuture<Claim> claim(UUID id) {
     return claimLoader.load(id);
   }
 }
