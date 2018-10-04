@@ -1,0 +1,36 @@
+server:
+  port: 80
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+      generate-ddl: true
+    properties:
+      javax:
+        persistence:
+          schema-generation:
+            create-source: metadata
+            scripts:
+              action: create
+  datasource:
+    url: jdbc:postgresql://postgresOne:5432/product_pricing
+    user: postgres
+    password: hedvig
+hedvig:
+  insuranceTransferService:
+    bcc: meletios@hedvig.com
+  product-pricing:
+    files:
+      location: src/test/resources
+  productPricing:
+    service:
+      certificatesS3Bucket: test
+hedvig.product-pricing.files.location: /tariff-data/
+
+hedvig.productPricing.service.certificatesS3Bucket: insurancecertificates-devcluster
+hedvig.insuranceTransferService.bcc: johan+DEVCLUSTER@hedvig.com
+cloud.aws.region.static: eu-central-1
+cloud.aws.stack.auto: "false"
+cloud.aws.credentials.instanceProfile: "true"
+spring.datasource.initialization-mode: always

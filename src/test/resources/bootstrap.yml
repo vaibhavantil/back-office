@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: back-office
+
+---
+spring:
+  profiles: test, development, integration_test
+  cloud:
+    kubernetes:
+      enabled: false
+      discovery.enabled: false
+  autoconfigure:
+    exclude:
+    - org.springframework.cloud.kubernetes.discovery.KubernetesDiscoveryClientAutoConfiguration
+    - org.springframework.cloud.kubernetes.KubernetesAutoConfiguration
