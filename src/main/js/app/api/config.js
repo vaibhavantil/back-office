@@ -136,6 +136,12 @@ export default {
       url: "member/insurance/search"
     }
   },
+  reports: {
+    getBDX: {
+      method: "get",
+      url: "reports/bdx"
+    }
+  },
   ws: {
     // eslint-disable-next-line
     endpoint: DEV ? "http://localhost:8080/chat" : "/chat",
