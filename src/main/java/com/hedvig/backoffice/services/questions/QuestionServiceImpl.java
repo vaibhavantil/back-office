@@ -19,7 +19,13 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.hedvig.backoffice.web.dto.QuestionSortFields;
+import com.hedvig.backoffice.web.dto.QuestionSortOrder;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,21 +72,36 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public List<QuestionGroupDTO> answered() {
+  public List<QuestionGroupDTO> answered(int page, int pageSize, List<QuestionSortOrder> sortOrders) {
     return questionGroupRepository
-        .answered()
+      .answered(buildQuestionsPageRequest(page, pageSize, sortOrders))
+      .stream()
+      .map(QuestionGroupDTO::fromDomain)
+      .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<QuestionGroupDTO> notAnswered(int page, int pageSize, List<QuestionSortOrder> sortOrders) {
+    return questionGroupRepository
+        .notAnswered(buildQuestionsPageRequest(page, pageSize, sortOrders))
         .stream()
         .map(QuestionGroupDTO::fromDomain)
         .collect(Collectors.toList());
   }
 
-  @Override
-  public List<QuestionGroupDTO> notAnswered() {
-    return questionGroupRepository
-        .notAnswered()
-        .stream()
-        .map(QuestionGroupDTO::fromDomain)
-        .collect(Collectors.toList());
+  @NotNull
+  private PageRequest buildQuestionsPageRequest(int page, int pageSize, List<QuestionSortOrder> sortOrders) {
+    List<Sort.Order> orders = sortOrders.stream()
+      .map(o -> {
+        String entitySortField = QuestionGroup.SORT_FIELDS_MAPPING.get(o.getField());
+        if (entitySortField == null) {
+          throw new RuntimeException("Failed to find entity field mapped to sort command " + o.getField());
+        }
+
+        return o.getDirection().isAscending() ? Sort.Order.asc(entitySortField) : Sort.Order.desc(entitySortField);
+      }).collect(Collectors.toList());
+
+    return PageRequest.of(page, pageSize, Sort.by(orders));
   }
 
   @Transactional

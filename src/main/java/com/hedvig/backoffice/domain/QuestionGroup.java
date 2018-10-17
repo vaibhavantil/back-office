@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.domain;
 
 import java.time.Instant;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -12,6 +13,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+
+import com.hedvig.backoffice.web.dto.QuestionSortFields;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +25,11 @@ import org.hibernate.annotations.Type;
 @Setter
 @NoArgsConstructor
 public class QuestionGroup {
+
+  public static final EnumMap<QuestionSortFields, String> SORT_FIELDS_MAPPING = new EnumMap<QuestionSortFields, String>(QuestionSortFields.class) {{
+    put(QuestionSortFields.MEMBER_ID, "subscription.memberId");
+    put(QuestionSortFields.CREATION_DATE, "date");
+  }};
 
   @Id @GeneratedValue private Long id;
 
