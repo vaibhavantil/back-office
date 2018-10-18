@@ -10,12 +10,12 @@ import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.Optional;
+
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 @Getter
 public class BotMessage {
-
   private JsonNode message;
 
   private Instant timestamp;
@@ -40,6 +40,7 @@ public class BotMessage {
     this(message, false);
   }
 
+
   public BotMessage(String message, boolean newMessage) throws BotMessageException {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
@@ -50,6 +51,7 @@ public class BotMessage {
     }
 
     parseFields(newMessage);
+
   }
 
   public BotMessage(JsonNode message) throws BotMessageException {
@@ -79,6 +81,19 @@ public class BotMessage {
 
   public void setMemberId(String memberId) {
     this.memberId = memberId;
+  }
+
+  private String getBodyField (String fldName, JsonNode body) {
+    return Optional.ofNullable(body.get(fldName)).map(com.fasterxml.jackson.databind.JsonNode::asText).orElse(null);
+  }
+
+  private boolean isEmptyFileld (String field, JsonNode body) {
+    String res = getBodyField(field, body);
+    return res == null || res.length() == 0 || "null".equals(res);
+  }
+
+  public boolean isEmptyBody () {
+    return isEmptyFileld("text", body) && isEmptyFileld("URL", body);
   }
 
   private void parseFields(boolean newMessage) throws BotMessageException {
