@@ -11,7 +11,7 @@ public class MemberDTO {
 
   private Long memberId;
 
-  private String status;
+  private MemberStatus status;
 
   private String ssn;
 

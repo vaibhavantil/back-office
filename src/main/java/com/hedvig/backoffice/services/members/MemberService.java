@@ -1,12 +1,26 @@
 package com.hedvig.backoffice.services.members;
 
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
+import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberDTO;
+import com.hedvig.backoffice.web.dto.MemberStatus;
+import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
+import org.springframework.data.domain.Sort;
+
 import java.util.List;
 
 public interface MemberService {
 
-  List<MemberDTO> search(String status, String query, String token);
+  List<MemberDTO> search(MemberStatus status, String query, String token);
+
+  MembersSearchResultDTO searchPaged(
+    MemberStatus status,
+    String query,
+    Integer page,
+    Integer pageSize,
+    MembersSortColumn sortBy,
+    Sort.Direction sortDirection,
+    String token);
 
   MemberDTO findByMemberId(String memberId, String token);
 

@@ -55,7 +55,7 @@ public class ClaimsServiceStub implements ClaimsService {
 
     List<String> memberIds =
         memberService
-            .search("", "", settingsService.getInternalAccessToken())
+            .search(null, "", settingsService.getInternalAccessToken())
             .stream()
             .map(o -> o.getMemberId().toString())
             .collect(Collectors.toList());
