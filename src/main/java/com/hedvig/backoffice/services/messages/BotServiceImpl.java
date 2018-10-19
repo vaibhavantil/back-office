@@ -8,7 +8,11 @@ import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
 import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +49,8 @@ public class BotServiceImpl implements BotService {
 
     botServiceClient.fetch(timestamp.toEpochMilli(), token).forEach(m -> {
       try {
-        if (!m.toBotMessage().isEmptyBody()) result.add(m);
+        BotMessage bm = m.toBotMessage();
+        if (!bm.isEmptyBody() && bm.getFromId() == 1) result.add(m);
       } catch (BotMessageException e) { log.error(e.toString());}
     });
 

@@ -12,8 +12,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import lombok.Getter;
+import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
-
+@Log
 @Getter
 public class BotMessage {
   private JsonNode message;
@@ -83,17 +84,17 @@ public class BotMessage {
     this.memberId = memberId;
   }
 
-  private String getBodyField (String fldName, JsonNode body) {
-    return Optional.ofNullable(body.get(fldName)).map(com.fasterxml.jackson.databind.JsonNode::asText).orElse(null);
+  private String getBodyField (String fieldName, JsonNode body) {
+    return Optional.ofNullable(body.get(fieldName)).map(com.fasterxml.jackson.databind.JsonNode::asText).orElse(null);
   }
 
-  private boolean isEmptyFileld (String field, JsonNode body) {
+  private boolean isEmptyField(String field, JsonNode body) {
     String res = getBodyField(field, body);
     return res == null || res.length() == 0 || "null".equals(res);
   }
 
   public boolean isEmptyBody () {
-    return isEmptyFileld("text", body) && isEmptyFileld("URL", body);
+    return isEmptyField("text", body) && isEmptyField("URL", body);
   }
 
   private void parseFields(boolean newMessage) throws BotMessageException {
