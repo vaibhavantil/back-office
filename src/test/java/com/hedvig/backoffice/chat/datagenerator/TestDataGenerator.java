@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Log
 public class TestDataGenerator {
 
   public static String EMPTY_BODY = "empty_body";
@@ -49,7 +48,6 @@ public class TestDataGenerator {
 
   public JsonNode getExampleForBodyChecking (String strategy) {
     try {
-      log.info(strategy+" "+mapper.readValue(strategies.get(strategy), JsonNode.class).toString());
       return mapper.readValue(strategies.get(strategy), JsonNode.class);
     } catch (IOException e) {
       throw new RuntimeException(e);
