@@ -21,32 +21,56 @@ public class TestChat {
   private BotService botService;
 
   @Test
-  public void correctMessageTest () {
+  public void testFetchWithUrlAndText () {
     List messageList = botService.fetch(Instant.now(), TestDataGenerator.BODY_WITH_URL_AND_TEXT);
     Assert.assertTrue(messageList.size()>0);
   }
 
   @Test
-  public void emptyTextMessageTest () {
+  public void testFetchWithTextOnly () {
     List messageList = botService.fetch(Instant.now(), TestDataGenerator.BODY_WITH_TEXT);
     Assert.assertTrue(messageList.size()>0);
   }
 
   @Test
-  public void emptyUrlMessageTest () {
+  public void testFetchWithUrlOnly () {
     List messageList = botService.fetch(Instant.now(), TestDataGenerator.BODY_WITH_URL);
     Assert.assertTrue(messageList.size()>0);
   }
 
   @Test
-  public void emptyBodyMessageTest () {
+  public void testFetchWithEmptyBody () {
     List messageList = botService.fetch(Instant.now(), TestDataGenerator.EMPTY_BODY);
     Assert.assertTrue(messageList.size()==0);
   }
 
   @Test
-  public void emptyBodyWithDiferentFromMessageTest () {
+  public void testFetchWithEmptyBodyAndDiferentFromMessageTest () {
     List messageList = botService.fetch(Instant.now(), TestDataGenerator.EMPTY_BODY_WITH_FROMID);
+    Assert.assertTrue(messageList.size()>0);
+  }
+
+  @Test
+  public void testMessagesWithEmptyBody () {
+    List messageList = botService.messages("1", TestDataGenerator.EMPTY_BODY);
+    Assert.assertTrue(messageList.size()==0);
+  }
+
+  @Test
+  public void testMessagesWithTextOnly () {
+    List messageList = botService.messages("1", TestDataGenerator.BODY_WITH_TEXT);
+    Assert.assertTrue(messageList.size()>0);
+  }
+
+  @Test
+  public void testMessagesWithUrlOnly () {
+    List messageList = botService.messages("1", TestDataGenerator.BODY_WITH_URL);
+    Assert.assertTrue(messageList.size()>0);
+  }
+
+  @Test
+  public void testMessagesWithUrlAndText () {
+    List messageList = botService.messages("1", TestDataGenerator.BODY_WITH_URL_AND_TEXT);
     Assert.assertTrue(messageList.size()>0);
   }
 

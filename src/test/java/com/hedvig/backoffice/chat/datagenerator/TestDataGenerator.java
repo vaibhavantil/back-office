@@ -3,7 +3,6 @@ package com.hedvig.backoffice.chat.datagenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.util.Date;
@@ -49,6 +48,15 @@ public class TestDataGenerator {
   public JsonNode getExampleForBodyChecking (String strategy) {
     try {
       return mapper.readValue(strategies.get(strategy), JsonNode.class);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+  }
+
+  public JsonNode getExamplesForBodyChecking (String strategy) {
+    try {
+      return mapper.readValue("{\"1\":"+strategies.get(strategy)+"}", JsonNode.class);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
