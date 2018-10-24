@@ -50,7 +50,7 @@ public class BotServiceImpl implements BotService {
     botServiceClient.fetch(timestamp.toEpochMilli(), token).forEach(m -> {
       try {
         BotMessage bm = m.toBotMessage();
-        if (!bm.isEmptyBody() || bm.getFromId() != 1) result.add(m);
+        if (!bm.isEmptyBody() || !bm.isBotMessage()) result.add(m);
       } catch (BotMessageException e) { log.error(e.toString());}
     });
 

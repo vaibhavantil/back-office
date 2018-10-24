@@ -10,13 +10,12 @@ import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.Optional;
-
 import lombok.Getter;
-import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
-@Log
+
 @Getter
 public class BotMessage {
+
   private JsonNode message;
 
   private Instant timestamp;
@@ -41,7 +40,6 @@ public class BotMessage {
     this(message, false);
   }
 
-
   public BotMessage(String message, boolean newMessage) throws BotMessageException {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
@@ -52,7 +50,6 @@ public class BotMessage {
     }
 
     parseFields(newMessage);
-
   }
 
   public BotMessage(JsonNode message) throws BotMessageException {
