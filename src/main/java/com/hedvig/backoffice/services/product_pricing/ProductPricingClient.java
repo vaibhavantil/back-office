@@ -7,15 +7,22 @@ import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
+import com.hedvig.backoffice.web.dto.InsuranceSearchResultDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import java.util.List;
+
+import com.hedvig.backoffice.web.dto.ProductSortColumns;
+import com.hedvig.backoffice.web.dto.ProductState;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @FeignClient(
   name = "product-pricing-service",
@@ -39,8 +46,18 @@ public interface ProductPricingClient {
 
   @GetMapping("/_/insurance/search?state={state}&query={query}")
   List<InsuranceStatusDTO> search(
-    @PathVariable("state") String state,
+    @PathVariable("state") ProductState state,
     @PathVariable("query") String query,
+    @RequestHeader("Authorization") String token);
+
+  @GetMapping("/_/insurance/searchPaged")
+  InsuranceSearchResultDTO searchPaged(
+    @RequestParam("query") String query,
+    @RequestParam("state") ProductState state,
+    @RequestParam("page") Integer page,
+    @RequestParam("pageSize") Integer pageSize,
+    @RequestParam("sortBy") ProductSortColumns sortBy,
+    @RequestParam("sortDirection") Sort.Direction sortDirection,
     @RequestHeader("Authorization") String token);
 
   @PostMapping("/_/insurance/{memberId}/sendCancellationEmail")

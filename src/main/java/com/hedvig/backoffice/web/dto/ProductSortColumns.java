@@ -1,0 +1,13 @@
+package com.hedvig.backoffice.web.dto;
+
+public enum ProductSortColumns {
+  MEMBER_FULL_NAME,
+  TYPE,
+  CONTRACT_SIGNED_DATE,
+  ACTIVE_FROM_DATE,
+  ACTIVE_TO_DATE,
+  STATUS,
+  CANCELLATION_EMAIL_SENT_DATE,
+  CERTIFICATE_UPLOADED,
+  HOUSEHOLD_SIZE,
+}
