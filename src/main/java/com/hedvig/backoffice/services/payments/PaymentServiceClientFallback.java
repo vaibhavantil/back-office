@@ -26,4 +26,10 @@ public class PaymentServiceClientFallback implements PaymentServiceClient {
   public void chargeMember(String memberId, ChargeRequestDTO chargeRequestDto) {
     log.error("payment-service unavailable");
   }
+
+  @Override
+  public DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId){
+    log.error("payment-service unavailable");
+    return null;
+  }
 }
