@@ -244,6 +244,9 @@ public class ProductPricingServiceStub implements ProductPricingService {
   public List<MonthlySubscriptionDTO> getMonthlyPayments(YearMonth month) {
     return Lists.newArrayList(
       new MonthlySubscriptionDTO("123456", Money.of(100, Monetary.getCurrency("SEK"))),
+      new MonthlySubscriptionDTO("2820671", Money.of(RandomUtils.nextInt(99,999), Monetary.getCurrency("SEK"))),
+      new MonthlySubscriptionDTO("6865256", Money.of(RandomUtils.nextInt(99,999), Monetary.getCurrency("SEK"))),
+      new MonthlySubscriptionDTO("9417985", Money.of(RandomUtils.nextInt(99,999), Monetary.getCurrency("SEK"))),
       new MonthlySubscriptionDTO("3267661", Money.of(200, Monetary.getCurrency("SEK"))));
   }
 

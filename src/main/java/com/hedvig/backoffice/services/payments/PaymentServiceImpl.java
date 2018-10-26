@@ -27,11 +27,6 @@ public class PaymentServiceImpl implements PaymentService {
   }
 
   @Override
-  public Boolean hasDirectDebitActivated(String memberId) {
-    return null;
-  }
-
-  @Override
   public List<DirectDebitStatusDTO> getDirectDebitStatuses(List<String> memberIds) {
     return paymentServiceClient.getDirectDebitStatuses(memberIds);
   }
@@ -39,5 +34,10 @@ public class PaymentServiceImpl implements PaymentService {
   @Override
   public void chargeMember(String memberId, MonetaryAmount amount) {
     paymentServiceClient.chargeMember(memberId, new ChargeRequestDTO(amount));
+  }
+
+  @Override
+  public DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId){
+    return paymentServiceClient.getDirectDebitStatusByMemberId(memberId);
   }
 }
