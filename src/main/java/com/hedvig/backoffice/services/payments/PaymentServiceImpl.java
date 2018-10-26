@@ -3,9 +3,11 @@ package com.hedvig.backoffice.services.payments;
 import com.hedvig.backoffice.services.payments.dto.ChargeRequestDTO;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.payments.dto.Transaction;
+import feign.FeignException;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.money.MonetaryAmount;
+import org.springframework.http.ResponseEntity;
 
 public class PaymentServiceImpl implements PaymentService {
 
@@ -38,6 +40,11 @@ public class PaymentServiceImpl implements PaymentService {
 
   @Override
   public DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId){
-    return paymentServiceClient.getDirectDebitStatusByMemberId(memberId);
+    try {
+      ResponseEntity<?> status = paymentServiceClient.getDirectDebitStatusByMemberId(memberId);
+      return (DirectDebitStatusDTO) status.getBody();
+    }catch (FeignException ex){
+     return new DirectDebitStatusDTO(memberId, false);
+    }
   }
 }

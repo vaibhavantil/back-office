@@ -6,6 +6,7 @@ import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.payments.dto.PaymentMemberDTO;
 import java.util.List;
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,6 @@ public interface PaymentServiceClient {
     @PathVariable("memberId") String memberId, @RequestBody ChargeRequestDTO chargeRequestDto);
 
   @GetMapping("/directDebit/status")
-  DirectDebitStatusDTO getDirectDebitStatusByMemberId(
+  ResponseEntity<DirectDebitStatusDTO> getDirectDebitStatusByMemberId(
     @RequestHeader("Hedvig.Token") String memberId);
 }
