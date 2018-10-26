@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.payments;
 
+import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.services.payments.dto.ChargeRequestDTO;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.payments.dto.Transaction;
@@ -43,7 +44,7 @@ public class PaymentServiceImpl implements PaymentService {
     try {
       ResponseEntity<?> status = paymentServiceClient.getDirectDebitStatusByMemberId(memberId);
       return (DirectDebitStatusDTO) status.getBody();
-    }catch (FeignException ex){
+    }catch (FeignException | ExternalServiceBadRequestException ex){
      return new DirectDebitStatusDTO(memberId, false);
     }
   }
