@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.members;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
+import com.hedvig.backoffice.services.members.dto.ChargeMembersDTO;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import java.util.List;
@@ -40,5 +41,5 @@ public interface MemberServiceClient {
       @RequestHeader("Authorization") String token);
 
   @PostMapping("/i/member/many")
-  List<MemberDTO> getMembers(@RequestBody List<String> memberIds);
+  List<MemberDTO> getMembers(@RequestBody ChargeMembersDTO memberIds);
 }
