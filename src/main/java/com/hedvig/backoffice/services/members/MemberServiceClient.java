@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(
     name = "member-service",
     url = "${memberservice.baseUrl}",
-    configuration = FeignConfig.class,
-    fallback = MemberServiceClientFallback.class)
+    configuration = FeignConfig.class)
 public interface MemberServiceClient {
 
   @GetMapping("/i/member/search?status={status}&query={query}")
