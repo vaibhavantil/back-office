@@ -39,6 +39,6 @@ public interface MemberServiceClient {
       @RequestBody InsuranceCancellationDTO dto,
       @RequestHeader("Authorization") String token);
 
-  @GetMapping("/i/member/many/{memberIds}")
-  List<MemberDTO> getMembers(@PathVariable("memberIds") List<String> memberIds);
+  @PostMapping("/i/member/many")
+  List<MemberDTO> getMembers(@RequestBody List<String> memberIds);
 }
