@@ -162,7 +162,7 @@ public class ClaimsServiceStub implements ClaimsService {
         totalPages++;
       }
 
-      claims = claims.subList(page * pageSize, Math.min(claims.size(), page * (pageSize + 1)));
+      claims = claims.subList(page * pageSize, Math.min(claims.size(), pageSize * (page + 1)));
       return new ClaimSearchResultDTO(claims, page, totalPages);
     }
 
