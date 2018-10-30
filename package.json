@@ -17,6 +17,7 @@
     "@material-ui/core": "^3.1.1",
     "@stomp/stompjs": "^4.0.0",
     "@types/react": "^16.4.14",
+    "@types/yup": "^0.24.9",
     "apollo-boost": "^0.1.10",
     "axios": "^0.17.1",
     "date-fns": "^1.29.0",
@@ -48,7 +49,8 @@
     "typescript": "^3.0.3",
     "webpack": "^3.10.0",
     "websocket": "^1.0.25",
-    "ws": "^3.3.3"
+    "ws": "^3.3.3",
+    "yup": "^0.26.6"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.39",

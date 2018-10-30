@@ -3,7 +3,7 @@
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const path = require('path');
 const buildPath = path.resolve(__dirname, 'src/main/resources/static');
@@ -64,7 +64,7 @@ module.exports = {
     new webpack.DefinePlugin({
       DEV: 'true',
       'process.env': {
-        NODE_ENV: JSON.stringify('production')
+        NODE_ENV: JSON.stringify('development')
       }
     }),
     extractCSS,
@@ -73,30 +73,30 @@ module.exports = {
       chunksSortMode: 'dependency',
       inject: 'body'
     }),
-    new UglifyJSPlugin({
-      parallel: true,
-      uglifyOptions: {
-        ie8: false,
-        compress: {
-          dead_code: true,
-          warnings: false,
-          properties: true,
-          drop_debugger: true,
-          conditionals: true,
-          booleans: true,
-          loops: true,
-          unused: true,
-          toplevel: true,
-          if_return: true,
-          inline: true,
-          join_vars: true
-        },
-        output: {
-          comments: false,
-          beautify: false,
-          indent_level: 2
-        }
-      }
-    })
+    // new UglifyJSPlugin({
+    //   parallel: true,
+    //   uglifyOptions: {
+    //     ie8: false,
+    //     compress: {
+    //       dead_code: true,
+    //       warnings: false,
+    //       properties: true,
+    //       drop_debugger: true,
+    //       conditionals: true,
+    //       booleans: true,
+    //       loops: true,
+    //       unused: true,
+    //       toplevel: true,
+    //       if_return: true,
+    //       inline: true,
+    //       join_vars: true
+    //     },
+    //     output: {
+    //       comments: false,
+    //       beautify: false,
+    //       indent_level: 2
+    //     }
+    //   }
+    // })
   ]
 };

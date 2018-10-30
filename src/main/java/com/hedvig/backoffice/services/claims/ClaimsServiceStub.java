@@ -71,6 +71,8 @@ public class ClaimsServiceStub implements ClaimsService {
       payment.setAmount(BigDecimal.valueOf(100));
       payment.setPaymentType(ClaimPaymentType.Trustly);
       payment.setTransactionId(Optional.empty());
+      payment.setDate(LocalDateTime.now());
+      payment.setExGratia(false);
       val payments = Lists.newArrayList(payment);
 
       Claim claim = new Claim();
@@ -84,7 +86,6 @@ public class ClaimsServiceStub implements ClaimsService {
       claim.setData(new ArrayList<>());
       claim.setAssets(new ArrayList<>());
       claim.setReserve(BigDecimal.valueOf(100));
-      claim.setType("FIRE");
 
       long randomSignedOnDate =
           ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
@@ -126,6 +127,15 @@ public class ClaimsServiceStub implements ClaimsService {
   @Override
   public void addPayment(ClaimPayment dto, String token) {
     Claim claim = find(dto.getClaimID(), token);
+    dto.setDate(LocalDateTime.now());
+    switch (dto.getPaymentType()) {
+      case Manual: {
+        dto.setTransactionId(Optional.empty());
+      }
+      case Trustly: {
+        dto.setTransactionId(Optional.of(UUID.randomUUID()));
+      }
+    }
     claim.getPayments().add(dto);
     addEvent(claim, "[test] payment added");
   }

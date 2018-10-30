@@ -1,8 +1,7 @@
 import * as React from 'react'
-import CardContent from '@material-ui/core/CardContent'
 
 import { Checkmark, Cross } from '../../../icons'
-import { CustomCard } from './Styles'
+import { CustomPaper } from './Styles'
 
 interface MemberInformationProps {
   member: {
@@ -19,15 +18,13 @@ interface MemberInformationProps {
 }
 
 const MemberInformation: React.SFC<MemberInformationProps> = ({ member: { firstName, lastName, personalNumber, address, postalNumber, city, directDebitStatus: { activated } } }) => (
-  <CustomCard>
-    <CardContent>
-      <h3>Member Information</h3>
-      <p>Name: {firstName} {lastName}</p>
-      <p>Personal Number: {personalNumber}</p>
-      <p>Address: {address}, {postalNumber} {city}</p>
-      <p>Direct Debit: {activated ? <Checkmark /> : <Cross />}</p>
-    </CardContent>
-  </CustomCard>
+  <CustomPaper>
+    <h3>Member Information</h3>
+    <p>Name: {firstName} {lastName}</p>
+    <p>Personal Number: {personalNumber}</p>
+    <p>Address: {address}, {postalNumber} {city}</p>
+    <p>Direct Debit: {activated ? <Checkmark /> : <Cross />}</p>
+  </CustomPaper>
 )
 
 export { MemberInformation }

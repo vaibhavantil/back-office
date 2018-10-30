@@ -1,8 +1,10 @@
 import styled from 'react-emotion'
-import Card from '@material-ui/core/Card'
+import { Paper } from '@material-ui/core'
 
-const CustomCard = styled(Card)({
-  minWidth: 275
+const CustomPaper = styled(Paper)({
+  padding: 10,
+  minWidth: 500,
+  minHeight: 500
 })
 
-export { CustomCard }
+export { CustomPaper }

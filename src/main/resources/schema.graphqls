@@ -1,48 +1,50 @@
 schema {
-    query: QueryType
-    mutation: MutationType
+  query: QueryType
+  mutation: MutationType
 }
 
 type QueryType {
-    monthlyPayments(month: YearMonth!): [MonthlySubscription]
-    member(id: ID!): Member
-    claim(id: ID!): Claim
+  monthlyPayments(month: YearMonth!): [MonthlySubscription]
+  member(id: ID!): Member
+  claim(id: ID!): Claim
 }
 
 type MutationType {
-    chargeMember(id: ID!, amount: MonetaryAmount!): Member
-    updateClaimState(id: ID!, state: ClaimState!): Claim
-    addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
+  chargeMember(id: ID!, amount: MonetaryAmount!): Member
+  updateClaimState(id: ID!, state: ClaimState!): Claim
+  addClaimNote(id: ID!, note: String!): Claim
+  createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
+  setClaimType(id: ID!, type: String!): Claim # best approach here?
 }
 
 type MonthlySubscription {
-    amount: MonetaryAmount
-    member: Member
+  amount: MonetaryAmount
+  member: Member
 }
 
 type Member {
-    memberId: ID
-    firstName: String
-    lastName: String
-    personalNumber: String
-    address: String
-    postalNumber: String
-    city: String
-    transactions: [Transaction]
-    directDebitStatus: DirectDebitStatus
-    monthlySubscription(month: YearMonth!): MonthlySubscription
+  memberId: ID
+  firstName: String
+  lastName: String
+  personalNumber: String
+  address: String
+  postalNumber: String
+  city: String
+  transactions: [Transaction]
+  directDebitStatus: DirectDebitStatus
+  monthlySubscription(month: YearMonth!): MonthlySubscription
 }
 
 type Transaction {
-    id: ID
-    amount: MonetaryAmount
-    timestamp: Instant
-    type: String
-    status: String
+  id: ID
+  amount: MonetaryAmount
+  timestamp: Instant
+  type: String
+  status: String
 }
 
 type DirectDebitStatus {
-    activated: Boolean
+  activated: Boolean
 }
 
 type Claim {
@@ -62,18 +64,7 @@ type ClaimNote {
   text: String
 }
 
-input ClaimNoteInput {
-  text: String!
-}
-
-union ClaimType = FireClaim | TheftClaim | AccidentalDamageClaim
-
-type FireClaim {
-  location: String
-  date: LocalDate
-  item: String
-  report: Boolean
-}
+union ClaimType = TheftClaim | AccidentalDamageClaim | AssaultClaim | WaterDamageClaim | TravelAccidentClaim | LuggageDelayClaim
 
 type TheftClaim {
   location: String
@@ -91,11 +82,43 @@ type AccidentalDamageClaim {
   receipt: String
 }
 
+type AssaultClaim {
+  location: String
+  date: LocalDate
+  policeReport: String
+}
+
+type WaterDamageClaim {
+  date: LocalDate
+}
+
+type TravelAccidentClaim {
+  location: String
+  date: LocalDate
+  policeReport: String
+  receipt: String
+}
+
+type LuggageDelayClaim {
+  location: String
+  date: LocalDate
+  ticket: String
+}
+
 type ClaimPayment {
   amount: MonetaryAmount
   note: String
-  type: String
+  type: ClaimPaymentType
+  timestamp: Instant
+  exGratia: Boolean
   transaction: Transaction
+}
+
+input ClaimPaymentInput {
+  amount: MonetaryAmount!
+  note: String!
+  type: ClaimPaymentType!
+  exGratia: Boolean!
 }
 
 type ClaimEvent {
@@ -107,6 +130,11 @@ enum ClaimState {
   OPEN
   CLOSED
   REOPENED
+}
+
+enum ClaimPaymentType {
+  Manual
+  Trustly
 }
 
 # A String-representation of `java.time.YearMonth`. ex: `"2018-06"`

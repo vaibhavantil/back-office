@@ -1,14 +1,10 @@
 import * as React from 'react'
-import { CustomCard } from './Styles';
-import { CardContent } from '@material-ui/core';
+import { CustomPaper } from './Styles'
 
 
 const ClaimType: React.SFC = () => (
-  <CustomCard>
-    <CardContent>
-
-    </CardContent>
-  </CustomCard>
+  <CustomPaper>
+  </CustomPaper>
 )
 
 export { ClaimType }

@@ -11,19 +11,15 @@ import lombok.val;
 
 @Value
 @UnionType
-public class AccidentalDamageClaim {
+public class LuggageDelayClaim {
   String location;
   LocalDate date;
-  String item;
-  String policeReport;
-  String receipt;
+  String ticket;
 
-  public static AccidentalDamageClaim fromClaimData(List<ClaimData> claimData) {
+  public static LuggageDelayClaim fromClaimData(List<ClaimData> claimData) {
     String location = null;
     LocalDate date = null;
-    String item = null;
-    String policeReport = null;
-    String receipt = null;
+    String ticket = null;
 
     for (val cd : claimData) {
       switch (cd.getName()) {
@@ -33,18 +29,12 @@ public class AccidentalDamageClaim {
         case "PLACE": {
           location = cd.getValue();
         }
-        case "ITEM": {
-          item = cd.getValue();
-        }
-        case "POLICE_REPORT": {
-          policeReport = cd.getValue();
-        }
-        case "RECEIPT": {
-          receipt = cd.getValue();
+        case "TICKET": {
+          ticket = cd.getValue();
         }
       }
     }
 
-    return new AccidentalDamageClaim(location, date, item, policeReport, receipt);
+    return new LuggageDelayClaim(location, date, ticket);
   }
 }

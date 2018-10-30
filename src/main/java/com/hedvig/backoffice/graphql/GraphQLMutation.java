@@ -4,15 +4,18 @@ import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.ClaimNoteInput;
+import com.hedvig.backoffice.graphql.types.ClaimPaymentInput;
 import com.hedvig.backoffice.graphql.types.ClaimState;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import graphql.schema.DataFetchingEnvironment;
+import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import javax.money.MonetaryAmount;
@@ -59,16 +62,33 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-  public CompletableFuture<Claim> addClaimNote(UUID id, ClaimNoteInput note,
-      DataFetchingEnvironment env) throws AuthorizationException {
-    log.info("Personnell with email '{} adding claim note'",
+  public CompletableFuture<Claim> addClaimNote(UUID id, String text, DataFetchingEnvironment env)
+      throws AuthorizationException {
+    log.info("Personnell with email '{}' adding claim note",
         GraphQLConfiguration.getEmail(env, personnelService));
     val noteDto = new com.hedvig.backoffice.services.claims.dto.ClaimNote();
-    noteDto.setText(note.getText());
-    noteDto.setFileURL(note.getUrl());
+    noteDto.setText(text);
     noteDto.setClaimID(id.toString());
     claimsService.addNote(noteDto, GraphQLConfiguration.getIdToken(env, personnelService));
     return claimLoader.load(id);
+  }
+
+  public CompletableFuture<Claim> createClaimPayment(UUID id, ClaimPaymentInput payment,
+      DataFetchingEnvironment env) throws AuthorizationException {
+    log.info("Personnel with email '{}'' adding claim payment",
+        GraphQLConfiguration.getEmail(env, personnelService));
+    val paymentDto = new ClaimPayment();
+    paymentDto.setAmount(BigDecimal.valueOf(payment.getAmount().getNumber().doubleValueExact()));
+    paymentDto.setNote(payment.getNote());
+    paymentDto.setExGratia(payment.getExGratia());
+    paymentDto.setPaymentType(ClaimPaymentType.valueOf(payment.getType().toString()));
+    paymentDto.setClaimID(id.toString());
+    claimsService.addPayment(paymentDto, GraphQLConfiguration.getIdToken(env, personnelService));
+    return claimLoader.load(id);
+  }
+
+  public CompletableFuture<Claim> setClaimType(UUID id, Object type) {
+    return null;
   }
 
 }

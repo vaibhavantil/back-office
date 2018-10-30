@@ -4,7 +4,12 @@ import graphql.execution.instrumentation.Instrumentation;
 import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentation;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
+import com.coxautodev.graphql.tools.ObjectMapperConfigurer;
+import com.coxautodev.graphql.tools.ObjectMapperConfigurerContext;
 import com.coxautodev.graphql.tools.SchemaParserDictionary;
+import com.coxautodev.graphql.tools.SchemaParserOptions;
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import lombok.val;
@@ -57,5 +62,16 @@ public class GraphQLConfiguration {
     }
 
     return schemaParserDictionary;
+  }
+
+  @Bean
+  SchemaParserOptions schemaParserOptions(List<Module> modules) {
+    return SchemaParserOptions.newOptions().objectMapperConfigurer(new ObjectMapperConfigurer() {
+
+      @Override
+      public void configure(ObjectMapper mapper, ObjectMapperConfigurerContext context) {
+        modules.forEach(module -> mapper.registerModule(module));
+      }
+    }).build();
   }
 }

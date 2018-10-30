@@ -28,15 +28,41 @@ const CLAIM_PAGE_QUERY = gql`
       registrationDate
       recordingUrl
       state
-      # type {
-      #   id
-      #   requirements {
-      #     name
-      #     mandatory
-      #     fulfilled
-      #     value
-      #   }
-      # }
+      type {
+        __typename
+        ... on TheftClaim {
+          location
+          date
+          item
+          policeReport
+        }
+        ... on AccidentalDamageClaim {
+          location
+          date
+          item
+          policeReport
+          receipt
+        }
+        ... on AssaultClaim {
+          location
+          date
+          policeReport
+        }
+        ... on WaterDamageClaim {
+          date
+        }
+        ... on TravelAccidentClaim {
+          location
+          date
+          policeReport
+          receipt
+        }
+        ... on LuggageDelayClaim {
+          location
+          date
+          ticket
+        }
+      }
       notes {
         text
       }
@@ -44,6 +70,8 @@ const CLAIM_PAGE_QUERY = gql`
       payments {
         amount
         note
+        timestamp
+        exGratia
         type
         transaction {
           status
@@ -81,6 +109,10 @@ const ADD_CLAIM_NOTE_QUERY = gql`
       notes {
         text
       }
+      events {
+        text
+        date
+      }
     }
   }
 `
@@ -91,9 +123,56 @@ const ADD_CLAIM_NOTE_MUTATION = gql`
       notes {
         text
       }
+      events {
+        text
+        date
+      }
     }
   }
 `
+
+const CREATE_PAYMENT_QUERY = gql`
+  query CreatePaymentQuery($id: ID!) {
+    claim(id: $id) {
+      payments {
+        amount
+        note
+        type
+        timestamp
+        exGratia
+        transaction {
+          status
+        }
+      }
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+
+const CREATE_PAYMENT_MUTATION = gql`
+  mutation CreatePayment($id: ID!, $payment: ClaimPaymentInput!) {
+    createClaimPayment(id: $id, payment: $payment) {
+      payments {
+        amount
+        note
+        type
+        timestamp
+        exGratia
+        transaction {
+          status
+        }
+      }
+      events {
+        text
+        date
+      }
+    }
+  }
+`
+
 
 interface Props {
   match: {
@@ -126,7 +205,7 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
           </Grid>
           <Grid item>
             <Mutation mutation={UPDATE_CLAIM_STATE_MUTATION} update={(cache, { data: updateData }) => {
-              cache.writeQuery({ query: UPDATE_STATE_QUERY, variables: { id: match.params.id }, data: { getClaim: { state: updateData.updateClaimState.state, __typename: data.getClaim.__typename } } })
+              cache.writeQuery({ query: UPDATE_STATE_QUERY, variables: { id: match.params.id }, data: { claim: { state: updateData.updateClaimState.state, __typename: data.claim.__typename } } })
             }}>
               {(updateClaimState) => (
                 <ClaimInformation recordingUrl={recordingUrl} registrationDate={registrationDate} state={state} updateState={(newState) => updateClaimState({ variables: { id: match.params.id, state: newState } })} />
@@ -137,11 +216,17 @@ const ClaimPage: React.SFC<Props> = ({ match }) => (
             <ClaimType type={type} />
           </Grid> */}
           <Grid item>
-            <ClaimPayments payments={payments} />
+            <Mutation mutation={CREATE_PAYMENT_MUTATION} update={(cache, { data: updateData }) => {
+              cache.writeQuery({ query: CREATE_PAYMENT_QUERY, variables: { id: match.params.id }, data: { claim: { payments: updateData.createClaimPayment.payments, __typename: data.claim.__typename, events: updateData.createClaimPayment.events } } })
+            }}>
+              {(createPayment) => (
+                <ClaimPayments payments={payments} createPayment={(values) => createPayment({ variables: { id: match.params.id, payment: { ...values } } })} />
+              )}
+            </Mutation>
           </Grid>
           <Grid item>
             <Mutation mutation={ADD_CLAIM_NOTE_MUTATION} update={(cache, { data: updateData }) => {
-              cache.writeQuery({ query: ADD_CLAIM_NOTE_QUERY, variables: { id: match.params.id }, data: { getClaim: { notes: updateData.addClaimNote.notes, __typename: data.getClaim.__typename } } })
+              cache.writeQuery({ query: ADD_CLAIM_NOTE_QUERY, variables: { id: match.params.id }, data: { claim: { notes: updateData.addClaimNote.notes, __typename: data.claim.__typename, events: updateData.addClaimNote.events } } })
             }}>
               {(addClaimNote) => (
                 <Notes notes={notes} addClaimNote={(note) => addClaimNote({ variables: { id: match.params.id, note } })} />

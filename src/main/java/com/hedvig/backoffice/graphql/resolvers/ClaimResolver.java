@@ -5,7 +5,6 @@ import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.AccidentalDamageClaim;
 import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.FireClaim;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.TheftClaim;
 import org.springframework.stereotype.Component;
@@ -29,9 +28,6 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
       return null;
     }
     switch (claim.get_type()) {
-      case "FIRE": {
-        return FireClaim.fromClaimData(claim.get_claimData());
-      }
       case "THEFT": {
         return TheftClaim.fromClaimData(claim.get_claimData());
       }

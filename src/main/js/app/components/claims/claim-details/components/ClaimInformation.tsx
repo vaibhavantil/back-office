@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { CustomCard } from './Styles';
-import CardContent from '@material-ui/core/CardContent';
 
 import { parse, format } from 'date-fns'
 import { Select } from '@material-ui/core';
+import { CustomPaper } from './Styles'
 
 enum ClaimState {
   OPEN = 'OPEN',
@@ -27,26 +26,24 @@ const validateSelectOption = (event: React.ChangeEvent<HTMLSelectElement>): Clai
 }
 
 const ClaimInformation: React.SFC<Props> = ({ recordingUrl, registrationDate, state, updateState }) => (
-  <CustomCard>
-    <CardContent>
-      <h3>Claim Information</h3>
-      <p>Registered at: {format(parse(registrationDate), 'YYYY-MM-DD hh:mm:ss')}</p>
-      <audio controls>
-        <source src={recordingUrl} type="audio/aac" />
-      </audio>
-      <div>
-        <a href={recordingUrl} target="_blank" rel="noopener noreferrer">Download claim file</a>
-      </div>
-      <p>Status</p>
-      <Select
-        native
-        value={state}
-        onChange={event => updateState(validateSelectOption(event))}
-      >
-        {Object.keys(ClaimState).map(s => <option key={s} value={s}>{s}</option>)}
-      </Select>
-    </CardContent>
-  </CustomCard>
+  <CustomPaper>
+    <h3>Claim Information</h3>
+    <p>Registered at: {format(parse(registrationDate), 'YYYY-MM-DD hh:mm:ss')}</p>
+    <audio controls>
+      <source src={recordingUrl} type="audio/aac" />
+    </audio>
+    <div>
+      <a href={recordingUrl} target="_blank" rel="noopener noreferrer">Download claim file</a>
+    </div>
+    <p>Status</p>
+    <Select
+      native
+      value={state}
+      onChange={event => updateState(validateSelectOption(event))}
+    >
+      {Object.keys(ClaimState).map(s => <option key={s} value={s}>{s}</option>)}
+    </Select>
+  </CustomPaper>
 )
 
 export { ClaimInformation }

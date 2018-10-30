@@ -242,10 +242,13 @@
           <profiles>
             development
           </profiles>
+          <jvmArguments>
+            -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+          </jvmArguments>
         </configuration>
       </plugin>
 
-      <plugin>
+      <!-- <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
         <version>1.6</version>
@@ -278,7 +281,7 @@
               <goal>webpack</goal>
             </goals>
             <configuration>
-              <arguments>--config webpack.prod.js</arguments>
+              <arguments>config webpack.prod.js</arguments>
             </configuration>
           </execution>
         </executions>
@@ -301,7 +304,7 @@
             </fileset>
           </filesets>
         </configuration>
-      </plugin>
+      </plugin> -->
     </plugins>
   </build>
 
