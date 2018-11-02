@@ -4,6 +4,7 @@ import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
@@ -51,6 +52,11 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   @Override
   public void activate(String memberId, InsuranceActivateDTO dto, String token) {
     client.activate(memberId, dto, token);
+  }
+
+  @Override
+  public void cancel(String memberId, InsuranceCancellationDateDTO dto, String token) {
+    client.cancelInsurance(memberId, dto, token);
   }
 
   @Override

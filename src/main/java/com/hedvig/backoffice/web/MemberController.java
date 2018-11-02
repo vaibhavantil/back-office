@@ -7,6 +7,7 @@ import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
@@ -16,6 +17,7 @@ import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -137,7 +139,11 @@ public class MemberController {
       @PathVariable String hid,
       @RequestBody InsuranceCancellationDTO dto,
       @AuthenticationPrincipal Principal principal) {
-    memberService.cancelInsurance(hid, dto, personnelService.getIdToken(principal.getName()));
+    InsuranceCancellationDateDTO sendDto = new InsuranceCancellationDateDTO(
+      dto.getMemberId(), dto.getInsuranceId(),
+      dto.getCancellationDate().atStartOfDay(ZoneId.of("Europe/Stockholm")).toInstant());
+//    memberService.cancelInsurance(hid, dto, personnelService.getIdToken(principal.getName()));
+    productPricingService.cancel(hid, sendDto, personnelService.getIdToken(principal.getName()));
     return ResponseEntity.noContent().build();
   }
 

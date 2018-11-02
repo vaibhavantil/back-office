@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.product_pricing;
 
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
@@ -19,6 +20,8 @@ public interface ProductPricingService {
   InsuranceStatusDTO insurance(String memberId, String token);
 
   void activate(String memberId, InsuranceActivateDTO dto, String token);
+
+  void cancel(String memberId, InsuranceCancellationDateDTO dto, String token);
 
   List<InsuranceStatusDTO> search(String state, String query, String token);
 

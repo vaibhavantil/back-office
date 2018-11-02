@@ -4,11 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
+import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
@@ -21,6 +17,7 @@ import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +75,8 @@ public class ProductPricingServiceStub implements ProductPricingService {
                 false,
                 null,
                 false,
-                null);
+                null,
+                new ArrayList<>());
 
             if (insurance.getInsuranceState().equals(states[1])) {
               long randomSignedOnDate =
@@ -124,6 +122,11 @@ public class ProductPricingServiceStub implements ProductPricingService {
     this.insurance(memberId, token)
       .setInsuranceActiveFrom(
         dto.getActivationDate().atTime(RandomUtils.nextInt(0, 9), RandomUtils.nextInt(0, 9)));
+  }
+
+  @Override
+  public void cancel(String memberId, InsuranceCancellationDateDTO dto, String token) {
+
   }
 
   @Override
@@ -202,7 +205,8 @@ public class ProductPricingServiceStub implements ProductPricingService {
           false,
           c.getCertificateUrl(),
           c.isCancellationEmailSent(),
-          c.getSignedOn());
+          c.getSignedOn(),
+          new ArrayList<>());
 
       insurances.add(updated);
 
