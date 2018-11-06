@@ -81,6 +81,19 @@ public class BotMessage {
     this.memberId = memberId;
   }
 
+  private String getBodyField (String fieldName, JsonNode body) {
+    return Optional.ofNullable(body.get(fieldName)).map(com.fasterxml.jackson.databind.JsonNode::asText).orElse(null);
+  }
+
+  private boolean isEmptyField(String field, JsonNode body) {
+    String res = getBodyField(field, body);
+    return res == null || res.length() == 0 || "null".equals(res);
+  }
+
+  public boolean isEmptyBody () {
+    return isEmptyField("text", body) && isEmptyField("URL", body);
+  }
+
   private void parseFields(boolean newMessage) throws BotMessageException {
     header =
         Optional.ofNullable(message.get("header"))
