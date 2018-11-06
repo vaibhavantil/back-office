@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.members;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
+import com.hedvig.backoffice.services.members.dto.ChargeMembersDTO;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import java.util.List;
@@ -14,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(
     name = "member-service",
     url = "${memberservice.baseUrl}",
-    configuration = FeignConfig.class,
-    fallback = MemberServiceClientFallback.class)
+    configuration = FeignConfig.class)
 public interface MemberServiceClient {
 
   @GetMapping("/i/member/search?status={status}&query={query}")
@@ -40,6 +40,6 @@ public interface MemberServiceClient {
       @RequestBody InsuranceCancellationDTO dto,
       @RequestHeader("Authorization") String token);
 
-  @GetMapping("/i/member/many/{memberIds}")
-  List<MemberDTO> getMembers(@PathVariable("memberIds") List<String> memberIds);
+  @PostMapping("/i/member/many")
+  List<MemberDTO> getMembers(@RequestBody ChargeMembersDTO memberIds);
 }

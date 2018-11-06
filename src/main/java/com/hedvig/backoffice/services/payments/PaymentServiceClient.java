@@ -6,24 +6,31 @@ import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.payments.dto.PaymentMemberDTO;
 import java.util.List;
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @FeignClient(
-    name = "payment-service",
-    url = "${paymentService.baseUrl}",
-    configuration = FeignConfig.class)
+  name = "payment-service",
+  url = "${paymentService.baseUrl}",
+  configuration = FeignConfig.class)
 public interface PaymentServiceClient {
+
   @GetMapping("/_/members/directDebitStatus/{memberIds}")
   List<DirectDebitStatusDTO> getDirectDebitStatuses(
-      @PathVariable("memberIds") List<String> memberIds);
+    @PathVariable("memberIds") List<String> memberIds);
 
   @GetMapping("/_/members/{memberId}/transactions")
   PaymentMemberDTO getTransactions(@PathVariable("memberId") String memberId);
 
   @PostMapping("/_/members/{memberId}/charge")
   void chargeMember(
-      @PathVariable("memberId") String memberId, @RequestBody ChargeRequestDTO chargeRequestDto);
+    @PathVariable("memberId") String memberId, @RequestBody ChargeRequestDTO chargeRequestDto);
+
+  @GetMapping("/directDebit/status")
+  ResponseEntity<DirectDebitStatusDTO> getDirectDebitStatusByMemberId(
+    @RequestHeader("Hedvig.Token") String memberId);
 }

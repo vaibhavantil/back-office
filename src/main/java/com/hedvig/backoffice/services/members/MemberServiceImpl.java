@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.members;
 
+import com.hedvig.backoffice.services.members.dto.ChargeMembersDTO;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import java.util.List;
@@ -42,6 +43,6 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   public List<MemberDTO> getMembersByIds(List<String> ids) {
-    return client.getMembers(ids);
+    return client.getMembers(new ChargeMembersDTO(ids));
   }
 }

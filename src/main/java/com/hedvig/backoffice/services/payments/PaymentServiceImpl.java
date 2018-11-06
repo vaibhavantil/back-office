@@ -1,11 +1,14 @@
 package com.hedvig.backoffice.services.payments;
 
+import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.services.payments.dto.ChargeRequestDTO;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.payments.dto.Transaction;
+import feign.FeignException;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.money.MonetaryAmount;
+import org.springframework.http.ResponseEntity;
 
 public class PaymentServiceImpl implements PaymentService {
 
@@ -27,11 +30,6 @@ public class PaymentServiceImpl implements PaymentService {
   }
 
   @Override
-  public Boolean hasDirectDebitActivated(String memberId) {
-    return null;
-  }
-
-  @Override
   public List<DirectDebitStatusDTO> getDirectDebitStatuses(List<String> memberIds) {
     return paymentServiceClient.getDirectDebitStatuses(memberIds);
   }
@@ -39,5 +37,15 @@ public class PaymentServiceImpl implements PaymentService {
   @Override
   public void chargeMember(String memberId, MonetaryAmount amount) {
     paymentServiceClient.chargeMember(memberId, new ChargeRequestDTO(amount));
+  }
+
+  @Override
+  public DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId){
+    try {
+      ResponseEntity<?> status = paymentServiceClient.getDirectDebitStatusByMemberId(memberId);
+      return (DirectDebitStatusDTO) status.getBody();
+    }catch (FeignException | ExternalServiceBadRequestException ex){
+     return new DirectDebitStatusDTO(memberId, false);
+    }
   }
 }
