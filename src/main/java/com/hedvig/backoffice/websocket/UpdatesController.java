@@ -27,7 +27,7 @@ public class UpdatesController {
     // updatesService.clear(principal, type);
   }
 
-  @SubscribeMapping("/")
+  @MessageMapping("/")
   public void updates(Principal principal) {
     updatesService.updates(principal.getName());
   }
