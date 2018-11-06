@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -61,7 +62,7 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
               .collect(Collectors.toList());
 
       if (changedAssets.size() > 0) {
-        assetRepository.save(changedAssets);
+        assetRepository.saveAll(changedAssets);
         final Long pendingCount = assetRepository.countAllByState(AssetState.PENDING);
         updatesService.set(pendingCount, UpdateType.ASSETS);
         log.info(
@@ -81,20 +82,28 @@ public class AssetTrackerServiceImpl implements AssetTrackerService {
   @Transactional
   @Override
   public AssetDTO find(String assetId) throws AssetNotFoundException {
-    Asset asset = assetRepository.findOne(assetId);
-    if (asset == null) {
-      throw new AssetNotFoundException(String.format("asset with id %s not found", assetId));
-    }
+    val asset = assetRepository.findById(assetId);
 
-    return AssetDTO.fromDomain(asset);
+    return asset
+        .map(AssetDTO::fromDomain)
+        .orElseThrow(
+            () -> {
+
+              //noinspection ThrowableNotThrown
+              return new AssetNotFoundException(
+                  String.format("asset with id %s not found", assetId));
+            });
   }
 
   @Transactional
   @Override
   public void changeAssetState(String assetId, AssetState state)
       throws AssetNotFoundException, AssetTrackerException {
-    Asset asset = assetRepository.findOne(assetId);
-    if (asset != null) {
+    val assetMaybe = assetRepository.findById(assetId);
+
+    if (assetMaybe.isPresent()) {
+      val asset = assetMaybe.get();
+
       asset.setState(state);
       trackerClient.updateAsset(asset);
       assetRepository.save(asset);

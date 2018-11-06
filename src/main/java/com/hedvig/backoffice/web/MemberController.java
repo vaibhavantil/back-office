@@ -3,6 +3,7 @@ package com.hedvig.backoffice.web;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
+import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
@@ -10,6 +11,8 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyD
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
+import com.hedvig.backoffice.web.dto.MemberStatus;
+import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import java.io.IOException;
 import java.security.Principal;
@@ -18,6 +21,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,7 +57,7 @@ public class MemberController {
 
   @GetMapping
   public List<MemberDTO> list(@AuthenticationPrincipal Principal principal) {
-    return memberService.search("", "", personnelService.getIdToken(principal.getName()));
+    return memberService.search(null, "", personnelService.getIdToken(principal.getName()));
   }
 
   @GetMapping("/{memberId}")
@@ -76,10 +80,24 @@ public class MemberController {
 
   @GetMapping("/search")
   public List<MemberDTO> search(
-      @RequestParam(name = "status", defaultValue = "", required = false) String status,
+      @RequestParam(name = "status", required = false) MemberStatus status,
       @RequestParam(name = "query", defaultValue = "", required = false) String query,
       @AuthenticationPrincipal Principal principal) {
     return memberService.search(status, query, personnelService.getIdToken(principal.getName()));
+  }
+
+  @GetMapping("/searchPaged")
+  public MembersSearchResultDTO searchPaged(
+    @RequestParam(name = "status", required = false) MemberStatus status,
+    @RequestParam(name = "query", required = false) String query,
+    @RequestParam(name = "page", required = false) Integer page,
+    @RequestParam(name = "pageSize", required = false) Integer pageSize,
+    @RequestParam(name = "sortBy", required = false) MembersSortColumn sortBy,
+    @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
+
+    @AuthenticationPrincipal Principal principal) {
+    String token = personnelService.getIdToken(principal.getName());
+    return memberService.searchPaged(status, query, page, pageSize, sortBy, sortDirection, token);
   }
 
   @RequestMapping(

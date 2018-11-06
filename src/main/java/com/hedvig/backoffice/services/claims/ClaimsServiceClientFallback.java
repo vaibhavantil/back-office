@@ -5,6 +5,8 @@ import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,6 +46,12 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   public List<Claim> list(String token) {
     log.error("request to claim-service failed");
     return new ArrayList<>();
+  }
+
+  @Override
+  public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy, Sort.Direction sortDirection, String token) {
+    log.error("request to claim-service failed");
+    return new ClaimSearchResultDTO(new ArrayList<>(), null, null);
   }
 
   @Override

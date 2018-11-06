@@ -69,7 +69,7 @@ public class UpdatesServiceImpl implements UpdatesService {
     if (count != 0) {
       List<Updates> updates = updatesRepository.findByType(type);
       updates.forEach(u -> u.setCount(u.getCount() + count));
-      updatesRepository.save(updates);
+      updatesRepository.saveAll(updates);
 
       updates.forEach(u -> send(u.getPersonnel(), Collections.singletonList(u)));
     }
@@ -80,7 +80,7 @@ public class UpdatesServiceImpl implements UpdatesService {
   public void set(long count, UpdateType type) {
     List<Updates> updates = updatesRepository.findByType(type);
     updates.forEach(u -> u.setCount(count));
-    updatesRepository.save(updates);
+    updatesRepository.saveAll(updates);
 
     updates.forEach(u -> send(u.getPersonnel(), Collections.singletonList(u)));
   }
@@ -129,7 +129,7 @@ public class UpdatesServiceImpl implements UpdatesService {
       }
     }
 
-    updatesRepository.save(updates);
+    updatesRepository.saveAll(updates);
   }
 
   @Override

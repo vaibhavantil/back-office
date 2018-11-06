@@ -1,0 +1,112 @@
+server:
+  port: 8443
+  httpPort: 8080
+  session:
+    timeout: 3600
+    cookie:
+      max-age: 3600
+      http-only: true
+      secure: true
+
+logging:
+  level:
+    com:
+      hedvig: DEBUG
+
+  http:
+    multipart:
+      max-file-size: 16MB
+      max-request-size: 16MB
+  cloud:
+    config:
+      allow-override: false
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+feign:
+  hystrix:
+    enabled: false
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+
+intervals:
+  tracker: 50000000
+  chat: 1000000000
+  claims: 600000000000
+
+websocket:
+  max-sile-size: 5242880
+
+tracker:
+  baseUrl: http://localhost:7082
+  urls:
+    assets: /assets
+    update: /asset
+  stub: false
+
+botservice:
+  baseUrl: http://localhost:7081
+  questionId: main.question
+  stub: false
+
+memberservice:
+  baseUrl: http://localhost:7084
+  stub: false
+
+claims:
+  baseUrl: http://localhost:7083
+  stub: false
+
+productPricing:
+  baseUrl: http://localhost:7085
+  stub: false
+
+paymentService:
+  baseUrl: http://localhost:7086
+  stub: false
+
+oauth:
+  enabled: true
+  hds: hedvig.com
+  google:
+    client:
+      clientId:
+      clientSecret:
+      accessTokenUri: https://accounts.google.com/o/oauth2/token
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth?access_type=offline&prompt=consent
+      tokenName: oauth_token
+      authenticationScheme: query
+      clientAuthenticationScheme: form
+      scope: profile, email
+    resource:
+      userInfoUri: https://www.googleapis.com/userinfo/v2/me
+
+graphql:
+  servlet:
+    mapping: /api/graphql
+    enabled: true
+    corsEnabled: false
+
+graphiql:
+  mapping: /graphiql
+  endpoint: /api/graphql
+  enabled: true
+  pageTitle: BackOffice GraphiQL
+
+
+spring:
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
