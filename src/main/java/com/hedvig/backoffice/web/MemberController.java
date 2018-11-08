@@ -9,6 +9,7 @@ import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
+import com.hedvig.backoffice.web.dto.InsuranceSearchResultDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
@@ -19,6 +20,9 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
+
+import com.hedvig.backoffice.web.dto.ProductSortColumns;
+import com.hedvig.backoffice.web.dto.ProductState;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -143,11 +147,24 @@ public class MemberController {
 
   @GetMapping("/insurance/search")
   public List<InsuranceStatusDTO> searchInsurance(
-      @RequestParam(name = "state", defaultValue = "", required = false) String state,
+      @RequestParam(name = "state", required = false) ProductState state,
       @RequestParam(name = "query", defaultValue = "", required = false) String query,
       @AuthenticationPrincipal Principal principal) {
     return productPricingService.search(
         state, query, personnelService.getIdToken(principal.getName()));
+  }
+
+  @GetMapping("/insurance/searchPaged")
+  public InsuranceSearchResultDTO searchInsurancePaged(
+    @RequestParam(name = "state", required = false) ProductState state,
+    @RequestParam(name = "query", defaultValue = "", required = false) String query,
+    @RequestParam(name = "page", required = false) Integer page,
+    @RequestParam(name = "pageSize", required = false) Integer pageSize,
+    @RequestParam(name = "sortBy", required = false) ProductSortColumns sortBy,
+    @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
+    @AuthenticationPrincipal Principal principal) {
+    String idToken = personnelService.getIdToken(principal.getName());
+    return productPricingService.searchPaged(state, query, page, pageSize, sortBy, sortDirection, idToken);
   }
 
   @GetMapping("/insurance/{memberId}/insurances")
