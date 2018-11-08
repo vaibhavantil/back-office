@@ -178,7 +178,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
     put(ProductSortColumns.CERTIFICATE_UPLOADED, Comparator.comparing((InsuranceStatusDTO ins) -> ins.isCertificateUploaded(), nullsLast(Boolean::compareTo)));
     put(ProductSortColumns.CONTRACT_SIGNED_DATE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getSignedOn(), nullsLast(Instant::compareTo)));
     put(ProductSortColumns.HOUSEHOLD_SIZE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getPersonsInHouseHold(), nullsLast(Integer::compareTo)));
-    put(ProductSortColumns.MEMBER_FULL_NAME, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getMemberLastName() + " " + ins.getMemberFirstName(), nullsLast(String::compareTo)));
+    put(ProductSortColumns.MEMBER_FULL_NAME, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getMemberFirstName() + " " + ins.getMemberLastName(), nullsLast(String::compareTo)));
     put(ProductSortColumns.STATUS, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceStatus(), nullsLast(String::compareTo)));
     put(ProductSortColumns.TYPE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceType(), nullsLast(String::compareTo)));
   }};
@@ -190,7 +190,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
     put(ProductSortColumns.CERTIFICATE_UPLOADED, Comparator.comparing((InsuranceStatusDTO ins) -> ins.isCertificateUploaded(), nullsFirst(Boolean::compareTo)).reversed());
     put(ProductSortColumns.CONTRACT_SIGNED_DATE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getSignedOn(), nullsFirst(Instant::compareTo)).reversed());
     put(ProductSortColumns.HOUSEHOLD_SIZE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getPersonsInHouseHold(), nullsFirst(Integer::compareTo)).reversed());
-    put(ProductSortColumns.MEMBER_FULL_NAME, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getMemberLastName() + " " + ins.getMemberFirstName(), nullsFirst(String::compareTo)).reversed());
+    put(ProductSortColumns.MEMBER_FULL_NAME, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getMemberFirstName() + " " + ins.getMemberLastName(), nullsFirst(String::compareTo)).reversed());
     put(ProductSortColumns.STATUS, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceStatus(), nullsFirst(String::compareTo)).reversed());
     put(ProductSortColumns.TYPE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceType(), nullsFirst(String::compareTo)).reversed());
   }};
