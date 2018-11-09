@@ -57,5 +57,5 @@ public class InsuranceStatusDTO {
 
   private Instant signedOn;
 
-  private List<TraceProductDTO> traceProduct;
+  private List<TraceInfoDTO> traceProduct;
 }
