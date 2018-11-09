@@ -5,6 +5,8 @@ import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 
 public class ClaimsServiceImpl implements ClaimsService {
 
@@ -49,6 +52,11 @@ public class ClaimsServiceImpl implements ClaimsService {
   @Override
   public List<ClaimType> types(String token) {
     return client.types(token);
+  }
+
+  @Override
+  public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy, Sort.Direction sortDirection, String token) {
+    return client.search(page, pageSize, sortBy, sortDirection, token);
   }
 
   @Override

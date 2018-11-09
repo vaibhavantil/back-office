@@ -188,8 +188,8 @@
     ]
   },
     {
-    "name": "Water damage - Kitchen",
-    "title": "Water damage - Kitchen",
+    "name": "Water Damage - Kitchen",
+    "title": "Water Damage - Kitchen",
     "requiredData": [
       {
         "name": "date",
@@ -201,8 +201,8 @@
     ]
   },
     {
-    "name": "Water damage - Bathroom",
-    "title": "Water damage - Bathroom",
+    "name": "Water Damage - Bathroom",
+    "title": "Water Damage - Bathroom",
     "requiredData": [
       {
         "name": "date",

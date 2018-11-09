@@ -33,7 +33,7 @@ public class InsuranceStatusDTO {
 
   private String insuranceStatus;
 
-  private String insuranceState;
+  private ProductState insuranceState;
 
   private Integer personsInHouseHold;
 

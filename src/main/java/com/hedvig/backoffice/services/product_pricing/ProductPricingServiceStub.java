@@ -6,8 +6,11 @@ import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
 import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
+import com.hedvig.backoffice.web.dto.InsuranceSearchResultDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
+import com.hedvig.backoffice.web.dto.ProductSortColumns;
+import com.hedvig.backoffice.web.dto.ProductState;
 import com.hedvig.backoffice.web.dto.SafetyIncreaserType;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -19,6 +22,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,6 +36,11 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+
+
+import static java.util.Comparator.nullsLast;
+import static java.util.Comparator.nullsFirst;
 
 @Slf4j
 public class ProductPricingServiceStub implements ProductPricingService {
@@ -41,7 +51,6 @@ public class ProductPricingServiceStub implements ProductPricingService {
   public ProductPricingServiceStub(ObjectMapper mapper) {
     long minSignedOnDay = LocalDate.of(2011, 1, 3).toEpochDay();
     long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
-    String[] states = {"QUOTE", "SIGNED", "TERMINATED"};
     List<SafetyIncreaserType> safetyIncreasers =
       Arrays.asList(SafetyIncreaserType.SAFETY_DOOR, SafetyIncreaserType.BURGLAR_ALARM);
     insurances =
@@ -49,7 +58,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
         .mapToObj(
           i -> {
             String memberId = Long.toString(MemberServiceStub.testMemberIds[i]);
-            String insuranceState = states[RandomUtils.nextInt(0, states.length)];
+            ProductState insuranceState = ProductState.values()[RandomUtils.nextInt(0, ProductState.values().length)];
 
             InsuranceStatusDTO insurance =
               new InsuranceStatusDTO(
@@ -78,7 +87,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
                 null,
                 new ArrayList<>());
 
-            if (insurance.getInsuranceState().equals(states[1])) {
+            if (insurance.getInsuranceState() == ProductState.SIGNED) {
               long randomSignedOnDate =
                 ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
               LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
@@ -129,9 +138,8 @@ public class ProductPricingServiceStub implements ProductPricingService {
 
   }
 
-  @Override
-  public List<InsuranceStatusDTO> search(String state, String query, String token) {
-    if (StringUtils.isBlank(state) && StringUtils.isBlank(query)) {
+  public List<InsuranceStatusDTO> search(ProductState state, String query, String token) {
+    if (state == null && StringUtils.isBlank(query)) {
       return insurances;
     }
     return insurances
@@ -139,9 +147,55 @@ public class ProductPricingServiceStub implements ProductPricingService {
       .filter(
         u ->
           (StringUtils.isNotBlank(query) && u.getMemberFirstName().contains(query))
-            || (StringUtils.isNotBlank(state) && u.getInsuranceState().contains(state)))
+            || (state != null && u.getInsuranceState() == state))
       .collect(Collectors.toList());
   }
+
+  @Override
+  public InsuranceSearchResultDTO searchPaged(ProductState state, String query, Integer page, Integer pageSize, ProductSortColumns sortBy, Sort.Direction sortDirection, String token) {
+    List<InsuranceStatusDTO> filtered = search(state, query, token);
+
+    if (sortBy != null) {
+      filtered.sort((sortDirection == Sort.Direction.DESC ? COMPARATORS_DESC : COMPARATORS_ASC).get(sortBy));
+    }
+
+    if (page != null && pageSize != null) {
+      int offset = page * pageSize;
+      int totalPages = filtered.size() / pageSize;
+      if (filtered.size() % pageSize != 0) {
+        totalPages++;
+      }
+
+      filtered = filtered.subList(offset, Math.min(filtered.size(), offset + pageSize));
+      return new InsuranceSearchResultDTO(filtered, page, totalPages);
+    } else {
+      return new InsuranceSearchResultDTO(filtered, null, null);
+    }
+  }
+
+  private static EnumMap<ProductSortColumns, Comparator<InsuranceStatusDTO>> COMPARATORS_ASC = new EnumMap<ProductSortColumns, Comparator<InsuranceStatusDTO>>(ProductSortColumns.class) {{
+    put(ProductSortColumns.ACTIVE_FROM_DATE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceActiveFrom(), nullsLast(LocalDateTime::compareTo)));
+    put(ProductSortColumns.ACTIVE_TO_DATE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceActiveTo(), nullsLast(LocalDateTime::compareTo)));
+    put(ProductSortColumns.CANCELLATION_EMAIL_SENT_DATE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.isCancellationEmailSent(), nullsLast(Boolean::compareTo)));
+    put(ProductSortColumns.CERTIFICATE_UPLOADED, Comparator.comparing((InsuranceStatusDTO ins) -> ins.isCertificateUploaded(), nullsLast(Boolean::compareTo)));
+    put(ProductSortColumns.CONTRACT_SIGNED_DATE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getSignedOn(), nullsLast(Instant::compareTo)));
+    put(ProductSortColumns.HOUSEHOLD_SIZE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getPersonsInHouseHold(), nullsLast(Integer::compareTo)));
+    put(ProductSortColumns.MEMBER_FULL_NAME, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getMemberFirstName() + " " + ins.getMemberLastName(), nullsLast(String::compareTo)));
+    put(ProductSortColumns.STATUS, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceStatus(), nullsLast(String::compareTo)));
+    put(ProductSortColumns.TYPE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceType(), nullsLast(String::compareTo)));
+  }};
+
+  private static EnumMap<ProductSortColumns, Comparator<InsuranceStatusDTO>> COMPARATORS_DESC = new EnumMap<ProductSortColumns, Comparator<InsuranceStatusDTO>>(ProductSortColumns.class) {{
+    put(ProductSortColumns.ACTIVE_FROM_DATE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceActiveFrom(), nullsFirst(LocalDateTime::compareTo)).reversed());
+    put(ProductSortColumns.ACTIVE_TO_DATE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceActiveTo(), nullsFirst(LocalDateTime::compareTo)).reversed());
+    put(ProductSortColumns.CANCELLATION_EMAIL_SENT_DATE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.isCancellationEmailSent(), nullsFirst(Boolean::compareTo)).reversed());
+    put(ProductSortColumns.CERTIFICATE_UPLOADED, Comparator.comparing((InsuranceStatusDTO ins) -> ins.isCertificateUploaded(), nullsFirst(Boolean::compareTo)).reversed());
+    put(ProductSortColumns.CONTRACT_SIGNED_DATE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getSignedOn(), nullsFirst(Instant::compareTo)).reversed());
+    put(ProductSortColumns.HOUSEHOLD_SIZE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getPersonsInHouseHold(), nullsFirst(Integer::compareTo)).reversed());
+    put(ProductSortColumns.MEMBER_FULL_NAME, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getMemberFirstName() + " " + ins.getMemberLastName(), nullsFirst(String::compareTo)).reversed());
+    put(ProductSortColumns.STATUS, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceStatus(), nullsFirst(String::compareTo)).reversed());
+    put(ProductSortColumns.TYPE, Comparator.comparing((InsuranceStatusDTO ins) -> ins.getInsuranceType(), nullsFirst(String::compareTo)).reversed());
+  }};
 
   @Override
   public void sendCancellationEmail(String memberId, String token) {
@@ -194,7 +248,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
           changeRequest.livingSpace,
           changeRequest.safetyIncreasers,
           c.getInsuranceStatus(),
-          "QUOTE",
+          ProductState.QUOTE,
           changeRequest.personsInHouseHold,
           c.getCurrentTotalPrice(),
           c.getNewTotalPrice(),
@@ -239,7 +293,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
       InsuranceStatusDTO u = updated.get();
       c.setInsuranceActiveTo(request.terminationDate.atStartOfDay());
 
-      u.setInsuranceState("SIGNED");
+      u.setInsuranceState(ProductState.SIGNED);
       u.setInsuranceActiveFrom(request.activationDate.atStartOfDay());
     }
   }
@@ -248,6 +302,9 @@ public class ProductPricingServiceStub implements ProductPricingService {
   public List<MonthlySubscriptionDTO> getMonthlyPayments(YearMonth month) {
     return Lists.newArrayList(
       new MonthlySubscriptionDTO("123456", Money.of(100, Monetary.getCurrency("SEK"))),
+      new MonthlySubscriptionDTO("2820671", Money.of(RandomUtils.nextInt(99,999), Monetary.getCurrency("SEK"))),
+      new MonthlySubscriptionDTO("6865256", Money.of(RandomUtils.nextInt(99,999), Monetary.getCurrency("SEK"))),
+      new MonthlySubscriptionDTO("9417985", Money.of(RandomUtils.nextInt(99,999), Monetary.getCurrency("SEK"))),
       new MonthlySubscriptionDTO("3267661", Money.of(200, Monetary.getCurrency("SEK"))));
   }
 

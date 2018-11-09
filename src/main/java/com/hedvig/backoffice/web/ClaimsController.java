@@ -7,6 +7,8 @@ import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
@@ -17,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,6 +47,18 @@ public class ClaimsController {
   @GetMapping
   public List<Claim> claims(@AuthenticationPrincipal Principal principal) {
     return claimsService.list(personnelService.getIdToken(principal.getName()));
+  }
+
+  @GetMapping("/search")
+  public ClaimSearchResultDTO search(
+    @RequestParam(name = "page", required = false) Integer page,
+    @RequestParam(name = "pageSize", required = false) Integer pageSize,
+    @RequestParam(name = "sortBy", required = false) ClaimSortColumn sortBy,
+    @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
+    @AuthenticationPrincipal Principal principal
+  ) {
+    String idToken = personnelService.getIdToken(principal.getName());
+    return claimsService.search(page, pageSize, sortBy, sortDirection, idToken);
   }
 
   @GetMapping("/{id}")

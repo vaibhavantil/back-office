@@ -10,11 +10,15 @@ import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
+import com.hedvig.backoffice.web.dto.InsuranceSearchResultDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import java.io.IOException;
 import java.time.YearMonth;
 import java.util.List;
+
+import com.hedvig.backoffice.web.dto.ProductSortColumns;
+import com.hedvig.backoffice.web.dto.ProductState;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -24,6 +28,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
 @Slf4j
@@ -59,9 +64,13 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     client.cancelInsurance(memberId, dto, token);
   }
 
-  @Override
-  public List<InsuranceStatusDTO> search(String state, String query, String token) {
+  public List<InsuranceStatusDTO> search(ProductState state, String query, String token) {
     return client.search(state, query, token);
+  }
+
+  @Override
+  public InsuranceSearchResultDTO searchPaged(ProductState state, String query, Integer page, Integer pageSize, ProductSortColumns sortBy, Sort.Direction sortDirection, String token) {
+    return client.searchPaged(query, state, page, pageSize, sortBy, sortDirection, token);
   }
 
   @Override

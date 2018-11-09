@@ -8,10 +8,11 @@ import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
 import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,16 @@ public class BotServiceImpl implements BotService {
 
   @Override
   public List<BackOfficeMessage> fetch(Instant timestamp, String token) {
-    return botServiceClient.fetch(timestamp.toEpochMilli(), token);
+    List<BackOfficeMessage> result = new ArrayList<>();
+
+    botServiceClient.fetch(timestamp.toEpochMilli(), token).forEach(m -> {
+      try {
+        BotMessage bm = m.toBotMessage();
+        if (!bm.isEmptyBody() || !bm.isBotMessage()) result.add(m);
+      } catch (BotMessageException e) { log.error(e.toString());}
+    });
+
+    return result;
   }
 
   @Override
@@ -68,7 +78,8 @@ public class BotServiceImpl implements BotService {
         .map(
             e -> {
               try {
-                return new BotMessage(e.getValue().toString());
+                BotMessage bm = new BotMessage(e.getValue().toString());
+                return bm.isEmptyBody() ? null : bm;
               } catch (BotMessageException ex) {
                 log.error(ex.getMessage(), ex);
                 return null;

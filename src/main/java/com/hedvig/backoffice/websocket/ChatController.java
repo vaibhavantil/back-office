@@ -33,13 +33,13 @@ public class ChatController {
         memberId, message.getMsg(), principalId, personnelService.getIdToken(principalId));
   }
 
-  @SubscribeMapping("/history/{memberId}")
+  @MessageMapping("/history/{memberId}")
   public void messages(
       @DestinationVariable String memberId, @AuthenticationPrincipal String principalId) {
     chatService.messages(memberId, principalId, personnelService.getIdToken(principalId));
   }
 
-  @SubscribeMapping("/history/{memberId}/{count}")
+  @MessageMapping("/history/{memberId}/{count}")
   public void messages(
       @DestinationVariable String memberId,
       @DestinationVariable int count,

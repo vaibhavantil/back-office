@@ -6,17 +6,21 @@ import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
 import java.util.List;
 import java.util.Map;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
     name = "claims-service",
@@ -34,6 +38,15 @@ public interface ClaimsServiceClient {
 
   @GetMapping("/_/claims/listclaims")
   List<Claim> list(@RequestHeader("Authorization") String token);
+
+  @GetMapping("/_/claims/search")
+  ClaimSearchResultDTO search(
+    @RequestParam("page") Integer page,
+    @RequestParam("pageSize") Integer pageSize,
+    @RequestParam("sortBy") ClaimSortColumn sortBy,
+    @RequestParam("sortDirection") Sort.Direction sortDirection,
+    @RequestHeader("Authorization") String token
+  );
 
   @GetMapping("/_/claims/claim?claimID={id}")
   Claim find(@PathVariable("id") String id, @RequestHeader("Authorization") String token);
