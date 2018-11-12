@@ -21,7 +21,7 @@ public class UpdatesController {
     this.updatesService = updatesService;
   }
 
-  @SubscribeMapping("/clear/{type}")
+  @MessageMapping("/clear/{type}")
   public void clear(
       @DestinationVariable UpdateType type, @AuthenticationPrincipal String principal) {
     // updatesService.clear(principal, type);
