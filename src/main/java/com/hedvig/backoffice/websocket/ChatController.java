@@ -24,7 +24,7 @@ public class ChatController {
     this.personnelService = personnelService;
   }
 
-  @SubscribeMapping("/send/{memberId}")
+  @MessageMapping("/send/{memberId}")
   public void send(
       @DestinationVariable String memberId,
       @RequestBody BackOfficeResponseDTO message,
