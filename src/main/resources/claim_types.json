@@ -30,9 +30,10 @@
         "title": "Receipt",
         "type": "FILE"
       }
-    ]
+    ],
+    "archive": false
   },
-    {
+  {
     "name": "Theft - Home",
     "title": "Theft - Home",
     "requiredData": [
@@ -63,9 +64,10 @@
         "title": "Receipt",
         "type": "FILE"
       }
-    ]
+    ],
+    "archive": false
   },
-    {
+  {
     "name": "Theft - Bike",
     "title": "Theft - Bike",
     "requiredData": [
@@ -96,9 +98,10 @@
         "title": "Receipt",
         "type": "FILE"
       }
-    ]
+    ],
+    "archive": false
   },
-    {
+  {
     "name": "Assault",
     "title": "Assault",
     "requiredData": [
@@ -119,9 +122,10 @@
         "title": "Police report",
         "type": "BOOL"
       }
-    ]
+    ],
+    "archive": false
   },
-    {
+  {
     "name": "Drulle - Mobile",
     "title": "Drulle - Mobile",
     "requiredData": [
@@ -152,9 +156,10 @@
         "title": "Receipt",
         "type": "FILE"
       }
-    ]
+    ],
+    "archive": false
   },
-    {
+  {
     "name": "Drulle - Other",
     "title": "Drulle - Other",
     "requiredData": [
@@ -185,9 +190,10 @@
         "title": "Receipt",
         "type": "FILE"
       }
-    ]
+    ],
+    "archive": false
   },
-    {
+  {
     "name": "Water Damage - Kitchen",
     "title": "Water Damage - Kitchen",
     "requiredData": [
@@ -198,9 +204,10 @@
       }
     ],
     "optionalData": [
-    ]
+    ],
+    "archive": false
   },
-    {
+  {
     "name": "Water Damage - Bathroom",
     "title": "Water Damage - Bathroom",
     "requiredData": [
@@ -211,10 +218,10 @@
       }
     ],
     "optionalData": [
-
-    ]
+    ],
+    "archive": false
   },
-    {
+  {
     "name": "Travel - Accident and Health",
     "title": "Travel - Accident and Health",
     "requiredData": [
@@ -240,9 +247,10 @@
         "title": "Receipt",
         "type": "FILE"
       }
-    ]
+    ],
+    "archive": false
   },
-      {
+  {
     "name": "Travel - Delayed Luggage",
     "title": "Travel - Delayed Luggage",
     "requiredData": [
@@ -263,6 +271,7 @@
         "title": "Ticket",
         "type": "BOOL"
       }
-    ]
+    ],
+    "archive": false
   }
 ]
