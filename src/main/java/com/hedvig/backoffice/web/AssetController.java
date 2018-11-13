@@ -25,8 +25,8 @@ public class AssetController {
   private final AssetTrackerService assetTrackerService;
 
   @Autowired
-  public AssetController(AssetTrackerService assetTrackerService) {
-    this.assetTrackerService = assetTrackerService;
+  public AssetController() {
+    assetTrackerService = null;
   }
 
   @GetMapping
