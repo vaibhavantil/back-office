@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.services.members;
 
-import com.google.common.collect.Lists;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberDTO;
@@ -17,6 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
 import org.apache.commons.lang3.RandomUtils;
@@ -167,4 +167,11 @@ public class MemberServiceStub implements MemberService {
         .filter(u -> ids.contains(u.getMemberId().toString()))
         .collect(Collectors.toList());
   }
+
+  @Override
+  public void setFraudulentStatus(String memberId, MemberFraudulentStatusDTO dto, String token) {
+
+  }
+
+
 }
