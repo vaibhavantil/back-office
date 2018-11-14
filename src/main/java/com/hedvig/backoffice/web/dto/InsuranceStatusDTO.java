@@ -43,6 +43,8 @@ public class InsuranceStatusDTO {
 
   private Boolean insuredAtOtherCompany;
 
+  private String currentInsurer;
+
   private String insuranceType;
 
   private LocalDateTime insuranceActiveFrom;
