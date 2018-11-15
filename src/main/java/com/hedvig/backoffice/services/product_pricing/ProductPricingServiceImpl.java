@@ -5,13 +5,19 @@ import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
+import com.hedvig.backoffice.web.dto.InsuranceSearchResultDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import java.io.IOException;
 import java.time.YearMonth;
 import java.util.List;
+
+import com.hedvig.backoffice.web.dto.ProductSortColumns;
+import com.hedvig.backoffice.web.dto.ProductState;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -21,6 +27,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
 @Slf4j
@@ -31,7 +38,7 @@ public class ProductPricingServiceImpl implements ProductPricingService {
 
   @Autowired
   public ProductPricingServiceImpl(
-      ProductPricingClient client, @Value("${productPricing.baseUrl}") String baseUrl) {
+    ProductPricingClient client, @Value("${productPricing.baseUrl}") String baseUrl) {
     this.client = client;
     this.baseUrl = baseUrl;
   }
@@ -52,8 +59,13 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   }
 
   @Override
-  public List<InsuranceStatusDTO> search(String state, String query, String token) {
+  public List<InsuranceStatusDTO> search(ProductState state, String query, String token) {
     return client.search(state, query, token);
+  }
+
+  @Override
+  public InsuranceSearchResultDTO searchPaged(ProductState state, String query, Integer page, Integer pageSize, ProductSortColumns sortBy, Sort.Direction sortDirection, String token) {
+    return client.searchPaged(query, state, page, pageSize, sortBy, sortDirection, token);
   }
 
   @Override
@@ -63,22 +75,22 @@ public class ProductPricingServiceImpl implements ProductPricingService {
 
   @Override
   public void uploadCertificate(
-      String memberId, String fileName, String contentType, byte[] data, String token)
-      throws IOException {
+    String memberId, String fileName, String contentType, byte[] data, String token)
+    throws IOException {
     OkHttpClient client = new OkHttpClient();
     RequestBody body =
-        new MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart(
-                "file", fileName, RequestBody.create(MediaType.parse(contentType), data))
-            .build();
+      new MultipartBody.Builder()
+        .setType(MultipartBody.FORM)
+        .addFormDataPart(
+          "file", fileName, RequestBody.create(MediaType.parse(contentType), data))
+        .build();
 
     Request request =
-        new Request.Builder()
-            .url(baseUrl + "/_/insurance/" + memberId + "/certificate")
-            .addHeader("Authorization", token)
-            .post(body)
-            .build();
+      new Request.Builder()
+        .url(baseUrl + "/_/insurance/" + memberId + "/certificate")
+        .addHeader("Authorization", token)
+        .post(body)
+        .build();
 
     Response response = client.newCall(request).execute();
     if (response.isSuccessful()) {
@@ -89,10 +101,10 @@ public class ProductPricingServiceImpl implements ProductPricingService {
 
     if (!status.is2xxSuccessful()) {
       log.error(
-          "insurance certificate not uploaded to product-pricing, code = "
-              + response.code()
-              + ", member id = "
-              + memberId);
+        "insurance certificate not uploaded to product-pricing, code = "
+          + response.code()
+          + ", member id = "
+          + memberId);
     }
 
     if (status == HttpStatus.NOT_FOUND) {
@@ -116,7 +128,7 @@ public class ProductPricingServiceImpl implements ProductPricingService {
 
   @Override
   public InsuranceStatusDTO createmodifiedProduct(
-      String memberId, InsuranceModificationDTO changeRequest, String token) {
+    String memberId, InsuranceModificationDTO changeRequest, String token) {
     return client.createmodifiedProduct(memberId, changeRequest, token);
   }
 
@@ -133,5 +145,12 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   @Override
   public MonthlySubscriptionDTO getMonthlyPaymentsByMember(YearMonth month, String memberId) {
     return client.getMonthlySubscriptionByMember(month.getYear(), month.getMonthValue(), memberId);
+  }
+
+  @Override
+  public List<MonthlyBordereauDTO> getMonthlyBordereauByProductType(YearMonth month,
+    ProductType productType) {
+    return client
+      .getMonthlyBordereauByProductType(month.getYear(), month.getMonthValue(), productType);
   }
 }

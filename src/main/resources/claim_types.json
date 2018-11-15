@@ -1,96 +1,277 @@
 [
   {
-    "name": "THEFT",
-    "title": "Stöld",
+    "name": "Theft - Other",
+    "title": "Theft - Other",
     "requiredData": [
       {
-        "name": "place",
-        "title": "Plats",
-        "type": "TEXT"
-      },
-      {
         "name": "date",
-        "title": "Datum",
+        "title": "Date",
         "type": "DATE"
       },
       {
+        "name": "place",
+        "title": "Place",
+        "type": "TEXT"
+      },
+      {
         "name": "item",
-        "title": "Pryl",
+        "title": "Item",
         "type": "ASSET"
       }
     ],
     "optionalData": [
       {
         "name": "report",
-        "title": "Polisanmälan",
+        "title": "Police report",
         "type": "BOOL"
       },
       {
-        "name": "file",
-        "title": "Kvitto",
+        "name": "receipt",
+        "title": "Receipt",
         "type": "FILE"
       }
-    ]
+    ],
+    "archive": false
   },
   {
-    "name": "FIRE",
-    "title": "Brand",
+    "name": "Theft - Home",
+    "title": "Theft - Home",
     "requiredData": [
       {
-        "name": "place",
-        "title": "Plats",
-        "type": "TEXT"
-      },
-      {
         "name": "date",
-        "title": "Datum",
+        "title": "Date",
         "type": "DATE"
       },
       {
+        "name": "place",
+        "title": "Place",
+        "type": "TEXT"
+      },
+      {
         "name": "item",
-        "title": "Pryl",
+        "title": "Item",
         "type": "ASSET"
       }
     ],
     "optionalData": [
       {
         "name": "report",
-        "title": "Brandinspektionsrapport",
-        "type": "BOOL"
-      }
-    ]
-  },
-  {
-    "name": "DRULLE",
-    "title": "Drulle",
-    "requiredData": [
-      {
-        "name": "place",
-        "title": "Plats",
-        "type": "TEXT"
-      },
-      {
-        "name": "date",
-        "title": "Datum",
-        "type": "DATE"
-      },
-      {
-        "name": "item",
-        "title": "Pryl",
-        "type": "ASSET"
-      }
-    ],
-    "optionalData": [
-      {
-        "name": "report",
-        "title": "Polisanmälan",
+        "title": "Police report",
         "type": "BOOL"
       },
       {
-        "name": "file",
-        "title": "Kvitto",
+        "name": "receipt",
+        "title": "Receipt",
         "type": "FILE"
       }
-    ]
+    ],
+    "archive": false
+  },
+  {
+    "name": "Theft - Bike",
+    "title": "Theft - Bike",
+    "requiredData": [
+      {
+        "name": "date",
+        "title": "Date",
+        "type": "DATE"
+      },
+      {
+        "name": "place",
+        "title": "Place",
+        "type": "TEXT"
+      },
+      {
+        "name": "item",
+        "title": "Item",
+        "type": "ASSET"
+      }
+    ],
+    "optionalData": [
+      {
+        "name": "report",
+        "title": "Police report",
+        "type": "BOOL"
+      },
+      {
+        "name": "receipt",
+        "title": "Receipt",
+        "type": "FILE"
+      }
+    ],
+    "archive": false
+  },
+  {
+    "name": "Assault",
+    "title": "Assault",
+    "requiredData": [
+      {
+        "name": "date",
+        "title": "Date",
+        "type": "DATE"
+      },
+      {
+        "name": "place",
+        "title": "Place",
+        "type": "TEXT"
+      }
+    ],
+    "optionalData": [
+      {
+        "name": "report",
+        "title": "Police report",
+        "type": "BOOL"
+      }
+    ],
+    "archive": false
+  },
+  {
+    "name": "Drulle - Mobile",
+    "title": "Drulle - Mobile",
+    "requiredData": [
+      {
+        "name": "date",
+        "title": "Date",
+        "type": "DATE"
+      },
+      {
+        "name": "place",
+        "title": "Place",
+        "type": "TEXT"
+      },
+      {
+        "name": "item",
+        "title": "Item",
+        "type": "ASSET"
+      }
+    ],
+    "optionalData": [
+      {
+        "name": "report",
+        "title": "Police report",
+        "type": "BOOL"
+      },
+      {
+        "name": "receipt",
+        "title": "Receipt",
+        "type": "FILE"
+      }
+    ],
+    "archive": false
+  },
+  {
+    "name": "Drulle - Other",
+    "title": "Drulle - Other",
+    "requiredData": [
+      {
+        "name": "date",
+        "title": "Date",
+        "type": "DATE"
+      },
+      {
+        "name": "place",
+        "title": "Place",
+        "type": "TEXT"
+      },
+      {
+        "name": "item",
+        "title": "Item",
+        "type": "ASSET"
+      }
+    ],
+    "optionalData": [
+      {
+        "name": "report",
+        "title": "Police report",
+        "type": "BOOL"
+      },
+      {
+        "name": "receipt",
+        "title": "Receipt",
+        "type": "FILE"
+      }
+    ],
+    "archive": false
+  },
+  {
+    "name": "Water Damage - Kitchen",
+    "title": "Water Damage - Kitchen",
+    "requiredData": [
+      {
+        "name": "date",
+        "title": "Date",
+        "type": "DATE"
+      }
+    ],
+    "optionalData": [
+    ],
+    "archive": false
+  },
+  {
+    "name": "Water Damage - Bathroom",
+    "title": "Water Damage - Bathroom",
+    "requiredData": [
+      {
+        "name": "date",
+        "title": "Date",
+        "type": "DATE"
+      }
+    ],
+    "optionalData": [
+    ],
+    "archive": false
+  },
+  {
+    "name": "Travel - Accident and Health",
+    "title": "Travel - Accident and Health",
+    "requiredData": [
+      {
+        "name": "date",
+        "title": "Date",
+        "type": "DATE"
+      },
+      {
+        "name": "place",
+        "title": "Place",
+        "type": "TEXT"
+      }
+    ],
+    "optionalData": [
+      {
+        "name": "report",
+        "title": "Police report",
+        "type": "BOOL"
+      },
+      {
+        "name": "receipt",
+        "title": "Receipt",
+        "type": "FILE"
+      }
+    ],
+    "archive": false
+  },
+  {
+    "name": "Travel - Delayed Luggage",
+    "title": "Travel - Delayed Luggage",
+    "requiredData": [
+      {
+        "name": "date",
+        "title": "Date",
+        "type": "DATE"
+      },
+      {
+        "name": "place",
+        "title": "Place",
+        "type": "TEXT"
+      }
+    ],
+    "optionalData": [
+      {
+        "name": "ticket",
+        "title": "Ticket",
+        "type": "BOOL"
+      }
+    ],
+    "archive": false
   }
 ]

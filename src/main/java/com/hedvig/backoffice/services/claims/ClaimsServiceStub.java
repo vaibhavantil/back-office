@@ -10,6 +10,8 @@ import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
@@ -22,6 +24,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +39,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Sort;
 
 public class ClaimsServiceStub implements ClaimsService {
 
@@ -55,8 +60,9 @@ public class ClaimsServiceStub implements ClaimsService {
       throw new UncheckedIOException(e);
     }
 
-    List<String> memberIds = memberService.search("", "", settingsService.getInternalAccessToken())
-        .stream().map(o -> o.getMemberId().toString()).collect(Collectors.toList());
+    List<String> memberIds =
+        memberService.search(null, "", settingsService.getInternalAccessToken()).stream()
+            .map(o -> o.getMemberId().toString()).collect(Collectors.toList());
 
     claims = IntStream.range(0, 10).mapToObj(i -> {
       String id = UUID.randomUUID().toString();
@@ -123,6 +129,67 @@ public class ClaimsServiceStub implements ClaimsService {
   public List<ClaimType> types(String token) {
     return types;
   }
+
+  @Override
+  public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy,
+      Sort.Direction sortDirection, String token) {
+    List<Claim> claims = list(token);
+
+    if (sortBy != null) {
+      claims.sort(
+          (sortDirection == Sort.Direction.DESC ? CLAIM_COMPARATORS_DESC : CLAIM_COMPARATORS_ASC)
+              .get(sortBy));
+    }
+
+    if (page != null && pageSize != null) {
+      int totalPages = claims.size() / pageSize;
+      if (claims.size() / pageSize != 0) {
+        totalPages++;
+      }
+
+      claims = claims.subList(page * pageSize, Math.min(claims.size(), pageSize * (page + 1)));
+      return new ClaimSearchResultDTO(claims, page, totalPages);
+    }
+
+    return new ClaimSearchResultDTO(claims, null, null);
+  }
+
+  EnumMap<ClaimSortColumn, Comparator<Claim>> CLAIM_COMPARATORS_ASC =
+      new EnumMap<ClaimSortColumn, Comparator<Claim>>(ClaimSortColumn.class) {
+        private static final long serialVersionUID = 1L;
+
+        {
+          put(ClaimSortColumn.DATE, Comparator.comparing((Claim c) -> c.getDate(),
+              Comparator.nullsLast(LocalDateTime::compareTo)));
+          put(ClaimSortColumn.RESERVES, Comparator.comparing((Claim c) -> c.getReserve(),
+              Comparator.nullsLast(BigDecimal::compareTo)));
+          put(ClaimSortColumn.TYPE, Comparator.comparing((Claim c) -> c.getType(),
+              Comparator.nullsLast(String::compareTo)));
+          put(ClaimSortColumn.STATE, Comparator.comparing((Claim c) -> c.getState(),
+              Comparator.nullsLast(ClaimState::compareTo)));
+        }
+      };
+
+  EnumMap<ClaimSortColumn, Comparator<Claim>> CLAIM_COMPARATORS_DESC =
+      new EnumMap<ClaimSortColumn, Comparator<Claim>>(ClaimSortColumn.class) {
+        private static final long serialVersionUID = 1L;
+
+        {
+          put(ClaimSortColumn.DATE, Comparator
+              .comparing((Claim c) -> c.getDate(), Comparator.nullsFirst(LocalDateTime::compareTo))
+              .reversed());
+          put(ClaimSortColumn.RESERVES, Comparator
+              .comparing((Claim c) -> c.getReserve(), Comparator.nullsFirst(BigDecimal::compareTo))
+              .reversed());
+          put(ClaimSortColumn.TYPE,
+              Comparator
+                  .comparing((Claim c) -> c.getType(), Comparator.nullsFirst(String::compareTo))
+                  .reversed());
+          put(ClaimSortColumn.STATE, Comparator
+              .comparing((Claim c) -> c.getState(), Comparator.nullsFirst(ClaimState::compareTo))
+              .reversed());
+        }
+      };
 
   @Override
   public void addPayment(ClaimPayment dto, String token) {

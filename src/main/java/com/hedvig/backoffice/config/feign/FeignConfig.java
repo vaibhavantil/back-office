@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -49,8 +50,10 @@ public class FeignConfig {
   }
 
   @Bean
-  public Request.Options options() {
-    return new Request.Options(10 * 1000, 300 * 1000);
+  public Request.Options options(
+    @Value("${feign.connectTimeoutMillis:35000}") int connectTimeoutMillis,
+    @Value("${feign.readTimeoutMillis:300000}") int readTimeoutMillis) {
+    return new Request.Options(connectTimeoutMillis, readTimeoutMillis);
   }
 
   @Bean

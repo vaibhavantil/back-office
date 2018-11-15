@@ -1,22 +1,28 @@
 package com.hedvig.backoffice.services.members;
 
-import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
-import com.hedvig.backoffice.services.members.dto.MemberSanctionStatus;
-import com.hedvig.backoffice.web.dto.MemberDTO;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
+import com.hedvig.backoffice.services.members.dto.MemberSanctionStatus;
+import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
+import com.hedvig.backoffice.web.dto.MemberDTO;
+import com.hedvig.backoffice.web.dto.MemberStatus;
+import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 
 public class MemberServiceStub implements MemberService {
 
@@ -27,22 +33,20 @@ public class MemberServiceStub implements MemberService {
   private List<MemberDTO> users;
 
   public MemberServiceStub() {
-    String[] statuses = {"INITIATED", "ONBOARDING", "SIGNED", "INACTIVATED"};
 
     long minBirthDay = LocalDate.of(1970, 1, 1).toEpochDay();
     long maxBirthDay = LocalDate.of(2010, 12, 31).toEpochDay();
     long minSignedOnDay = LocalDate.of(2011, 1, 3).toEpochDay();
     long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
 
+    MemberStatus[] memberStatuses = MemberStatus.values();
+
     users = IntStream.range(0, testMemberIds.length + 100).mapToObj(i -> {
       long id = i < testMemberIds.length ? testMemberIds[i] : RandomUtils.nextInt();
       MemberDTO user = new MemberDTO(id);
       user.setFirstName("Test user " + id);
-      user.setStatus(statuses[RandomUtils.nextInt(0, 4)]);
-      user.setSsn("201212121212");
-      user.setStreet("Testvägen 1");
-      user.setZipCode("111 11");
-      user.setCity("Tensta");
+
+      user.setStatus(memberStatuses[RandomUtils.nextInt(0, memberStatuses.length)]);
 
       long randomDay = ThreadLocalRandom.current().nextLong(minBirthDay, maxBirthDay);
       LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
@@ -57,7 +61,7 @@ public class MemberServiceStub implements MemberService {
           .from(ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime),
               ZoneId.of("Europe/Stockholm"))));
 
-      if (user.getStatus().equals(statuses[2])) {
+      if (user.getStatus() == MemberStatus.SIGNED) {
         user.setSignedOn(Instant.from(
             ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime),
                 ZoneId.of("Europe/Stockholm"))));
@@ -71,18 +75,74 @@ public class MemberServiceStub implements MemberService {
   }
 
   @Override
-  public List<MemberDTO> search(String status, String query, String token) {
-    if (StringUtils.isBlank(status) && StringUtils.isBlank(query)) {
+  public List<MemberDTO> search(MemberStatus status, String query, String token) {
+    if (status == null && StringUtils.isBlank(query)) {
       return users;
     }
 
     List<MemberDTO> result = users.stream()
         .filter(u -> (StringUtils.isNotBlank(query) && u.getFirstName().contains(query))
-            || (StringUtils.isNotBlank(status) && u.getStatus().contains(status)))
+            || (status != null && u.getStatus() == status))
         .collect(Collectors.toList());
 
     return result;
   }
+
+  @Override
+  public MembersSearchResultDTO searchPaged(MemberStatus status, String query, Integer page,
+      Integer pageSize, MembersSortColumn sortBy, Sort.Direction sortDirection, String token) {
+    List<MemberDTO> members = search(status, query, token);
+    if (sortBy != null) {
+      members.sort(
+          (sortDirection == Sort.Direction.DESC ? MEMBER_COMPARATORS_DESC : MEMBER_COMPARATORS_ASC)
+              .get(sortBy));
+    }
+
+    if (page != null && pageSize != null) {
+      int totalPages = members.size() / pageSize;
+      if (members.size() % pageSize != 0) {
+        totalPages++;
+      }
+
+      int sublistStart = page * pageSize;
+      int sublistEnd = sublistStart + pageSize;
+      members = members.subList(sublistStart, Math.min(members.size(), sublistEnd));
+      return new MembersSearchResultDTO(members, page, totalPages);
+    }
+
+    return new MembersSearchResultDTO(members, null, null);
+  }
+
+  private static EnumMap<MembersSortColumn, Comparator<MemberDTO>> MEMBER_COMPARATORS_ASC =
+      new EnumMap<MembersSortColumn, Comparator<MemberDTO>>(MembersSortColumn.class) {
+        private static final long serialVersionUID = 1L;
+
+        {
+          put(MembersSortColumn.NAME,
+              Comparator.comparing((MemberDTO m) -> "" + m.getLastName() + m.getFirstName(),
+                  Comparator.nullsLast(String::compareTo)));
+          put(MembersSortColumn.SIGN_UP, Comparator.comparing((MemberDTO m) -> m.getSignedOn(),
+              Comparator.nullsLast(Instant::compareTo)));
+          put(MembersSortColumn.CREATED, Comparator.comparing((MemberDTO m) -> m.getCreatedOn(),
+              Comparator.nullsLast(Instant::compareTo)));
+        }
+      };
+
+  private static EnumMap<MembersSortColumn, Comparator<MemberDTO>> MEMBER_COMPARATORS_DESC =
+      new EnumMap<MembersSortColumn, Comparator<MemberDTO>>(MembersSortColumn.class) {
+        private static final long serialVersionUID = 1L;
+
+        {
+          put(MembersSortColumn.NAME,
+              Comparator.comparing((MemberDTO m) -> "" + m.getLastName() + m.getFirstName(),
+                  Comparator.nullsFirst(String::compareTo)).reversed());
+          put(MembersSortColumn.SIGN_UP, Comparator.comparing((MemberDTO m) -> m.getSignedOn(),
+              Comparator.nullsFirst(Instant::compareTo)).reversed());
+          put(MembersSortColumn.CREATED, Comparator.comparing((MemberDTO m) -> m.getCreatedOn(),
+              Comparator.nullsFirst(Instant::compareTo)).reversed());
+        }
+      };
+
 
   @Override
   public MemberDTO findByMemberId(String memberId, String token) {

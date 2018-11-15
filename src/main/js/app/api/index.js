@@ -4,7 +4,7 @@ import { history } from 'app/store';
 
 const axiosInstance = axios.create({
     baseURL: config.baseUrl,
-    timeout: 10000,
+    timeout: 30000,
     withCredentials: false,
     headers: {
         Accept: 'application/json',

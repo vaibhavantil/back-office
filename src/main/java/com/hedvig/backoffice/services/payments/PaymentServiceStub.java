@@ -25,11 +25,6 @@ public class PaymentServiceStub implements PaymentService {
   }
 
   @Override
-  public Boolean hasDirectDebitActivated(String memberId) {
-    return true;
-  }
-
-  @Override
   public List<DirectDebitStatusDTO> getDirectDebitStatuses(List<String> memberIds) {
     return memberIds.stream().map(id -> new DirectDebitStatusDTO(id, RandomUtils.nextBoolean()))
         .collect(Collectors.toList());
@@ -41,5 +36,9 @@ public class PaymentServiceStub implements PaymentService {
   @Override
   public Transaction getTransactionById(UUID id) {
     return transactions.get(0);
+  }
+
+  public DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId) {
+    return new DirectDebitStatusDTO(memberId, RandomUtils.nextBoolean());
   }
 }

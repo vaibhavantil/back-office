@@ -9,11 +9,11 @@ import javax.money.MonetaryAmount;
 public interface PaymentService {
   List<Transaction> getTransactionsByMemberId(String memberId);
 
-  Boolean hasDirectDebitActivated(String memberId);
-
   List<DirectDebitStatusDTO> getDirectDebitStatuses(List<String> memberIds);
 
   void chargeMember(String memberId, MonetaryAmount amount);
 
   Transaction getTransactionById(UUID id);
+
+  DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId);
 }

@@ -33,7 +33,7 @@ public class InsuranceStatusDTO {
 
   private String insuranceStatus;
 
-  private String insuranceState;
+  private ProductState insuranceState;
 
   private Integer personsInHouseHold;
 
@@ -42,6 +42,8 @@ public class InsuranceStatusDTO {
   private BigDecimal newTotalPrice;
 
   private Boolean insuredAtOtherCompany;
+
+  private String currentInsurer;
 
   private String insuranceType;
 

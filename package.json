@@ -1,7 +1,7 @@
 {
   "name": "asset-frontend",
   "version": "0.0.1",
-  "description": "Hedvig's asset-tracker management application",
+  "description": "HOPE - Hedvig Operations",
   "repository": {
     "type": "git",
     "url": "git@github.com:HedvigInsurance/asset-tracker.git"
