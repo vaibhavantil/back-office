@@ -13,4 +13,6 @@ public class ClaimType {
   @NotNull private List<ClaimField> requiredData;
 
   @NotNull private List<ClaimField> optionalData;
+
+  private boolean archive;
 }
