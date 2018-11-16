@@ -45,7 +45,7 @@ public interface ProductPricingService {
     String memberId, String fileName, String contentType, byte[] data, String token)
     throws IOException;
 
-  void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto);
+  void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto, String token);
 
   List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token);
 

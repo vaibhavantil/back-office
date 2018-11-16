@@ -74,7 +74,7 @@ public interface ProductPricingClient {
 
   @PostMapping("/_/insurance/{memberId}/insuredAtOtherCompany")
   void insuredAtOtherCompany(
-    @PathVariable("memberId") String memberId, @RequestBody InsuredAtOtherCompanyDTO dto);
+    @PathVariable("memberId") String memberId, @RequestBody InsuredAtOtherCompanyDTO dto, @RequestHeader("Authorization") String token);
 
   @GetMapping("/_/insurance/{memberId}/insurances")
   List<InsuranceStatusDTO> getInsurancesByMember(

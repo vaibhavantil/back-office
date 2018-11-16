@@ -210,7 +210,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
-  public void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto) {
+  public void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto, String token) {
     this.insurance(memberId, "").setInsuredAtOtherCompany(dto.isInsuredAtOtherCompany());
   }
 

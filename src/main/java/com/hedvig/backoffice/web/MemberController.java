@@ -208,8 +208,8 @@ public class MemberController {
 
   @PostMapping("/insurance/{memberId}/insuredAtOtherCompany")
   public ResponseEntity<?> setInsuredAtOtherCompany(
-    @PathVariable String memberId, @RequestBody @Valid InsuredAtOtherCompanyDTO dto) {
-    productPricingService.setInsuredAtOtherCompany(memberId, dto);
+    @PathVariable String memberId, @RequestBody @Valid InsuredAtOtherCompanyDTO dto, @AuthenticationPrincipal Principal principal) {
+    productPricingService.setInsuredAtOtherCompany(memberId, dto, personnelService.getIdToken(principal.getName()));
     return ResponseEntity.noContent().build();
   }
 
