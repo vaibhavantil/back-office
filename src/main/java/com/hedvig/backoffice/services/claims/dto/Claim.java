@@ -19,6 +19,4 @@ public class Claim extends ClaimBackOffice {
   private List<ClaimAsset> assets;
   private List<ClaimEvent> events;
   private List<ClaimData> data;
-
-  private LocalDateTime registrationDate;
 }

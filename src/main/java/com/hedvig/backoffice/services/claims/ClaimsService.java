@@ -10,11 +10,13 @@ import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface ClaimsService {
 
@@ -43,4 +45,6 @@ public interface ClaimsService {
   Map<String, Long> statistics(String token);
 
   long totalClaims(String token);
+
+  UUID createClaim(CreateBackofficeClaimDTO claimData, String token);
 }

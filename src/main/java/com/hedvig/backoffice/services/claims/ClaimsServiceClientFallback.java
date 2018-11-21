@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimResponseDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -94,5 +97,11 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   @Override
   public void updateType(ClaimTypeUpdate type, String token) {
     log.error("request to claim-service failed");
+  }
+
+  @Override
+  public CreateBackofficeClaimResponseDTO createClaim(CreateBackofficeClaimDTO req, String token) {
+    log.error("request to claim-service failed");
+    return null;
   }
 }
