@@ -10,6 +10,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
 import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
+import com.hedvig.backoffice.services.claims.dto.ClaimSource;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
@@ -85,6 +86,7 @@ public class ClaimsServiceStub implements ClaimsService {
                   claim.setReserve(i < 7 ? null : BigDecimal.valueOf(i * 100));
                   claim.setUserId(memberId);
                   claim.setState(ClaimState.OPEN);
+                  claim.setClaimSource(ClaimSource.APP);
                   claim.setAudioURL(
                       "http://78.media.tumblr.com/tumblr_ll313eVnI91qjahcpo1_1280.jpg");
                   claim.setPayments(new ArrayList<>());
@@ -251,6 +253,7 @@ public class ClaimsServiceStub implements ClaimsService {
     claim.setDate(claimData.getRegistrationDate().atZone(SWEDEN_TZ).toLocalDateTime());
     claim.setState(ClaimState.OPEN);
     claim.setUserId(claimData.getMemberId());
+    claim.setClaimSource(claimData.getClaimSource());
 
     claim.setPayments(new ArrayList<>());
     claim.setNotes(new ArrayList<>());

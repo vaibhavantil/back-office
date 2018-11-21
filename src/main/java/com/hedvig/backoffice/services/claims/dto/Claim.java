@@ -13,6 +13,7 @@ public class Claim extends ClaimBackOffice {
   private ClaimState state;
   private BigDecimal reserve;
   private String type;
+  private ClaimSource claimSource;
 
   private List<ClaimNote> notes;
   private List<ClaimPayment> payments;
