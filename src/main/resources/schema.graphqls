@@ -12,9 +12,19 @@ type QueryType {
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
   updateClaimState(id: ID!, state: ClaimState!): Claim
-  addClaimNote(id: ID!, note: String!): Claim
+  addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
   createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
-  setClaimType(id: ID!, type: String!): Claim # best approach here?
+  setClaimType(id: ID!, type: ClaimTypes!): Claim
+  setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
+}
+
+input ClaimInformationInput {
+  location: String
+  date: LocalDate
+  item: String
+  policeReport: String
+  receipt: String
+  ticket: String
 }
 
 type MonthlySubscription {
@@ -64,6 +74,14 @@ type ClaimNote {
   text: String
 }
 
+enum ClaimTypes {
+  TheftClaim,
+  AccidentalDamageClaim,
+  AssaultClaim,
+  WaterDamageClaim,
+  TravelAccidentClaim,
+  LuggageDelayClaim,
+}
 union ClaimType = TheftClaim | AccidentalDamageClaim | AssaultClaim | WaterDamageClaim | TravelAccidentClaim | LuggageDelayClaim
 
 type TheftClaim {
@@ -119,6 +137,10 @@ input ClaimPaymentInput {
   note: String!
   type: ClaimPaymentType!
   exGratia: Boolean!
+}
+
+input ClaimNoteInput {
+  text: String!
 }
 
 type ClaimEvent {

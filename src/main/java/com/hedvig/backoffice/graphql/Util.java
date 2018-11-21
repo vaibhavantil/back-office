@@ -1,0 +1,49 @@
+package com.hedvig.backoffice.graphql;
+
+import com.hedvig.backoffice.graphql.types.ClaimTypes;
+
+public class Util {
+  public static String claimServiceType(ClaimTypes type) {
+    switch (type) {
+      case TheftClaim:
+        return "THEFT";
+      case AssaultClaim:
+        return "Assault";
+      case AccidentalDamageClaim:
+        return "DRULLE";
+      case WaterDamageClaim:
+        return "Water Damage - Bathroom";
+      case TravelAccidentClaim:
+        return "Travel - Accident and Health";
+      case LuggageDelayClaim:
+        return "Travel - Delayed Luggage";
+      default:
+        throw new RuntimeException(String.format("Unmappable ClaimTypes.%s", type.toString()));
+    }
+  }
+
+  public static ClaimTypes claimType(String claimServiceType) {
+    switch (claimServiceType) {
+      case "THEFT":
+      case "Theft - Other":
+      case "Theft - Home":
+        return ClaimTypes.TheftClaim;
+      case "Assault":
+        return ClaimTypes.AssaultClaim;
+      case "DRULLE":
+      case "Drulle - Mobile":
+      case "Drulle - Other":
+        return ClaimTypes.AccidentalDamageClaim;
+      case "Water Damage - Kitchen":
+      case "Water Damage - Bathroom":
+        return ClaimTypes.WaterDamageClaim;
+      case "Travel - Accident and Health":
+        return ClaimTypes.TravelAccidentClaim;
+      case "Travel - Delayed Luggage":
+        return ClaimTypes.LuggageDelayClaim;
+      default:
+        throw new RuntimeException(
+            String.format("Unmappable ClaimService ClaimType: %s", claimServiceType));
+    }
+  }
+}

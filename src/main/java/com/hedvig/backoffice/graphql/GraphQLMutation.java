@@ -1,27 +1,34 @@
 package com.hedvig.backoffice.graphql;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import javax.money.MonetaryAmount;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
+import com.hedvig.backoffice.graphql.types.ClaimInformationInput;
+import com.hedvig.backoffice.graphql.types.ClaimNoteInput;
 import com.hedvig.backoffice.graphql.types.ClaimPaymentInput;
 import com.hedvig.backoffice.graphql.types.ClaimState;
+import com.hedvig.backoffice.graphql.types.ClaimTypes;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
-import graphql.schema.DataFetchingEnvironment;
-import java.math.BigDecimal;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import javax.money.MonetaryAmount;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.stereotype.Component;
+import graphql.schema.DataFetchingEnvironment;
+import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -62,12 +69,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-  public CompletableFuture<Claim> addClaimNote(UUID id, String text, DataFetchingEnvironment env)
-      throws AuthorizationException {
+  public CompletableFuture<Claim> addClaimNote(UUID id, ClaimNoteInput input,
+      DataFetchingEnvironment env) throws AuthorizationException {
     log.info("Personnell with email '{}' adding claim note",
         GraphQLConfiguration.getEmail(env, personnelService));
     val noteDto = new com.hedvig.backoffice.services.claims.dto.ClaimNote();
-    noteDto.setText(text);
+    noteDto.setText(input.getText());
     noteDto.setClaimID(id.toString());
     claimsService.addNote(noteDto, GraphQLConfiguration.getIdToken(env, personnelService));
     return claimLoader.load(id);
@@ -87,8 +94,127 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-  public CompletableFuture<Claim> setClaimType(UUID id, Object type) {
-    return null;
+  public CompletableFuture<Claim> setClaimType(UUID id, ClaimTypes type,
+      DataFetchingEnvironment env) throws AuthorizationException {
+    log.info("Personnel with email '{}' setting claim type",
+        GraphQLConfiguration.getEmail(env, personnelService));
+    val claimTypeDto = new ClaimTypeUpdate();
+    claimTypeDto.setClaimID(id.toString());
+    claimTypeDto.setType(Util.claimServiceType(type));
+    claimsService.changeType(claimTypeDto, GraphQLConfiguration.getIdToken(env, personnelService));
+
+    return claimLoader.load(id);
   }
 
+  public CompletableFuture<Claim> setClaimInformation(UUID id,
+      ClaimInformationInput claimInformationInput, DataFetchingEnvironment env)
+      throws AuthorizationException {
+    log.info("Personnel with email '{}' updating claim information",
+        GraphQLConfiguration.getEmail(env, personnelService));
+    return claimLoader.load(id).thenCompose(claim -> {
+      val claimData = claim.get_claimData();
+
+      val now = LocalDateTime.now();
+
+      val prevLocation = claimData.stream().filter(d -> d.getName().equals("PLACE"))
+          .sorted(sortedByDateDescComparator).findFirst();
+      if (claimInformationInput.getLocation() != null && !(prevLocation.isPresent()
+          && !prevLocation.get().getValue().equals(claimInformationInput.getLocation()))) {
+        val data = new ClaimData();
+        data.setClaimID(id.toString());
+        data.setName("PLACE");
+        data.setType("TEXT");
+        data.setTitle("Place");
+        data.setDate(now);
+        data.setValue(claimInformationInput.getLocation());
+        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+      }
+
+      val prevDate = claimData.stream().filter(d -> d.getName().equals("DATE"))
+          .sorted(sortedByDateDescComparator).findFirst();
+      if (claimInformationInput.getDate() != null && !(prevDate.isPresent()
+          && !prevDate.get().getValue().equals(claimInformationInput.getDate().toString()))) {
+        val data = new ClaimData();
+        data.setClaimID(id.toString());
+        data.setType("DATE");
+        data.setName("DATE");
+        data.setTitle("Date");
+        data.setDate(now);
+        data.setValue(claimInformationInput.getDate().toString());
+        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+      }
+
+      val prevItem = claimData.stream().filter(d -> d.getName().equals("ITEM"))
+          .sorted(sortedByDateDescComparator).findFirst();
+      if (claimInformationInput.getItem() != null && !(prevItem.isPresent()
+          && !prevItem.get().getValue().equals(claimInformationInput.getItem()))) {
+        val data = new ClaimData();
+        data.setClaimID(id.toString());
+        data.setName("ITEM");
+        data.setType("TEXT");
+        data.setTitle("Item");
+        data.setDate(now);
+        data.setValue(claimInformationInput.getItem());
+        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+      }
+
+      val prevPoliceReport = claimData.stream().filter(d -> d.getName().equals("POLICE_REPORT"))
+          .sorted(sortedByDateDescComparator).findFirst();
+      if (claimInformationInput.getPoliceReport() != null && !(prevPoliceReport.isPresent()
+          && !prevPoliceReport.get().getValue().equals(claimInformationInput.getPoliceReport()))) {
+        val data = new ClaimData();
+        data.setClaimID(id.toString());
+        data.setName("POLICE_REPORT");
+        data.setType("FILE");
+        data.setTitle("Police report");
+        data.setDate(now);
+        data.setValue(claimInformationInput.getPoliceReport());
+        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+      }
+
+      val prevReceipt = claimData.stream().filter(d -> d.getName().equals("RECEIPT"))
+          .sorted(sortedByDateDescComparator).findFirst();
+      if (claimInformationInput.getReceipt() != null && !(prevReceipt.isPresent()
+          && prevReceipt.get().getValue().equals(claimInformationInput.getReceipt()))) {
+        val data = new ClaimData();
+        data.setClaimID(id.toString());
+        data.setName("RECEIPT");
+        data.setType("RECEIPT");
+        data.setTitle("Receipt");
+        data.setDate(now);
+        data.setValue(claimInformationInput.getReceipt());
+        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+      }
+
+      val prevTicket = claimData.stream().filter(d -> d.getName().equals("TICKET"))
+          .sorted(sortedByDateDescComparator).findFirst();
+      if (claimInformationInput.getTicket() != null && !(prevTicket.isPresent()
+          && prevTicket.get().getValue().equals(claimInformationInput.getTicket()))) {
+        val data = new ClaimData();
+        data.setClaimID(id.toString());
+        data.setName("TICKET");
+        data.setType("TICKET");
+        data.setTitle("Ticket");
+        data.setDate(now);
+        data.setValue(claimInformationInput.getTicket());
+        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+      }
+
+      return claimLoader.load(id);
+    });
+  }
+
+  private static Comparator<ClaimData> sortedByDateDescComparator = new Comparator<ClaimData>() {
+
+    @Override
+    public int compare(ClaimData o1, ClaimData o2) {
+      if (o1.getDate().isBefore(o2.getDate())) {
+        return 1;
+      }
+      if (o1.getDate().isAfter(o2.getDate())) {
+        return -1;
+      }
+      return 0;
+    }
+  };
 }

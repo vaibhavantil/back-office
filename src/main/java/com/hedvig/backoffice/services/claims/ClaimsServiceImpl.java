@@ -14,25 +14,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 
 public class ClaimsServiceImpl implements ClaimsService {
-
-  private static Logger logger = LoggerFactory.getLogger(ClaimsServiceImpl.class);
-
   private final ClaimsServiceClient client;
 
   @Autowired
   public ClaimsServiceImpl(@Value("${claims.baseUrl}") String baseUrl, ClaimsServiceClient client) {
     this.client = client;
-
-    logger.info("CLAIMS SERVICE:");
-    logger.info("class: " + ClaimsServiceImpl.class.getName());
-    logger.info("base url: " + baseUrl);
   }
 
   @Override

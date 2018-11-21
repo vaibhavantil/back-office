@@ -2,11 +2,16 @@ package com.hedvig.backoffice.graphql.resolvers;
 
 import java.util.concurrent.CompletableFuture;
 import com.coxautodev.graphql.tools.GraphQLResolver;
+import com.hedvig.backoffice.graphql.Util;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.AccidentalDamageClaim;
+import com.hedvig.backoffice.graphql.types.AssaultClaim;
 import com.hedvig.backoffice.graphql.types.Claim;
+import com.hedvig.backoffice.graphql.types.LuggageDelayClaim;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.TheftClaim;
+import com.hedvig.backoffice.graphql.types.TravelAccidentClaim;
+import com.hedvig.backoffice.graphql.types.WaterDamageClaim;
 import org.springframework.stereotype.Component;
 import graphql.schema.DataFetchingEnvironment;
 
@@ -27,12 +32,24 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
     if (claim.get_type() == null) {
       return null;
     }
-    switch (claim.get_type()) {
-      case "THEFT": {
+    switch (Util.claimType(claim.get_type())) {
+      case TheftClaim: {
         return TheftClaim.fromClaimData(claim.get_claimData());
       }
-      case "DRULLE": {
+      case AssaultClaim: {
+        return AssaultClaim.fromClaimData(claim.get_claimData());
+      }
+      case AccidentalDamageClaim: {
         return AccidentalDamageClaim.fromClaimData(claim.get_claimData());
+      }
+      case WaterDamageClaim: {
+        return WaterDamageClaim.fromClaimData(claim.get_claimData());
+      }
+      case TravelAccidentClaim: {
+        return TravelAccidentClaim.fromClaimData(claim.get_claimData());
+      }
+      case LuggageDelayClaim: {
+        return LuggageDelayClaim.fromClaimData(claim.get_claimData());
       }
     }
     throw new RuntimeException(String.format("Unsupported claim type: %s", claim.get_type()));
