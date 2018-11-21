@@ -111,97 +111,98 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       throws AuthorizationException {
     log.info("Personnel with email '{}' updating claim information",
         GraphQLConfiguration.getEmail(env, personnelService));
-    return claimLoader.load(id).thenCompose(claim -> {
-      val claimData = claim.get_claimData();
+    val claim =
+        claimsService.find(id.toString(), GraphQLConfiguration.getIdToken(env, personnelService));
 
-      val now = LocalDateTime.now();
+    val claimData = claim.getData();
 
-      val prevLocation = claimData.stream().filter(d -> d.getName().equals("PLACE"))
-          .sorted(sortedByDateDescComparator).findFirst();
-      if (claimInformationInput.getLocation() != null && !(prevLocation.isPresent()
-          && !prevLocation.get().getValue().equals(claimInformationInput.getLocation()))) {
-        val data = new ClaimData();
-        data.setClaimID(id.toString());
-        data.setName("PLACE");
-        data.setType("TEXT");
-        data.setTitle("Place");
-        data.setDate(now);
-        data.setValue(claimInformationInput.getLocation());
-        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
-      }
+    val now = LocalDateTime.now();
 
-      val prevDate = claimData.stream().filter(d -> d.getName().equals("DATE"))
-          .sorted(sortedByDateDescComparator).findFirst();
-      if (claimInformationInput.getDate() != null && !(prevDate.isPresent()
-          && !prevDate.get().getValue().equals(claimInformationInput.getDate().toString()))) {
-        val data = new ClaimData();
-        data.setClaimID(id.toString());
-        data.setType("DATE");
-        data.setName("DATE");
-        data.setTitle("Date");
-        data.setDate(now);
-        data.setValue(claimInformationInput.getDate().toString());
-        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
-      }
+    val prevLocation = claimData.stream().filter(d -> d.getName().equals("PLACE"))
+        .sorted(sortedByDateDescComparator).findFirst();
+    if (claimInformationInput.getLocation() != null && !(prevLocation.isPresent()
+        && !prevLocation.get().getValue().equals(claimInformationInput.getLocation()))) {
+      val data = new ClaimData();
+      data.setClaimID(id.toString());
+      data.setName("PLACE");
+      data.setType("TEXT");
+      data.setTitle("Place");
+      data.setDate(now);
+      data.setValue(claimInformationInput.getLocation());
+      claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+    }
 
-      val prevItem = claimData.stream().filter(d -> d.getName().equals("ITEM"))
-          .sorted(sortedByDateDescComparator).findFirst();
-      if (claimInformationInput.getItem() != null && !(prevItem.isPresent()
-          && !prevItem.get().getValue().equals(claimInformationInput.getItem()))) {
-        val data = new ClaimData();
-        data.setClaimID(id.toString());
-        data.setName("ITEM");
-        data.setType("TEXT");
-        data.setTitle("Item");
-        data.setDate(now);
-        data.setValue(claimInformationInput.getItem());
-        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
-      }
+    val prevDate = claimData.stream().filter(d -> d.getName().equals("DATE"))
+        .sorted(sortedByDateDescComparator).findFirst();
+    if (claimInformationInput.getDate() != null && !(prevDate.isPresent()
+        && !prevDate.get().getValue().equals(claimInformationInput.getDate().toString()))) {
+      val data = new ClaimData();
+      data.setClaimID(id.toString());
+      data.setType("DATE");
+      data.setName("DATE");
+      data.setTitle("Date");
+      data.setDate(now);
+      data.setValue(claimInformationInput.getDate().toString());
+      claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+    }
 
-      val prevPoliceReport = claimData.stream().filter(d -> d.getName().equals("POLICE_REPORT"))
-          .sorted(sortedByDateDescComparator).findFirst();
-      if (claimInformationInput.getPoliceReport() != null && !(prevPoliceReport.isPresent()
-          && !prevPoliceReport.get().getValue().equals(claimInformationInput.getPoliceReport()))) {
-        val data = new ClaimData();
-        data.setClaimID(id.toString());
-        data.setName("POLICE_REPORT");
-        data.setType("FILE");
-        data.setTitle("Police report");
-        data.setDate(now);
-        data.setValue(claimInformationInput.getPoliceReport());
-        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
-      }
+    val prevItem = claimData.stream().filter(d -> d.getName().equals("ITEM"))
+        .sorted(sortedByDateDescComparator).findFirst();
+    if (claimInformationInput.getItem() != null && !(prevItem.isPresent()
+        && !prevItem.get().getValue().equals(claimInformationInput.getItem()))) {
+      val data = new ClaimData();
+      data.setClaimID(id.toString());
+      data.setName("ITEM");
+      data.setType("TEXT");
+      data.setTitle("Item");
+      data.setDate(now);
+      data.setValue(claimInformationInput.getItem());
+      claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+    }
 
-      val prevReceipt = claimData.stream().filter(d -> d.getName().equals("RECEIPT"))
-          .sorted(sortedByDateDescComparator).findFirst();
-      if (claimInformationInput.getReceipt() != null && !(prevReceipt.isPresent()
-          && prevReceipt.get().getValue().equals(claimInformationInput.getReceipt()))) {
-        val data = new ClaimData();
-        data.setClaimID(id.toString());
-        data.setName("RECEIPT");
-        data.setType("RECEIPT");
-        data.setTitle("Receipt");
-        data.setDate(now);
-        data.setValue(claimInformationInput.getReceipt());
-        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
-      }
+    val prevPoliceReport = claimData.stream().filter(d -> d.getName().equals("POLICE_REPORT"))
+        .sorted(sortedByDateDescComparator).findFirst();
+    if (claimInformationInput.getPoliceReport() != null && !(prevPoliceReport.isPresent()
+        && !prevPoliceReport.get().getValue().equals(claimInformationInput.getPoliceReport()))) {
+      val data = new ClaimData();
+      data.setClaimID(id.toString());
+      data.setName("POLICE_REPORT");
+      data.setType("FILE");
+      data.setTitle("Police report");
+      data.setDate(now);
+      data.setValue(claimInformationInput.getPoliceReport());
+      claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+    }
 
-      val prevTicket = claimData.stream().filter(d -> d.getName().equals("TICKET"))
-          .sorted(sortedByDateDescComparator).findFirst();
-      if (claimInformationInput.getTicket() != null && !(prevTicket.isPresent()
-          && prevTicket.get().getValue().equals(claimInformationInput.getTicket()))) {
-        val data = new ClaimData();
-        data.setClaimID(id.toString());
-        data.setName("TICKET");
-        data.setType("TICKET");
-        data.setTitle("Ticket");
-        data.setDate(now);
-        data.setValue(claimInformationInput.getTicket());
-        claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
-      }
+    val prevReceipt = claimData.stream().filter(d -> d.getName().equals("RECEIPT"))
+        .sorted(sortedByDateDescComparator).findFirst();
+    if (claimInformationInput.getReceipt() != null && !(prevReceipt.isPresent()
+        && prevReceipt.get().getValue().equals(claimInformationInput.getReceipt()))) {
+      val data = new ClaimData();
+      data.setClaimID(id.toString());
+      data.setName("RECEIPT");
+      data.setType("RECEIPT");
+      data.setTitle("Receipt");
+      data.setDate(now);
+      data.setValue(claimInformationInput.getReceipt());
+      claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+    }
 
-      return claimLoader.load(id);
-    });
+    val prevTicket = claimData.stream().filter(d -> d.getName().equals("TICKET"))
+        .sorted(sortedByDateDescComparator).findFirst();
+    if (claimInformationInput.getTicket() != null && !(prevTicket.isPresent()
+        && prevTicket.get().getValue().equals(claimInformationInput.getTicket()))) {
+      val data = new ClaimData();
+      data.setClaimID(id.toString());
+      data.setName("TICKET");
+      data.setType("TICKET");
+      data.setTitle("Ticket");
+      data.setDate(now);
+      data.setValue(claimInformationInput.getTicket());
+      claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
+    }
+
+    return claimLoader.load(id);
   }
 
   private static Comparator<ClaimData> sortedByDateDescComparator = new Comparator<ClaimData>() {

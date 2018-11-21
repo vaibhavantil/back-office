@@ -25,12 +25,15 @@ public class AssaultClaim {
       switch (cd.getName()) {
         case "PLACE": {
           location = cd.getValue();
+          break;
         }
         case "DATE": {
           date = LocalDate.ofInstant(Instant.parse(cd.getValue()), ZoneOffset.UTC);
+          break;
         }
         case "POLICE_REPORT": {
           policeReport = cd.getValue();
+          break;
         }
       }
     }

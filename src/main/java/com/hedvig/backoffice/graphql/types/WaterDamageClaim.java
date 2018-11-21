@@ -20,6 +20,7 @@ public class WaterDamageClaim {
       switch (cd.getName()) {
         case "DATE": {
           date = LocalDate.ofInstant(Instant.parse(cd.getValue()), ZoneOffset.UTC);
+          break;
         }
       }
     }

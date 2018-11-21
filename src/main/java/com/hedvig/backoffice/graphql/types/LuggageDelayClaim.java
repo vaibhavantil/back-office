@@ -25,12 +25,15 @@ public class LuggageDelayClaim {
       switch (cd.getName()) {
         case "DATE": {
           date = LocalDate.ofInstant(Instant.parse(cd.getValue()), ZoneOffset.UTC);
+          break;
         }
         case "PLACE": {
           location = cd.getValue();
+          break;
         }
         case "TICKET": {
           ticket = cd.getValue();
+          break;
         }
       }
     }

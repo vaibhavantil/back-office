@@ -28,15 +28,19 @@ public class TravelAccidentClaim {
       switch (cd.getName()) {
         case "DATE": {
           date = LocalDate.ofInstant(Instant.parse(cd.getValue()), ZoneOffset.UTC);
+          break;
         }
         case "PLACE": {
           location = cd.getValue();
+          break;
         }
         case "POLICE_REPORT": {
           policeReport = cd.getValue();
+          break;
         }
         case "RECEIPT": {
           receipt = cd.getValue();
+          break;
         }
       }
     }
