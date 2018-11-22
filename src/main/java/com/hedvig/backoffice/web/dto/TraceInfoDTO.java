@@ -7,7 +7,6 @@ import java.util.UUID;
 
 @Data
 public class TraceInfoDTO {
-  private Long id;
   private LocalDateTime date;
   private String oldValue;
   private String newValue;
