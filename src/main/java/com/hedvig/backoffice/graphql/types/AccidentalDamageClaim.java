@@ -1,8 +1,7 @@
 package com.hedvig.backoffice.graphql.types;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
+import java.time.LocalDateTime;
 import java.util.List;
 import com.hedvig.backoffice.graphql.UnionType;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
@@ -28,7 +27,7 @@ public class AccidentalDamageClaim {
     for (val cd : claimData) {
       switch (cd.getName()) {
         case "DATE": {
-          date = LocalDate.ofInstant(Instant.parse(cd.getValue()), ZoneOffset.UTC);
+          date = LocalDateTime.parse(cd.getValue()).toLocalDate();
           break;
         }
         case "PLACE": {
