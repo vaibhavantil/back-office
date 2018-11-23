@@ -10,6 +10,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimsByIdsDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,8 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   }
 
   @Override
-  public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy, Sort.Direction sortDirection, String token) {
+  public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy,
+      Sort.Direction sortDirection, String token) {
     log.error("request to claim-service failed");
     return new ClaimSearchResultDTO(new ArrayList<>(), null, null);
   }
@@ -94,5 +96,11 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   @Override
   public void updateType(ClaimTypeUpdate type, String token) {
     log.error("request to claim-service failed");
+  }
+
+  @Override
+  public List<Claim> getClaimsByIds(ClaimsByIdsDto dto) {
+    log.error("request to claim-service failed");
+    return null;
   }
 }

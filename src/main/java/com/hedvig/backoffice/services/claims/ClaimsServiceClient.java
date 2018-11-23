@@ -11,6 +11,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimsByIdsDto;
 import java.util.List;
 import java.util.Map;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -22,10 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(
-    name = "claims-service",
-    url = "${claims.baseUrl}",
-    configuration = FeignConfig.class,
+@FeignClient(name = "claims-service", url = "${claims.baseUrl}", configuration = FeignConfig.class,
     fallback = ClaimsServiceClientFallback.class)
 public interface ClaimsServiceClient {
 
@@ -33,20 +31,17 @@ public interface ClaimsServiceClient {
   Map<String, Long> statistics(@RequestHeader("Authorization") String token);
 
   @GetMapping("/_/claims/listclaims/{userId}")
-  List<Claim> listByUserId(
-      @PathVariable("userId") String userId, @RequestHeader("Authorization") String token);
+  List<Claim> listByUserId(@PathVariable("userId") String userId,
+      @RequestHeader("Authorization") String token);
 
   @GetMapping("/_/claims/listclaims")
   List<Claim> list(@RequestHeader("Authorization") String token);
 
   @GetMapping("/_/claims/search")
-  ClaimSearchResultDTO search(
-    @RequestParam("page") Integer page,
-    @RequestParam("pageSize") Integer pageSize,
-    @RequestParam("sortBy") ClaimSortColumn sortBy,
-    @RequestParam("sortDirection") Sort.Direction sortDirection,
-    @RequestHeader("Authorization") String token
-  );
+  ClaimSearchResultDTO search(@RequestParam("page") Integer page,
+      @RequestParam("pageSize") Integer pageSize, @RequestParam("sortBy") ClaimSortColumn sortBy,
+      @RequestParam("sortDirection") Sort.Direction sortDirection,
+      @RequestHeader("Authorization") String token);
 
   @GetMapping("/_/claims/claim?claimID={id}")
   Claim find(@PathVariable("id") String id, @RequestHeader("Authorization") String token);
@@ -64,13 +59,16 @@ public interface ClaimsServiceClient {
   void addDataItem(@RequestBody ClaimData data, @RequestHeader("Authorization") String token);
 
   @PostMapping("/_/claims/updatestate")
-  void updateState(
-      @RequestBody ClaimStateUpdate state, @RequestHeader("Authorization") String token);
+  void updateState(@RequestBody ClaimStateUpdate state,
+      @RequestHeader("Authorization") String token);
 
   @PostMapping("/_/claims/updatereserve")
-  void updateReserve(
-      @RequestBody ClaimReserveUpdate reserve, @RequestHeader("Authorization") String token);
+  void updateReserve(@RequestBody ClaimReserveUpdate reserve,
+      @RequestHeader("Authorization") String token);
 
   @PostMapping("/_/claims/updatetype")
   void updateType(@RequestBody ClaimTypeUpdate type, @RequestHeader("Authorization") String token);
+
+  @PostMapping("/_/claims/many")
+  List<Claim> getClaimsByIds(@RequestBody ClaimsByIdsDto dto);
 }

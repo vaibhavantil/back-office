@@ -10,6 +10,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimsByIdsDto;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -97,6 +98,6 @@ public class ClaimsServiceImpl implements ClaimsService {
 
   @Override
   public List<Claim> getClaimsByIds(List<UUID> ids) {
-    throw new RuntimeException("Not implemented yet :(");
+    return client.getClaimsByIds(new ClaimsByIdsDto(ids));
   }
 }
