@@ -2,6 +2,7 @@ package com.hedvig.backoffice.graphql;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -142,7 +143,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       data.setName("DATE");
       data.setTitle("Date");
       data.setDate(now);
-      data.setValue(claimInformationInput.getDate().toString());
+      data.setValue(claimInformationInput.getDate().atTime(LocalTime.of(10, 0, 0)).toString());
       claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
     }
 
@@ -209,10 +210,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
     @Override
     public int compare(ClaimData o1, ClaimData o2) {
-      if (o1.getDate().isBefore(o2.getDate())) {
+      if (o1.getDate().isAfter(o2.getDate())) {
         return 1;
       }
-      if (o1.getDate().isAfter(o2.getDate())) {
+      if (o1.getDate().isBefore(o2.getDate())) {
         return -1;
       }
       return 0;
