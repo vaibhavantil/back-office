@@ -7,15 +7,20 @@ import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Subscription;
 import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.services.MessagesFrontendPostprocessor;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.messages.BotService;
+import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.notificationService.NotificationService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import java.util.Date;
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.core.MessagePostProcessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,15 +45,18 @@ public class ChatServiceImpl implements ChatService {
 
   private final NotificationService notificationService;
 
+  private final MessagesFrontendPostprocessor messagePostProcessor;
+
   public ChatServiceImpl(
-      SimpMessagingTemplate template,
-      BotService botService,
-      MemberService memberService,
-      ChatContextRepository chatContextRepository,
-      PersonnelService personnelService,
-      ExpoNotificationService expoNotificationService,
-      SubscriptionService subscriptionService,
-      NotificationService notificationService) {
+    SimpMessagingTemplate template,
+    BotService botService,
+    MemberService memberService,
+    ChatContextRepository chatContextRepository,
+    PersonnelService personnelService,
+    ExpoNotificationService expoNotificationService,
+    SubscriptionService subscriptionService,
+    NotificationService notificationService,
+    MessagesFrontendPostprocessor messagePostProcessor) {
 
     this.template = template;
     this.botService = botService;
@@ -58,6 +66,7 @@ public class ChatServiceImpl implements ChatService {
     this.expoNotificationService = expoNotificationService;
     this.subscriptionService = subscriptionService;
     this.notificationService = notificationService;
+    this.messagePostProcessor = messagePostProcessor;
   }
 
   @Override
@@ -82,7 +91,9 @@ public class ChatServiceImpl implements ChatService {
   @Override
   public void messages(String memberId, String personnelId, String token) {
     try {
-      send(memberId, personnelId, Message.chat(botService.messages(memberId, token)));
+      List<BotMessage> messages = botService.messages(memberId, token);
+      messages.forEach(msg -> messagePostProcessor.processMessage(msg.getMessage()));
+      send(memberId, personnelId, Message.chat(messages));
     } catch (ExternalServiceBadRequestException e) {
       send(memberId, personnelId, Message.error(400, e.getMessage()));
       log.error("chat not updated memberId = " + memberId, e);
@@ -95,7 +106,9 @@ public class ChatServiceImpl implements ChatService {
   @Override
   public void messages(String memberId, int count, String personnelId, String token) {
     try {
-      send(memberId, personnelId, Message.chat(botService.messages(memberId, count, token)));
+      List<BotMessage> messages = botService.messages(memberId, count, token);
+      messages.forEach(msg -> messagePostProcessor.processMessage(msg.getMessage()));
+      send(memberId, personnelId, Message.chat(messages));
     } catch (ExternalServiceBadRequestException e) {
       send(memberId, personnelId, Message.error(400, e.getMessage()));
       log.error("chat not updated memberId = " + memberId, e);

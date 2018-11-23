@@ -6,6 +6,7 @@ import com.hedvig.backoffice.domain.QuestionGroup;
 import com.hedvig.backoffice.domain.Subscription;
 import com.hedvig.backoffice.repository.QuestionGroupRepository;
 import com.hedvig.backoffice.repository.QuestionRepository;
+import com.hedvig.backoffice.services.MessagesFrontendPostprocessor;
 import com.hedvig.backoffice.services.chat.SubscriptionService;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.messages.BotService;
@@ -34,17 +35,19 @@ public class QuestionServiceImpl implements QuestionService {
   private final ExpoNotificationService expoNotificationService;
   private final PersonnelService personnelService;
   private final NotificationService notificationService;
+  private final MessagesFrontendPostprocessor messagesPostprocessor;
 
   @Autowired
   public QuestionServiceImpl(
-      QuestionRepository questionRepository,
-      QuestionGroupRepository questionGroupRepository,
-      SubscriptionService subscriptionService,
-      UpdatesService updatesService,
-      BotService botService,
-      ExpoNotificationService expoNotificationService,
-      PersonnelService personnelService,
-      NotificationService notificationService) {
+    QuestionRepository questionRepository,
+    QuestionGroupRepository questionGroupRepository,
+    SubscriptionService subscriptionService,
+    UpdatesService updatesService,
+    BotService botService,
+    ExpoNotificationService expoNotificationService,
+    PersonnelService personnelService,
+    NotificationService notificationService,
+    MessagesFrontendPostprocessor messagesPostprocessor) {
 
     this.questionRepository = questionRepository;
     this.questionGroupRepository = questionGroupRepository;
@@ -54,6 +57,12 @@ public class QuestionServiceImpl implements QuestionService {
     this.expoNotificationService = expoNotificationService;
     this.personnelService = personnelService;
     this.notificationService = notificationService;
+    this.messagesPostprocessor = messagesPostprocessor;
+  }
+
+  private QuestionGroupDTO postProcessQuestionGroup(QuestionGroupDTO group) {
+    group.getQuestions().forEach(q -> messagesPostprocessor.processMessage(q.getMessage()));
+    return group;
   }
 
   @Override
@@ -62,6 +71,7 @@ public class QuestionServiceImpl implements QuestionService {
         .findAll()
         .stream()
         .map(QuestionGroupDTO::fromDomain)
+        .map(this::postProcessQuestionGroup)
         .collect(Collectors.toList());
   }
 
@@ -71,6 +81,7 @@ public class QuestionServiceImpl implements QuestionService {
         .answered()
         .stream()
         .map(QuestionGroupDTO::fromDomain)
+      .map(this::postProcessQuestionGroup)
         .collect(Collectors.toList());
   }
 
@@ -80,6 +91,7 @@ public class QuestionServiceImpl implements QuestionService {
         .notAnswered()
         .stream()
         .map(QuestionGroupDTO::fromDomain)
+      .map(this::postProcessQuestionGroup)
         .collect(Collectors.toList());
   }
 
