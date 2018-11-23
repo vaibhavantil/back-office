@@ -8,7 +8,6 @@ import com.coxautodev.graphql.tools.ObjectMapperConfigurer;
 import com.coxautodev.graphql.tools.ObjectMapperConfigurerContext;
 import com.coxautodev.graphql.tools.SchemaParserDictionary;
 import com.coxautodev.graphql.tools.SchemaParserOptions;
-import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
@@ -65,12 +64,12 @@ public class GraphQLConfiguration {
   }
 
   @Bean
-  SchemaParserOptions schemaParserOptions(List<Module> modules) {
+  SchemaParserOptions schemaParserOptions() {
     return SchemaParserOptions.newOptions().objectMapperConfigurer(new ObjectMapperConfigurer() {
 
       @Override
       public void configure(ObjectMapper mapper, ObjectMapperConfigurerContext context) {
-        modules.forEach(module -> mapper.registerModule(module));
+        mapper.findAndRegisterModules();
       }
     }).build();
   }
