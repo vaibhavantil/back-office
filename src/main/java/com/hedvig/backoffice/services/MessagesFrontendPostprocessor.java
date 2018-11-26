@@ -55,7 +55,7 @@ public class MessagesFrontendPostprocessor {
     URL url = amazonS3.generatePresignedUrl(
       chatS3Bucket,
       key,
-      new Date(Instant.now().plus(24, ChronoUnit.HOURS).toEpochMilli()),
+      new Date(Instant.now().plus(30, ChronoUnit.MINUTES).toEpochMilli()),
       HttpMethod.GET
     );
 
