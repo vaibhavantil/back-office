@@ -13,6 +13,9 @@ import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
 import java.util.List;
 import java.util.Map;
+
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,4 +76,8 @@ public interface ClaimsServiceClient {
 
   @PostMapping("/_/claims/updatetype")
   void updateType(@RequestBody ClaimTypeUpdate type, @RequestHeader("Authorization") String token);
+
+
+  @PostMapping("/_/claims/createFromBackOffice")
+  CreateBackofficeClaimResponseDTO createClaim(@RequestBody CreateBackofficeClaimDTO req, @RequestHeader("Authorization") String token);
 }
