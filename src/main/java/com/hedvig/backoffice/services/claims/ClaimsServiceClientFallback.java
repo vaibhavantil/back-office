@@ -103,4 +103,9 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
     log.error("request to claim-service failed");
     return null;
   }
+
+  @Override
+  public void addAutomaticPayment(String id, ClaimPayment dto, String token) {
+    log.error("request to claim-service failed");
+  }
 }

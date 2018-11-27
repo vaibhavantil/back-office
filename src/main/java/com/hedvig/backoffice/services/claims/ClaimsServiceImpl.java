@@ -54,8 +54,22 @@ public class ClaimsServiceImpl implements ClaimsService {
   }
 
   @Override
-  public void addPayment(ClaimPayment dto, String token) {
-    client.addPayment(dto, token);
+  public void addPayment(String memberId, ClaimPayment dto, String token) {
+    switch (dto.getPaymentType()) {
+      case Manual: {
+        client.addPayment(dto, token);
+        break;
+      }
+
+      case Automatic: {
+        client.addAutomaticPayment(memberId, dto, token);
+        break;
+      }
+
+      default:
+        throw new RuntimeException(
+            String.format("Unhandled Claim Payment Type: %s", dto.getPaymentType()));
+    }
   }
 
   @Override

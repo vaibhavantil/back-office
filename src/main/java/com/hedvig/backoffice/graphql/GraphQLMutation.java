@@ -3,7 +3,6 @@ package com.hedvig.backoffice.graphql;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Comparator;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import javax.money.MonetaryAmount;
@@ -85,13 +84,17 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       DataFetchingEnvironment env) throws AuthorizationException {
     log.info("Personnel with email '{}'' adding claim payment",
         GraphQLConfiguration.getEmail(env, personnelService));
+    val claim =
+        claimsService.find(id.toString(), GraphQLConfiguration.getIdToken(env, personnelService));
+    val memberId = claim.getUserId();
     val paymentDto = new ClaimPayment();
     paymentDto.setAmount(BigDecimal.valueOf(payment.getAmount().getNumber().doubleValueExact()));
     paymentDto.setNote(payment.getNote());
     paymentDto.setExGratia(payment.getExGratia());
     paymentDto.setPaymentType(ClaimPaymentType.valueOf(payment.getType().toString()));
     paymentDto.setClaimID(id.toString());
-    claimsService.addPayment(paymentDto, GraphQLConfiguration.getIdToken(env, personnelService));
+    claimsService.addPayment(memberId, paymentDto,
+        GraphQLConfiguration.getIdToken(env, personnelService));
     return claimLoader.load(id);
   }
 
@@ -120,9 +123,9 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     val now = LocalDateTime.now();
 
     val prevLocation = claimData.stream().filter(d -> d.getName().equals("PLACE"))
-        .sorted(sortedByDateDescComparator).findFirst();
+        .sorted(Util.sortedByDateDescComparator).findFirst();
     if (claimInformationInput.getLocation() != null && !(prevLocation.isPresent()
-        && !prevLocation.get().getValue().equals(claimInformationInput.getLocation()))) {
+        && prevLocation.get().getValue().equals(claimInformationInput.getLocation()))) {
       val data = new ClaimData();
       data.setClaimID(id.toString());
       data.setName("PLACE");
@@ -134,9 +137,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     }
 
     val prevDate = claimData.stream().filter(d -> d.getName().equals("DATE"))
-        .sorted(sortedByDateDescComparator).findFirst();
+        .sorted(Util.sortedByDateDescComparator).findFirst();
+    log.info("previous Date: {}, new Date: {}",
+        prevDate.orElseGet(() -> new ClaimData()).getValue(), claimInformationInput.getDate());
     if (claimInformationInput.getDate() != null && !(prevDate.isPresent()
-        && !prevDate.get().getValue().equals(claimInformationInput.getDate().toString()))) {
+        && prevDate.get().getValue().equals(claimInformationInput.getDate().toString()))) {
       val data = new ClaimData();
       data.setClaimID(id.toString());
       data.setType("DATE");
@@ -148,9 +153,9 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     }
 
     val prevItem = claimData.stream().filter(d -> d.getName().equals("ITEM"))
-        .sorted(sortedByDateDescComparator).findFirst();
+        .sorted(Util.sortedByDateDescComparator).findFirst();
     if (claimInformationInput.getItem() != null && !(prevItem.isPresent()
-        && !prevItem.get().getValue().equals(claimInformationInput.getItem()))) {
+        && prevItem.get().getValue().equals(claimInformationInput.getItem()))) {
       val data = new ClaimData();
       data.setClaimID(id.toString());
       data.setName("ITEM");
@@ -162,9 +167,9 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     }
 
     val prevPoliceReport = claimData.stream().filter(d -> d.getName().equals("POLICE_REPORT"))
-        .sorted(sortedByDateDescComparator).findFirst();
+        .sorted(Util.sortedByDateDescComparator).findFirst();
     if (claimInformationInput.getPoliceReport() != null && !(prevPoliceReport.isPresent()
-        && !prevPoliceReport.get().getValue().equals(claimInformationInput.getPoliceReport()))) {
+        && prevPoliceReport.get().getValue().equals(claimInformationInput.getPoliceReport()))) {
       val data = new ClaimData();
       data.setClaimID(id.toString());
       data.setName("POLICE_REPORT");
@@ -176,7 +181,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     }
 
     val prevReceipt = claimData.stream().filter(d -> d.getName().equals("RECEIPT"))
-        .sorted(sortedByDateDescComparator).findFirst();
+        .sorted(Util.sortedByDateDescComparator).findFirst();
     if (claimInformationInput.getReceipt() != null && !(prevReceipt.isPresent()
         && prevReceipt.get().getValue().equals(claimInformationInput.getReceipt()))) {
       val data = new ClaimData();
@@ -190,7 +195,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     }
 
     val prevTicket = claimData.stream().filter(d -> d.getName().equals("TICKET"))
-        .sorted(sortedByDateDescComparator).findFirst();
+        .sorted(Util.sortedByDateDescComparator).findFirst();
     if (claimInformationInput.getTicket() != null && !(prevTicket.isPresent()
         && prevTicket.get().getValue().equals(claimInformationInput.getTicket()))) {
       val data = new ClaimData();
@@ -205,18 +210,4 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
     return claimLoader.load(id);
   }
-
-  private static Comparator<ClaimData> sortedByDateDescComparator = new Comparator<ClaimData>() {
-
-    @Override
-    public int compare(ClaimData o1, ClaimData o2) {
-      if (o1.getDate().isAfter(o2.getDate())) {
-        return 1;
-      }
-      if (o1.getDate().isBefore(o2.getDate())) {
-        return -1;
-      }
-      return 0;
-    }
-  };
 }

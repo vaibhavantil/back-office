@@ -156,7 +156,7 @@ enum ClaimState {
 
 enum ClaimPaymentType {
   Manual
-  Trustly
+  Automatic
 }
 
 # A String-representation of `java.time.YearMonth`. ex: `"2018-06"`

@@ -52,6 +52,10 @@ public interface ClaimsServiceClient {
   @PostMapping("/_/claims/addpayment")
   void addPayment(@RequestBody ClaimPayment dto, @RequestHeader("Authorization") String token);
 
+  @PostMapping("/_/claims/{id}/addAutomaticPayment")
+  void addAutomaticPayment(@PathVariable("id") String id, @RequestBody ClaimPayment dto,
+      @RequestHeader("Authorization") String token);
+
   @PostMapping("/_/claims/addnote")
   void addNote(@RequestBody ClaimNote dto, @RequestHeader("Authorization") String token);
 
@@ -71,4 +75,5 @@ public interface ClaimsServiceClient {
 
   @PostMapping("/_/claims/many")
   List<Claim> getClaimsByIds(@RequestBody ClaimsByIdsDto dto);
+
 }

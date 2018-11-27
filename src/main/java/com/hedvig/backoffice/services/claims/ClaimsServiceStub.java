@@ -75,7 +75,7 @@ public class ClaimsServiceStub implements ClaimsService {
 
       val payment = new ClaimPayment();
       payment.setAmount(BigDecimal.valueOf(100));
-      payment.setPaymentType(ClaimPaymentType.Trustly);
+      payment.setPaymentType(ClaimPaymentType.Automatic);
       payment.setTransactionId(Optional.empty());
       payment.setDate(LocalDateTime.now());
       payment.setExGratia(false);
@@ -192,14 +192,14 @@ public class ClaimsServiceStub implements ClaimsService {
       };
 
   @Override
-  public void addPayment(ClaimPayment dto, String token) {
+  public void addPayment(String memberId, ClaimPayment dto, String token) {
     Claim claim = find(dto.getClaimID(), token);
     dto.setDate(LocalDateTime.now());
     switch (dto.getPaymentType()) {
       case Manual: {
         dto.setTransactionId(Optional.empty());
       }
-      case Trustly: {
+      case Automatic: {
         dto.setTransactionId(Optional.of(UUID.randomUUID()));
       }
     }

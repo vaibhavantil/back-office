@@ -1,6 +1,8 @@
 package com.hedvig.backoffice.graphql;
 
+import java.util.Comparator;
 import com.hedvig.backoffice.graphql.types.ClaimTypes;
+import com.hedvig.backoffice.services.claims.dto.ClaimData;
 
 public class Util {
   public static String claimServiceType(ClaimTypes type) {
@@ -46,4 +48,12 @@ public class Util {
             String.format("Unmappable ClaimService ClaimType: %s", claimServiceType));
     }
   }
+
+  public static Comparator<ClaimData> sortedByDateDescComparator = new Comparator<ClaimData>() {
+
+    @Override
+    public int compare(ClaimData o1, ClaimData o2) {
+      return o2.getDate().compareTo(o1.getDate());
+    }
+  };
 }
