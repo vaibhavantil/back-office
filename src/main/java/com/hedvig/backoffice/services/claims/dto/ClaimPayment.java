@@ -2,7 +2,6 @@ package com.hedvig.backoffice.services.claims.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
@@ -20,7 +19,7 @@ public class ClaimPayment extends ClaimBackOffice {
   @NotNull
   public Boolean exGratia;
 
-  ClaimPaymentType paymentType;
+  ClaimPaymentType type;
 
-  Optional<UUID> transactionId;
+  UUID handlerReference;
 }

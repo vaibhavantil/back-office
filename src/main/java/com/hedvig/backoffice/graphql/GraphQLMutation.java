@@ -91,7 +91,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     paymentDto.setAmount(BigDecimal.valueOf(payment.getAmount().getNumber().doubleValueExact()));
     paymentDto.setNote(payment.getNote());
     paymentDto.setExGratia(payment.getExGratia());
-    paymentDto.setPaymentType(ClaimPaymentType.valueOf(payment.getType().toString()));
+    paymentDto.setType(ClaimPaymentType.valueOf(payment.getType().toString()));
     paymentDto.setClaimID(id.toString());
     claimsService.addPayment(memberId, paymentDto,
         GraphQLConfiguration.getIdToken(env, personnelService));

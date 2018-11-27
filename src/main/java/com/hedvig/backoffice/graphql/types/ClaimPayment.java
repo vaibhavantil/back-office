@@ -20,7 +20,9 @@ public class ClaimPayment {
 
   public static ClaimPayment fromDto(com.hedvig.backoffice.services.claims.dto.ClaimPayment dto) {
     return new ClaimPayment(Money.of(dto.getAmount(), "SEK"), dto.getNote(),
-        ClaimPaymentType.valueOf(dto.getPaymentType().toString()),
-        dto.getDate().toInstant(ZoneOffset.UTC), dto.getExGratia(), dto.getTransactionId());
+        ClaimPaymentType.valueOf(dto.getType().toString()), dto.getDate().toInstant(ZoneOffset.UTC),
+        dto.getExGratia(),
+        dto.getHandlerReference() != null ? Optional.of(dto.getHandlerReference())
+            : Optional.empty());
   }
 }

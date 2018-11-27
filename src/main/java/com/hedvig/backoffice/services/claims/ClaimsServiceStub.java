@@ -29,7 +29,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -75,8 +74,8 @@ public class ClaimsServiceStub implements ClaimsService {
 
       val payment = new ClaimPayment();
       payment.setAmount(BigDecimal.valueOf(100));
-      payment.setPaymentType(ClaimPaymentType.Automatic);
-      payment.setTransactionId(Optional.empty());
+      payment.setType(ClaimPaymentType.Manual);
+      payment.setHandlerReference(UUID.randomUUID());
       payment.setDate(LocalDateTime.now());
       payment.setExGratia(false);
       val payments = Lists.newArrayList(payment);
@@ -195,12 +194,12 @@ public class ClaimsServiceStub implements ClaimsService {
   public void addPayment(String memberId, ClaimPayment dto, String token) {
     Claim claim = find(dto.getClaimID(), token);
     dto.setDate(LocalDateTime.now());
-    switch (dto.getPaymentType()) {
+    switch (dto.getType()) {
       case Manual: {
-        dto.setTransactionId(Optional.empty());
+        dto.setHandlerReference(null);
       }
       case Automatic: {
-        dto.setTransactionId(Optional.of(UUID.randomUUID()));
+        dto.setHandlerReference(UUID.randomUUID());
       }
     }
     claim.getPayments().add(dto);

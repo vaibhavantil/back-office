@@ -55,7 +55,7 @@ public class ClaimsServiceImpl implements ClaimsService {
 
   @Override
   public void addPayment(String memberId, ClaimPayment dto, String token) {
-    switch (dto.getPaymentType()) {
+    switch (dto.getType()) {
       case Manual: {
         client.addPayment(dto, token);
         break;
@@ -68,7 +68,7 @@ public class ClaimsServiceImpl implements ClaimsService {
 
       default:
         throw new RuntimeException(
-            String.format("Unhandled Claim Payment Type: %s", dto.getPaymentType()));
+            String.format("Unhandled Claim Payment Type: %s", dto.getType()));
     }
   }
 
