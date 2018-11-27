@@ -112,3 +112,7 @@ spring:
   jackson:
     serialization:
       write_dates_as_timestamps: false
+
+cloud:
+  aws:
+    credentials.useDefaultAwsCredentialsChain: true
