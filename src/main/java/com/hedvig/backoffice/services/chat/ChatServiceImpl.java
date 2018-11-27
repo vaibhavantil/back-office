@@ -15,7 +15,7 @@ import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import com.hedvig.backoffice.services.notificationService.NotificationService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
-import com.hedvig.backoffice.web.dto.MemberDTO;
+import com.hedvig.backoffice.services.members.dto.MemberDTO;
 import java.util.Date;
 import java.util.List;
 

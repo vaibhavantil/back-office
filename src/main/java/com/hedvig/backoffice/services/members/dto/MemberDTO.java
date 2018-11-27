@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.web.dto;
+package com.hedvig.backoffice.services.members.dto;
 
 import java.time.Instant;
 import java.time.LocalDate;
