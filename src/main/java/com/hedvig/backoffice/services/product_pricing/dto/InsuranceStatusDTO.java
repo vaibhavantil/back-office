@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.hedvig.backoffice.web.dto.ProductState;
 import com.hedvig.backoffice.web.dto.SafetyIncreaserType;
+import com.hedvig.backoffice.web.dto.TraceInfoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

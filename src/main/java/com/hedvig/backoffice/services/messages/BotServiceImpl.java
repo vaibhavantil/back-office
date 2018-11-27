@@ -30,13 +30,17 @@ public class BotServiceImpl implements BotService {
   @Override
   public List<BotMessageDTO> messages(String memberId, String token) {
     Map<Integer, BotMessageDTO> root = botServiceClient.messages(memberId, token);
-    return new ArrayList<>(root.values());
+    return root.values().stream()
+      .filter(msg -> !msg.isEmptyBody())
+      .collect(Collectors.toList());
   }
 
   @Override
   public List<BotMessageDTO> messages(String memberId, int count, String token) {
     Map<Integer, BotMessageDTO> root = botServiceClient.messages(memberId, count, token);
-    return new ArrayList<>(root.values());
+    return root.values().stream()
+      .filter(msg -> !msg.isEmptyBody())
+      .collect(Collectors.toList());
   }
 
   @Override

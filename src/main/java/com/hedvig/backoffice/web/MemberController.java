@@ -15,6 +15,7 @@ import java.security.Principal;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;

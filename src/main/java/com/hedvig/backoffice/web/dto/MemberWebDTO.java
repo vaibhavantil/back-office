@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 import static com.hedvig.backoffice.util.TzHelper.toInstant;
@@ -30,6 +31,9 @@ public class MemberWebDTO {
   LocalDate birthDate;
   LocalDateTime signedOn;
   LocalDateTime createdOn;
+  String fraudulentStatus;
+  String fraudulentDescription;
+  List<TraceInfoDTO> traceMemberInfo;
 
   public MemberWebDTO(MemberDTO m) {
     this.memberId = m.getMemberId();
@@ -48,6 +52,7 @@ public class MemberWebDTO {
     this.birthDate = m.getBirthDate();
     this.signedOn = toLocalDateTime(m.getSignedOn(), SWEDEN_TZ);
     this.createdOn = toLocalDateTime(m.getSignedOn(), SWEDEN_TZ);
+    this.traceMemberInfo = m .getTraceMemberInfo();
   }
 
   public MemberDTO convertToMemberDTO() {
@@ -67,7 +72,10 @@ public class MemberWebDTO {
       this.phoneNumber,
       this.birthDate,
       toInstant(this.signedOn, SWEDEN_TZ),
-      toInstant(this.createdOn, SWEDEN_TZ)
+      toInstant(this.createdOn, SWEDEN_TZ),
+      this.fraudulentStatus,
+      this.fraudulentDescription,
+      this.traceMemberInfo
     );
   }
 }

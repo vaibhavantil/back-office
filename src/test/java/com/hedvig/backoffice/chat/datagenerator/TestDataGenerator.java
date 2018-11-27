@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class TestDataGenerator {
   public TestDataGenerator() {
     mapper = new ObjectMapper();
     mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+    mapper.registerModule(new JavaTimeModule());
 
     initParams();
 
