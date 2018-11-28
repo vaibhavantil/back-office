@@ -3,9 +3,7 @@ package com.hedvig.backoffice.graphql.types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import com.hedvig.backoffice.graphql.UnionType;
-import com.hedvig.backoffice.graphql.Util;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import lombok.Value;
 import lombok.val;
@@ -26,19 +24,7 @@ public class TheftClaim {
     String policeReport = null;
     String receipt = null;
 
-    val claimDataWithoutDuplicates = claimData.stream().filter(cd -> {
-      val type = cd.getName();
-      val itemsWithType = claimData.stream().filter(c -> c.getName().equals(type))
-          .sorted(Util.sortedByDateDescComparator).collect(Collectors.toList());
-      if (itemsWithType.size() == 1) {
-        return true;
-      }
-
-      if (itemsWithType.size() > 1) {
-        return cd.getId() == itemsWithType.get(0).getId();
-      }
-      throw new RuntimeException("Invalid invariant");
-    }).collect(Collectors.toList());
+    val claimDataWithoutDuplicates = ClaimData.withoutDuplicates(claimData);
 
     for (val cd : claimDataWithoutDuplicates) {
       switch (cd.getName()) {

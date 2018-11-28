@@ -15,7 +15,8 @@ public class WaterDamageClaim {
 
   public static WaterDamageClaim fromClaimData(List<ClaimData> claimData) {
     LocalDate date = null;
-    for (val cd : claimData) {
+    val claimDataWithoutDuplicates = ClaimData.withoutDuplicates(claimData);
+    for (val cd : claimDataWithoutDuplicates) {
       switch (cd.getName()) {
         case "DATE": {
           date = LocalDateTime.parse(cd.getValue()).toLocalDate();

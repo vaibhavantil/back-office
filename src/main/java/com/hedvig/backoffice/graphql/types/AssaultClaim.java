@@ -20,7 +20,9 @@ public class AssaultClaim {
     LocalDate date = null;
     String policeReport = null;
 
-    for (val cd : claimData) {
+    val claimDataWithoutDuplicates = ClaimData.withoutDuplicates(claimData);
+
+    for (val cd : claimDataWithoutDuplicates) {
       switch (cd.getName()) {
         case "PLACE": {
           location = cd.getValue();

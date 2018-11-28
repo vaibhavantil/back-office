@@ -22,8 +22,9 @@ public class TravelAccidentClaim {
     String policeReport = null;
     String receipt = null;
 
+    val claimDataWithoutDuplicates = ClaimData.withoutDuplicates(claimData);
 
-    for (val cd : claimData) {
+    for (val cd : claimDataWithoutDuplicates) {
       switch (cd.getName()) {
         case "DATE": {
           date = LocalDateTime.parse(cd.getValue()).toLocalDate();
