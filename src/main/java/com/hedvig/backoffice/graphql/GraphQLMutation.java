@@ -159,7 +159,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       val data = new ClaimData();
       data.setClaimID(id.toString());
       data.setName("ITEM");
-      data.setType("TEXT");
+      data.setType("ASSET");
       data.setTitle("Item");
       data.setDate(now);
       data.setValue(claimInformationInput.getItem());
@@ -187,7 +187,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       val data = new ClaimData();
       data.setClaimID(id.toString());
       data.setName("RECEIPT");
-      data.setType("RECEIPT");
+      data.setType("FILE");
       data.setTitle("Receipt");
       data.setDate(now);
       data.setValue(claimInformationInput.getReceipt());
