@@ -53,6 +53,8 @@ public class MemberServiceStub implements MemberService {
 
                   user.setStatus(memberStatuses[RandomUtils.nextInt(0, memberStatuses.length)]);
 
+                  user.setFraudulentStatus(FraudulentStatus.values()[RandomUtils.nextInt(0, FraudulentStatus.values().length)].toString());
+
                   long randomDay = ThreadLocalRandom.current().nextLong(minBirthDay, maxBirthDay);
                   LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
                   user.setBirthDate(randomDate);
@@ -173,5 +175,11 @@ public class MemberServiceStub implements MemberService {
 
   }
 
+  private enum FraudulentStatus {
+    UNDEFINED,
+    NOT_FRAUD,
+    SUSPECTED_FRAUD,
+    CONFIRMED_FRAUD
+  }
 
 }

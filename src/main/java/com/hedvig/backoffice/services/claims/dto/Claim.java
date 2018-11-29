@@ -12,6 +12,7 @@ public class Claim extends ClaimBackOffice {
   private String audioURL;
   private ClaimState state;
   private BigDecimal reserve;
+  private BigDecimal deductible;
   private String type;
 
   private List<ClaimNote> notes;

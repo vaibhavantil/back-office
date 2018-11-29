@@ -104,6 +104,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
 
               insurance.setCertificateUploaded(true);
               insurance.setCertificateUrl("http://hedvigeleonora.se/");
+
             }
 
             return insurance;
@@ -135,7 +136,8 @@ public class ProductPricingServiceStub implements ProductPricingService {
 
   @Override
   public void cancel(String memberId, InsuranceCancellationDateDTO dto, String token) {
-
+    this.insurance(memberId, token)
+      .setInsuranceActiveTo(dto.getCancellationDate().atZone(ZoneId.of("Europe/Stockholm")).toLocalDateTime());
   }
 
   public List<InsuranceStatusDTO> search(ProductState state, String query, String token) {

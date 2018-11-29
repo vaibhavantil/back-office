@@ -4,6 +4,7 @@ import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
+import com.hedvig.backoffice.services.claims.dto.ClaimDeductibleUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
@@ -121,11 +122,21 @@ public class ClaimsController {
 
   @PostMapping("/{id}/reserve")
   public ResponseEntity<?> reserve(
-      @PathVariable String id,
-      @RequestBody @Valid ClaimReserveUpdate reserve,
-      @AuthenticationPrincipal Principal principal) {
+    @PathVariable String id,
+    @RequestBody @Valid ClaimReserveUpdate reserve,
+    @AuthenticationPrincipal Principal principal) {
     reserve.setClaimID(id);
     claimsService.changeReserve(reserve, personnelService.getIdToken(principal.getName()));
+    return ResponseEntity.noContent().build();
+  }
+
+  @PostMapping("/{id}/deductible")
+  public ResponseEntity<?> deductible(
+    @PathVariable String id,
+    @RequestBody @Valid ClaimDeductibleUpdate deductible,
+    @AuthenticationPrincipal Principal principal) {
+    deductible.setClaimID(id);
+    claimsService.changeDeductible(deductible, personnelService.getIdToken(principal.getName()));
     return ResponseEntity.noContent().build();
   }
 

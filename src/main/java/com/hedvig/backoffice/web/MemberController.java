@@ -148,7 +148,6 @@ public class MemberController {
     InsuranceCancellationDateDTO sendDto = new InsuranceCancellationDateDTO(
       dto.getMemberId(), dto.getInsuranceId(),
       dto.getCancellationDate().atStartOfDay(ZoneId.of("Europe/Stockholm")).toInstant());
-//    memberService.cancelInsurance(hid, dto, personnelService.getIdToken(principal.getName()));
     productPricingService.cancel(hid, sendDto, personnelService.getIdToken(principal.getName()));
     return ResponseEntity.noContent().build();
   }
@@ -213,7 +212,7 @@ public class MemberController {
     return ResponseEntity.noContent().build();
   }
 
-  @PostMapping("/insurance/{memberId}/fraudulentStatus")
+  @PostMapping("/{memberId}/setFraudulentStatus")
   public ResponseEntity<?> setFraudulentStatus(
     @PathVariable String memberId, @RequestBody @Valid MemberFraudulentStatusDTO dto, @AuthenticationPrincipal Principal principal) {
     memberService.setFraudulentStatus(memberId, dto, personnelService.getIdToken(principal.getName()));
