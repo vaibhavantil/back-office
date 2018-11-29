@@ -104,7 +104,6 @@ public class ClaimsServiceStub implements ClaimsService {
           LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
 
       claim.setDate(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime));
-      claim.setRegistrationDate(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime));
 
       return claim;
     }).collect(Collectors.toList());

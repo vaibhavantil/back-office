@@ -31,7 +31,7 @@ public class Claim {
                                                                              // currencies other
                                                                              // than SEK in
         // claims-service
-        dto.getRegistrationDate().atZone(ZoneId.of("Europe/Stockholm")).toInstant(), // TODO Do not
+        dto.getDate().atZone(ZoneId.of("Europe/Stockholm")).toInstant(), // TODO Do not
                                                                                      // hardcode
         // time zone
         dto.getUserId(),
