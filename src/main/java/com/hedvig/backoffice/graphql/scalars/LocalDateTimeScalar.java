@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class LocalDateTimeScalar extends GraphQLScalarType {
-  static final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+  static final DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
   public LocalDateTimeScalar() {
     super("LocalDateTime",
