@@ -110,3 +110,9 @@ spring:
   jackson:
     serialization:
       write_dates_as_timestamps: false
+
+
+cloud.aws.region.auto: false
+cloud.aws.region.static: eu-central-1
+
+hedvig.chat.s3Bucket: testChatBucket

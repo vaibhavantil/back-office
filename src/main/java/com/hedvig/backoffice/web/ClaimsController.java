@@ -12,12 +12,16 @@ import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import javax.validation.Valid;
+
+import com.hedvig.backoffice.web.dto.CreateClaimDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.val;
+
+import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
 @RestController
 @RequestMapping("/api/claims")
@@ -48,6 +54,19 @@ public class ClaimsController {
   @GetMapping
   public List<Claim> claims(@AuthenticationPrincipal Principal principal) {
     return claimsService.list(personnelService.getIdToken(principal.getName()));
+  }
+
+  @PostMapping
+  public UUID create(
+    @AuthenticationPrincipal Principal principal,
+    @RequestBody CreateClaimDTO body
+  ) {
+    String token = personnelService.getIdToken(principal.getName());
+    return claimsService.createClaim(new CreateBackofficeClaimDTO(
+      body.getMemberId(),
+      body.getRegistrationDate().atZone(SWEDEN_TZ).toInstant(),
+      body.getClaimSource()
+    ), token);
   }
 
   @GetMapping("/search")

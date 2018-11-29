@@ -14,6 +14,8 @@ import com.hedvig.backoffice.services.claims.dto.ClaimsByIdsDto;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -113,5 +115,10 @@ public class ClaimsServiceImpl implements ClaimsService {
   @Override
   public List<Claim> getClaimsByIds(List<UUID> ids) {
     return client.getClaimsByIds(new ClaimsByIdsDto(ids));
+  }
+
+  @Override
+  public UUID createClaim(CreateBackofficeClaimDTO claimData, String token) {
+    return client.createClaim(claimData, token).getClaimId();
   }
 }

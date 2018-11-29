@@ -12,9 +12,11 @@ import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
 import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
+import com.hedvig.backoffice.services.claims.dto.ClaimSource;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import java.io.IOException;
@@ -39,6 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Sort;
+
+import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
 public class ClaimsServiceStub implements ClaimsService {
 
@@ -85,6 +89,7 @@ public class ClaimsServiceStub implements ClaimsService {
       claim.setUserId(memberId);
       claim.setState(ClaimState.OPEN);
       claim.setAudioURL("http://techslides.com/demos/samples/sample.aac");
+      claim.setClaimSource(ClaimSource.APP);
       claim.setPayments(payments);
       claim.setNotes(notes);
       claim.setEvents(new ArrayList<>());
@@ -142,7 +147,7 @@ public class ClaimsServiceStub implements ClaimsService {
 
     if (page != null && pageSize != null) {
       int totalPages = claims.size() / pageSize;
-      if (claims.size() / pageSize != 0) {
+      if (claims.size() % pageSize != 0) {
         totalPages++;
       }
 
@@ -257,6 +262,27 @@ public class ClaimsServiceStub implements ClaimsService {
 
     return stat.getOrDefault(ClaimState.OPEN.name(), 0L)
         + stat.getOrDefault(ClaimState.REOPENED.name(), 0L);
+  }
+
+  @Override
+  public UUID createClaim(CreateBackofficeClaimDTO claimData, String token) {
+    UUID id = UUID.randomUUID();
+    Claim claim = new Claim();
+    claim.setId("" + id);
+    claim.setDate(claimData.getRegistrationDate().atZone(SWEDEN_TZ).toLocalDateTime());
+    claim.setState(ClaimState.OPEN);
+    claim.setUserId(claimData.getMemberId());
+    claim.setClaimSource(claimData.getClaimSource());
+
+    claim.setPayments(new ArrayList<>());
+    claim.setNotes(new ArrayList<>());
+    claim.setEvents(new ArrayList<>());
+    claim.setData(new ArrayList<>());
+    claim.setAssets(new ArrayList<>());
+
+    claims.add(claim);
+
+    return id;
   }
 
   private void addEvent(Claim claim, String message) {
