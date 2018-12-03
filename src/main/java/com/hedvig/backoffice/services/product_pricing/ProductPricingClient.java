@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.product_pricing;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
@@ -44,6 +45,13 @@ public interface ProductPricingClient {
     @RequestBody InsuranceActivateDTO dto,
     @RequestHeader("Authorization") String token);
 
+  @PostMapping("/_/insurance/{memberId}/setCancellationDateBO")
+  void cancelInsurance(
+    @PathVariable("memberId") String memberId,
+    @RequestBody InsuranceCancellationDateDTO dto,
+    @RequestHeader("Authorization") String token);
+
+
   @GetMapping("/_/insurance/search?state={state}&query={query}")
   List<InsuranceStatusDTO> search(
     @PathVariable("state") ProductState state,
@@ -66,7 +74,7 @@ public interface ProductPricingClient {
 
   @PostMapping("/_/insurance/{memberId}/insuredAtOtherCompany")
   void insuredAtOtherCompany(
-    @PathVariable("memberId") String memberId, @RequestBody InsuredAtOtherCompanyDTO dto);
+    @PathVariable("memberId") String memberId, @RequestBody InsuredAtOtherCompanyDTO dto, @RequestHeader("Authorization") String token);
 
   @GetMapping("/_/insurance/{memberId}/insurances")
   List<InsuranceStatusDTO> getInsurancesByMember(

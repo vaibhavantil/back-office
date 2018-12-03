@@ -2,6 +2,8 @@ package com.hedvig.backoffice.web.dto;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -40,6 +42,12 @@ public class MemberDTO {
   private Instant signedOn;
 
   private Instant createdOn;
+
+  private String fraudulentStatus;
+
+  private String fraudulentDescription;
+
+  private List<TraceInfoDTO> traceMemberInfo;
 
   public MemberDTO(long memberId) {
     this.memberId = memberId;

@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.services.members;
 
-import com.google.common.collect.Lists;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberDTO;
@@ -17,6 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
 import org.apache.commons.lang3.RandomUtils;
@@ -52,6 +52,8 @@ public class MemberServiceStub implements MemberService {
                   user.setFirstName("Test user " + id);
 
                   user.setStatus(memberStatuses[RandomUtils.nextInt(0, memberStatuses.length)]);
+
+                  user.setFraudulentStatus(FraudulentStatus.values()[RandomUtils.nextInt(0, FraudulentStatus.values().length)].toString());
 
                   long randomDay = ThreadLocalRandom.current().nextLong(minBirthDay, maxBirthDay);
                   LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
@@ -167,4 +169,17 @@ public class MemberServiceStub implements MemberService {
         .filter(u -> ids.contains(u.getMemberId().toString()))
         .collect(Collectors.toList());
   }
+
+  @Override
+  public void setFraudulentStatus(String memberId, MemberFraudulentStatusDTO dto, String token) {
+
+  }
+
+  private enum FraudulentStatus {
+    UNDEFINED,
+    NOT_FRAUD,
+    SUSPECTED_FRAUD,
+    CONFIRMED_FRAUD
+  }
+
 }
