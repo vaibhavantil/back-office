@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.members;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberDTO;
+import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
 import org.springframework.data.domain.Sort;
@@ -29,4 +30,6 @@ public interface MemberService {
   void cancelInsurance(String hid, InsuranceCancellationDTO dto, String token);
 
   List<MemberDTO> getMembersByIds(List<String> ids);
+
+  void setFraudulentStatus(String memberId, MemberFraudulentStatusDTO dto, String token);
 }

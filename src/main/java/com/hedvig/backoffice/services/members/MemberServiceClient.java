@@ -7,6 +7,7 @@ import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import java.util.List;
 
+import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -52,9 +53,15 @@ public interface MemberServiceClient {
 
   @PostMapping("/i/member/{memberId}/memberCancelInsurance")
   void cancelInsurance(
-      @PathVariable("memberId") String memberId,
-      @RequestBody InsuranceCancellationDTO dto,
-      @RequestHeader("Authorization") String token);
+    @PathVariable("memberId") String memberId,
+    @RequestBody InsuranceCancellationDTO dto,
+    @RequestHeader("Authorization") String token);
+
+  @PostMapping("/i/member/{memberId}/setFraudulentStatus")
+  void setFraudulentStatus(
+    @PathVariable("memberId") String memberId,
+    @RequestBody MemberFraudulentStatusDTO dto,
+    @RequestHeader("Authorization") String token);
 
   @PostMapping("/i/member/many")
   List<MemberDTO> getMembers(@RequestBody ChargeMembersDTO memberIds);

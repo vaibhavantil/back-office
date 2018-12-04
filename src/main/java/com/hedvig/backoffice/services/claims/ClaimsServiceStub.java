@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
+import com.hedvig.backoffice.services.claims.dto.ClaimDeductibleUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimEvent;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
@@ -218,6 +219,13 @@ public class ClaimsServiceStub implements ClaimsService {
     Claim claim = find(reserve.getClaimID(), token);
     claim.setReserve(reserve.getAmount());
     addEvent(claim, "[test] reserve changed");
+  }
+
+  @Override
+  public void changeDeductible(ClaimDeductibleUpdate deductible, String token) {
+    Claim claim = find(deductible.getClaimID(), token);
+    claim.setDeductible(BigDecimal.valueOf(deductible.getAmount()));
+    addEvent(claim, "[test] Deductible changed");
   }
 
   @Override
