@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.claims;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
+import com.hedvig.backoffice.services.claims.dto.ClaimDeductibleUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
@@ -72,6 +73,10 @@ public interface ClaimsServiceClient {
   @PostMapping("/_/claims/updatereserve")
   void updateReserve(@RequestBody ClaimReserveUpdate reserve,
       @RequestHeader("Authorization") String token);
+
+  @PostMapping("/_/claims/updateDeductible")
+  void updateDeductible(
+    @RequestBody ClaimDeductibleUpdate deductible, @RequestHeader("Authorization") String token);
 
   @PostMapping("/_/claims/updatetype")
   void updateType(@RequestBody ClaimTypeUpdate type, @RequestHeader("Authorization") String token);

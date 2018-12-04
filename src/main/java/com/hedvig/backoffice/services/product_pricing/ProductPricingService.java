@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.product_pricing;
 
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
@@ -25,6 +26,8 @@ public interface ProductPricingService {
 
   void activate(String memberId, InsuranceActivateDTO dto, String token);
 
+  void cancel(String memberId, InsuranceCancellationDateDTO dto, String token);
+
   List<InsuranceStatusDTO> search(ProductState state, String query, String token);
 
   InsuranceSearchResultDTO searchPaged(
@@ -42,7 +45,7 @@ public interface ProductPricingService {
     String memberId, String fileName, String contentType, byte[] data, String token)
     throws IOException;
 
-  void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto);
+  void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto, String token);
 
   List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token);
 

@@ -13,6 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
+import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
@@ -46,6 +47,8 @@ public class MemberServiceStub implements MemberService {
       user.setFirstName("Test user " + id);
 
       user.setStatus(memberStatuses[RandomUtils.nextInt(0, memberStatuses.length)]);
+
+                  user.setFraudulentStatus(FraudulentStatus.values()[RandomUtils.nextInt(0, FraudulentStatus.values().length)].toString());
 
       long randomDay = ThreadLocalRandom.current().nextLong(minBirthDay, maxBirthDay);
       LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
@@ -165,4 +168,17 @@ public class MemberServiceStub implements MemberService {
     return users.stream().filter(u -> ids.contains(u.getMemberId().toString()))
         .collect(Collectors.toList());
   }
+
+  @Override
+  public void setFraudulentStatus(String memberId, MemberFraudulentStatusDTO dto, String token) {
+
+  }
+
+  private enum FraudulentStatus {
+    UNDEFINED,
+    NOT_FRAUD,
+    SUSPECTED_FRAUD,
+    CONFIRMED_FRAUD
+  }
+
 }

@@ -5,6 +5,7 @@ import com.hedvig.backoffice.services.members.dto.ChargeMembersDTO;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberDTO;
+import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
 import org.slf4j.Logger;
@@ -54,5 +55,11 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public List<MemberDTO> getMembersByIds(List<String> ids) {
     return client.getMembers(new ChargeMembersDTO(ids));
+  }
+
+  @Override
+  public void setFraudulentStatus(String memberId, MemberFraudulentStatusDTO dto, String token) {
+    client.setFraudulentStatus(memberId, dto, token);
+    logger.info("Change member status for "+memberId+": "+dto.getFraudulentStatus()+", "+dto.getFraudulentStatusDescription());
   }
 }
