@@ -9,6 +9,9 @@ import com.hedvig.backoffice.services.claims.ClaimsServiceStub;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.expo.ExpoNotificationServiceImpl;
 import com.hedvig.backoffice.services.expo.ExpoNotificationServiceStub;
+import com.hedvig.backoffice.services.meerkat.Meerkat;
+import com.hedvig.backoffice.services.meerkat.MeerkatImpl;
+import com.hedvig.backoffice.services.meerkat.MeerkatStub;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.MemberServiceImpl;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
@@ -43,8 +46,8 @@ public class ExternalServicesConfig {
     val factory = context.getAutowireCapableBeanFactory();
 
     return stub
-        ? factory.createBean(AssetTrackerClientStub.class)
-        : factory.createBean(AssetTrackerClientImpl.class);
+      ? factory.createBean(AssetTrackerClientStub.class)
+      : factory.createBean(AssetTrackerClientImpl.class);
   }
 
   @Bean
@@ -52,8 +55,8 @@ public class ExternalServicesConfig {
     val factory = context.getAutowireCapableBeanFactory();
 
     return stub
-        ? factory.createBean(BotServiceStub.class)
-        : factory.createBean(BotServiceImpl.class);
+      ? factory.createBean(BotServiceStub.class)
+      : factory.createBean(BotServiceImpl.class);
   }
 
   @Bean
@@ -61,8 +64,8 @@ public class ExternalServicesConfig {
     val factory = context.getAutowireCapableBeanFactory();
 
     return stub
-        ? factory.createBean(MemberServiceStub.class)
-        : factory.createBean(MemberServiceImpl.class);
+      ? factory.createBean(MemberServiceStub.class)
+      : factory.createBean(MemberServiceImpl.class);
   }
 
   @Bean
@@ -70,33 +73,42 @@ public class ExternalServicesConfig {
     val factory = context.getAutowireCapableBeanFactory();
 
     return stub
-        ? factory.createBean(ClaimsServiceStub.class)
-        : factory.createBean(ClaimsServiceImpl.class);
+      ? factory.createBean(ClaimsServiceStub.class)
+      : factory.createBean(ClaimsServiceImpl.class);
   }
 
   @Bean
   public ExpoNotificationService expoNotificationService(
-      @Value("${expo.stub:false}") boolean stub) {
+    @Value("${expo.stub:false}") boolean stub) {
     val factory = context.getAutowireCapableBeanFactory();
     return stub
-        ? factory.createBean(ExpoNotificationServiceStub.class)
-        : factory.createBean(ExpoNotificationServiceImpl.class);
+      ? factory.createBean(ExpoNotificationServiceStub.class)
+      : factory.createBean(ExpoNotificationServiceImpl.class);
   }
 
   @Bean
   public ProductPricingService productPricingService(
-      @Value("${productPricing.stub:false}") boolean stub) {
+    @Value("${productPricing.stub:false}") boolean stub) {
     val factory = context.getAutowireCapableBeanFactory();
     return stub
-        ? factory.createBean(ProductPricingServiceStub.class)
-        : factory.createBean(ProductPricingServiceImpl.class);
+      ? factory.createBean(ProductPricingServiceStub.class)
+      : factory.createBean(ProductPricingServiceImpl.class);
   }
 
   @Bean
   public PaymentService paymentService(@Value("${paymentService.stub:false}") boolean stub) {
     val factory = context.getAutowireCapableBeanFactory();
     return stub
-        ? factory.createBean(PaymentServiceStub.class)
-        : factory.createBean(PaymentServiceImpl.class);
+      ? factory.createBean(PaymentServiceStub.class)
+      : factory.createBean(PaymentServiceImpl.class);
   }
+
+  @Bean
+  public Meerkat meerkat(@Value("${meerkat.stub:false}") boolean stub) {
+    val factory = context.getAutowireCapableBeanFactory();
+    return stub
+      ? factory.createBean(MeerkatStub.class)
+      : factory.createBean(MeerkatImpl.class);
+  }
+
 }
