@@ -13,7 +13,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
-import com.hedvig.backoffice.services.members.dto.MemberSanctionStatus;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;

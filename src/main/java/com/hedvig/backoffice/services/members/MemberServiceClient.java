@@ -4,21 +4,17 @@ import java.util.List;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.members.dto.ChargeMembersDTO;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
-import com.hedvig.backoffice.services.members.dto.MemberSanctionStatus;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "member-service", url = "${memberservice.baseUrl}",

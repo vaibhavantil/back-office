@@ -3,7 +3,6 @@ package com.hedvig.backoffice.services.members;
 import java.util.List;
 import com.hedvig.backoffice.services.members.dto.ChargeMembersDTO;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
-import com.hedvig.backoffice.services.members.dto.MemberSanctionStatus;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
@@ -11,8 +10,6 @@ import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestClientResponseException;
 
 public class MemberServiceImpl implements MemberService {
 
