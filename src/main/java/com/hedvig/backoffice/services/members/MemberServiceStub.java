@@ -166,9 +166,4 @@ public class MemberServiceStub implements MemberService {
     return users.stream().filter(u -> ids.contains(u.getMemberId().toString()))
         .collect(Collectors.toList());
   }
-
-  @Override
-  public MemberSanctionStatus getMemberSanctionStatus(String memberId) {
-    return MemberSanctionStatus.values()[RandomUtils.nextInt(0, 3)];
-  }
 }

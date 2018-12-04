@@ -1,20 +1,19 @@
 package com.hedvig.backoffice.services.members;
 
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
-import com.hedvig.backoffice.services.members.dto.MemberSanctionStatus;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
-import org.springframework.data.domain.Sort;
 import java.util.List;
+import org.springframework.data.domain.Sort;
 
 public interface MemberService {
 
   List<MemberDTO> search(MemberStatus status, String query, String token);
 
   MembersSearchResultDTO searchPaged(MemberStatus status, String query, Integer page,
-      Integer pageSize, MembersSortColumn sortBy, Sort.Direction sortDirection, String token);
+    Integer pageSize, MembersSortColumn sortBy, Sort.Direction sortDirection, String token);
 
   MemberDTO findByMemberId(String memberId, String token);
 
@@ -23,6 +22,4 @@ public interface MemberService {
   void cancelInsurance(String hid, InsuranceCancellationDTO dto, String token);
 
   List<MemberDTO> getMembersByIds(List<String> ids);
-
-  MemberSanctionStatus getMemberSanctionStatus(String memberId);
 }

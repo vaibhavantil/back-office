@@ -50,8 +50,4 @@ public interface MemberServiceClient {
 
   @PostMapping("/i/member/many")
   List<MemberDTO> getMembers(@RequestBody ChargeMembersDTO memberIds);
-
-  @RequestMapping(value = "/i/member/{memberId}/sanctionList", method = RequestMethod.GET)
-  ResponseEntity<MemberSanctionStatus> getMemberSanctionStatus(
-      @PathVariable("memberId") String memberId);
 }
