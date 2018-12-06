@@ -39,6 +39,7 @@ public class InsuranceStatusWebDTO {
   String certificateUrl;
   boolean cancellationEmailSent;
   LocalDateTime signedOn;
+  List<TraceInfoDTO> traceProduct;
 
   public InsuranceStatusWebDTO(InsuranceStatusDTO ins) {
     this.productId = ins.getProductId();
@@ -65,5 +66,6 @@ public class InsuranceStatusWebDTO {
     this.certificateUrl = ins.getCertificateUrl();
     this.cancellationEmailSent = ins.isCancellationEmailSent();
     this.signedOn = toLocalDateTime(ins.getSignedOn(), SWEDEN_TZ);
+    this.traceProduct = ins.getTraceProduct();
   }
 }
