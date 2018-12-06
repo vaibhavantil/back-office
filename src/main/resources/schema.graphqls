@@ -10,6 +10,7 @@ type QueryType {
 
 type MutationType {
     chargeMember(id: ID!, amount: MonetaryAmount!): Member
+    createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
 }
 
 type MonthlySubscription {
@@ -38,9 +39,18 @@ type DirectDebitStatus {
     activated: Boolean
 }
 
+enum ClaimSource {
+  APP
+  EMAIL
+  INTERCOM
+  PHONE
+}
+
 # A String-representation of `java.time.YearMonth`. ex: `"2018-06"`
 scalar YearMonth
 # An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100,  "currency": "SEK"}`
 scalar MonetaryAmount
 # An epoch-representation of `java.time.Instant`. ex: `1531914777`
 scalar Instant
+# A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"`
+scalar LocalDateTime
