@@ -1,8 +1,12 @@
 package com.hedvig.backoffice.chat.datagenerator;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.MapType;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 
 import java.io.IOException;
 import java.util.Date;
@@ -39,24 +43,28 @@ public class TestDataGenerator {
   public TestDataGenerator() {
     mapper = new ObjectMapper();
     mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+    mapper.registerModule(new JavaTimeModule());
 
     initParams();
 
   }
 
 
-  public JsonNode getExampleForBodyChecking (String strategy) {
+  public BotMessageDTO getExampleForBodyChecking (String strategy) {
     try {
-      return mapper.readValue(strategies.get(strategy), JsonNode.class);
+      return mapper.readValue(strategies.get(strategy), BotMessageDTO.class);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
 
   }
 
-  public JsonNode getExamplesForBodyChecking (String strategy) {
+  public Map<Integer, BotMessageDTO> getExamplesForBodyChecking(String strategy) {
     try {
-      return mapper.readValue("{\"1\":"+strategies.get(strategy)+"}", JsonNode.class);
+      BotMessageDTO msg = mapper.readValue(strategies.get(strategy), BotMessageDTO.class);
+      HashMap<Integer, BotMessageDTO> res = new HashMap<>();
+      res.put(1, msg);
+      return res;
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

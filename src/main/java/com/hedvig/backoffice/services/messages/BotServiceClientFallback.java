@@ -3,9 +3,12 @@ package com.hedvig.backoffice.services.messages;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
+import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
 import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
 import java.util.List;
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +23,13 @@ public class BotServiceClientFallback implements BotServiceClient {
   }
 
   @Override
-  public JsonNode messages(String memberId, String token) {
+  public Map<Integer, BotMessageDTO> messages(String memberId, String token) {
     log.error("request to bot-service failed");
     return null;
   }
 
   @Override
-  public JsonNode messages(String memberId, int count, String token) {
+  public Map<Integer, BotMessageDTO> messages(String memberId, int count, String token) {
     log.error("request to bot-service failed");
     return null;
   }

@@ -1,9 +1,13 @@
-package com.hedvig.backoffice.web.dto;
+package com.hedvig.backoffice.services.product_pricing.dto;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.hedvig.backoffice.web.dto.ProductState;
+import com.hedvig.backoffice.web.dto.SafetyIncreaserType;
+import com.hedvig.backoffice.web.dto.TraceInfoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

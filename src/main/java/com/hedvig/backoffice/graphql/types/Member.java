@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.graphql.types;
 
-import com.hedvig.backoffice.web.dto.MemberDTO;
+import com.hedvig.backoffice.services.members.dto.MemberDTO;
 import lombok.Value;
 
 @Value

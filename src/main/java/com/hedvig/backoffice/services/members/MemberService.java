@@ -2,10 +2,10 @@ package com.hedvig.backoffice.services.members;
 
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
-import com.hedvig.backoffice.web.dto.MemberDTO;
+import com.hedvig.backoffice.services.members.dto.MemberDTO;
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
-import com.hedvig.backoffice.web.dto.MembersSearchResultDTO;
+import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 

@@ -18,6 +18,8 @@ import com.hedvig.backoffice.graphql.types.ClaimTypes;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.claims.dto.ClaimSource;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
@@ -27,8 +29,13 @@ import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import org.springframework.stereotype.Component;
 import graphql.schema.DataFetchingEnvironment;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
 @Component
 @Slf4j
@@ -55,6 +62,18 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     paymentService.chargeMember(id, amount);
     return memberLoader.load(id);
   }
+
+  public UUID createClaim(String memberId, LocalDateTime date, ClaimSource source, DataFetchingEnvironment env) {
+    GraphQLRequestContext context = env.getContext();
+    String token = personnelService.getIdToken(context.getUserPrincipal().getName());
+    return claimsService.createClaim(new CreateBackofficeClaimDTO(
+      memberId,
+      date.atZone(SWEDEN_TZ).toInstant(),
+      source
+    ), token);
+  }
+
+
 
   public CompletableFuture<Claim> updateClaimState(UUID id, ClaimState claimState,
       DataFetchingEnvironment env) throws AuthorizationException {

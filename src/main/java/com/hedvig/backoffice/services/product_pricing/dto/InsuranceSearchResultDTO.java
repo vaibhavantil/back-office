@@ -1,5 +1,6 @@
-package com.hedvig.backoffice.web.dto;
+package com.hedvig.backoffice.services.product_pricing.dto;
 
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

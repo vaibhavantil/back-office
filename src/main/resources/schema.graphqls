@@ -12,6 +12,7 @@ type QueryType {
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
   updateClaimState(id: ID!, state: ClaimState!): Claim
+  createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
   createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
   setClaimType(id: ID!, type: ClaimTypes!): Claim
@@ -55,6 +56,14 @@ type Transaction {
 
 type DirectDebitStatus {
   activated: Boolean
+}
+
+enum ClaimSource {
+  APP
+  EMAIL
+  INTERCOM
+  PHONE
+  CHAT
 }
 
 type Claim {
@@ -169,3 +178,5 @@ scalar Instant
 scalar ZonedDateTime
 # A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"`
 scalar LocalDate
+# A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"`
+scalar LocalDateTime

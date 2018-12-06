@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -27,22 +28,10 @@ public class MessagesFrontendPostprocessor {
     this.chatS3Bucket = chatS3Bucket;
   }
 
-  public void processMessage(JsonNode msgNode) {
-    if (msgNode == null) {
-      return;
-    }
-
-    JsonNode body = msgNode.get("body");
-    JsonNode header = msgNode.get("header");
-    if (body != null && header != null && body.isObject() && header.isObject()) {
-      processMessage((ObjectNode)body, (ObjectNode)header);
-    }
-  }
-
-  public void processMessage(ObjectNode body, ObjectNode header) {
-    String bodyType = body.path("type").asText();
+  public void processMessage(BotMessageDTO msg) {
+    String bodyType = msg.getBody().path("type").asText();
     if ("file_upload".equals(bodyType)) {
-      processFileUpload(body);
+      processFileUpload((ObjectNode)msg.getBody());
     }
   }
 
