@@ -52,6 +52,8 @@ public class MemberWebDTO {
     this.birthDate = m.getBirthDate();
     this.signedOn = toLocalDateTime(m.getSignedOn(), SWEDEN_TZ);
     this.createdOn = toLocalDateTime(m.getSignedOn(), SWEDEN_TZ);
+    this.fraudulentStatus = m.getFraudulentStatus();
+    this.fraudulentDescription = m.getFraudulentDescription();
     this.traceMemberInfo = m .getTraceMemberInfo();
   }
 
