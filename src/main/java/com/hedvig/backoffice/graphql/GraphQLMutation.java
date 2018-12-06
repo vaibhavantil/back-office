@@ -3,8 +3,10 @@ package com.hedvig.backoffice.graphql;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import javax.money.MonetaryAmount;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
@@ -122,7 +124,9 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
     val now = LocalDateTime.now();
 
-    val prevLocation = claimData.stream().filter(d -> d.getName().equals("PLACE"))
+    val groupedClaimData = claimData.stream().collect(Collectors.groupingBy(ClaimData::getName));
+
+    val prevLocation = groupedClaimData.getOrDefault("PLACE", Collections.emptyList()).stream()
         .sorted(Util.sortedByDateDescComparator).findFirst();
     if (claimInformationInput.getLocation() != null && !(prevLocation.isPresent()
         && prevLocation.get().getValue().equals(claimInformationInput.getLocation()))) {
@@ -136,7 +140,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
     }
 
-    val prevDate = claimData.stream().filter(d -> d.getName().equals("DATE"))
+    val prevDate = groupedClaimData.getOrDefault("DATE", Collections.emptyList()).stream()
         .sorted(Util.sortedByDateDescComparator).findFirst();
     log.info("previous Date: {}, new Date: {}",
         prevDate.orElseGet(() -> new ClaimData()).getValue(), claimInformationInput.getDate());
@@ -152,7 +156,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
     }
 
-    val prevItem = claimData.stream().filter(d -> d.getName().equals("ITEM"))
+    val prevItem = groupedClaimData.getOrDefault("ITEM", Collections.emptyList()).stream()
         .sorted(Util.sortedByDateDescComparator).findFirst();
     if (claimInformationInput.getItem() != null && !(prevItem.isPresent()
         && prevItem.get().getValue().equals(claimInformationInput.getItem()))) {
@@ -166,8 +170,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
     }
 
-    val prevPoliceReport = claimData.stream().filter(d -> d.getName().equals("POLICE_REPORT"))
-        .sorted(Util.sortedByDateDescComparator).findFirst();
+    val prevPoliceReport = groupedClaimData.getOrDefault("POLICE_REPORT", Collections.emptyList())
+        .stream().sorted(Util.sortedByDateDescComparator).findFirst();
     if (claimInformationInput.getPoliceReport() != null && !(prevPoliceReport.isPresent()
         && prevPoliceReport.get().getValue().equals(claimInformationInput.getPoliceReport()))) {
       val data = new ClaimData();
@@ -180,7 +184,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
     }
 
-    val prevReceipt = claimData.stream().filter(d -> d.getName().equals("RECEIPT"))
+    val prevReceipt = groupedClaimData.getOrDefault("RECEIPT", Collections.emptyList()).stream()
         .sorted(Util.sortedByDateDescComparator).findFirst();
     if (claimInformationInput.getReceipt() != null && !(prevReceipt.isPresent()
         && prevReceipt.get().getValue().equals(claimInformationInput.getReceipt()))) {
@@ -194,7 +198,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
     }
 
-    val prevTicket = claimData.stream().filter(d -> d.getName().equals("TICKET"))
+    val prevTicket = groupedClaimData.getOrDefault("TICKET", Collections.emptyList()).stream()
         .sorted(Util.sortedByDateDescComparator).findFirst();
     if (claimInformationInput.getTicket() != null && !(prevTicket.isPresent()
         && prevTicket.get().getValue().equals(claimInformationInput.getTicket()))) {
