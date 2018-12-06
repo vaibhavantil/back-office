@@ -10,7 +10,7 @@ import com.hedvig.backoffice.services.MessagesFrontendPostprocessor;
 import com.hedvig.backoffice.services.chat.SubscriptionService;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.messages.BotService;
-import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.notificationService.NotificationService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
@@ -133,14 +133,14 @@ public class QuestionServiceImpl implements QuestionService {
 
   @Transactional
   @Override
-  public void addNewQuestions(List<BotMessage> questions) {
+  public void addNewQuestions(List<BotMessageDTO> questions) {
     if (questions.size() == 0) return;
 
-    for (BotMessage message : questions) {
+    for (BotMessageDTO message : questions) {
       Optional<Question> question = questionRepository.findById(message.getGlobalId());
       if (question.isPresent()) continue;
 
-      Subscription sub = subscriptionService.getOrCreateSubscription(message.getMemberId());
+      Subscription sub = subscriptionService.getOrCreateSubscription("" + message.getHeader().getFromId());
       QuestionGroup group =
           questionGroupRepository.findUnasweredBySub(sub).orElseGet(() -> new QuestionGroup(sub));
 
@@ -149,7 +149,7 @@ public class QuestionServiceImpl implements QuestionService {
               () ->
                   new Question(
                       message.getGlobalId(),
-                      message.getMessage().toString(),
+                      message.toJson(),
                       message.getTimestamp())));
       group.correctDate(message.getTimestamp());
       questionGroupRepository.save(group);
@@ -167,4 +167,5 @@ public class QuestionServiceImpl implements QuestionService {
 
     expoNotificationService.sendNotification(memberId, personnelToken);
   }
+
 }

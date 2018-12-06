@@ -2,7 +2,7 @@ package com.hedvig.backoffice.services.messages;
 
 import com.hedvig.backoffice.repository.SubscriptionRepository;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
-import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
 import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
 import java.time.Instant;
@@ -109,7 +109,7 @@ public class BotServiceStub implements BotService {
 
   private final SubscriptionRepository subscriptionRepository;
 
-  private ConcurrentHashMap<String, List<BotMessage>> messages;
+  private ConcurrentHashMap<String, List<BotMessageDTO>> messages;
   private ConcurrentHashMap<String, Instant> timestamps;
   private AtomicLong increment;
 
@@ -128,8 +128,8 @@ public class BotServiceStub implements BotService {
   }
 
   @Override
-  public List<BotMessage> messages(String memberId, String token) {
-    List<BotMessage> current = messages.computeIfAbsent(memberId, k -> new ArrayList<>());
+  public List<BotMessageDTO> messages(String memberId, String token) {
+    List<BotMessageDTO> current = messages.computeIfAbsent(memberId, k -> new ArrayList<>());
     Instant time = new Date().toInstant();
     Instant timestamp = timestamps.computeIfAbsent(memberId, k -> new Date().toInstant());
 
@@ -139,8 +139,7 @@ public class BotServiceStub implements BotService {
 
       try {
         current.add(
-          new BotMessage(
-            String.format(
+          BotMessageDTO.fromJson(String.format(
               STUB_MESSAGE_TEMPLATE,
               increment.addAndGet(1),
               current.size(),
@@ -148,8 +147,9 @@ public class BotServiceStub implements BotService {
               type,
               "Test message " + current.size(),
               typesTemplates.get(type),
-              time.toString())));
-      } catch (BotMessageException e) {
+              time.toString()
+            )));
+      } catch (Exception e) {
         log.error("error creating message", e);
       }
     }
@@ -158,8 +158,8 @@ public class BotServiceStub implements BotService {
   }
 
   @Override
-  public List<BotMessage> messages(String memberId, int count, String token) {
-    List<BotMessage> all = messages(memberId, token);
+  public List<BotMessageDTO> messages(String memberId, int count, String token) {
+    List<BotMessageDTO> all = messages(memberId, token);
     if (all.size() <= count) {
       return all;
     }
@@ -175,12 +175,12 @@ public class BotServiceStub implements BotService {
       .flatMap(
         e -> {
           String memberId = e.getKey();
-          List<BotMessage> messages = e.getValue();
+          List<BotMessageDTO> messages = e.getValue();
           return messages
             .stream()
             .filter(Objects::nonNull)
             .filter(m -> m.getTimestamp().isAfter(timestamp))
-            .map(m -> new BackOfficeMessage(memberId, m.getMessage()));
+            .map(m -> new BackOfficeMessage(memberId, m));
         })
       .collect(Collectors.toList());
   }
@@ -192,12 +192,11 @@ public class BotServiceStub implements BotService {
 
   @Override
   public void answerQuestion(String memberId, String answer, String token) {
-    List<BotMessage> current = messages.computeIfAbsent(memberId, k -> new ArrayList<>());
+    List<BotMessageDTO> current = messages.computeIfAbsent(memberId, k -> new ArrayList<>());
     try {
       appendMessage(
         memberId,
-        new BotMessage(
-          String.format(
+        BotMessageDTO.fromJson(String.format(
             STUB_MESSAGE_TEMPLATE,
             increment.addAndGet(1),
             current.size(),
@@ -206,15 +205,15 @@ public class BotServiceStub implements BotService {
             answer,
             typesTemplates.get("text"),
             new Date().toInstant())));
-    } catch (BotMessageException e) {
+    } catch (Exception e) {
       log.error("message not created", e);
     }
   }
 
-  private void appendMessage(String memberId, BotMessage bm) {
-    List<BotMessage> msg = messages.computeIfAbsent(memberId, k -> new ArrayList<>());
+  private void appendMessage(String memberId, BotMessageDTO bm) {
+    List<BotMessageDTO> msg = messages.computeIfAbsent(memberId, k -> new ArrayList<>());
     bm.setGlobalId(increment.addAndGet(1));
-    bm.setMessageId((long) msg.size());
+    bm.getHeader().setMessageId((long)msg.size());
     msg.add(bm);
   }
 

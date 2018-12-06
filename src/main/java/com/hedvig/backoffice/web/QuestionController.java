@@ -8,7 +8,10 @@ import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
+
+import com.hedvig.backoffice.web.dto.QuestionGroupWebDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,22 +36,28 @@ public class QuestionController {
   }
 
   @GetMapping
-  public List<QuestionGroupDTO> list() {
-    return questionService.list();
+  public List<QuestionGroupWebDTO> list() {
+    return questionService.list().stream()
+      .map(QuestionGroupWebDTO::new)
+      .collect(Collectors.toList());
   }
 
   @GetMapping("/answered")
-  public List<QuestionGroupDTO> answered() {
-    return questionService.answered();
+  public List<QuestionGroupWebDTO> answered() {
+    return questionService.answered().stream()
+      .map(QuestionGroupWebDTO::new)
+      .collect(Collectors.toList());
   }
 
   @GetMapping("/not-answered")
-  public List<QuestionGroupDTO> notAnswered() {
-    return questionService.notAnswered();
+  public List<QuestionGroupWebDTO> notAnswered() {
+    return questionService.notAnswered().stream()
+      .map(QuestionGroupWebDTO::new)
+      .collect(Collectors.toList());
   }
 
   @PostMapping("/answer/{memberId}")
-  public QuestionGroupDTO answer(
+  public QuestionGroupWebDTO answer(
       @PathVariable String memberId,
       @Valid @RequestBody BackOfficeResponseDTO message,
       @AuthenticationPrincipal String principal)
@@ -56,7 +65,8 @@ public class QuestionController {
 
     Personnel personnel =
         personnelRepository.findById(principal).orElseThrow(AuthorizationException::new);
-    return questionService.answer(memberId, message.getMsg(), personnel);
+    QuestionGroupDTO answer = questionService.answer(memberId, message.getMsg(), personnel);
+    return new QuestionGroupWebDTO(answer);
   }
 
   @PostMapping("/done/{memberId}")

@@ -1,5 +1,6 @@
-package com.hedvig.backoffice.web.dto;
+package com.hedvig.backoffice.services.members.dto;
 
+import com.hedvig.backoffice.services.members.dto.MemberDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -7,10 +7,9 @@ import com.hedvig.backoffice.domain.SystemSetting;
 import com.hedvig.backoffice.domain.SystemSettingType;
 import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.services.chat.data.Message;
-import com.hedvig.backoffice.services.messages.BotMessageException;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
-import com.hedvig.backoffice.services.messages.dto.BotMessage;
+import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import java.time.Instant;
@@ -106,20 +105,13 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     }
 
     Instant lastTimestamp = null;
-    Map<String, List<BotMessage>> messages = new HashMap<>();
-    List<BotMessage> questions = new ArrayList<>();
+    Map<String, List<BotMessageDTO>> messages = new HashMap<>();
+    List<BotMessageDTO> questions = new ArrayList<>();
 
     for (BackOfficeMessage backOfficeMessage : fetched) {
-      BotMessage message;
+      BotMessageDTO message = backOfficeMessage.getMsg();
 
-      try {
-        message = backOfficeMessage.toBotMessage();
-      } catch (BotMessageException e) {
-        log.error("Error during parsing message from bot-service", e);
-        continue;
-      }
-
-      List<BotMessage> messagesForMemberId =
+      List<BotMessageDTO> messagesForMemberId =
           messages.computeIfAbsent(backOfficeMessage.getUserId(), key -> new ArrayList<>());
       messagesForMemberId.add(message);
 
@@ -174,11 +166,11 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     return Instant.parse(setting.getValue());
   }
 
-  private void addQuestions(List<BotMessage> questions) {
+  private void addQuestions(List<BotMessageDTO> questions) {
     questionService.addNewQuestions(questions);
   }
 
-  private void sendMessages(String memberId, List<BotMessage> messages) {
+  private void sendMessages(String memberId, List<BotMessageDTO> messages) {
     List<Personnel> personnels =
         chatContextRepository.findPersonnelsWithActiveChatsByMemberId(memberId);
     Message m = Message.chat(messages);

@@ -8,6 +8,7 @@ import lombok.extern.java.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Log
 public class BotServiceClientStub implements BotServiceClient {
@@ -18,12 +19,12 @@ public class BotServiceClientStub implements BotServiceClient {
   }
 
   @Override
-  public JsonNode messages(String memberId, String token) {
+  public Map<Integer, BotMessageDTO> messages(String memberId, String token) {
     return new TestDataGenerator().getExamplesForBodyChecking(token);
   }
 
   @Override
-  public JsonNode messages(String memberId, int count, String token) {
+  public Map<Integer, BotMessageDTO> messages(String memberId, int count, String token) {
     return new TestDataGenerator().getExamplesForBodyChecking(token);
   }
 

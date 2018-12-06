@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
+import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
 import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,11 +29,11 @@ public interface BotServiceClient {
       @PathVariable("memberId") String memberId, @RequestHeader("Authorization") String token);
 
   @GetMapping("/messages")
-  JsonNode messages(
+  Map<Integer, BotMessageDTO> messages(
       @RequestHeader("hedvig.token") String memberId, @RequestHeader("Authorization") String token);
 
   @GetMapping("/messages/{count}")
-  JsonNode messages(
+  Map<Integer, BotMessageDTO> messages(
       @RequestHeader("hedvig.token") String memberId,
       @PathVariable("count") int count,
       @RequestHeader("Authorization") String token);

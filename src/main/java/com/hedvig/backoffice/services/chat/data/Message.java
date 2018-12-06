@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.hedvig.backoffice.services.messages.dto.BotMessage;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
+
+import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
+import com.hedvig.backoffice.web.dto.BotMessageWebDTO;
 import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,15 +42,14 @@ public class Message {
     return new Message(MessageType.ERROR, new Date().toInstant(), new ErrorMessage(code, msg));
   }
 
-  public static Message chat(List<BotMessage> messages) {
+  public static Message chat(List<BotMessageDTO> messages) {
     return new Message(
         MessageType.MESSAGE,
         new Date().toInstant(),
-        new ChatMessages(
-            messages
-                .stream()
-                .filter(Objects::nonNull)
-                .map(BotMessage::getMessage)
-                .collect(Collectors.toList())));
+        new ChatMessages(messages.stream()
+          .map(BotMessageWebDTO::new)
+          .collect(Collectors.toList())
+        )
+    );
   }
 }
