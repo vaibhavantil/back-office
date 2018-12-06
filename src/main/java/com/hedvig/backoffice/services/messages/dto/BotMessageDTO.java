@@ -21,6 +21,7 @@ public class BotMessageDTO {
   BotMessageHeaderDTO header;
   JsonNode body;
   Instant timestamp;
+  String author;
 
   public boolean isBotMessage() {
     return Objects.equals(header.getFromId(), 1L);

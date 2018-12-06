@@ -23,6 +23,7 @@ public class BotMessageWebDTO {
   JsonNode body;
   Instant timestamp;
   LocalDateTime localTimestamp;
+  String author;
 
   public BotMessageWebDTO(BotMessageDTO msg) {
     this.globalId = msg.getGlobalId();
@@ -31,5 +32,6 @@ public class BotMessageWebDTO {
     this.body = msg.getBody();
     this.timestamp = msg.getTimestamp();
     this.localTimestamp = toLocalDateTime(msg.getTimestamp(), SWEDEN_TZ);
+    this.author = msg.getAuthor();
   }
 }
