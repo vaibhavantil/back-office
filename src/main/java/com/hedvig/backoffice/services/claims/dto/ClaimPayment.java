@@ -21,5 +21,7 @@ public class ClaimPayment extends ClaimBackOffice {
 
   ClaimPaymentType type;
 
-  UUID handlerReference;
+  String handlerReference;
+
+  UUID transactionId;
 }

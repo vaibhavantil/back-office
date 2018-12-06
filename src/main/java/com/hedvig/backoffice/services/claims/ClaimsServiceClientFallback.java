@@ -5,6 +5,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimDeductibleUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentRequest;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
 import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
@@ -112,7 +113,7 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   }
 
   @Override
-  public void addAutomaticPayment(String id, ClaimPayment dto, String token) {
+  public void addAutomaticPayment(String id, ClaimPaymentRequest dto) {
     log.error("request to claim-service failed");
   }
 

@@ -22,7 +22,7 @@ public class ClaimPayment {
     return new ClaimPayment(Money.of(dto.getAmount(), "SEK"), dto.getNote(),
         ClaimPaymentType.valueOf(dto.getType().toString()), dto.getDate().toInstant(ZoneOffset.UTC),
         dto.getExGratia(),
-        dto.getHandlerReference() != null ? Optional.of(dto.getHandlerReference())
+        dto.getTransactionId() != null ? Optional.of(dto.getTransactionId())
             : Optional.empty());
   }
 }

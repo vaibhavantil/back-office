@@ -9,6 +9,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimDeductibleUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimEvent;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentResponse;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
@@ -80,7 +81,7 @@ public class ClaimsServiceStub implements ClaimsService {
       val payment = new ClaimPayment();
       payment.setAmount(BigDecimal.valueOf(100));
       payment.setType(ClaimPaymentType.Manual);
-      payment.setHandlerReference(UUID.randomUUID());
+      payment.setHandlerReference("testPerson@Hedvig.com");
       payment.setDate(LocalDateTime.now());
       payment.setExGratia(false);
       val payments = Lists.newArrayList(payment);
@@ -196,7 +197,7 @@ public class ClaimsServiceStub implements ClaimsService {
       };
 
   @Override
-  public void addPayment(String memberId, ClaimPayment dto, String token) {
+  public ClaimPaymentResponse addPayment(String memberId, ClaimPayment dto, String token) {
     Claim claim = find(dto.getClaimID(), token);
     dto.setDate(LocalDateTime.now());
     switch (dto.getType()) {
@@ -204,11 +205,12 @@ public class ClaimsServiceStub implements ClaimsService {
         dto.setHandlerReference(null);
       }
       case Automatic: {
-        dto.setHandlerReference(UUID.randomUUID());
+        dto.setHandlerReference("testPerson@hedvig.com");
       }
     }
     claim.getPayments().add(dto);
     addEvent(claim, "[test] payment added");
+    return ClaimPaymentResponse.SUCCESSFUL;
   }
 
   @Override
