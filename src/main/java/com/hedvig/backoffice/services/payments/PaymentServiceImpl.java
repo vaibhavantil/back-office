@@ -4,6 +4,7 @@ import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.services.payments.dto.ChargeRequestDTO;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.payments.dto.Transaction;
+import com.hedvig.backoffice.services.payments.dto.TransactionDTO;
 import feign.FeignException;
 import java.util.List;
 import java.util.UUID;
@@ -22,8 +23,8 @@ public class PaymentServiceImpl implements PaymentService {
   @Override
   public List<Transaction> getTransactionsByMemberId(String memberId) {
     return paymentServiceClient.getTransactions(memberId).getTransactions().entrySet().stream()
-        .map(entry -> Transaction.fromTransactionDTO(entry.getKey(), entry.getValue()))
-        .collect(Collectors.toList());
+      .map(entry -> Transaction.fromTransactionDTO(entry.getKey(), entry.getValue()))
+      .collect(Collectors.toList());
   }
 
   @Override
@@ -38,7 +39,8 @@ public class PaymentServiceImpl implements PaymentService {
 
   @Override
   public Transaction getTransactionById(UUID id) {
-    return null;
+    TransactionDTO dto = paymentServiceClient.getTransactionById(id).getBody();
+    return Transaction.fromTransactionDTO(id, dto);
   }
 
   public DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId) {
