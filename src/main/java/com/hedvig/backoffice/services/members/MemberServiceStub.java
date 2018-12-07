@@ -176,7 +176,6 @@ public class MemberServiceStub implements MemberService {
   }
 
   private enum FraudulentStatus {
-    UNDEFINED,
     NOT_FRAUD,
     SUSPECTED_FRAUD,
     CONFIRMED_FRAUD
