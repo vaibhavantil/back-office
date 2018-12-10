@@ -5,6 +5,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimDeductibleUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentRequest;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentResponse;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
@@ -77,7 +78,8 @@ public class ClaimsServiceImpl implements ClaimsService {
 
       case Automatic: {
         try {
-          client.addAutomaticPayment(memberId, null); //TODO: FIX ME
+          client.addAutomaticPayment(memberId,
+            ClaimPaymentRequest.fromClaimPayment(dto)); //TODO: ADD BYPASSING
           return ClaimPaymentResponse.SUCCESSFUL;
         } catch (FeignException ex) {
           if (ex.status() == HttpStatus.FORBIDDEN.value()) {
