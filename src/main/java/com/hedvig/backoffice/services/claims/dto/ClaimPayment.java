@@ -24,4 +24,8 @@ public class ClaimPayment extends ClaimBackOffice {
   String handlerReference;
 
   UUID transactionId;
+
+  boolean sanctionListSkipped;
+
+  String paymentNote;
 }

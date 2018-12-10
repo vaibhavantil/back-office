@@ -20,7 +20,7 @@ public class ClaimPaymentRequest {
 
   public static ClaimPaymentRequest fromClaimPayment(ClaimPayment c) {
     return new ClaimPaymentRequest(UUID.fromString(c.claimID), c.userId, Money.of(c.amount, SEK),
-      c.handlerReference, false, "Note", c.exGratia);
+      c.handlerReference, c.sanctionListSkipped, c.paymentNote, c.exGratia);
   }
 
 }
