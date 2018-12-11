@@ -31,12 +31,8 @@ import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import org.springframework.stereotype.Component;
 import graphql.schema.DataFetchingEnvironment;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
-
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
 @Component
@@ -65,14 +61,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return memberLoader.load(id);
   }
 
-  public UUID createClaim(String memberId, LocalDateTime date, ClaimSource source, DataFetchingEnvironment env) {
+  public UUID createClaim(String memberId, LocalDateTime date, ClaimSource source,
+      DataFetchingEnvironment env) {
     GraphQLRequestContext context = env.getContext();
     String token = personnelService.getIdToken(context.getUserPrincipal().getName());
-    return claimsService.createClaim(new CreateBackofficeClaimDTO(
-      memberId,
-      date.atZone(SWEDEN_TZ).toInstant(),
-      source
-    ), token);
+    return claimsService.createClaim(
+        new CreateBackofficeClaimDTO(memberId, date.atZone(SWEDEN_TZ).toInstant(), source), token);
   }
 
 
