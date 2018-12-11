@@ -4,11 +4,14 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import javax.money.MonetaryAmount;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import com.google.common.collect.ImmutableMap;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
@@ -30,7 +33,12 @@ import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import org.springframework.stereotype.Component;
+import graphql.ErrorType;
+import graphql.GraphQLError;
+import graphql.execution.DataFetcherResult;
+import graphql.language.SourceLocation;
 import graphql.schema.DataFetchingEnvironment;
+import jersey.repackaged.com.google.common.collect.Lists;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
@@ -95,8 +103,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-  public CompletableFuture<Claim> createClaimPayment(UUID id, ClaimPaymentInput payment,
-      DataFetchingEnvironment env) throws AuthorizationException {
+  public CompletableFuture<DataFetcherResult<Claim>> createClaimPayment(UUID id,
+      ClaimPaymentInput payment, DataFetchingEnvironment env) throws AuthorizationException {
     log.info("Personnel with email '{}'' adding claim payment",
         GraphQLConfiguration.getEmail(env, personnelService));
     val claim =
@@ -108,9 +116,43 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     paymentDto.setExGratia(payment.getExGratia());
     paymentDto.setType(ClaimPaymentType.valueOf(payment.getType().toString()));
     paymentDto.setClaimID(id.toString());
-    claimsService.addPayment(memberId, paymentDto,
-        GraphQLConfiguration.getIdToken(env, personnelService));
-    return claimLoader.load(id);
+    switch (claimsService.addPayment(memberId, paymentDto,
+        GraphQLConfiguration.getIdToken(env, personnelService))) {
+      case SUCCESSFUL: {
+        return claimLoader.load(id).thenApply(c -> new DataFetcherResult<Claim>(c, null));
+      }
+      case FORBIDDEN:
+      case FAILED: {
+        return CompletableFuture.completedFuture(
+            new DataFetcherResult<Claim>(null, Lists.newArrayList(new GraphQLError() {
+
+              @Override
+              public String getMessage() {
+                return "potentially sanctioned";
+              }
+
+              @Override
+              public List<SourceLocation> getLocations() {
+                return null;
+              }
+
+              @Override
+              public ErrorType getErrorType() {
+                return null;
+              }
+
+              @Override
+              public Map<String, Object> getExtensions() {
+                return ImmutableMap.of("code", 403);
+              }
+            })));
+      }
+
+      default: {
+        throw new RuntimeException(
+            "ClaimsService.addPayment returned nothing, this code should be unreachable");
+      }
+    }
   }
 
   public CompletableFuture<Claim> setClaimType(UUID id, ClaimTypes type,

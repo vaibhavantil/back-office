@@ -17,7 +17,6 @@ import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
 import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
 import org.springframework.data.domain.Sort;
-import java.util.UUID;
 
 public interface ClaimsService {
 

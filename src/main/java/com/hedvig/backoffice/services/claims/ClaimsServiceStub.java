@@ -43,7 +43,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Sort;
-
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
 public class ClaimsServiceStub implements ClaimsService {
@@ -206,6 +205,7 @@ public class ClaimsServiceStub implements ClaimsService {
       }
       case Automatic: {
         dto.setHandlerReference("testPerson@hedvig.com");
+        return ClaimPaymentResponse.FORBIDDEN;
       }
     }
     claim.getPayments().add(dto);
