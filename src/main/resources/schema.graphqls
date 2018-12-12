@@ -44,6 +44,7 @@ type Member {
   transactions: [Transaction]
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
+  sanctionStatus: SanctionStatus
 }
 
 type Transaction {
@@ -56,6 +57,13 @@ type Transaction {
 
 type DirectDebitStatus {
   activated: Boolean
+}
+
+enum SanctionStatus {
+  Undetermined,
+  NoHit,
+  PartialHit,
+  FullHit
 }
 
 enum ClaimSource {
@@ -133,12 +141,22 @@ type LuggageDelayClaim {
 }
 
 type ClaimPayment {
+  id: String
   amount: MonetaryAmount
   note: String
   type: ClaimPaymentType
   timestamp: Instant
   exGratia: Boolean
   transaction: Transaction
+  status: ClaimPaymentStatus
+}
+
+enum ClaimPaymentStatus {
+  PREPARED,
+  INITIATED,
+  SANCTION_LIST_HIT,
+  COMPLETED,
+  FAILED
 }
 
 input ClaimPaymentInput {

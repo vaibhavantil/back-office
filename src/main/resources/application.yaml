@@ -79,6 +79,10 @@ paymentService:
   baseUrl: http://localhost:8086
   stub: false
 
+meerkat:
+  baseUrl: http://localhost:4123
+  stub: false
+
 oauth:
   enabled: true
   hds: hedvig.com

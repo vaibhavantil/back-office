@@ -116,15 +116,16 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     paymentDto.setExGratia(payment.getExGratia());
     paymentDto.setType(ClaimPaymentType.valueOf(payment.getType().toString()));
     paymentDto.setClaimID(id.toString());
+    paymentDto.setHandlerReference(GraphQLConfiguration.getEmail(env, personnelService));
     switch (claimsService.addPayment(memberId, paymentDto,
         GraphQLConfiguration.getIdToken(env, personnelService))) {
       case SUCCESSFUL: {
-        return claimLoader.load(id).thenApply(c -> new DataFetcherResult<Claim>(c, null));
+        return claimLoader.load(id).thenApply(c -> new DataFetcherResult<>(c, Collections.EMPTY_LIST));
       }
       case FORBIDDEN:
       case FAILED: {
         return CompletableFuture.completedFuture(
-            new DataFetcherResult<Claim>(null, Lists.newArrayList(new GraphQLError() {
+            new DataFetcherResult<>(null, Lists.newArrayList(new GraphQLError() { //TODO: fix that error
 
               @Override
               public String getMessage() {

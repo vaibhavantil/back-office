@@ -11,7 +11,6 @@ public class ClaimPaymentRequest {
   private static String SEK = "SEK";
 
   UUID claimId;
-  String memberId;
   MonetaryAmount amount;
   String handlerReference;
   boolean sanctionCheckSkipped;
@@ -19,8 +18,8 @@ public class ClaimPaymentRequest {
   boolean exGratia;
 
   public static ClaimPaymentRequest fromClaimPayment(ClaimPayment c) {
-    return new ClaimPaymentRequest(UUID.fromString(c.claimID), c.userId, Money.of(c.amount, SEK),
-      c.handlerReference, c.sanctionListSkipped, c.paymentNote, c.exGratia);
+    return new ClaimPaymentRequest(UUID.fromString(c.claimID), Money.of(c.amount, SEK),
+      c.handlerReference, c.sanctionListSkipped, c.note, c.exGratia);
   }
 
 }

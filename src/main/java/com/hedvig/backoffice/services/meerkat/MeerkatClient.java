@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(
   name = "meerkatClient",
-  url = "${hedvig.meerkat.url:meerkat}",
+  url = "${meerkat.baseUrl:meerkat}",
   configuration = FeignConfig.class
 )
 public interface MeerkatClient {

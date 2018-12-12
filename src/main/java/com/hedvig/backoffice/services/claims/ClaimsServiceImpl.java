@@ -79,7 +79,7 @@ public class ClaimsServiceImpl implements ClaimsService {
       case Automatic: {
         try {
           client.addAutomaticPayment(memberId,
-            ClaimPaymentRequest.fromClaimPayment(dto)); //TODO: ADD BYPASSING
+            ClaimPaymentRequest.fromClaimPayment(dto));
           return ClaimPaymentResponse.SUCCESSFUL;
         } catch (FeignException ex) {
           if (ex.status() == HttpStatus.FORBIDDEN.value()) {

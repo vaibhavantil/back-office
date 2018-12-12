@@ -28,4 +28,6 @@ public class ClaimPayment extends ClaimBackOffice {
   boolean sanctionListSkipped;
 
   String paymentNote;
+
+  ClaimPaymentStatus status;
 }
