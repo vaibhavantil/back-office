@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
-import java.util.concurrent.CompletableFuture;
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.hedvig.backoffice.graphql.Util;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
@@ -9,11 +8,13 @@ import com.hedvig.backoffice.graphql.types.AssaultClaim;
 import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.LuggageDelayClaim;
 import com.hedvig.backoffice.graphql.types.Member;
+import com.hedvig.backoffice.graphql.types.NotCoveredClaim;
 import com.hedvig.backoffice.graphql.types.TheftClaim;
 import com.hedvig.backoffice.graphql.types.TravelAccidentClaim;
 import com.hedvig.backoffice.graphql.types.WaterDamageClaim;
-import org.springframework.stereotype.Component;
 import graphql.schema.DataFetchingEnvironment;
+import java.util.concurrent.CompletableFuture;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ClaimResolver implements GraphQLResolver<Claim> {
@@ -50,6 +51,9 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
       }
       case LuggageDelayClaim: {
         return LuggageDelayClaim.fromClaimData(claim.get_claimData());
+      }
+      case NotCoveredClaim: {
+        return NotCoveredClaim.fromClaimData(claim.get_claimData());
       }
     }
     throw new RuntimeException(String.format("Unsupported claim type: %s", claim.get_type()));

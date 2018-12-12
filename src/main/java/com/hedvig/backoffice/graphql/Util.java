@@ -19,6 +19,8 @@ public class Util {
         return "Travel - Accident and Health";
       case LuggageDelayClaim:
         return "Travel - Delayed Luggage";
+      case NotCoveredClaim:
+        return "Not Covered";
       default:
         throw new RuntimeException(String.format("Unmappable ClaimTypes.%s", type.toString()));
     }
@@ -43,6 +45,8 @@ public class Util {
         return ClaimTypes.TravelAccidentClaim;
       case "Travel - Delayed Luggage":
         return ClaimTypes.LuggageDelayClaim;
+      case "Not Covered":
+        return ClaimTypes.NotCoveredClaim;
       default:
         throw new RuntimeException(
             String.format("Unmappable ClaimService ClaimType: %s", claimServiceType));
