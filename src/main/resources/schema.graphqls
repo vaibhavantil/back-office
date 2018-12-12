@@ -17,6 +17,7 @@ type MutationType {
   createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
   setClaimType(id: ID!, type: ClaimTypes!): Claim
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
+  updateReserve(id: ID!, amount: MonetaryAmount!): Claim
 }
 
 input ClaimInformationInput {
