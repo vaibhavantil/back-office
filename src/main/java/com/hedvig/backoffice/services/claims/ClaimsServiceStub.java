@@ -9,6 +9,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimEvent;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentResponse;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentStatus;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
@@ -78,10 +79,18 @@ public class ClaimsServiceStub implements ClaimsService {
 
       val payment = new ClaimPayment();
       payment.setAmount(BigDecimal.valueOf(100));
+      payment.setTransactionId(UUID.randomUUID());
+      payment.setDeductible(BigDecimal.valueOf(1500));
       payment.setType(ClaimPaymentType.Manual);
       payment.setHandlerReference("testPerson@Hedvig.com");
       payment.setDate(LocalDateTime.now());
       payment.setExGratia(false);
+      payment.setNote("Dummu Note here");
+      payment.setStatus(ClaimPaymentStatus.COMPLETED);
+      payment.setPayoutDate(LocalDateTime.now());
+      payment.setClaimID(id);
+      payment.setId(UUID.randomUUID().toString());
+      payment.setUserId(memberId);
       val payments = Lists.newArrayList(payment);
 
       Claim claim = new Claim();
