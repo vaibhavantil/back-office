@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
-import com.hedvig.backoffice.services.claims.dto.ClaimDeductibleUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
@@ -40,8 +39,6 @@ public interface ClaimsService {
   void changeState(ClaimStateUpdate state, String token);
 
   void changeReserve(ClaimReserveUpdate reserve, String token);
-
-  void changeDeductible(ClaimDeductibleUpdate deductible, String token);
 
   void changeType(ClaimTypeUpdate type, String token);
 

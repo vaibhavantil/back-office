@@ -12,6 +12,9 @@ public class ClaimPayment extends ClaimBackOffice {
   @NotNull
   public BigDecimal amount;
 
+  @NotNull
+  public BigDecimal deductible;
+
   public String note;
 
   public LocalDateTime payoutDate;

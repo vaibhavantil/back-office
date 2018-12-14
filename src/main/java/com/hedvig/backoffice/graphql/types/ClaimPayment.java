@@ -11,8 +11,12 @@ import lombok.Value;
 
 @Value
 public class ClaimPayment {
+
+  private static String SEK = "SEK";
+
   String id;
   MonetaryAmount amount;
+  MonetaryAmount deductible;
   String note;
   ClaimPaymentType type;
   Instant timestamp;
@@ -22,11 +26,15 @@ public class ClaimPayment {
   Optional<UUID> transactionId;
 
   public static ClaimPayment fromDto(com.hedvig.backoffice.services.claims.dto.ClaimPayment dto) {
-    return new ClaimPayment(dto.getId(), Money.of(dto.getAmount(), "SEK"), dto.getNote(),
-        ClaimPaymentType.valueOf(dto.getType().toString()), dto.getDate().toInstant(ZoneOffset.UTC),
-        dto.getExGratia(),
-        dto.getStatus(),
-        dto.getTransactionId() != null ? Optional.of(dto.getTransactionId())
+    return new ClaimPayment(dto.getId(),
+      Money.of(dto.getAmount(), SEK),
+      Money.of(dto.getDeductible(), SEK),
+      dto.getNote(),
+      ClaimPaymentType.valueOf(dto.getType().toString()),
+      dto.getDate().toInstant(ZoneOffset.UTC),
+      dto.getExGratia(),
+      dto.getStatus(),
+      dto.getTransactionId() != null ? Optional.of(dto.getTransactionId())
             : Optional.empty());
   }
 }

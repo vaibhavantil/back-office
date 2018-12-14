@@ -126,6 +126,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     val memberId = claim.getUserId();
     val paymentDto = new ClaimPayment();
     paymentDto.setAmount(BigDecimal.valueOf(payment.getAmount().getNumber().doubleValueExact()));
+    paymentDto.setDeductible(BigDecimal.valueOf(payment.getDeductible().getNumber().doubleValueExact()));
     paymentDto.setNote(payment.getNote());
     paymentDto.setExGratia(payment.getExGratia());
     paymentDto.setType(ClaimPaymentType.valueOf(payment.getType().toString()));

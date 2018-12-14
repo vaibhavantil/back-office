@@ -2,7 +2,6 @@ package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
-import com.hedvig.backoffice.services.claims.dto.ClaimDeductibleUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentRequest;
@@ -113,11 +112,6 @@ public class ClaimsServiceImpl implements ClaimsService {
   @Override
   public void changeReserve(ClaimReserveUpdate reserve, String token) {
     client.updateReserve(reserve, token);
-  }
-
-  @Override
-  public void changeDeductible(ClaimDeductibleUpdate deductible, String token) {
-    client.updateDeductible(deductible, token);
   }
 
   @Override

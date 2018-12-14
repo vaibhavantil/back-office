@@ -2,7 +2,6 @@ package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
-import com.hedvig.backoffice.services.claims.dto.ClaimDeductibleUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentRequest;
@@ -97,9 +96,6 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   public void updateReserve(ClaimReserveUpdate reserve, String token) {
     log.error("request to claim-service failed");
   }
-
-  @Override
-  public void updateDeductible(ClaimDeductibleUpdate deductible, String token) { log.error("request to claim-service failed"); }
 
   @Override
   public void updateType(ClaimTypeUpdate type, String token) {

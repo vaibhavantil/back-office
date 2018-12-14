@@ -149,6 +149,7 @@ type NotCoveredClaim {
 type ClaimPayment {
   id: String
   amount: MonetaryAmount
+  deductible: MonetaryAmount
   note: String
   type: ClaimPaymentType
   timestamp: Instant
@@ -167,6 +168,7 @@ enum ClaimPaymentStatus {
 
 input ClaimPaymentInput {
   amount: MonetaryAmount!
+  deductible: MonetaryAmount!
   note: String!
   type: ClaimPaymentType!
   exGratia: Boolean!

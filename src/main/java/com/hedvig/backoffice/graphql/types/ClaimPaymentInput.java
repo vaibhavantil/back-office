@@ -9,4 +9,5 @@ public class ClaimPaymentInput {
   String note;
   ClaimPaymentType type;
   Boolean exGratia;
+  MonetaryAmount deductible;
 }

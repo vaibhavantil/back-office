@@ -12,14 +12,20 @@ public class ClaimPaymentRequest {
 
   UUID claimId;
   MonetaryAmount amount;
+  MonetaryAmount deductible;
   String handlerReference;
   boolean sanctionCheckSkipped;
   String paymentRequestNote;
   boolean exGratia;
 
   public static ClaimPaymentRequest fromClaimPayment(ClaimPayment c) {
-    return new ClaimPaymentRequest(UUID.fromString(c.claimID), Money.of(c.amount, SEK),
-      c.handlerReference, c.sanctionListSkipped, c.note, c.exGratia);
+    return new ClaimPaymentRequest(UUID.fromString(c.claimID),
+      Money.of(c.amount, SEK),
+      Money.of(c.deductible, SEK),
+      c.handlerReference,
+      c.sanctionListSkipped,
+      c.note,
+      c.exGratia);
   }
 
 }
