@@ -213,7 +213,7 @@ public class ClaimsServiceStub implements ClaimsService {
       }
       case Automatic: {
         dto.setHandlerReference("testPerson@hedvig.com");
-        return dto.isSanctionListSkipped() ? ClaimPaymentResponse.SUCCESSFUL : ClaimPaymentResponse.FORBIDDEN;
+        logger.info("isSanctionListSkipped ", dto.isSanctionListSkipped());
       }
     }
     claim.getPayments().add(dto);
