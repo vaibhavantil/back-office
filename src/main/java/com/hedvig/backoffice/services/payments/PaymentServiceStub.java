@@ -13,24 +13,20 @@ import org.javamoney.moneta.Money;
 
 public class PaymentServiceStub implements PaymentService {
 
+  private List<Transaction> transactions = Lists.newArrayList(
+      new Transaction(UUID.randomUUID(), Money.of(100, "SEK"), Instant.now().minusSeconds(100),
+          "CHARGE", "COMPLETED"),
+      new Transaction(UUID.randomUUID(), Money.of(200, "SEK"), Instant.now(), "CHARGE",
+          "INITIATED"));
+
   @Override
   public List<Transaction> getTransactionsByMemberId(String memberId) {
-    return Lists.newArrayList(
-        new Transaction(
-            UUID.randomUUID(),
-            Money.of(100, "SEK"),
-            Instant.now().minusSeconds(100),
-            "CHARGE",
-            "COMPLETED"),
-        new Transaction(
-            UUID.randomUUID(), Money.of(200, "SEK"), Instant.now(), "CHARGE", "INITIATED"));
+    return transactions;
   }
 
   @Override
   public List<DirectDebitStatusDTO> getDirectDebitStatuses(List<String> memberIds) {
-    return memberIds
-        .stream()
-        .map(id -> new DirectDebitStatusDTO(id, RandomUtils.nextBoolean()))
+    return memberIds.stream().map(id -> new DirectDebitStatusDTO(id, RandomUtils.nextBoolean()))
         .collect(Collectors.toList());
   }
 
@@ -38,7 +34,11 @@ public class PaymentServiceStub implements PaymentService {
   public void chargeMember(String memberId, MonetaryAmount amount) {}
 
   @Override
-  public DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId){
+  public Transaction getTransactionById(UUID id) {
+    return transactions.get(0);
+  }
+
+  public DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId) {
     return new DirectDebitStatusDTO(memberId, RandomUtils.nextBoolean());
   }
 }

@@ -77,6 +77,9 @@ module.exports = {
                         loader: 'postcss-loader'
                     }
                 ]
+            },
+            {
+              test: /\.tsx?$/, loader: 'ts-loader'
             }
         ]
     },

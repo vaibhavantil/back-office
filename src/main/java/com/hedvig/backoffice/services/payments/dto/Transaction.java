@@ -17,7 +17,7 @@ public class Transaction {
   public static Transaction fromTransactionDTO(UUID id, TransactionDTO dto) {
     return new Transaction(
         id,
-        Money.of(dto.getAmount(), dto.getCurrency()),
+        dto.getAmount(),
         dto.getTimestamp(),
         dto.getTransactionType(),
         dto.getTransactionStatus());

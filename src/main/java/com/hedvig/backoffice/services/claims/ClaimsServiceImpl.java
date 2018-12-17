@@ -2,40 +2,35 @@ package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
-import com.hedvig.backoffice.services.claims.dto.ClaimDeductibleUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentRequest;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentResponse;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
 import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimsByIdsDto;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import feign.FeignException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 
 public class ClaimsServiceImpl implements ClaimsService {
-
-  private static Logger logger = LoggerFactory.getLogger(ClaimsServiceImpl.class);
 
   private final ClaimsServiceClient client;
 
   @Autowired
   public ClaimsServiceImpl(@Value("${claims.baseUrl}") String baseUrl, ClaimsServiceClient client) {
     this.client = client;
-
-    logger.info("CLAIMS SERVICE:");
-    logger.info("class: " + ClaimsServiceImpl.class.getName());
-    logger.info("base url: " + baseUrl);
   }
 
   @Override
@@ -59,13 +54,43 @@ public class ClaimsServiceImpl implements ClaimsService {
   }
 
   @Override
-  public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy, Sort.Direction sortDirection, String token) {
+  public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy,
+    Sort.Direction sortDirection, String token) {
     return client.search(page, pageSize, sortBy, sortDirection, token);
   }
 
   @Override
-  public void addPayment(ClaimPayment dto, String token) {
-    client.addPayment(dto, token);
+  public ClaimPaymentResponse addPayment(String memberId, ClaimPayment dto, String token) {
+    switch (dto.getType()) {
+      case Manual: {
+        try {
+          client.addPayment(dto, token);
+          return ClaimPaymentResponse.SUCCESSFUL;
+        } catch (FeignException ex) {
+          if (ex.status() == HttpStatus.FORBIDDEN.value()) {
+            return ClaimPaymentResponse.FORBIDDEN;
+          }
+          return ClaimPaymentResponse.FAILED;
+        }
+      }
+
+      case Automatic: {
+        try {
+          client.addAutomaticPayment(memberId,
+            ClaimPaymentRequest.fromClaimPayment(dto));
+          return ClaimPaymentResponse.SUCCESSFUL;
+        } catch (FeignException ex) {
+          if (ex.status() == HttpStatus.FORBIDDEN.value()) {
+            return ClaimPaymentResponse.FORBIDDEN;
+          }
+          return ClaimPaymentResponse.FAILED;
+        }
+      }
+
+      default:
+        throw new RuntimeException(
+          String.format("Unhandled Claim Payment Type: %s", dto.getType()));
+    }
   }
 
   @Override
@@ -89,11 +114,6 @@ public class ClaimsServiceImpl implements ClaimsService {
   }
 
   @Override
-  public void changeDeductible(ClaimDeductibleUpdate deductible, String token) {
-    client.updateDeductible(deductible, token);
-  }
-
-  @Override
   public void changeType(ClaimTypeUpdate type, String token) {
     client.updateType(type, token);
   }
@@ -108,7 +128,12 @@ public class ClaimsServiceImpl implements ClaimsService {
     val stat = statistics(token);
 
     return stat.getOrDefault(ClaimState.OPEN.name(), 0L)
-        + stat.getOrDefault(ClaimState.REOPENED.name(), 0L);
+      + stat.getOrDefault(ClaimState.REOPENED.name(), 0L);
+  }
+
+  @Override
+  public List<Claim> getClaimsByIds(List<UUID> ids) {
+    return client.getClaimsByIds(new ClaimsByIdsDto(ids));
   }
 
   @Override

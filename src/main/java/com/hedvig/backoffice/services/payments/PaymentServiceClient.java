@@ -4,7 +4,9 @@ import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.payments.dto.ChargeRequestDTO;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.payments.dto.PaymentMemberDTO;
+import com.hedvig.backoffice.services.payments.dto.TransactionDTO;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,4 +35,7 @@ public interface PaymentServiceClient {
   @GetMapping("/directDebit/status")
   ResponseEntity<DirectDebitStatusDTO> getDirectDebitStatusByMemberId(
     @RequestHeader("Hedvig.Token") String memberId);
+
+  @GetMapping("/_/transactions/{transactionId}")
+  ResponseEntity<TransactionDTO> getTransactionById(@PathVariable UUID transactionId);
 }

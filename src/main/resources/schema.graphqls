@@ -1,42 +1,70 @@
 schema {
-    query: QueryType
-    mutation: MutationType
+  query: QueryType
+  mutation: MutationType
 }
 
 type QueryType {
-    getMonthlyPayments(month: YearMonth!): [MonthlySubscription]
-    getMember(id: ID!): Member
+  monthlyPayments(month: YearMonth!): [MonthlySubscription]
+  member(id: ID!): Member
+  claim(id: ID!): Claim
 }
 
 type MutationType {
-    chargeMember(id: ID!, amount: MonetaryAmount!): Member
-    createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
+  chargeMember(id: ID!, amount: MonetaryAmount!): Member
+  updateClaimState(id: ID!, state: ClaimState!): Claim
+  createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
+  addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
+  createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
+  setClaimType(id: ID!, type: ClaimTypes!): Claim
+  setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
+  updateReserve(id: ID!, amount: MonetaryAmount!): Claim
+}
+
+input ClaimInformationInput {
+  location: String
+  date: LocalDate
+  item: String
+  policeReport: String
+  receipt: String
+  ticket: String
 }
 
 type MonthlySubscription {
-    amount: MonetaryAmount
-    member: Member
+  amount: MonetaryAmount
+  member: Member
 }
 
 type Member {
-    memberId: ID
-    firstName: String
-    lastName: String
-    transactions: [Transaction]
-    directDebitStatus: DirectDebitStatus
-    monthlySubscription(month: YearMonth!): MonthlySubscription
+  memberId: ID
+  firstName: String
+  lastName: String
+  personalNumber: String
+  address: String
+  postalNumber: String
+  city: String
+  transactions: [Transaction]
+  directDebitStatus: DirectDebitStatus
+  monthlySubscription(month: YearMonth!): MonthlySubscription
+  sanctionStatus: SanctionStatus
 }
 
 type Transaction {
-    id: ID
-    amount: MonetaryAmount
-    timestamp: Instant
-    type: String
-    status: String
+  id: ID
+  amount: MonetaryAmount
+  timestamp: Instant
+  type: String
+  status: String
 }
 
 type DirectDebitStatus {
-    activated: Boolean
+  activated: Boolean
+}
+
+enum SanctionStatus {
+  Undetermined,
+  NoHit,
+  PartialHit,
+  FullHit
 }
 
 enum ClaimSource {
@@ -47,11 +75,135 @@ enum ClaimSource {
   CHAT
 }
 
+type Claim {
+  id: ID
+  member: Member
+  recordingUrl: String
+  state: ClaimState
+  type: ClaimType
+  reserves: MonetaryAmount
+  registrationDate: Instant
+  notes: [ClaimNote]
+  payments: [ClaimPayment]
+  events: [ClaimEvent]
+}
+
+type ClaimNote {
+  text: String
+}
+
+enum ClaimTypes {
+  TheftClaim,
+  AccidentalDamageClaim,
+  AssaultClaim,
+  WaterDamageClaim,
+  TravelAccidentClaim,
+  LuggageDelayClaim,
+  NotCoveredClaim
+}
+union ClaimType = TheftClaim | AccidentalDamageClaim | AssaultClaim | WaterDamageClaim | TravelAccidentClaim | LuggageDelayClaim | NotCoveredClaim
+
+type TheftClaim {
+  location: String
+  date: LocalDate
+  item: String
+  policeReport: String
+  receipt: String
+}
+
+type AccidentalDamageClaim {
+  location: String
+  date: LocalDate
+  item: String
+  policeReport: String
+  receipt: String
+}
+
+type AssaultClaim {
+  location: String
+  date: LocalDate
+  policeReport: String
+}
+
+type WaterDamageClaim {
+  date: LocalDate
+}
+
+type TravelAccidentClaim {
+  location: String
+  date: LocalDate
+  policeReport: String
+  receipt: String
+}
+
+type LuggageDelayClaim {
+  location: String
+  date: LocalDate
+  ticket: String
+}
+
+type NotCoveredClaim {
+  date: LocalDate
+}
+
+type ClaimPayment {
+  id: String
+  amount: MonetaryAmount
+  deductible: MonetaryAmount
+  note: String
+  type: ClaimPaymentType
+  timestamp: Instant
+  exGratia: Boolean
+  transaction: Transaction
+  status: ClaimPaymentStatus
+}
+
+enum ClaimPaymentStatus {
+  PREPARED,
+  INITIATED,
+  SANCTION_LIST_HIT,
+  COMPLETED,
+  FAILED
+}
+
+input ClaimPaymentInput {
+  amount: MonetaryAmount!
+  deductible: MonetaryAmount!
+  note: String!
+  type: ClaimPaymentType!
+  exGratia: Boolean!
+  sanctionListSkipped: Boolean!
+}
+
+input ClaimNoteInput {
+  text: String!
+}
+
+type ClaimEvent {
+  text: String
+  date: Instant
+}
+
+enum ClaimState {
+  OPEN
+  CLOSED
+  REOPENED
+}
+
+enum ClaimPaymentType {
+  Manual
+  Automatic
+}
+
 # A String-representation of `java.time.YearMonth`. ex: `"2018-06"`
 scalar YearMonth
 # An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100,  "currency": "SEK"}`
 scalar MonetaryAmount
 # An epoch-representation of `java.time.Instant`. ex: `1531914777`
 scalar Instant
+# A String-representation of `java.time.ZonedDateTime`, ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"`
+scalar ZonedDateTime
+# A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"`
+scalar LocalDate
 # A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"`
 scalar LocalDateTime

@@ -17,7 +17,7 @@ const DatePickerContainer = styled.div`
 
 const query = gql`
   query MonthlyPaymentsQuery($month: YearMonth!) {
-    getMonthlyPayments(month: $month) {
+    monthlyPayments(month: $month) {
       amount
       member {
         memberId
@@ -49,7 +49,7 @@ const MonthlyPaymentsTable = ({ monthlyPayments }) => (
         <Table.Row
           key={`${monthlyPayment.member.memberId}:${
             monthlyPayment.amount.amount
-          }`}
+            }`}
         >
           <Table.Cell
             selectable
@@ -67,8 +67,8 @@ const MonthlyPaymentsTable = ({ monthlyPayments }) => (
             {monthlyPayment.member.directDebitStatus.activated ? (
               <Checkmark />
             ) : (
-              <Cross />
-            )}
+                <Cross />
+              )}
           </Table.Cell>
         </Table.Row>
       ))}

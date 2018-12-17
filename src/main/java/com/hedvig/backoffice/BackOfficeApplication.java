@@ -15,6 +15,9 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 
@@ -77,5 +80,11 @@ public class BackOfficeApplication {
   @ConfigurationProperties("oauth.google.resource")
   public ResourceServerProperties clientResource() {
     return new ResourceServerProperties();
+  }
+
+  @Configuration
+  @Profile("development")
+  @ComponentScan(lazyInit = true)
+  static class DevConfig {
   }
 }

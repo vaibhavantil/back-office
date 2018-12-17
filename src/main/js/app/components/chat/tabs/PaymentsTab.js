@@ -25,7 +25,7 @@ const GET_MEMBER_QUERY = gql`
     $currentMonth: YearMonth!
     $previousMonth: YearMonth!
   ) {
-    getMember(id: $id) {
+    member(id: $id) {
       directDebitStatus {
         activated
       }
@@ -162,25 +162,25 @@ class PaymentsTab extends React.Component {
               <div>
                 <p>
                   Direct Debit activated:{" "}
-                  {data.getMember.directDebitStatus.activated ? (
+                  {data.member.directDebitStatus.activated ? (
                     <Checkmark />
                   ) : (
-                    <Cross />
-                  )}
+                      <Cross />
+                    )}
                 </p>
                 <p>
                   Subscrtiption cost for this month({
                     this.variables.currentMonth
-                  }) is : {data.getMember.currentMonth.amount.amount}{" "}
-                  {data.getMember.currentMonth.amount.currency}
+                  }) is : {data.member.currentMonth.amount.amount}{" "}
+                  {data.member.currentMonth.amount.currency}
                 </p>
                 <p>
                   Subscrtiption cost for the previous month ({
                     this.variables.previousMonth
-                  }) is : {data.getMember.previousMonth.amount.amount}{" "}
-                  {data.getMember.previousMonth.amount.currency}
+                  }) is : {data.member.previousMonth.amount.amount}{" "}
+                  {data.member.previousMonth.amount.currency}
                 </p>
-                {data.getMember.directDebitStatus.activated && (
+                {data.member.directDebitStatus.activated && (
                   <Mutation
                     mutation={CHARGE_MEMBER_MUTATION}
                     update={this.handleUpdate}
@@ -233,7 +233,7 @@ class PaymentsTab extends React.Component {
                 <br />
                 <p>Transactions:</p>
                 <MemberTransactionsTable
-                  transactions={data.getMember.transactions
+                  transactions={data.member.transactions
                     .slice()
                     .sort(transactionDateSorter)
                     .reverse()}

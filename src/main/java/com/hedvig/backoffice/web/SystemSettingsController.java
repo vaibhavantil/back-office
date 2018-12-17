@@ -24,8 +24,8 @@ public class SystemSettingsController {
   private final PersonnelService personnelService;
 
   @Autowired
-  public SystemSettingsController(
-      SystemSettingsService settingsService, PersonnelService personnelService) {
+  public SystemSettingsController(SystemSettingsService settingsService,
+      PersonnelService personnelService) {
     this.settingsService = settingsService;
     this.personnelService = personnelService;
   }

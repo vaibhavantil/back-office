@@ -6,22 +6,15 @@ import com.hedvig.backoffice.services.members.dto.MemberDTO;
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
-import org.springframework.data.domain.Sort;
-
 import java.util.List;
+import org.springframework.data.domain.Sort;
 
 public interface MemberService {
 
   List<MemberDTO> search(MemberStatus status, String query, String token);
 
-  MembersSearchResultDTO searchPaged(
-    MemberStatus status,
-    String query,
-    Integer page,
-    Integer pageSize,
-    MembersSortColumn sortBy,
-    Sort.Direction sortDirection,
-    String token);
+  MembersSearchResultDTO searchPaged(MemberStatus status, String query, Integer page,
+    Integer pageSize, MembersSortColumn sortBy, Sort.Direction sortDirection, String token);
 
   MemberDTO findByMemberId(String memberId, String token);
 

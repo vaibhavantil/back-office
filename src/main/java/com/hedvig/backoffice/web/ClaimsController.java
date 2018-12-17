@@ -4,7 +4,6 @@ import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
-import com.hedvig.backoffice.services.claims.dto.ClaimDeductibleUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
@@ -35,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import lombok.val;
 
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
@@ -70,27 +70,25 @@ public class ClaimsController {
   }
 
   @GetMapping("/search")
-  public ClaimSearchResultDTO search(
-    @RequestParam(name = "page", required = false) Integer page,
-    @RequestParam(name = "pageSize", required = false) Integer pageSize,
-    @RequestParam(name = "sortBy", required = false) ClaimSortColumn sortBy,
-    @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
-    @AuthenticationPrincipal Principal principal
-  ) {
+  public ClaimSearchResultDTO search(@RequestParam(name = "page", required = false) Integer page,
+      @RequestParam(name = "pageSize", required = false) Integer pageSize,
+      @RequestParam(name = "sortBy", required = false) ClaimSortColumn sortBy,
+      @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
+      @AuthenticationPrincipal Principal principal) {
     String idToken = personnelService.getIdToken(principal.getName());
     return claimsService.search(page, pageSize, sortBy, sortDirection, idToken);
   }
 
   @GetMapping("/{id}")
   public Claim claim(@PathVariable String id, @AuthenticationPrincipal Principal principal) {
-    return Optional.ofNullable(
-            claimsService.find(id, personnelService.getIdToken(principal.getName())))
+    return Optional
+        .ofNullable(claimsService.find(id, personnelService.getIdToken(principal.getName())))
         .orElseThrow(() -> new ExternalServiceException("claim-service unavailable"));
   }
 
   @GetMapping("/user/{id}")
-  public List<Claim> listByUserId(
-      @PathVariable String id, @AuthenticationPrincipal Principal principal) {
+  public List<Claim> listByUserId(@PathVariable String id,
+      @AuthenticationPrincipal Principal principal) {
     return claimsService.listByUserId(id, personnelService.getIdToken(principal.getName()));
   }
 
@@ -100,19 +98,17 @@ public class ClaimsController {
   }
 
   @PutMapping("/{id}/payments")
-  public ResponseEntity<?> addPayment(
-      @PathVariable String id,
-      @RequestBody @Valid ClaimPayment dto,
+  public ResponseEntity<?> addPayment(@PathVariable String id, @RequestBody @Valid ClaimPayment dto,
       @AuthenticationPrincipal Principal principal) {
     dto.setClaimID(id);
-    claimsService.addPayment(dto, personnelService.getIdToken(principal.getName()));
+    val claim = claimsService.find(id, personnelService.getIdToken(principal.getName()));
+    claimsService.addPayment(claim.getUserId(), dto,
+        personnelService.getIdToken(principal.getName()));
     return ResponseEntity.ok().build();
   }
 
   @PutMapping("/{id}/notes")
-  public ResponseEntity<?> addNote(
-      @PathVariable String id,
-      @RequestBody ClaimNote dto,
+  public ResponseEntity<?> addNote(@PathVariable String id, @RequestBody ClaimNote dto,
       @AuthenticationPrincipal Principal principal) {
     dto.setClaimID(id);
     claimsService.addNote(dto, personnelService.getIdToken(principal.getName()));
@@ -120,9 +116,7 @@ public class ClaimsController {
   }
 
   @PutMapping("/{id}/data")
-  public ResponseEntity<?> addData(
-      @PathVariable String id,
-      @RequestBody ClaimData dto,
+  public ResponseEntity<?> addData(@PathVariable String id, @RequestBody ClaimData dto,
       @AuthenticationPrincipal Principal principal) {
     dto.setClaimID(id);
     claimsService.addData(dto, personnelService.getIdToken(principal.getName()));
@@ -130,18 +124,15 @@ public class ClaimsController {
   }
 
   @PostMapping("/{id}/state")
-  public ResponseEntity<?> state(
-      @PathVariable String id,
-      @RequestBody @Valid ClaimStateUpdate state,
-      @AuthenticationPrincipal Principal principal) {
+  public ResponseEntity<?> state(@PathVariable String id,
+      @RequestBody @Valid ClaimStateUpdate state, @AuthenticationPrincipal Principal principal) {
     state.setClaimID(id);
     claimsService.changeState(state, personnelService.getIdToken(principal.getName()));
     return ResponseEntity.noContent().build();
   }
 
   @PostMapping("/{id}/reserve")
-  public ResponseEntity<?> reserve(
-    @PathVariable String id,
+  public ResponseEntity<?> reserve(@PathVariable String id,
     @RequestBody @Valid ClaimReserveUpdate reserve,
     @AuthenticationPrincipal Principal principal) {
     reserve.setClaimID(id);
@@ -149,20 +140,8 @@ public class ClaimsController {
     return ResponseEntity.noContent().build();
   }
 
-  @PostMapping("/{id}/deductible")
-  public ResponseEntity<?> deductible(
-    @PathVariable String id,
-    @RequestBody @Valid ClaimDeductibleUpdate deductible,
-    @AuthenticationPrincipal Principal principal) {
-    deductible.setClaimID(id);
-    claimsService.changeDeductible(deductible, personnelService.getIdToken(principal.getName()));
-    return ResponseEntity.noContent().build();
-  }
-
   @PostMapping("/{id}/type")
-  public ResponseEntity<?> type(
-      @PathVariable String id,
-      @RequestBody @Valid ClaimTypeUpdate type,
+  public ResponseEntity<?> type(@PathVariable String id, @RequestBody @Valid ClaimTypeUpdate type,
       @AuthenticationPrincipal Principal principal) {
     type.setClaimID(id);
     claimsService.changeType(type, personnelService.getIdToken(principal.getName()));

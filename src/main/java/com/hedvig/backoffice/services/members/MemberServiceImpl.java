@@ -1,11 +1,10 @@
 package com.hedvig.backoffice.services.members;
 
+import java.util.List;
 import com.hedvig.backoffice.services.members.dto.ChargeMembersDTO;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.services.members.dto.MemberDTO;
-import java.util.List;
-
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
@@ -32,14 +31,8 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  public MembersSearchResultDTO searchPaged(
-    MemberStatus status,
-    String query,
-    Integer page,
-    Integer pageSize,
-    MembersSortColumn sortBy,
-    Sort.Direction sortDirection,
-    String token) {
+  public MembersSearchResultDTO searchPaged(MemberStatus status, String query, Integer page,
+      Integer pageSize, MembersSortColumn sortBy, Sort.Direction sortDirection, String token) {
     return client.searchPaged(status, query, page, pageSize, sortBy, sortDirection, token);
   }
 
