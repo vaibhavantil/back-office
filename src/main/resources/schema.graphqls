@@ -172,6 +172,7 @@ input ClaimPaymentInput {
   note: String!
   type: ClaimPaymentType!
   exGratia: Boolean!
+  sanctionListSkipped: Boolean!
 }
 
 input ClaimNoteInput {

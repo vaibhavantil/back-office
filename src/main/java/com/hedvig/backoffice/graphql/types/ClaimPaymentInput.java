@@ -10,4 +10,5 @@ public class ClaimPaymentInput {
   ClaimPaymentType type;
   Boolean exGratia;
   MonetaryAmount deductible;
+  boolean sanctionListSkipped;
 }

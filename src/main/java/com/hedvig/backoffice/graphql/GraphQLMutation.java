@@ -132,6 +132,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     paymentDto.setType(ClaimPaymentType.valueOf(payment.getType().toString()));
     paymentDto.setClaimID(id.toString());
     paymentDto.setHandlerReference(GraphQLConfiguration.getEmail(env, personnelService));
+    paymentDto.setSanctionListSkipped(payment.isSanctionListSkipped());
     switch (claimsService.addPayment(memberId, paymentDto,
       GraphQLConfiguration.getIdToken(env, personnelService))) {
       case SUCCESSFUL: {

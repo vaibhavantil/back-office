@@ -62,7 +62,6 @@ public class ClaimsServiceImpl implements ClaimsService {
   @Override
   public ClaimPaymentResponse addPayment(String memberId, ClaimPayment dto, String token) {
     switch (dto.getType()) {
-
       case Manual: {
         try {
           client.addPayment(dto, token);
