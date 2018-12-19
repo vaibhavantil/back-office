@@ -30,6 +30,7 @@ public class Util {
     switch (claimServiceType) {
       case "THEFT":
       case "Theft - Other":
+      case "Theft - Bike":
       case "Theft - Home":
         return ClaimTypes.TheftClaim;
       case "Assault":
