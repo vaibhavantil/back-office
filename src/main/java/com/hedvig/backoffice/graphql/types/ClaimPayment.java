@@ -26,15 +26,11 @@ public class ClaimPayment {
   Optional<UUID> transactionId;
 
   public static ClaimPayment fromDto(com.hedvig.backoffice.services.claims.dto.ClaimPayment dto) {
-    return new ClaimPayment(dto.getId(),
-      Money.of(dto.getAmount(), SEK),
-      Money.of(dto.getDeductible(), SEK),
-      dto.getNote(),
-      ClaimPaymentType.valueOf(dto.getType().toString()),
-      dto.getDate().toInstant(ZoneOffset.UTC),
-      dto.getExGratia(),
-      dto.getStatus(),
-      dto.getTransactionId() != null ? Optional.of(dto.getTransactionId())
-            : Optional.empty());
+    return new ClaimPayment(dto.getId(), Money.of(dto.getAmount(), SEK),
+        Money.of(dto.getDeductible(), SEK), dto.getNote(),
+        dto.getType() != null ? ClaimPaymentType.valueOf(dto.getType().toString())
+            : ClaimPaymentType.Manual,
+        dto.getDate().toInstant(ZoneOffset.UTC), dto.getExGratia(), dto.getStatus(),
+        dto.getTransactionId() != null ? Optional.of(dto.getTransactionId()) : Optional.empty());
   }
 }
