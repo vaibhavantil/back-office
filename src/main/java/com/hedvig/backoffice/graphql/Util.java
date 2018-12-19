@@ -20,7 +20,7 @@ public class Util {
       case LuggageDelayClaim:
         return "Travel - Delayed Luggage";
       case NotCoveredClaim:
-        return "Not covered";
+        return "Not Covered";
       default:
         throw new RuntimeException(String.format("Unmappable ClaimTypes.%s", type.toString()));
     }
@@ -46,7 +46,7 @@ public class Util {
         return ClaimTypes.TravelAccidentClaim;
       case "Travel - Delayed Luggage":
         return ClaimTypes.LuggageDelayClaim;
-      case "Not Covered":
+      case "Not covered":
         return ClaimTypes.NotCoveredClaim;
       default:
         throw new RuntimeException(
