@@ -1,11 +1,13 @@
 package com.hedvig.backoffice.services.payments;
 
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
+import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.payments.dto.ChargeRequestDTO;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.payments.dto.Transaction;
 import com.hedvig.backoffice.services.payments.dto.TransactionDTO;
 import feign.FeignException;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -22,9 +24,18 @@ public class PaymentServiceImpl implements PaymentService {
 
   @Override
   public List<Transaction> getTransactionsByMemberId(String memberId) {
-    return paymentServiceClient.getTransactions(memberId).getTransactions().entrySet().stream()
-      .map(entry -> Transaction.fromTransactionDTO(entry.getKey(), entry.getValue()))
-      .collect(Collectors.toList());
+    try {
+      return paymentServiceClient.getTransactions(memberId).getTransactions().entrySet().stream()
+        .map(entry -> Transaction.fromTransactionDTO(entry.getKey(), entry.getValue()))
+        .collect(Collectors.toList());
+    } catch (FeignException e) {
+      if (e.status() == 404) {
+        return Collections.emptyList();
+      }
+      throw e;
+    } catch (ExternalServiceNotFoundException ex) {
+      return Collections.emptyList();
+    }
   }
 
   @Override
