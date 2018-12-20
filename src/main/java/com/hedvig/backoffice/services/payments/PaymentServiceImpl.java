@@ -12,8 +12,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.money.MonetaryAmount;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
+@Slf4j
 public class PaymentServiceImpl implements PaymentService {
 
   private final PaymentServiceClient paymentServiceClient;
@@ -32,6 +34,8 @@ public class PaymentServiceImpl implements PaymentService {
       if (e.status() == 404) {
         return Collections.emptyList();
       }
+      log.error("Something went wrong with Payment-service. Status: {}, Message: {}", e.status(),
+        e.getMessage());
       throw e;
     } catch (ExternalServiceNotFoundException ex) {
       return Collections.emptyList();
