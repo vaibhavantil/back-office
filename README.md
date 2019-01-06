@@ -1,4 +1,4 @@
-# Hedvig's asset-tracker and bot-service management application
+# H.OPE: Hedvig OPErations, backend
 
 ## Development
 
