@@ -1,8 +1,9 @@
 package com.hedvig.backoffice.graphql;
 
-import java.util.Comparator;
 import com.hedvig.backoffice.graphql.types.ClaimTypes;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
+
+import java.util.Comparator;
 
 public class Util {
   public static String claimServiceType(ClaimTypes type) {
@@ -19,6 +20,8 @@ public class Util {
         return "Travel - Accident and Health";
       case LuggageDelayClaim:
         return "Travel - Delayed Luggage";
+      case FireDamageClaim:
+        return "FIRE";
       case NotCoveredClaim:
         return "Not covered";
       default:
@@ -28,29 +31,32 @@ public class Util {
 
   public static ClaimTypes claimType(String claimServiceType) {
     switch (claimServiceType) {
-      case "THEFT":
-      case "Theft - Other":
-      case "Theft - Bike":
-      case "Theft - Home":
-        return ClaimTypes.TheftClaim;
       case "Assault":
         return ClaimTypes.AssaultClaim;
       case "DRULLE":
       case "Drulle - Mobile":
       case "Drulle - Other":
         return ClaimTypes.AccidentalDamageClaim;
-      case "Water Damage - Kitchen":
-      case "Water Damage - Bathroom":
-        return ClaimTypes.WaterDamageClaim;
+      case "FILE":
+      case "FIRE":
+        return ClaimTypes.FireDamageClaim;
+      case "Not covered":
+        return ClaimTypes.NotCoveredClaim;
+      case "THEFT":
+      case "Theft - Bike":
+      case "Theft - Home":
+      case "Theft - Other":
+        return ClaimTypes.TheftClaim;
       case "Travel - Accident and Health":
         return ClaimTypes.TravelAccidentClaim;
       case "Travel - Delayed Luggage":
         return ClaimTypes.LuggageDelayClaim;
-      case "Not covered":
-        return ClaimTypes.NotCoveredClaim;
+      case "Water Damage - Bathroom":
+      case "Water Damage - Kitchen":
+        return ClaimTypes.WaterDamageClaim;
       default:
         throw new RuntimeException(
-            String.format("Unmappable ClaimService ClaimType: %s", claimServiceType));
+          String.format("Unmappable ClaimService ClaimType: %s", claimServiceType));
     }
   }
 
