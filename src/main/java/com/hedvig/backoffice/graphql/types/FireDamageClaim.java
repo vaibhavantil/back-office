@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.graphql.types;
 
+import com.hedvig.backoffice.graphql.UnionType;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import lombok.Value;
 import lombok.val;
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@UnionType
 @Value
 public class FireDamageClaim {
   String location;
