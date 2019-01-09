@@ -37,6 +37,7 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
@@ -58,15 +59,13 @@ public class ClaimsServiceStub implements ClaimsService {
     try {
       val resource = new ClassPathResource("claim_types.json").getInputStream();
       val mapper = new ObjectMapper();
-      types = mapper.readValue(resource,
-          mapper.getTypeFactory().constructCollectionType(List.class, ClaimType.class));
+      types = mapper.readValue(resource, mapper.getTypeFactory().constructCollectionType(List.class, ClaimType.class));
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
 
-    List<String> memberIds =
-        memberService.search(null, "", settingsService.getInternalAccessToken()).stream()
-            .map(o -> o.getMemberId().toString()).collect(Collectors.toList());
+    List<String> memberIds = memberService.search(null, "", settingsService.getInternalAccessToken()).stream()
+        .map(o -> o.getMemberId().toString()).collect(Collectors.toList());
 
     claims = IntStream.range(0, 10).mapToObj(i -> {
       String id = UUID.randomUUID().toString();
@@ -75,6 +74,8 @@ public class ClaimsServiceStub implements ClaimsService {
 
       val note = new ClaimNote();
       note.setText("Testnote 123");
+      note.setDate(LocalDateTime.now());
+
       val notes = Lists.newArrayList(note);
 
       val payment = new ClaimPayment();
@@ -106,11 +107,9 @@ public class ClaimsServiceStub implements ClaimsService {
       claim.setAssets(new ArrayList<>());
       claim.setReserve(BigDecimal.valueOf(100));
 
-      long randomSignedOnDate =
-          ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
+      long randomSignedOnDate = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
       LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
-      LocalTime randomSignedOnLocalTime =
-          LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
+      LocalTime randomSignedOnLocalTime = LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
 
       claim.setDate(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime));
 
@@ -148,9 +147,7 @@ public class ClaimsServiceStub implements ClaimsService {
     List<Claim> claims = list(token);
 
     if (sortBy != null) {
-      claims.sort(
-          (sortDirection == Sort.Direction.DESC ? CLAIM_COMPARATORS_DESC : CLAIM_COMPARATORS_ASC)
-              .get(sortBy));
+      claims.sort((sortDirection == Sort.Direction.DESC ? CLAIM_COMPARATORS_DESC : CLAIM_COMPARATORS_ASC).get(sortBy));
     }
 
     if (page != null && pageSize != null) {
@@ -166,55 +163,50 @@ public class ClaimsServiceStub implements ClaimsService {
     return new ClaimSearchResultDTO(claims, null, null);
   }
 
-  EnumMap<ClaimSortColumn, Comparator<Claim>> CLAIM_COMPARATORS_ASC =
-      new EnumMap<ClaimSortColumn, Comparator<Claim>>(ClaimSortColumn.class) {
-        private static final long serialVersionUID = 1L;
+  EnumMap<ClaimSortColumn, Comparator<Claim>> CLAIM_COMPARATORS_ASC = new EnumMap<ClaimSortColumn, Comparator<Claim>>(
+      ClaimSortColumn.class) {
+    private static final long serialVersionUID = 1L;
 
-        {
-          put(ClaimSortColumn.DATE, Comparator.comparing((Claim c) -> c.getDate(),
-              Comparator.nullsLast(LocalDateTime::compareTo)));
-          put(ClaimSortColumn.RESERVES, Comparator.comparing((Claim c) -> c.getReserve(),
-              Comparator.nullsLast(BigDecimal::compareTo)));
-          put(ClaimSortColumn.TYPE, Comparator.comparing((Claim c) -> c.getType(),
-              Comparator.nullsLast(String::compareTo)));
-          put(ClaimSortColumn.STATE, Comparator.comparing((Claim c) -> c.getState(),
-              Comparator.nullsLast(ClaimState::compareTo)));
-        }
-      };
+    {
+      put(ClaimSortColumn.DATE,
+          Comparator.comparing((Claim c) -> c.getDate(), Comparator.nullsLast(LocalDateTime::compareTo)));
+      put(ClaimSortColumn.RESERVES,
+          Comparator.comparing((Claim c) -> c.getReserve(), Comparator.nullsLast(BigDecimal::compareTo)));
+      put(ClaimSortColumn.TYPE,
+          Comparator.comparing((Claim c) -> c.getType(), Comparator.nullsLast(String::compareTo)));
+      put(ClaimSortColumn.STATE,
+          Comparator.comparing((Claim c) -> c.getState(), Comparator.nullsLast(ClaimState::compareTo)));
+    }
+  };
 
-  EnumMap<ClaimSortColumn, Comparator<Claim>> CLAIM_COMPARATORS_DESC =
-      new EnumMap<ClaimSortColumn, Comparator<Claim>>(ClaimSortColumn.class) {
-        private static final long serialVersionUID = 1L;
+  EnumMap<ClaimSortColumn, Comparator<Claim>> CLAIM_COMPARATORS_DESC = new EnumMap<ClaimSortColumn, Comparator<Claim>>(
+      ClaimSortColumn.class) {
+    private static final long serialVersionUID = 1L;
 
-        {
-          put(ClaimSortColumn.DATE, Comparator
-              .comparing((Claim c) -> c.getDate(), Comparator.nullsFirst(LocalDateTime::compareTo))
-              .reversed());
-          put(ClaimSortColumn.RESERVES, Comparator
-              .comparing((Claim c) -> c.getReserve(), Comparator.nullsFirst(BigDecimal::compareTo))
-              .reversed());
-          put(ClaimSortColumn.TYPE,
-              Comparator
-                  .comparing((Claim c) -> c.getType(), Comparator.nullsFirst(String::compareTo))
-                  .reversed());
-          put(ClaimSortColumn.STATE, Comparator
-              .comparing((Claim c) -> c.getState(), Comparator.nullsFirst(ClaimState::compareTo))
-              .reversed());
-        }
-      };
+    {
+      put(ClaimSortColumn.DATE,
+          Comparator.comparing((Claim c) -> c.getDate(), Comparator.nullsFirst(LocalDateTime::compareTo)).reversed());
+      put(ClaimSortColumn.RESERVES,
+          Comparator.comparing((Claim c) -> c.getReserve(), Comparator.nullsFirst(BigDecimal::compareTo)).reversed());
+      put(ClaimSortColumn.TYPE,
+          Comparator.comparing((Claim c) -> c.getType(), Comparator.nullsFirst(String::compareTo)).reversed());
+      put(ClaimSortColumn.STATE,
+          Comparator.comparing((Claim c) -> c.getState(), Comparator.nullsFirst(ClaimState::compareTo)).reversed());
+    }
+  };
 
   @Override
   public ClaimPaymentResponse addPayment(String memberId, ClaimPayment dto, String token) {
     Claim claim = find(dto.getClaimID(), token);
     dto.setDate(LocalDateTime.now());
     switch (dto.getType()) {
-      case Manual: {
-        dto.setHandlerReference(null);
-      }
-      case Automatic: {
-        dto.setHandlerReference("testPerson@hedvig.com");
-        logger.info("isSanctionListSkipped ", dto.isSanctionListSkipped());
-      }
+    case Manual: {
+      dto.setHandlerReference(null);
+    }
+    case Automatic: {
+      dto.setHandlerReference("testPerson@hedvig.com");
+      logger.info("isSanctionListSkipped ", dto.isSanctionListSkipped());
+    }
     }
     claim.getPayments().add(dto);
     addEvent(claim, "[test] payment added");
@@ -224,6 +216,7 @@ public class ClaimsServiceStub implements ClaimsService {
   @Override
   public void addNote(ClaimNote dto, String token) {
     Claim claim = find(dto.getClaimID(), token);
+    dto.setDate(LocalDateTime.now());
     claim.getNotes().add(dto);
     addEvent(claim, "[test] note added");
   }
@@ -270,8 +263,7 @@ public class ClaimsServiceStub implements ClaimsService {
   public long totalClaims(String token) {
     val stat = statistics(token);
 
-    return stat.getOrDefault(ClaimState.OPEN.name(), 0L)
-        + stat.getOrDefault(ClaimState.REOPENED.name(), 0L);
+    return stat.getOrDefault(ClaimState.OPEN.name(), 0L) + stat.getOrDefault(ClaimState.REOPENED.name(), 0L);
   }
 
   @Override
@@ -305,7 +297,6 @@ public class ClaimsServiceStub implements ClaimsService {
 
   @Override
   public List<Claim> getClaimsByIds(List<UUID> ids) {
-    return claims.stream().filter(c -> ids.contains(UUID.fromString(c.getId())))
-        .collect(Collectors.toList());
+    return claims.stream().filter(c -> ids.contains(UUID.fromString(c.getId()))).collect(Collectors.toList());
   }
 }
