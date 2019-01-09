@@ -9,15 +9,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@UnionType
 @Value
-public class FireDamageClaim {
+@UnionType
+public class ApplianceClaim {
   String location;
   LocalDate date;
+  String item;
 
-  public static FireDamageClaim fromClaimData(List<ClaimData> claimData) {
+  public static ApplianceClaim fromClaimData(List<ClaimData> claimData) {
     String location = null;
     LocalDate date = null;
+    String item = null;
 
     val claimDataWithoutDuplicates = ClaimData.withoutDuplicates(claimData);
 
@@ -31,9 +33,13 @@ public class FireDamageClaim {
           location = cd.getValue();
           break;
         }
+        case "ITEM": {
+          item = cd.getValue();
+          break;
+        }
       }
     }
 
-    return new FireDamageClaim(location, date);
+    return new ApplianceClaim(location, date, item);
   }
 }
