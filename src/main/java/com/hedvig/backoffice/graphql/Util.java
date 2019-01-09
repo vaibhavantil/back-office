@@ -24,6 +24,12 @@ public class Util {
         return "FIRE";
       case NotCoveredClaim:
         return "Not covered";
+      case ConfirmedFraudClaim:
+        return "Confirmed Fraud";
+      case TestClaim:
+        return "Test";
+      case LiabilityClaim:
+        return "Liability";
       default:
         throw new RuntimeException(String.format("Unmappable ClaimTypes.%s", type.toString()));
     }
@@ -33,6 +39,8 @@ public class Util {
     switch (claimServiceType) {
       case "Assault":
         return ClaimTypes.AssaultClaim;
+      case "Confirmed Fraud":
+        return ClaimTypes.ConfirmedFraudClaim;
       case "DRULLE":
       case "Drulle - Mobile":
       case "Drulle - Other":
@@ -40,8 +48,12 @@ public class Util {
       case "FILE":
       case "FIRE":
         return ClaimTypes.FireDamageClaim;
+      case "Liability":
+        return ClaimTypes.LiabilityClaim;
       case "Not covered":
         return ClaimTypes.NotCoveredClaim;
+      case "Test":
+        return ClaimTypes.TestClaim;
       case "THEFT":
       case "Theft - Bike":
       case "Theft - Home":

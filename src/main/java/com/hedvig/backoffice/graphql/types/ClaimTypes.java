@@ -8,5 +8,8 @@ public enum ClaimTypes {
   TravelAccidentClaim,
   LuggageDelayClaim,
   NotCoveredClaim,
-  FireDamageClaim
+  FireDamageClaim,
+  ConfirmedFraudClaim,
+  TestClaim,
+  LiabilityClaim
 }
