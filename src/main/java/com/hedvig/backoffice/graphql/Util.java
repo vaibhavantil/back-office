@@ -21,7 +21,7 @@ public class Util {
       case LuggageDelayClaim:
         return "Travel - Delayed Luggage";
       case FireDamageClaim:
-        return "FIRE";
+        return "Fire Damage";
       case NotCoveredClaim:
         return "Not covered";
       case ConfirmedFraudClaim:
@@ -47,6 +47,7 @@ public class Util {
         return ClaimTypes.AccidentalDamageClaim;
       case "FILE":
       case "FIRE":
+      case "Fire Damage":
         return ClaimTypes.FireDamageClaim;
       case "Liability":
         return ClaimTypes.LiabilityClaim;

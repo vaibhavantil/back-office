@@ -166,8 +166,6 @@ type NotCoveredClaim {
 type FireDamageClaim {
   location: String
   date: LocalDate
-  item: String
-  receipt: String
 }
 
 type ClaimPayment {

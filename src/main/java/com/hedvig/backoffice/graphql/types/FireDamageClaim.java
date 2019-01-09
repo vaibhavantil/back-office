@@ -14,14 +14,10 @@ import java.util.List;
 public class FireDamageClaim {
   String location;
   LocalDate date;
-  String item;
-  String receipt;
 
   public static FireDamageClaim fromClaimData(List<ClaimData> claimData) {
     String location = null;
     LocalDate date = null;
-    String item = null;
-    String receipt = null;
 
     val claimDataWithoutDuplicates = ClaimData.withoutDuplicates(claimData);
 
@@ -35,17 +31,9 @@ public class FireDamageClaim {
           location = cd.getValue();
           break;
         }
-        case "ITEM": {
-          item = cd.getValue();
-          break;
-        }
-        case "RECEIPT": {
-          receipt = cd.getValue();
-          break;
-        }
       }
     }
 
-    return new FireDamageClaim(location, date, item, receipt);
+    return new FireDamageClaim(location, date);
   }
 }
