@@ -90,6 +90,7 @@ type Claim {
 
 type ClaimNote {
   text: String
+  date: LocalDateTime
 }
 
 enum ClaimTypes {
