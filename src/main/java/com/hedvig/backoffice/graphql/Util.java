@@ -30,6 +30,8 @@ public class Util {
         return "Test";
       case LiabilityClaim:
         return "Liability";
+      case ApplianceClaim:
+        return "Appliance";
       default:
         throw new RuntimeException(String.format("Unmappable ClaimTypes.%s", type.toString()));
     }
@@ -37,6 +39,8 @@ public class Util {
 
   public static ClaimTypes claimType(String claimServiceType) {
     switch (claimServiceType) {
+      case "Appliance":
+        return ClaimTypes.ApplianceClaim;
       case "Assault":
         return ClaimTypes.AssaultClaim;
       case "Confirmed Fraud":
