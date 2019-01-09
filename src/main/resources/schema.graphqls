@@ -102,9 +102,10 @@ enum ClaimTypes {
   NotCoveredClaim,
   FireDamageClaim,
   ConfirmedFraudClaim,
-  TestClaim
+  TestClaim,
+  LiabilityClaim
 }
-union ClaimType = TheftClaim | AccidentalDamageClaim | AssaultClaim | WaterDamageClaim | TravelAccidentClaim | LuggageDelayClaim | NotCoveredClaim | FireDamageClaim | ConfirmedFraudClaim | TestClaim
+union ClaimType = TheftClaim | AccidentalDamageClaim | AssaultClaim | WaterDamageClaim | TravelAccidentClaim | LuggageDelayClaim | NotCoveredClaim | FireDamageClaim | ConfirmedFraudClaim | TestClaim | LiabilityClaim
 
 type TheftClaim {
   location: String
@@ -151,6 +152,11 @@ type ConfirmedFraudClaim {
 
 type TestClaim {
   date: LocalDate
+}
+
+type LiabilityClaim {
+  date: LocalDate
+  location: String
 }
 
 type NotCoveredClaim {

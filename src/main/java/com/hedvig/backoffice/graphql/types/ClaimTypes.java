@@ -10,5 +10,6 @@ public enum ClaimTypes {
   NotCoveredClaim,
   FireDamageClaim,
   ConfirmedFraudClaim,
-  TestClaim
+  TestClaim,
+  LiabilityClaim
 }

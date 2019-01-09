@@ -28,6 +28,8 @@ public class Util {
         return "Confirmed Fraud";
       case TestClaim:
         return "Test";
+      case LiabilityClaim:
+        return "Liability";
       default:
         throw new RuntimeException(String.format("Unmappable ClaimTypes.%s", type.toString()));
     }
@@ -46,6 +48,8 @@ public class Util {
       case "FILE":
       case "FIRE":
         return ClaimTypes.FireDamageClaim;
+      case "Liability":
+        return ClaimTypes.LiabilityClaim;
       case "Not covered":
         return ClaimTypes.NotCoveredClaim;
       case "Test":

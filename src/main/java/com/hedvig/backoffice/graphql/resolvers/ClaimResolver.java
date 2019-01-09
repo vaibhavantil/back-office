@@ -8,6 +8,7 @@ import com.hedvig.backoffice.graphql.types.AssaultClaim;
 import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.ConfirmedFraudClaim;
 import com.hedvig.backoffice.graphql.types.FireDamageClaim;
+import com.hedvig.backoffice.graphql.types.LiabilityClaim;
 import com.hedvig.backoffice.graphql.types.LuggageDelayClaim;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.NotCoveredClaim;
@@ -67,6 +68,9 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
       }
       case TestClaim: {
         return TestClaim.fromClaimData(claim.get_claimData());
+      }
+      case LiabilityClaim: {
+        return LiabilityClaim.fromClaimData(claim.get_claimData());
       }
     }
     throw new RuntimeException(String.format("Unsupported claim type: %s", claim.get_type()));
