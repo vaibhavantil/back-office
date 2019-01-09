@@ -28,7 +28,6 @@ public class LiabilityClaim {
       }
       if ("PLACE".equalsIgnoreCase(cwd.getName())) {
         location = cwd.getValue();
-        break;
       }
     }
     return new LiabilityClaim(date, location);
