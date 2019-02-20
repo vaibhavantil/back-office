@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "hope-autocomplete", url = "${hopeAutocompleteService.baseUrl}", configuration = FeignConfig.class)
+@FeignClient(name = "hope-autocomplete", url = "${hopeAutocompleteService.baseUrl:hope-autocomplete-service}", configuration = FeignConfig.class)
 public interface HopeAutocompleteClient {
   @GetMapping("/v0/messages/autocomplete?query={query}")
   List<AutocompleteSuggestion> getAutocomplete(@RequestParam("query") String query);

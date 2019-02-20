@@ -4,7 +4,6 @@ import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteService;
 import com.hedvig.backoffice.services.hopeAutocomplete.dto.AutocompleteSuggestion;
 import com.hedvig.backoffice.services.hopeAutocomplete.dto.SelectSuggestionRequestBodyDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
