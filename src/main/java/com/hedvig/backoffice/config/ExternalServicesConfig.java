@@ -11,6 +11,7 @@ import com.hedvig.backoffice.services.expo.ExpoNotificationServiceImpl;
 import com.hedvig.backoffice.services.expo.ExpoNotificationServiceStub;
 import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteService;
 import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteServiceImpl;
+import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteServiceStub;
 import com.hedvig.backoffice.services.meerkat.Meerkat;
 import com.hedvig.backoffice.services.meerkat.MeerkatImpl;
 import com.hedvig.backoffice.services.meerkat.MeerkatStub;
@@ -29,6 +30,7 @@ import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceStub;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,8 +55,9 @@ public class ExternalServicesConfig {
   }
 
   @Bean
-  public HopeAutocompleteService hopeAutocompleteService() {
-    return context.getAutowireCapableBeanFactory().createBean(HopeAutocompleteServiceImpl.class);
+  public HopeAutocompleteService hopeAutocompleteService(@Value("${hopeAutocompleteService.stub:false}") boolean stub) {
+    AutowireCapableBeanFactory factory = context.getAutowireCapableBeanFactory();
+    return stub ? factory.createBean(HopeAutocompleteServiceStub.class) : factory.createBean(HopeAutocompleteServiceImpl.class);
   }
 
   @Bean
