@@ -6,5 +6,5 @@ import lombok.Data;
 public class ChatHistoryMessage {
   public final String authorType;
   public final String text;
-  public final double timestamp;
+  public final String timestamp;
 }

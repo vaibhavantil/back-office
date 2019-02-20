@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -13,7 +14,7 @@ import static java.util.stream.Collectors.toList;
 public class RemoteChatHistoryMessage {
   public final String authorType;
   public final String text;
-  public final double timestamp;
+  public final long timestamp;
 
   public static List<RemoteChatHistoryMessage> from(final List<ChatHistoryMessage> chatHistory) {
     return chatHistory.stream()
@@ -22,6 +23,6 @@ public class RemoteChatHistoryMessage {
   }
 
   public static RemoteChatHistoryMessage from(final ChatHistoryMessage message) {
-    return new RemoteChatHistoryMessage(message.authorType, message.text, message.timestamp);
+    return new RemoteChatHistoryMessage(message.authorType, message.text, Instant.parse(message.timestamp).getEpochSecond());
   }
 }
