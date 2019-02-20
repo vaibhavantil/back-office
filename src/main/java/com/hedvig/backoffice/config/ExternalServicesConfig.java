@@ -9,6 +9,9 @@ import com.hedvig.backoffice.services.claims.ClaimsServiceStub;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.expo.ExpoNotificationServiceImpl;
 import com.hedvig.backoffice.services.expo.ExpoNotificationServiceStub;
+import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteService;
+import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteServiceImpl;
+import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteServiceStub;
 import com.hedvig.backoffice.services.meerkat.Meerkat;
 import com.hedvig.backoffice.services.meerkat.MeerkatImpl;
 import com.hedvig.backoffice.services.meerkat.MeerkatStub;
@@ -27,6 +30,7 @@ import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceStub;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +52,12 @@ public class ExternalServicesConfig {
     return stub
       ? factory.createBean(AssetTrackerClientStub.class)
       : factory.createBean(AssetTrackerClientImpl.class);
+  }
+
+  @Bean
+  public HopeAutocompleteService hopeAutocompleteService(@Value("${hopeAutocompleteService.stub:false}") boolean stub) {
+    AutowireCapableBeanFactory factory = context.getAutowireCapableBeanFactory();
+    return stub ? factory.createBean(HopeAutocompleteServiceStub.class) : factory.createBean(HopeAutocompleteServiceImpl.class);
   }
 
   @Bean
@@ -79,7 +89,8 @@ public class ExternalServicesConfig {
 
   @Bean
   public ExpoNotificationService expoNotificationService(
-    @Value("${expo.stub:false}") boolean stub) {
+    @Value("${expo.stub:false}") boolean stub
+  ) {
     val factory = context.getAutowireCapableBeanFactory();
     return stub
       ? factory.createBean(ExpoNotificationServiceStub.class)
@@ -88,7 +99,8 @@ public class ExternalServicesConfig {
 
   @Bean
   public ProductPricingService productPricingService(
-    @Value("${productPricing.stub:false}") boolean stub) {
+    @Value("${productPricing.stub:false}") boolean stub
+  ) {
     val factory = context.getAutowireCapableBeanFactory();
     return stub
       ? factory.createBean(ProductPricingServiceStub.class)
