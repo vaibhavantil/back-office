@@ -9,6 +9,8 @@ import com.hedvig.backoffice.services.claims.ClaimsServiceStub;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.expo.ExpoNotificationServiceImpl;
 import com.hedvig.backoffice.services.expo.ExpoNotificationServiceStub;
+import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteService;
+import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteServiceImpl;
 import com.hedvig.backoffice.services.meerkat.Meerkat;
 import com.hedvig.backoffice.services.meerkat.MeerkatImpl;
 import com.hedvig.backoffice.services.meerkat.MeerkatStub;
@@ -51,6 +53,11 @@ public class ExternalServicesConfig {
   }
 
   @Bean
+  public HopeAutocompleteService hopeAutocompleteService() {
+    return context.getAutowireCapableBeanFactory().createBean(HopeAutocompleteServiceImpl.class);
+  }
+
+  @Bean
   public BotService botService(@Value("${botservice.stub:false}") boolean stub) {
     val factory = context.getAutowireCapableBeanFactory();
 
@@ -79,7 +86,8 @@ public class ExternalServicesConfig {
 
   @Bean
   public ExpoNotificationService expoNotificationService(
-    @Value("${expo.stub:false}") boolean stub) {
+    @Value("${expo.stub:false}") boolean stub
+  ) {
     val factory = context.getAutowireCapableBeanFactory();
     return stub
       ? factory.createBean(ExpoNotificationServiceStub.class)
@@ -88,7 +96,8 @@ public class ExternalServicesConfig {
 
   @Bean
   public ProductPricingService productPricingService(
-    @Value("${productPricing.stub:false}") boolean stub) {
+    @Value("${productPricing.stub:false}") boolean stub
+  ) {
     val factory = context.getAutowireCapableBeanFactory();
     return stub
       ? factory.createBean(ProductPricingServiceStub.class)

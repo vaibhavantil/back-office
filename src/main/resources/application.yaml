@@ -58,6 +58,9 @@ tracker:
     update: /asset
   stub: false
 
+hopeAutocompleteService:
+  baseUrl: http://localhost:5000
+
 botservice:
   baseUrl: http://localhost:4081
   questionId: main.question
