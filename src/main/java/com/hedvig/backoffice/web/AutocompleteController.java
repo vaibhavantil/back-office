@@ -26,7 +26,7 @@ public class AutocompleteController {
     return autocompleteService.getAutocompleteSuggestions(query);
   }
 
-  @PostMapping(path = {"select"})
+  @PostMapping(path = {"/select"})
   public void selectSuggestion(@RequestBody final SelectSuggestionRequestBodyDto requestBody) {
     autocompleteService.selectSuggestion(requestBody);
   }
