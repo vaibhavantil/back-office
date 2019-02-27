@@ -1,28 +1,16 @@
 package com.hedvig.backoffice.graphql;
 
-import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
-
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.google.common.collect.ImmutableMap;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.ClaimInformationInput;
-import com.hedvig.backoffice.graphql.types.ClaimNoteInput;
-import com.hedvig.backoffice.graphql.types.ClaimPaymentInput;
-import com.hedvig.backoffice.graphql.types.ClaimState;
-import com.hedvig.backoffice.graphql.types.ClaimTypes;
-import com.hedvig.backoffice.graphql.types.Member;
+import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
-import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
-import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimSource;
-import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
-import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import graphql.ErrorType;
@@ -30,7 +18,12 @@ import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
 import graphql.language.SourceLocation;
 import graphql.schema.DataFetchingEnvironment;
-import graphql.schema.GraphQLScalarType;
+import jersey.repackaged.com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.springframework.stereotype.Component;
+
+import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -40,11 +33,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-import javax.money.MonetaryAmount;
-import jersey.repackaged.com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.springframework.stereotype.Component;
+
+import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
 @Component
 @Slf4j
@@ -57,7 +47,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ClaimsService claimsService;
 
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
-    MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService) {
+                         MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
@@ -66,7 +56,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
   public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount,
-    DataFetchingEnvironment env) throws AuthorizationException {
+                                                DataFetchingEnvironment env) throws AuthorizationException {
     log.info("Personnel with email '{}' attempting to charge member '{}' the amount '{}'",
       GraphQLConfiguration.getEmail(env, personnelService), id, amount.toString());
     paymentService.chargeMember(id, amount);
@@ -74,7 +64,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
   public UUID createClaim(String memberId, LocalDateTime date, ClaimSource source,
-    DataFetchingEnvironment env) {
+                          DataFetchingEnvironment env) {
     GraphQLRequestContext context = env.getContext();
     String token = personnelService.getIdToken(context.getUserPrincipal().getName());
     return claimsService.createClaim(
@@ -83,7 +73,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
 
   public CompletableFuture<Claim> updateClaimState(UUID id, ClaimState claimState,
-    DataFetchingEnvironment env) throws AuthorizationException {
+                                                   DataFetchingEnvironment env) throws AuthorizationException {
     log.info("Personnel with email '{}' updating claim status",
       GraphQLConfiguration.getEmail(env, personnelService));
     val stateChangeDto = new ClaimStateUpdate();
@@ -96,7 +86,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
   public CompletableFuture<Claim> addClaimNote(UUID id, ClaimNoteInput input,
-    DataFetchingEnvironment env) throws AuthorizationException {
+                                               DataFetchingEnvironment env) throws AuthorizationException {
     log.info("Personnell with email '{}' adding claim note",
       GraphQLConfiguration.getEmail(env, personnelService));
     val noteDto = new com.hedvig.backoffice.services.claims.dto.ClaimNote();
@@ -107,7 +97,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
   public CompletableFuture<Claim> updateReserve(UUID id, MonetaryAmount amount,
-    DataFetchingEnvironment env) throws AuthorizationException {
+                                                DataFetchingEnvironment env) throws AuthorizationException {
     log.debug("Personnell with email '{}' updating reserve",
       GraphQLConfiguration.getEmail(env, personnelService));
     val reserveRequest = new ClaimReserveUpdate();
@@ -118,7 +108,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
   public CompletableFuture<DataFetcherResult<Claim>> createClaimPayment(UUID id,
-    ClaimPaymentInput payment, DataFetchingEnvironment env) throws AuthorizationException {
+                                                                        ClaimPaymentInput payment, DataFetchingEnvironment env) throws AuthorizationException {
     log.info("Personnel with email '{}'' adding claim payment",
       GraphQLConfiguration.getEmail(env, personnelService));
     val claim =
@@ -175,7 +165,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
   public CompletableFuture<Claim> setClaimType(UUID id, ClaimTypes type,
-    DataFetchingEnvironment env) throws AuthorizationException {
+                                               DataFetchingEnvironment env) throws AuthorizationException {
     log.info("Personnel with email '{}' setting claim type",
       GraphQLConfiguration.getEmail(env, personnelService));
     val claimTypeDto = new ClaimTypeUpdate();
@@ -186,8 +176,17 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
+  public CompletableFuture<Claim> setCoveringEmployee(UUID id, boolean coveringEmployee,
+                                                      DataFetchingEnvironment env)
+    throws AuthorizationException {
+    EmployeeClaimRequestDTO request = new EmployeeClaimRequestDTO(id.toString(), coveringEmployee);
+    claimsService.markEmployeeClaim(request, GraphQLConfiguration.getIdToken(env, personnelService));
+    return claimLoader.load(id);
+  }
+
   public CompletableFuture<Claim> setClaimInformation(UUID id,
-    ClaimInformationInput claimInformationInput, DataFetchingEnvironment env)
+                                                      ClaimInformationInput claimInformationInput,
+                                                      DataFetchingEnvironment env)
     throws AuthorizationException {
     log.info("Personnel with email '{}' updating claim information",
       GraphQLConfiguration.getEmail(env, personnelService));

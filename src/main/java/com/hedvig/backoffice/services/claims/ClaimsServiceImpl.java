@@ -1,28 +1,16 @@
 package com.hedvig.backoffice.services.claims;
 
-import com.hedvig.backoffice.services.claims.dto.Claim;
-import com.hedvig.backoffice.services.claims.dto.ClaimData;
-import com.hedvig.backoffice.services.claims.dto.ClaimNote;
-import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
-import com.hedvig.backoffice.services.claims.dto.ClaimPaymentRequest;
-import com.hedvig.backoffice.services.claims.dto.ClaimPaymentResponse;
-import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
-import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
-import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimType;
-import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimsByIdsDto;
-import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.*;
 import feign.FeignException;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class ClaimsServiceImpl implements ClaimsService {
 
@@ -55,7 +43,7 @@ public class ClaimsServiceImpl implements ClaimsService {
 
   @Override
   public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy,
-    Sort.Direction sortDirection, String token) {
+                                     Sort.Direction sortDirection, String token) {
     return client.search(page, pageSize, sortBy, sortDirection, token);
   }
 
@@ -139,5 +127,10 @@ public class ClaimsServiceImpl implements ClaimsService {
   @Override
   public UUID createClaim(CreateBackofficeClaimDTO claimData, String token) {
     return client.createClaim(claimData, token).getClaimId();
+  }
+
+  @Override
+  public void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token) {
+    client.markEmployeeClaim(dto, token);
   }
 }

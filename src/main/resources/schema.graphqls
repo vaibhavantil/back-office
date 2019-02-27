@@ -18,6 +18,7 @@ type MutationType {
   setClaimType(id: ID!, type: ClaimTypes!): Claim
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
+  setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
 }
 
 input ClaimInformationInput {
@@ -86,6 +87,7 @@ type Claim {
   notes: [ClaimNote]
   payments: [ClaimPayment]
   events: [ClaimEvent]
+  coveringEmployee: Boolean!
 }
 
 type ClaimNote {

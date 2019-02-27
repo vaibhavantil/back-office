@@ -1,21 +1,11 @@
 package com.hedvig.backoffice.services.claims;
 
-import com.hedvig.backoffice.services.claims.dto.ClaimPaymentResponse;
+import com.hedvig.backoffice.services.claims.dto.*;
+import org.springframework.data.domain.Sort;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import com.hedvig.backoffice.services.claims.dto.Claim;
-import com.hedvig.backoffice.services.claims.dto.ClaimData;
-import com.hedvig.backoffice.services.claims.dto.ClaimNote;
-import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
-import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
-import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
-import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimType;
-import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
-import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
-import org.springframework.data.domain.Sort;
 
 public interface ClaimsService {
 
@@ -28,7 +18,7 @@ public interface ClaimsService {
   List<ClaimType> types(String token);
 
   ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy,
-      Sort.Direction sortDirection, String token);
+                              Sort.Direction sortDirection, String token);
 
   ClaimPaymentResponse addPayment(String memberId, ClaimPayment dto, String token);
 
@@ -49,4 +39,6 @@ public interface ClaimsService {
   List<Claim> getClaimsByIds(List<UUID> ids);
 
   UUID createClaim(CreateBackofficeClaimDTO claimData, String token);
+
+  void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token);
 }

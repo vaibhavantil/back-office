@@ -3,47 +3,27 @@ package com.hedvig.backoffice.services.claims;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
-import com.hedvig.backoffice.services.claims.dto.Claim;
-import com.hedvig.backoffice.services.claims.dto.ClaimData;
-import com.hedvig.backoffice.services.claims.dto.ClaimEvent;
-import com.hedvig.backoffice.services.claims.dto.ClaimNote;
-import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
-import com.hedvig.backoffice.services.claims.dto.ClaimPaymentResponse;
-import com.hedvig.backoffice.services.claims.dto.ClaimPaymentStatus;
-import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
-import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
-import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
-import com.hedvig.backoffice.services.claims.dto.ClaimSource;
-import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimType;
-import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
-import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Sort;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
 public class ClaimsServiceStub implements ClaimsService {
@@ -65,12 +45,12 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     List<String> memberIds = memberService.search(null, "", settingsService.getInternalAccessToken()).stream()
-        .map(o -> o.getMemberId().toString()).collect(Collectors.toList());
+      .map(o -> o.getMemberId().toString()).collect(Collectors.toList());
 
     claims = IntStream.range(0, 10).mapToObj(i -> {
       String id = UUID.randomUUID().toString();
       String memberId = memberIds.size() > i ? memberIds.get(i)
-          : memberIds.size() > 0 ? memberIds.get(0) : UUID.randomUUID().toString();
+        : memberIds.size() > 0 ? memberIds.get(0) : UUID.randomUUID().toString();
 
       val note = new ClaimNote();
       note.setText("Testnote 123");
@@ -106,6 +86,7 @@ public class ClaimsServiceStub implements ClaimsService {
       claim.setData(new ArrayList<>());
       claim.setAssets(new ArrayList<>());
       claim.setReserve(BigDecimal.valueOf(100));
+      claim.setCoveringEmployee(false);
 
       long randomSignedOnDate = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
       LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
@@ -133,7 +114,7 @@ public class ClaimsServiceStub implements ClaimsService {
   @Override
   public Claim find(String id, String token) {
     return claims.stream().filter(c -> c.getId().equals(id)).findAny()
-        .orElseThrow(() -> new ExternalServiceNotFoundException("claim not found", "mock"));
+      .orElseThrow(() -> new ExternalServiceNotFoundException("claim not found", "mock"));
   }
 
   @Override
@@ -143,7 +124,7 @@ public class ClaimsServiceStub implements ClaimsService {
 
   @Override
   public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy,
-      Sort.Direction sortDirection, String token) {
+                                     Sort.Direction sortDirection, String token) {
     List<Claim> claims = list(token);
 
     if (sortBy != null) {
@@ -164,34 +145,34 @@ public class ClaimsServiceStub implements ClaimsService {
   }
 
   EnumMap<ClaimSortColumn, Comparator<Claim>> CLAIM_COMPARATORS_ASC = new EnumMap<ClaimSortColumn, Comparator<Claim>>(
-      ClaimSortColumn.class) {
+    ClaimSortColumn.class) {
     private static final long serialVersionUID = 1L;
 
     {
       put(ClaimSortColumn.DATE,
-          Comparator.comparing((Claim c) -> c.getDate(), Comparator.nullsLast(LocalDateTime::compareTo)));
+        Comparator.comparing((Claim c) -> c.getDate(), Comparator.nullsLast(LocalDateTime::compareTo)));
       put(ClaimSortColumn.RESERVES,
-          Comparator.comparing((Claim c) -> c.getReserve(), Comparator.nullsLast(BigDecimal::compareTo)));
+        Comparator.comparing((Claim c) -> c.getReserve(), Comparator.nullsLast(BigDecimal::compareTo)));
       put(ClaimSortColumn.TYPE,
-          Comparator.comparing((Claim c) -> c.getType(), Comparator.nullsLast(String::compareTo)));
+        Comparator.comparing((Claim c) -> c.getType(), Comparator.nullsLast(String::compareTo)));
       put(ClaimSortColumn.STATE,
-          Comparator.comparing((Claim c) -> c.getState(), Comparator.nullsLast(ClaimState::compareTo)));
+        Comparator.comparing((Claim c) -> c.getState(), Comparator.nullsLast(ClaimState::compareTo)));
     }
   };
 
   EnumMap<ClaimSortColumn, Comparator<Claim>> CLAIM_COMPARATORS_DESC = new EnumMap<ClaimSortColumn, Comparator<Claim>>(
-      ClaimSortColumn.class) {
+    ClaimSortColumn.class) {
     private static final long serialVersionUID = 1L;
 
     {
       put(ClaimSortColumn.DATE,
-          Comparator.comparing((Claim c) -> c.getDate(), Comparator.nullsFirst(LocalDateTime::compareTo)).reversed());
+        Comparator.comparing((Claim c) -> c.getDate(), Comparator.nullsFirst(LocalDateTime::compareTo)).reversed());
       put(ClaimSortColumn.RESERVES,
-          Comparator.comparing((Claim c) -> c.getReserve(), Comparator.nullsFirst(BigDecimal::compareTo)).reversed());
+        Comparator.comparing((Claim c) -> c.getReserve(), Comparator.nullsFirst(BigDecimal::compareTo)).reversed());
       put(ClaimSortColumn.TYPE,
-          Comparator.comparing((Claim c) -> c.getType(), Comparator.nullsFirst(String::compareTo)).reversed());
+        Comparator.comparing((Claim c) -> c.getType(), Comparator.nullsFirst(String::compareTo)).reversed());
       put(ClaimSortColumn.STATE,
-          Comparator.comparing((Claim c) -> c.getState(), Comparator.nullsFirst(ClaimState::compareTo)).reversed());
+        Comparator.comparing((Claim c) -> c.getState(), Comparator.nullsFirst(ClaimState::compareTo)).reversed());
     }
   };
 
@@ -200,13 +181,13 @@ public class ClaimsServiceStub implements ClaimsService {
     Claim claim = find(dto.getClaimID(), token);
     dto.setDate(LocalDateTime.now());
     switch (dto.getType()) {
-    case Manual: {
-      dto.setHandlerReference(null);
-    }
-    case Automatic: {
-      dto.setHandlerReference("testPerson@hedvig.com");
-      logger.info("isSanctionListSkipped ", dto.isSanctionListSkipped());
-    }
+      case Manual: {
+        dto.setHandlerReference(null);
+      }
+      case Automatic: {
+        dto.setHandlerReference("testPerson@hedvig.com");
+        logger.info("isSanctionListSkipped ", dto.isSanctionListSkipped());
+      }
     }
     claim.getPayments().add(dto);
     addEvent(claim, "[test] payment added");
@@ -282,9 +263,17 @@ public class ClaimsServiceStub implements ClaimsService {
     claim.setData(new ArrayList<>());
     claim.setAssets(new ArrayList<>());
 
+    claim.setCoveringEmployee(false);
+
     claims.add(claim);
 
     return id;
+  }
+
+  @Override
+  public void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token) {
+    Claim c = find(dto.getClaimId(), token);
+    c.setCoveringEmployee(dto.isCoveringEmployee());
   }
 
   private void addEvent(Claim claim, String message) {
