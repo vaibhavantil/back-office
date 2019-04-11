@@ -2,10 +2,9 @@
 node_modules/
 yarn-error.log
 src/main/resources/static/
-src/main/resources/application-development.yaml
 !src/main/resources/static/test/**
 target/
-src/main/resources/application-development.yaml
+application-development.*
 
 ### IntelliJ IDEA ###
 .idea
