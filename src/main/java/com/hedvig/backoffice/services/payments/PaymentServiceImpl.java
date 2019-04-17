@@ -2,10 +2,7 @@ package com.hedvig.backoffice.services.payments;
 
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
-import com.hedvig.backoffice.services.payments.dto.ChargeRequestDTO;
-import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
-import com.hedvig.backoffice.services.payments.dto.Transaction;
-import com.hedvig.backoffice.services.payments.dto.TransactionDTO;
+import com.hedvig.backoffice.services.payments.dto.*;
 import feign.FeignException;
 import java.util.Collections;
 import java.util.List;
@@ -56,6 +53,18 @@ public class PaymentServiceImpl implements PaymentService {
   public Transaction getTransactionById(UUID id) {
     TransactionDTO dto = paymentServiceClient.getTransactionById(id).getBody();
     return Transaction.fromTransactionDTO(id, dto);
+  }
+
+  @Override
+  public ResponseEntity<?> payoutMember(String memberId, PayoutMemberRequest payoutMemberRequest) {
+    PayoutRequest payoutRequest = new PayoutRequest(payoutMemberRequest.getAmount(), true); // TODO:  SanctionBypassed from front end
+    return paymentServiceClient.payoutMember(
+      memberId,
+      payoutMemberRequest.getCategory(),
+      payoutMemberRequest.getReferenceId(),
+      payoutMemberRequest.getNote(),
+      payoutRequest
+    );
   }
 
   public DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId) {
