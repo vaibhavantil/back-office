@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("api/payout")
 public class PayoutController {
@@ -20,7 +22,7 @@ public class PayoutController {
   }
 
   @PostMapping("/{memberId}")
-  public ResponseEntity<?> payoutMember(
+  public ResponseEntity<UUID> payoutMember(
     @PathVariable String memberId,
     @RequestBody PayoutMemberRequest payoutMemberRequest
     ) {

@@ -21,5 +21,5 @@ public interface PaymentService {
 
   DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId);
 
-  ResponseEntity<?> payoutMember(String memberId, PayoutMemberRequest payoutMemberRequest);
+  ResponseEntity<UUID> payoutMember(String memberId, PayoutMemberRequest payoutMemberRequest);
 }

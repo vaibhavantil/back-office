@@ -34,7 +34,7 @@ public interface PaymentServiceClient {
   ResponseEntity<TransactionDTO> getTransactionById(@PathVariable UUID transactionId);
 
   @PostMapping("/v2/_/members/{memberId}/payout")
-  ResponseEntity<?> payoutMember(
+  ResponseEntity<UUID> payoutMember(
     @PathVariable String memberId,
     @RequestParam(name="category") PayoutCategory category,
     @RequestParam(name="referenceId", required = false) String referenceId,

@@ -56,7 +56,7 @@ public class PaymentServiceImpl implements PaymentService {
   }
 
   @Override
-  public ResponseEntity<?> payoutMember(String memberId, PayoutMemberRequest payoutMemberRequest) {
+  public ResponseEntity<UUID> payoutMember(String memberId, PayoutMemberRequest payoutMemberRequest) {
     PayoutRequest payoutRequest = new PayoutRequest(payoutMemberRequest.getAmount(), true); // TODO:  SanctionBypassed from front end
     return paymentServiceClient.payoutMember(
       memberId,
