@@ -24,4 +24,4 @@ package-lock.json
 
 # jEnv
 .java-version
-target
+/target/**

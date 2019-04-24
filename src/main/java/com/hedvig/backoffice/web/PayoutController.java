@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/payout")
+@RequestMapping("/api/payout")
 public class PayoutController {
 
   private final PaymentService paymentService;
