@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.payments;
 
 import com.google.common.collect.Lists;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
+import com.hedvig.backoffice.services.payments.dto.PayoutMemberRequest;
 import com.hedvig.backoffice.services.payments.dto.Transaction;
 import java.time.Instant;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.money.MonetaryAmount;
 import org.apache.commons.lang3.RandomUtils;
 import org.javamoney.moneta.Money;
+import org.springframework.http.ResponseEntity;
 
 public class PaymentServiceStub implements PaymentService {
 
@@ -36,6 +38,11 @@ public class PaymentServiceStub implements PaymentService {
   @Override
   public Transaction getTransactionById(UUID id) {
     return transactions.get(0);
+  }
+
+  @Override
+  public ResponseEntity<UUID> payoutMember(String memberId, PayoutMemberRequest payoutMemberRequest) {
+    return null;
   }
 
   public DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId) {
