@@ -5,6 +5,8 @@ import com.hedvig.backoffice.graphql.types.DirectDebitStatus;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.MonthlySubscription;
 import com.hedvig.backoffice.graphql.types.Transaction;
+import com.hedvig.backoffice.services.account.AccountService;
+import com.hedvig.backoffice.services.account.dto.Account;
 import com.hedvig.backoffice.services.meerkat.Meerkat;
 import com.hedvig.backoffice.services.meerkat.dto.SanctionStatus;
 import com.hedvig.backoffice.services.payments.PaymentService;
@@ -21,13 +23,15 @@ public class MemberResolver implements GraphQLResolver<Member> {
   private final PaymentService paymentService;
   private final ProductPricingService productPricingService;
   private final Meerkat meerkat;
+  private final AccountService accountService;
 
   public MemberResolver(PaymentService paymentService,
-    ProductPricingService productPricingService,
-    Meerkat meerkat) {
+                        ProductPricingService productPricingService,
+                        Meerkat meerkat, AccountService accountService) {
     this.paymentService = paymentService;
     this.productPricingService = productPricingService;
     this.meerkat = meerkat;
+    this.accountService = accountService;
   }
 
   public List<Transaction> getTransactions(Member member) {
@@ -51,5 +55,9 @@ public class MemberResolver implements GraphQLResolver<Member> {
 
   public SanctionStatus getSanctionStatus(Member member) {
     return meerkat.getMemberSanctionStatus(String.format("%s %s", member.getFirstName(), member.getLastName()));
+  }
+
+  public Account getAccount(Member member) {
+    return accountService.getAccount(member.getMemberId());
   }
 }

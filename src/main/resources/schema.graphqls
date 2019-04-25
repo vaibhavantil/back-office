@@ -47,6 +47,7 @@ type Member {
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
   sanctionStatus: SanctionStatus
+  account: Account
 }
 
 type Transaction {
@@ -66,6 +67,29 @@ enum SanctionStatus {
   NoHit,
   PartialHit,
   FullHit
+}
+
+type Account {
+  id: ID!
+  entries: [AccountEntry!]!
+}
+
+type AccountEntry {
+  id: ID!
+  type: AccountEntryType!
+  amount: MonetaryAmount!
+  fromDate: LocalDate!
+  reference: String!
+  source: String!
+  title: String
+  comment: String
+}
+
+enum AccountEntryType {
+  CORRECTION,
+  FEE,
+  CAMPAIGN,
+  PAYMENT
 }
 
 enum ClaimSource {
