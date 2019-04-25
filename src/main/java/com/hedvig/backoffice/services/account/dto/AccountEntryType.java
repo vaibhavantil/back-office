@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.services.account.dto;
 
-public enum EntryType {
+public enum AccountEntryType {
   CORRECTION,
   FEE,
   CAMPAIGN,

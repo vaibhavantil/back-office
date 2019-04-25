@@ -1,7 +1,10 @@
 package com.hedvig.backoffice.services.account;
 
-import com.hedvig.backoffice.services.account.dto.Account;
+import com.hedvig.backoffice.graphql.types.AccountEntryInput;
+import com.hedvig.backoffice.services.account.dto.AccountDTO;
 
 public interface AccountService {
-  Account getAccount(String memberId);
+  AccountDTO getAccount(String memberId);
+
+  void addAccountEntry(String memberId, AccountEntryInput accountEntryInput);
 }

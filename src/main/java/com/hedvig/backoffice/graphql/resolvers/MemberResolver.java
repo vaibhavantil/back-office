@@ -1,12 +1,8 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLResolver;
-import com.hedvig.backoffice.graphql.types.DirectDebitStatus;
-import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.graphql.types.MonthlySubscription;
-import com.hedvig.backoffice.graphql.types.Transaction;
+import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.services.account.AccountService;
-import com.hedvig.backoffice.services.account.dto.Account;
 import com.hedvig.backoffice.services.meerkat.Meerkat;
 import com.hedvig.backoffice.services.meerkat.dto.SanctionStatus;
 import com.hedvig.backoffice.services.payments.PaymentService;
@@ -58,6 +54,6 @@ public class MemberResolver implements GraphQLResolver<Member> {
   }
 
   public Account getAccount(Member member) {
-    return accountService.getAccount(member.getMemberId());
+    return Account.from(accountService.getAccount(member.getMemberId()));
   }
 }

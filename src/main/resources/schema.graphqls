@@ -11,6 +11,7 @@ type QueryType {
 
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
+  addAccountEntryToMember(memberId: ID!, accountEntry: AccountEntryInput!): Member!
   updateClaimState(id: ID!, state: ClaimState!): Claim
   createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
@@ -71,7 +72,18 @@ enum SanctionStatus {
 
 type Account {
   id: ID!
+  balance: MonetaryAmount!
   entries: [AccountEntry!]!
+}
+
+input AccountEntryInput {
+  type: AccountEntryType!
+  amount: MonetaryAmount!
+  fromDate: LocalDate!
+  reference: String!
+  source: String!
+  title: String
+  comment: String
 }
 
 type AccountEntry {

@@ -8,11 +8,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Value
-public class Entry {
+public class AccountEntryDTO {
   UUID id;
   LocalDate fromDate;
   MonetaryAmount amount;
-  EntryType type;
+  AccountEntryType type;
   String source;
   String reference;
   Optional<String> title;
