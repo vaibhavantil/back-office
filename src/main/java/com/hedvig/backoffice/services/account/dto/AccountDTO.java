@@ -7,7 +7,7 @@ import java.util.List;
 
 @Value
 public class AccountDTO {
-  String id;
+  String memberId;
   MonetaryAmount balance;
   List<AccountEntryDTO> entries;
 }

@@ -87,6 +87,10 @@ meerkat:
   baseUrl: http://localhost:4123
   stub: false
 
+accountService:
+  baseUrl: http://localhost:8090
+  stub: false
+
 oauth:
   enabled: true
   hds: hedvig.com

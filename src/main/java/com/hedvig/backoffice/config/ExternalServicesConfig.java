@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.config;
 
 import com.hedvig.backoffice.services.account.AccountService;
+import com.hedvig.backoffice.services.account.AccountServiceImpl;
 import com.hedvig.backoffice.services.account.AccountServiceStub;
 import com.hedvig.backoffice.services.assettracker.AssetTrackerClient;
 import com.hedvig.backoffice.services.assettracker.AssetTrackerClientImpl;
@@ -126,9 +127,10 @@ public class ExternalServicesConfig {
   }
 
   @Bean
-  public AccountService accountService() {
+  public AccountService accountService(@Value("${accountService.stub:false}") boolean stub) {
     val factory = context.getAutowireCapableBeanFactory();
-    return factory.createBean(AccountServiceStub.class);
+    return stub
+      ? factory.createBean(AccountServiceStub.class)
+      : factory.createBean(AccountServiceImpl.class);
   }
-
 }

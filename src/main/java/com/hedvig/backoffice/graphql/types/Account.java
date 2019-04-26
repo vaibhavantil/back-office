@@ -16,7 +16,7 @@ public class Account {
 
   public static Account from(AccountDTO account) {
     return new Account(
-      account.getId(),
+      account.getMemberId(),
       account.getBalance(),
       account.getEntries().stream()
       .map(AccountEntry::from)
