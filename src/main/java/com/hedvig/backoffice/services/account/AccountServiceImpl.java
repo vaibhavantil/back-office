@@ -20,7 +20,7 @@ public class AccountServiceImpl implements AccountService {
   }
 
   @Override
-  public void addAccountEntry(String memberId, AccountEntryInput accountEntryInput) {
-    accountServiceClient.addAccountEntry(memberId, AccountEntryRequestDTO.from(accountEntryInput, "blargh@hedvig.com")); // TODO: <- fix
+  public void addAccountEntry(String memberId, AccountEntryInput accountEntryInput, String addedBy) {
+    accountServiceClient.addAccountEntry(memberId, AccountEntryRequestDTO.from(accountEntryInput, addedBy));
   }
 }

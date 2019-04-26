@@ -28,7 +28,8 @@ public class AccountServiceStub implements AccountService {
         "Member",
         "123123",
         Optional.of("Title"),
-        Optional.of("Valborg campaign 2019")
+        Optional.of("Valborg campaign 2019"),
+        "system"
       )
     );
     entries.add(
@@ -40,7 +41,8 @@ public class AccountServiceStub implements AccountService {
         "Product",
         UUID.randomUUID().toString(),
         Optional.of("Monthly insurance fee"),
-        Optional.empty()
+        Optional.empty(),
+        "system"
       )
     );
   }
@@ -60,7 +62,7 @@ public class AccountServiceStub implements AccountService {
   }
 
   @Override
-  public void addAccountEntry(String memberId, AccountEntryInput accountEntryInput) {
+  public void addAccountEntry(String memberId, AccountEntryInput accountEntryInput, String addedBy) {
     final AccountEntryDTO newAccountEntry = new AccountEntryDTO(
       UUID.randomUUID(),
       accountEntryInput.getFromDate(),
@@ -69,7 +71,8 @@ public class AccountServiceStub implements AccountService {
       accountEntryInput.getSource(),
       accountEntryInput.getReference(),
       accountEntryInput.getTitle(),
-      accountEntryInput.getComment()
+      accountEntryInput.getComment(),
+      addedBy
     );
 
     entries.add(newAccountEntry);

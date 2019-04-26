@@ -17,4 +17,5 @@ public class AccountEntryDTO {
   String reference;
   Optional<String> title;
   Optional<String> comment;
+  String addedBy;
 }

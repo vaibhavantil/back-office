@@ -67,8 +67,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return memberLoader.load(id);
   }
 
-  public CompletableFuture<Member> addAccountEntryToMember(final String memberId, final AccountEntryInput accountEntryInput, final DataFetchingEnvironment env) {
-    accountService.addAccountEntry(memberId, accountEntryInput);
+  public CompletableFuture<Member> addAccountEntryToMember(
+    final String memberId,
+    final AccountEntryInput accountEntryInput,
+    final DataFetchingEnvironment env
+  ) throws AuthorizationException {
+    accountService.addAccountEntry(memberId, accountEntryInput, GraphQLConfiguration.getEmail(env, personnelService));
     return memberLoader.load(memberId);
   }
 
