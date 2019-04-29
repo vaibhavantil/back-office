@@ -8,6 +8,7 @@ import java.util.List;
 @Value
 public class AccountDTO {
   String memberId;
-  MonetaryAmount balance;
+  MonetaryAmount currentMonthsBalance;
+  MonetaryAmount totalBalance;
   List<AccountEntryDTO> entries;
 }

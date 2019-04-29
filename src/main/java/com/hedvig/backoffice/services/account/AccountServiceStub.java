@@ -6,9 +6,9 @@ import com.hedvig.backoffice.services.account.dto.AccountEntryDTO;
 import com.hedvig.backoffice.services.account.dto.AccountEntryType;
 import org.javamoney.moneta.Money;
 
-import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,14 +49,20 @@ public class AccountServiceStub implements AccountService {
 
   @Override
   public AccountDTO getAccount(String memberId) {
-    final BigDecimal balance = entries.stream()
+    final BigDecimal currentMonthsBalance = entries.stream()
+      .filter(accountEntry -> !YearMonth.from(accountEntry.getFromDate()).atEndOfMonth().isAfter(LocalDate.now().plusDays(1)))
+      .map(AccountEntryDTO::getAmount)
+      .map(amount -> amount.getNumber().numberValueExact(BigDecimal.class))
+      .reduce(BigDecimal.ZERO, BigDecimal::add);
+    final BigDecimal totalBalance = entries.stream()
       .map(AccountEntryDTO::getAmount)
       .map(amount -> amount.getNumber().numberValueExact(BigDecimal.class))
       .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     return new AccountDTO(
       memberId,
-      Money.of(balance, "SEK"),
+      Money.of(currentMonthsBalance, "SEK"),
+      Money.of(totalBalance, "SEK"),
       entries
     );
   }

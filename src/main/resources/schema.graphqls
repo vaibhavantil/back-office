@@ -72,7 +72,8 @@ enum SanctionStatus {
 
 type Account {
   id: ID!
-  balance: MonetaryAmount!
+  currentMonthsBalance: MonetaryAmount!
+  totalBalance: MonetaryAmount!
   entries: [AccountEntry!]!
 }
 

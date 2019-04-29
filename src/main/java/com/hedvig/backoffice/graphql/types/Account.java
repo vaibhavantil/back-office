@@ -11,13 +11,15 @@ import static java.util.stream.Collectors.toList;
 @Value
 public class Account {
   String id;
-  MonetaryAmount balance;
+  MonetaryAmount currentMonthsBalance;
+  MonetaryAmount totalBalance;
   List<AccountEntry> entries;
 
   public static Account from(AccountDTO account) {
     return new Account(
       account.getMemberId(),
-      account.getBalance(),
+      account.getCurrentMonthsBalance(),
+      account.getTotalBalance(),
       account.getEntries().stream()
       .map(AccountEntry::from)
       .collect(toList())
