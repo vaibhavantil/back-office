@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
   name = "account-service",
-  url = "${accountService.baseUrl}",
+  url = "${accountService.baseUrl:account-service}",
   configuration = FeignConfig.class)
 public interface AccountServiceClient {
   @PostMapping(path = "/_/accounts/{memberId}/entries")
