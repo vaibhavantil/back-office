@@ -7,6 +7,7 @@ type QueryType {
   monthlyPayments(month: YearMonth!): [MonthlySubscription]
   member(id: ID!): Member
   claim(id: ID!): Claim
+
 }
 
 type MutationType {
@@ -19,6 +20,12 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
+}
+
+type FileUpload {
+  memberId: ID
+  fileUploadKey: String
+  timestamp: Instant
 }
 
 input ClaimInformationInput {
@@ -47,6 +54,7 @@ type Member {
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
   sanctionStatus: SanctionStatus
+  fileUploads: [FileUpload!]!
 }
 
 type Transaction {

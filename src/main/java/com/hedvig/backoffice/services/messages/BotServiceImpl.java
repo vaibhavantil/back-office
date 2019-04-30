@@ -1,10 +1,12 @@
 package com.hedvig.backoffice.services.messages;
 
+import com.hedvig.backoffice.graphql.types.FileUpload;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
 import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
+import com.hedvig.backoffice.services.messages.dto.FileUploadDTO;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,4 +78,11 @@ public class BotServiceImpl implements BotService {
       return Optional.empty();
     }
   }
+
+  @Override
+  public List<FileUploadDTO> files(String memberId, String token) {
+    return botServiceClient.getFileUploads(memberId, token);
+  }
 }
+
+
