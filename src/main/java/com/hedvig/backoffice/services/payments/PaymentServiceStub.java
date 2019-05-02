@@ -41,7 +41,7 @@ public class PaymentServiceStub implements PaymentService {
   }
 
   @Override
-  public ResponseEntity<UUID> payoutMember(String memberId, PayoutMemberRequest payoutMemberRequest) {
+  public ResponseEntity<UUID> payoutMember(String memberId, String handler, PayoutMemberRequest payoutMemberRequest) {
     return null;
   }
 
