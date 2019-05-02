@@ -39,6 +39,7 @@ public interface PaymentServiceClient {
     @RequestParam(name="category") PayoutCategory category,
     @RequestParam(name="referenceId", required = false) String referenceId,
     @RequestParam(name="note", required = false) String note,
+    @RequestParam(name="handler", required = false) String handler,
     @RequestBody PayoutRequest request
   );
 }
