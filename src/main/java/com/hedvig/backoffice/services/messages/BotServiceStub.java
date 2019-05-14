@@ -227,19 +227,16 @@ public class BotServiceStub implements BotService {
   public List<FileUploadDTO> files(String memberId, String token) {
     List<FileUploadDTO> fileUploads = new ArrayList<>();
     fileUploads.add(new FileUploadDTO(
-      UUID.randomUUID(),
-      "testkey123",
-      "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2700&q=80",
+      "ae4e0980-f3ff-11e8-8f52-37917eb5f47f-img_20181112_193429.jpg",
+      Instant.now(),
       "image.png",
-      Instant.now()
-
+      "507308289"
     ));
     fileUploads.add(new FileUploadDTO(
-      UUID.randomUUID(),
-      "testkey123",
-      "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2700&q=80",
+      "ae4e0980-f3ff-11e8-8f52-37917eb5f47f-img_20181112_193429.jpg",
+      Instant.now(),
       "image.png",
-      Instant.now()
+      "507308289"
     ));
     return fileUploads;
   }

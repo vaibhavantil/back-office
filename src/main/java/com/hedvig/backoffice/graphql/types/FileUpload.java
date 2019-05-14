@@ -1,24 +1,14 @@
 package com.hedvig.backoffice.graphql.types;
 
-import com.hedvig.backoffice.services.messages.dto.FileUploadDTO;
 import lombok.Value;
-
+import java.net.URL;
 import java.time.Instant;
 
 @Value
 public class FileUpload {
-  String memberId;
-  String fileUploadKey;
-  String mimeType;
+  URL fileUploadUrl;
   Instant timestamp;
-
-  public static FileUpload from(FileUploadDTO file) {
-    return new FileUpload(
-      file.getMemberId(),
-      file.getFileUploadKey(),
-      file.getMimeType(),
-      file.getTimestamp()
-    );
-  }
+  String mimeType;
+  String memberId;
 }
 

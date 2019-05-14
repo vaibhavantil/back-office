@@ -7,7 +7,6 @@ type QueryType {
   monthlyPayments(month: YearMonth!): [MonthlySubscription]
   member(id: ID!): Member
   claim(id: ID!): Claim
-
 }
 
 type MutationType {
@@ -23,9 +22,10 @@ type MutationType {
 }
 
 type FileUpload {
-  memberId: ID
-  fileUploadKey: String
+  fileUploadUrl: URL
   timestamp: Instant
+  mimeType: String
+  memberId: ID
 }
 
 input ClaimInformationInput {
@@ -247,3 +247,5 @@ scalar ZonedDateTime
 scalar LocalDate
 # A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"`
 scalar LocalDateTime
+# A String-representation of `java.net.URL`, ex: "https://www.google.com/"
+scalar URL
