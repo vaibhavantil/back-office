@@ -57,5 +57,3 @@ public class BotServiceClientStub implements BotServiceClient {
   @Override
   public List<FileUploadDTO> getFileUploads(String memberId, String token) { return null; }
 }
-
-

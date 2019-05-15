@@ -21,8 +21,7 @@ public class MessagesFrontendPostprocessor {
 
   public MessagesFrontendPostprocessor(AmazonS3 amazonS3,
       @Value("${hedvig.chat.s3Bucket}") String chatS3Bucket
-  )
-  {
+  ) {
     this.amazonS3 = amazonS3;
     this.chatS3Bucket = chatS3Bucket;
   }

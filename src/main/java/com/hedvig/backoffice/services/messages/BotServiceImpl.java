@@ -82,5 +82,3 @@ public class BotServiceImpl implements BotService {
     return botServiceClient.getFileUploads(memberId, token);
   }
 }
-
-

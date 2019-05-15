@@ -39,19 +39,11 @@ public class URLScalar extends GraphQLScalarType {
 
       @Override
       public URL parseValue(Object input) throws CoercingParseValueException {
-        String urlStr;
         if (input instanceof String) {
-          urlStr = String.valueOf(input);
-        } else {
-          Optional<URL> url = toURL(input);
-          if (!url.isPresent()) {
-            throw new CoercingParseValueException(
-              "Expected a 'URL' like object but was '"  + input.getClass().getSimpleName() + "'."
-            );
-          }
-          return url.get();
+          return parseURL(String.valueOf(input), CoercingParseValueException::new);
         }
-        return parseURL(urlStr, CoercingParseValueException::new);
+        Optional<URL> url = toURL(input);
+        return url.orElseThrow(( ) -> new CoercingParseValueException("Expected a 'URL' like object but was '"  + input.getClass().getSimpleName() + "'."));
       }
 
       @Override
@@ -77,18 +69,21 @@ public class URLScalar extends GraphQLScalarType {
   private static Optional<URL> toURL(Object input) {
     if (input instanceof URL) {
       return Optional.of((URL) input);
-    } else if (input instanceof URI) {
+    }
+    if (input instanceof URI) {
       try {
         return Optional.of(((URI) input).toURL());
       } catch (MalformedURLException ignored) {
+          return Optional.empty();
       }
-    } else if (input instanceof File) {
+    }
+    if (input instanceof File) {
       try {
         return Optional.of(((File) input).toURI().toURL());
       } catch (MalformedURLException ignored) {
+          return Optional.empty();
       }
     }
     return Optional.empty();
   }
-
 }

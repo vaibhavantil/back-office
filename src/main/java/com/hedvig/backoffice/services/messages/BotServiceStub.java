@@ -229,14 +229,14 @@ public class BotServiceStub implements BotService {
     fileUploads.add(new FileUploadDTO(
       "ae4e0980-f3ff-11e8-8f52-37917eb5f47f-img_20181112_193429.jpg",
       Instant.now(),
-      "image.png",
-      "507308289"
+      "image/jpg",
+      memberId
     ));
     fileUploads.add(new FileUploadDTO(
-      "ae4e0980-f3ff-11e8-8f52-37917eb5f47f-img_20181112_193429.jpg",
+      "a2aae820-f321-11e8-bd6f-670ad6bb9d88-img_20181124_183848.jpg",
       Instant.now(),
-      "image.png",
-      "507308289"
+      "image/jpg",
+      memberId
     ));
     return fileUploads;
   }

@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
-import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -69,11 +68,6 @@ public class BackOfficeApplication {
     filterRegBean.setEnabled(Boolean.TRUE);
     filterRegBean.setAsyncSupported(Boolean.TRUE);
     return filterRegBean;
-  }
-
-  @Bean
-  public RestTemplate createRestTemplate() {
-    return new RestTemplate();
   }
 
   @Bean
