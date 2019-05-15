@@ -53,4 +53,7 @@ public class BotServiceClientStub implements BotServiceClient {
   public FirebasePushTokenDTO getFirebasePushToken(String memberId, String token) {
     return null;
   }
+
+  @Override
+  public List<FileUploadDTO> getFileUploads(String memberId, String token) { return null; }
 }

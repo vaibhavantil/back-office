@@ -1,11 +1,8 @@
 package com.hedvig.backoffice.services.messages;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
-import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
-import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
-import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
-import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
+import com.hedvig.backoffice.services.messages.dto.*;
+
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +49,12 @@ public class BotServiceClientFallback implements BotServiceClient {
 
   @Override
   public FirebasePushTokenDTO getFirebasePushToken(String memberId, String token) {
+    log.error("request to bot-service failed");
+    return null;
+  }
+
+  @Override
+  public List<FileUploadDTO> getFileUploads(String id, String token) {
     log.error("request to bot-service failed");
     return null;
   }

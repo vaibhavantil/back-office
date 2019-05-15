@@ -21,6 +21,13 @@ type MutationType {
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
 }
 
+type FileUpload {
+  fileUploadUrl: URL
+  timestamp: Instant
+  mimeType: String
+  memberId: ID
+}
+
 input ClaimInformationInput {
   location: String
   date: LocalDate
@@ -47,6 +54,7 @@ type Member {
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
   sanctionStatus: SanctionStatus
+  fileUploads: [FileUpload!]!
 }
 
 type Transaction {
@@ -239,3 +247,5 @@ scalar ZonedDateTime
 scalar LocalDate
 # A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"`
 scalar LocalDateTime
+# A String-representation of `java.net.URL`, ex: "https://www.google.com/"
+scalar URL
