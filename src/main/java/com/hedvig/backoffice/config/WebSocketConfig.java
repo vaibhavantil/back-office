@@ -33,6 +33,7 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     registry.addEndpoint("/chat").setAllowedOrigins("*").withSockJS();
+    registry.addEndpoint("/wschat").setAllowedOrigins("*");
   }
 
   @Override

@@ -17,7 +17,7 @@ public interface BotService {
 
   ExpoPushTokenDTO getExpoPushToken(String memberId, String token);
 
-  void response(String memberId, String message, String token);
+  void response(String memberId, String message, boolean forceSendMessage, String token);
 
   void answerQuestion(String memberId, String answer, String token);
 

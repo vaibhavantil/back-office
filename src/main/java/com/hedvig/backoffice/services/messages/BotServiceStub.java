@@ -186,7 +186,7 @@ public class BotServiceStub implements BotService {
   }
 
   @Override
-  public void response(String memberId, String message, String token) {
+  public void response(String memberId, String message, boolean forceSendMessage, String token) {
     answerQuestion(memberId, message, token);
   }
 
