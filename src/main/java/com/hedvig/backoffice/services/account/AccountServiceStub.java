@@ -4,9 +4,12 @@ import com.hedvig.backoffice.graphql.types.AccountEntryInput;
 import com.hedvig.backoffice.services.account.dto.AccountDTO;
 import com.hedvig.backoffice.services.account.dto.AccountEntryDTO;
 import com.hedvig.backoffice.services.account.dto.AccountEntryType;
+import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import org.javamoney.moneta.Money;
 
+import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -80,7 +83,34 @@ public class AccountServiceStub implements AccountService {
       accountEntryInput.getComment(),
       addedBy
     );
-
     entries.add(newAccountEntry);
   }
+
+  @Override
+  public List<SchedulerStateDto> subscriptionSchedulesAwaitingApproval(ChargeStatus chargeStatus) {
+    List<SchedulerStateDto> subscriptionsPendingApproval = new ArrayList<>();
+    subscriptionsPendingApproval.add(new SchedulerStateDto(
+      UUID.randomUUID(),
+      "1223",
+      chargeStatus,
+      "admin1",
+      Instant.now(),
+      null,
+      null
+      )
+    );
+
+    subscriptionsPendingApproval.add(new SchedulerStateDto(
+        UUID.randomUUID(),
+        "321",
+        chargeStatus,
+        "admin2",
+        Instant.now(),
+        null,
+        null
+      )
+    );
+    return subscriptionsPendingApproval;
+  }
 }
+

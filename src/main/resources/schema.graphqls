@@ -7,6 +7,7 @@ type QueryType {
   monthlyPayments(month: YearMonth!): [MonthlySubscription]
   member(id: ID!): Member
   claim(id: ID!): Claim
+  paymentSchedule(chargeStatus: ChargeStatus): [SchedulerState]
 }
 
 type MutationType {
@@ -75,6 +76,16 @@ type Account {
   currentMonthsBalance: MonetaryAmount!
   totalBalance: MonetaryAmount!
   entries: [AccountEntry!]!
+}
+
+type SchedulerState {
+  id: ID!
+  member: Member!
+  chargeStatus: ChargeStatus
+  changedBy: String!
+  changedAt: Instant!
+  amount: MonetaryAmount
+  transactionId: ID
 }
 
 input AccountEntryInput {
@@ -262,6 +273,21 @@ enum ClaimState {
 enum ClaimPaymentType {
   Manual
   Automatic
+}
+
+enum ChargeStatus {
+INITIATED,
+WAITING_FOR_SUBSCRIPTION,
+SCHEDULING_SUBSCRIPTION,
+SCHEDULE_SUBSCRIPTION_FAILED,
+SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL,
+APPROVED_FOR_CHARGE,
+SCHEDULING_CHARGE,
+CHARGE_REQUESTING,
+CHARGE_REQUEST_FAILED,
+CHARGE_INITIATED,
+CHARGE_FAILED,
+CHARGE_COMPLETED,
 }
 
 # A String-representation of `java.time.YearMonth`. ex: `"2018-06"`
