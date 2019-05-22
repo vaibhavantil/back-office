@@ -56,24 +56,14 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   public List<SchedulerStatus> paymentSchedule(ChargeStatus chargeStatus) {
     List<SchedulerStateDto> schedulerStateDtos = accountService.subscriptionSchedulesAwaitingApproval(chargeStatus);
 
-    if (schedulerStateDtos.isEmpty()) {
-      return new ArrayList<>();
-    }
-
-    List<SchedulerStatus> schedulerStatuses = new ArrayList<>();
-
-    for (SchedulerStateDto schedulerStateDto : schedulerStateDtos) {
-      SchedulerStatus schedulerStatus = new SchedulerStatus(
-        schedulerStateDto.getStateId(),
-        Member.fromDTO(memberService.findByMemberId(schedulerStateDto.getMemberId(), null)),
-        schedulerStateDto.getChargeStatus(),
-        schedulerStateDto.getChangedBy(),
-        schedulerStateDto.getChangedAt(),
-        schedulerStateDto.getAmount(),
-        schedulerStateDto.getTransactionId()
-      );
-      schedulerStatuses.add(schedulerStatus);
-    }
-    return schedulerStatuses;
+    return schedulerStateDtos.stream().map(schedulerStateDto -> new SchedulerStatus(
+      schedulerStateDto.getStateId(),
+      schedulerStateDto.getMemberId(),
+      chargeStatus,
+      schedulerStateDto.getChangedBy(),
+      schedulerStateDto.getChangedAt(),
+      schedulerStateDto.getAmount(),
+      schedulerStateDto.getTransactionId()
+    )).collect(Collectors.toList());
   }
 }

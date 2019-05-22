@@ -1,10 +1,7 @@
 package com.hedvig.backoffice.services.account;
 
 import com.hedvig.backoffice.graphql.types.AccountEntryInput;
-import com.hedvig.backoffice.services.account.dto.AccountDTO;
-import com.hedvig.backoffice.services.account.dto.AccountEntryDTO;
-import com.hedvig.backoffice.services.account.dto.AccountEntryType;
-import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
+import com.hedvig.backoffice.services.account.dto.*;
 import org.javamoney.moneta.Money;
 
 import javax.money.MonetaryAmount;
@@ -40,7 +37,7 @@ public class AccountServiceStub implements AccountService {
         UUID.randomUUID(),
         LocalDate.now(),
         Money.of(-100, "SEK"),
-        AccountEntryType.FEE,
+        AccountEntryType.SUBSCRIPTION,
         "Product",
         UUID.randomUUID().toString(),
         Optional.of("Monthly insurance fee"),
@@ -52,7 +49,7 @@ public class AccountServiceStub implements AccountService {
 
   @Override
   public AccountDTO getAccount(String memberId) {
-    final BigDecimal currentMonthsBalance = entries.stream()
+    final BigDecimal currentBalance = entries.stream()
       .filter(accountEntry -> !YearMonth.from(accountEntry.getFromDate()).atEndOfMonth().isAfter(LocalDate.now().plusDays(1)))
       .map(AccountEntryDTO::getAmount)
       .map(amount -> amount.getNumber().numberValueExact(BigDecimal.class))
@@ -64,7 +61,7 @@ public class AccountServiceStub implements AccountService {
 
     return new AccountDTO(
       memberId,
-      Money.of(currentMonthsBalance, "SEK"),
+      Money.of(currentBalance, "SEK"),
       Money.of(totalBalance, "SEK"),
       entries
     );
@@ -111,6 +108,11 @@ public class AccountServiceStub implements AccountService {
       )
     );
     return subscriptionsPendingApproval;
+  }
+
+  @Override
+  public void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody) {
+
   }
 }
 

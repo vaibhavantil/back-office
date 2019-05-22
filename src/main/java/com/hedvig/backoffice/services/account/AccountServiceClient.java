@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.account;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.account.dto.AccountDTO;
 import com.hedvig.backoffice.services.account.dto.AccountEntryRequestDTO;
+import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -28,5 +29,10 @@ public interface AccountServiceClient {
   @GetMapping(path = "/_/schedule/states")
   List<SchedulerStateDto> getSubscriptionsPendingApproval(
     @RequestParam("chargeStatus") ChargeStatus chargeStatus
+  );
+
+  @PostMapping(path = "/_/schedule/approvals")
+  void addApprovedSubscriptions(
+    @RequestBody List<ApproveChargeRequestDto> requestBody
   );
 }

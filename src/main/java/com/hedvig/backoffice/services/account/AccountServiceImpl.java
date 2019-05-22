@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.account;
 import com.hedvig.backoffice.graphql.types.AccountEntryInput;
 import com.hedvig.backoffice.services.account.dto.AccountDTO;
 import com.hedvig.backoffice.services.account.dto.AccountEntryRequestDTO;
+import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import org.javamoney.moneta.Money;
 
@@ -29,5 +30,10 @@ public class AccountServiceImpl implements AccountService {
   @Override
   public List<SchedulerStateDto> subscriptionSchedulesAwaitingApproval(ChargeStatus chargeStatus) {
     return accountServiceClient.getSubscriptionsPendingApproval(chargeStatus);
+  }
+
+  @Override
+  public void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody) {
+    accountServiceClient.addApprovedSubscriptions(requestBody);
   }
 }

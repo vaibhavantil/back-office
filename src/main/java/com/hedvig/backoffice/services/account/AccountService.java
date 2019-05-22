@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.account;
 
 import com.hedvig.backoffice.graphql.types.AccountEntryInput;
 import com.hedvig.backoffice.services.account.dto.AccountDTO;
+import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface AccountService {
   void addAccountEntry(String memberId, AccountEntryInput accountEntryInput, String addedBy);
 
   List<SchedulerStateDto> subscriptionSchedulesAwaitingApproval(ChargeStatus chargeStatus);
+
+  void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody);
 }

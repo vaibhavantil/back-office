@@ -12,7 +12,7 @@ import java.util.UUID;
 @Value
 public class SchedulerStatus {
   UUID id;
-  Member member;
+  String memberId;
   ChargeStatus chargeStatus;
   String changedBy;
   Instant changedAt;

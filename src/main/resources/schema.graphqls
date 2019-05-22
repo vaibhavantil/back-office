@@ -7,12 +7,13 @@ type QueryType {
   monthlyPayments(month: YearMonth!): [MonthlySubscription]
   member(id: ID!): Member
   claim(id: ID!): Claim
-  paymentSchedule(chargeStatus: ChargeStatus): [SchedulerState]
+  paymentSchedule(chargeStatus: ChargeStatus!): [SchedulerState]
 }
 
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
   addAccountEntryToMember(memberId: ID!, accountEntry: AccountEntryInput!): Member!
+  approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
   updateClaimState(id: ID!, state: ClaimState!): Claim
   createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
@@ -73,7 +74,7 @@ enum SanctionStatus {
 
 type Account {
   id: ID!
-  currentMonthsBalance: MonetaryAmount!
+  currentBalance: MonetaryAmount!
   totalBalance: MonetaryAmount!
   entries: [AccountEntry!]!
 }
@@ -81,11 +82,16 @@ type Account {
 type SchedulerState {
   id: ID!
   member: Member!
-  chargeStatus: ChargeStatus
+  chargeStatus: ChargeStatus!
   changedBy: String!
   changedAt: Instant!
   amount: MonetaryAmount
   transactionId: ID
+}
+
+input MemberChargeApproval {
+  memberId: ID!
+  amount: MonetaryAmount!
 }
 
 input AccountEntryInput {
@@ -111,9 +117,11 @@ type AccountEntry {
 
 enum AccountEntryType {
   CORRECTION,
-  FEE,
+  SUBSCRIPTION,
   CAMPAIGN,
-  PAYMENT
+  PAYOUT,
+  CHARGE,
+  RESERVED
 }
 
 enum ClaimSource {
