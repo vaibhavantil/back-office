@@ -28,11 +28,12 @@ public interface AccountServiceClient {
 
   @GetMapping(path = "/_/schedule/states")
   List<SchedulerStateDto> getSubscriptionsPendingApproval(
-    @RequestParam("chargeStatus") ChargeStatus chargeStatus
+    @RequestParam("status") ChargeStatus status
   );
 
   @PostMapping(path = "/_/schedule/approvals")
   void addApprovedSubscriptions(
-    @RequestBody List<ApproveChargeRequestDto> requestBody
+    @RequestBody List<ApproveChargeRequestDto> requestBody,
+    @RequestParam("approvedBy") String approvedBy
   );
 }

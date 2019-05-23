@@ -12,7 +12,7 @@ public interface AccountService {
 
   void addAccountEntry(String memberId, AccountEntryInput accountEntryInput, String addedBy);
 
-  List<SchedulerStateDto> subscriptionSchedulesAwaitingApproval(ChargeStatus chargeStatus);
+  List<SchedulerStateDto> subscriptionSchedulesAwaitingApproval(ChargeStatus status);
 
-  void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody);
+  void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody, String approvedBy);
 }

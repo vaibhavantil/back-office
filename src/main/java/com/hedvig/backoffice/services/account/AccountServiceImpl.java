@@ -28,12 +28,12 @@ public class AccountServiceImpl implements AccountService {
   }
 
   @Override
-  public List<SchedulerStateDto> subscriptionSchedulesAwaitingApproval(ChargeStatus chargeStatus) {
-    return accountServiceClient.getSubscriptionsPendingApproval(chargeStatus);
+  public List<SchedulerStateDto> subscriptionSchedulesAwaitingApproval(ChargeStatus status) {
+    return accountServiceClient.getSubscriptionsPendingApproval(status);
   }
 
   @Override
-  public void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody) {
-    accountServiceClient.addApprovedSubscriptions(requestBody);
+  public void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody, String approvedBy) {
+    accountServiceClient.addApprovedSubscriptions(requestBody, approvedBy);
   }
 }

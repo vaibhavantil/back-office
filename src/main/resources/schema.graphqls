@@ -7,7 +7,7 @@ type QueryType {
   monthlyPayments(month: YearMonth!): [MonthlySubscription]
   member(id: ID!): Member
   claim(id: ID!): Claim
-  paymentSchedule(chargeStatus: ChargeStatus!): [SchedulerState]
+  paymentSchedule(status: ChargeStatus!): [SchedulerState]
 }
 
 type MutationType {
@@ -82,7 +82,7 @@ type Account {
 type SchedulerState {
   id: ID!
   member: Member!
-  chargeStatus: ChargeStatus!
+  status: ChargeStatus!
   changedBy: String!
   changedAt: Instant!
   amount: MonetaryAmount

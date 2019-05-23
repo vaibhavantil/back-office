@@ -88,8 +88,8 @@ public class AccountServiceStub implements AccountService {
     List<SchedulerStateDto> subscriptionsPendingApproval = new ArrayList<>();
     subscriptionsPendingApproval.add(new SchedulerStateDto(
       UUID.randomUUID(),
-      "1223",
-      chargeStatus,
+      "338786454",
+      ChargeStatus.APPROVED_FOR_CHARGE,
       "admin1",
       Instant.now(),
       null,
@@ -99,8 +99,8 @@ public class AccountServiceStub implements AccountService {
 
     subscriptionsPendingApproval.add(new SchedulerStateDto(
         UUID.randomUUID(),
-        "321",
-        chargeStatus,
+        "477408051",
+        ChargeStatus.SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL,
         "admin2",
         Instant.now(),
         null,
@@ -111,7 +111,7 @@ public class AccountServiceStub implements AccountService {
   }
 
   @Override
-  public void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody) {
+  public void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody, String approvedBy) {
 
   }
 }

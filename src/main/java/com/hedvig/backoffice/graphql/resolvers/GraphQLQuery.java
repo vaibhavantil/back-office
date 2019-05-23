@@ -53,8 +53,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return claimLoader.load(id);
   }
 
-  public List<SchedulerStatus> paymentSchedule(ChargeStatus chargeStatus) {
-    List<SchedulerStateDto> schedulerStateDtos = accountService.subscriptionSchedulesAwaitingApproval(chargeStatus);
+  public List<SchedulerStatus> paymentSchedule(ChargeStatus status) {
+    List<SchedulerStateDto> schedulerStateDtos = accountService.subscriptionSchedulesAwaitingApproval(status);
 
     return schedulerStateDtos
       .stream()
@@ -62,7 +62,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
         (schedulerStateDto -> new SchedulerStatus(
           schedulerStateDto.getStateId(),
           schedulerStateDto.getMemberId(),
-          chargeStatus,
+          schedulerStateDto.getStatus(),
           schedulerStateDto.getChangedBy(),
           schedulerStateDto.getChangedAt(),
           schedulerStateDto.getAmount(),

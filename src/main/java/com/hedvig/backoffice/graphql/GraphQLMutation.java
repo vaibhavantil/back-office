@@ -85,12 +85,13 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       new CreateBackofficeClaimDTO(memberId, date.atZone(SWEDEN_TZ).toInstant(), source), token);
   }
 
-  public Boolean approveMemberCharge(List<MemberChargeApproval> memberChargeApprovals) {
+  public Boolean approveMemberCharge(List<MemberChargeApproval> memberChargeApprovals, DataFetchingEnvironment env) throws AuthorizationException {
     accountService.addApprovedSubscriptions(
       memberChargeApprovals
         .stream()
         .map(ApproveChargeRequestDto::from)
-        .collect(Collectors.toList())
+        .collect(Collectors.toList()),
+      GraphQLConfiguration.getEmail(env, personnelService)
     );
     return true;
   }

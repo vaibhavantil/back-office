@@ -13,7 +13,7 @@ import java.util.UUID;
 public class SchedulerStatus {
   UUID id;
   String memberId;
-  ChargeStatus chargeStatus;
+  ChargeStatus status;
   String changedBy;
   Instant changedAt;
   Optional<MonetaryAmount> amount;

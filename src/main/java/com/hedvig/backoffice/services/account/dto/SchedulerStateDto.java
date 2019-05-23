@@ -16,7 +16,7 @@ import java.util.UUID;
 public class SchedulerStateDto {
   UUID stateId;
   String memberId;
-  ChargeStatus chargeStatus;
+  ChargeStatus status;
   String changedBy;
   Instant changedAt;
   Optional<MonetaryAmount> amount;
