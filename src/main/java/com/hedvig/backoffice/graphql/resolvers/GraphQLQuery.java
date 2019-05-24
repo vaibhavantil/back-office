@@ -58,8 +58,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
     return schedulerStateDtos
       .stream()
-      .map
-        (schedulerStateDto -> new SchedulerStatus(
+      .map(
+        schedulerStateDto -> new SchedulerStatus(
           schedulerStateDto.getStateId(),
           schedulerStateDto.getMemberId(),
           schedulerStateDto.getStatus(),
@@ -67,7 +67,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
           schedulerStateDto.getChangedAt(),
           schedulerStateDto.getAmount(),
           schedulerStateDto.getTransactionId()
-        ))
+        )
+      )
       .collect(Collectors.toList());
   }
 }
