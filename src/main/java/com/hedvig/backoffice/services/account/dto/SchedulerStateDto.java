@@ -1,18 +1,15 @@
 package com.hedvig.backoffice.services.account.dto;
 
 import com.hedvig.backoffice.services.account.ChargeStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.Value;
 
 import javax.money.MonetaryAmount;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
+@Value
 public class SchedulerStateDto {
   UUID stateId;
   String memberId;
