@@ -62,12 +62,13 @@ public class AccountServiceStub implements AccountService {
   }
 
   @Override
-  public List<AccountBalanceDTO> batchFindCurrentBalances(final List<String> memberIds) {
+  public List<AccountDTO> batchFindCurrentBalances(final List<String> memberIds) {
     return memberIds.stream()
-      .map(memberId -> new AccountBalanceDTO(
+      .map(memberId -> new AccountDTO(
         memberId,
         Money.of(calculateCurrentMonthsBalance(), "SEK"),
-        Money.of(calculateTotalBalance(), "SEK")
+        Money.of(calculateTotalBalance(), "SEK"),
+        entries
       ))
       .collect(toList());
   }
