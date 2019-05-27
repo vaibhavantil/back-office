@@ -1,17 +1,19 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLResolver;
+import com.hedvig.backoffice.graphql.dataloaders.AccountLoader;
 import com.hedvig.backoffice.graphql.types.*;
-import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.meerkat.Meerkat;
 import com.hedvig.backoffice.services.meerkat.dto.SanctionStatus;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import org.springframework.stereotype.Component;
+
 import java.time.YearMonth;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Component;
 
 @Component
 public class MemberResolver implements GraphQLResolver<Member> {
@@ -19,15 +21,18 @@ public class MemberResolver implements GraphQLResolver<Member> {
   private final PaymentService paymentService;
   private final ProductPricingService productPricingService;
   private final Meerkat meerkat;
-  private final AccountService accountService;
+  private final AccountLoader accountLoader;
 
-  public MemberResolver(PaymentService paymentService,
-                        ProductPricingService productPricingService,
-                        Meerkat meerkat, AccountService accountService) {
+  public MemberResolver(
+    PaymentService paymentService,
+    ProductPricingService productPricingService,
+    Meerkat meerkat,
+    AccountLoader accountLoader
+  ) {
     this.paymentService = paymentService;
     this.productPricingService = productPricingService;
     this.meerkat = meerkat;
-    this.accountService = accountService;
+    this.accountLoader = accountLoader;
   }
 
   public List<Transaction> getTransactions(Member member) {
@@ -53,7 +58,7 @@ public class MemberResolver implements GraphQLResolver<Member> {
     return meerkat.getMemberSanctionStatus(String.format("%s %s", member.getFirstName(), member.getLastName()));
   }
 
-  public Account getAccount(Member member) {
-    return Account.from(accountService.getAccount(member.getMemberId()));
+  public CompletableFuture<Account> getAccount(Member member) {
+    return accountLoader.load(member.getMemberId());
   }
 }

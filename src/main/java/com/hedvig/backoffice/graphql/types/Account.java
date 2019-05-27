@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.graphql.types;
 
+import com.hedvig.backoffice.services.account.dto.AccountBalanceDTO;
 import com.hedvig.backoffice.services.account.dto.AccountDTO;
 import lombok.Value;
 
@@ -23,6 +24,15 @@ public class Account {
       account.getEntries().stream()
       .map(AccountEntry::from)
       .collect(toList())
+    );
+  }
+
+  public static Account from(final AccountBalanceDTO accountDto) {
+    return new Account(
+      accountDto.getMemberId(),
+      accountDto.getCurrentBalance(),
+      accountDto.getTotalBalance(),
+      null
     );
   }
 }
