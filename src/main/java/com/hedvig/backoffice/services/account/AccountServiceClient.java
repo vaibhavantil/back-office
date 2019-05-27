@@ -27,7 +27,7 @@ public interface AccountServiceClient {
     @PathVariable("memberId") String memberId
   );
 
-  @PostMapping(path = "/_accounts/batchFind")
+  @PostMapping(path = "/_/accounts/batchFind")
   List<AccountBalanceDTO> batchFindCurrentBalances(@RequestBody List<String> memberIds);
 
   @GetMapping(path = "/_/schedule/states")
