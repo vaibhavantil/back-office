@@ -4,7 +4,6 @@ import com.hedvig.backoffice.graphql.types.AccountEntryInput;
 import com.hedvig.backoffice.services.account.dto.*;
 import org.javamoney.moneta.Money;
 
-import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -13,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static java.util.stream.Collectors.toList;
 
 public class AccountServiceStub implements AccountService {
 
@@ -49,22 +50,26 @@ public class AccountServiceStub implements AccountService {
 
   @Override
   public AccountDTO getAccount(String memberId) {
-    final BigDecimal currentBalance = entries.stream()
-      .filter(accountEntry -> !YearMonth.from(accountEntry.getFromDate()).atEndOfMonth().isAfter(LocalDate.now().plusDays(1)))
-      .map(AccountEntryDTO::getAmount)
-      .map(amount -> amount.getNumber().numberValueExact(BigDecimal.class))
-      .reduce(BigDecimal.ZERO, BigDecimal::add);
-    final BigDecimal totalBalance = entries.stream()
-      .map(AccountEntryDTO::getAmount)
-      .map(amount -> amount.getNumber().numberValueExact(BigDecimal.class))
-      .reduce(BigDecimal.ZERO, BigDecimal::add);
+    final BigDecimal currentMonthsBalance = calculateCurrentMonthsBalance();
+    final BigDecimal totalBalance = calculateTotalBalance();
 
     return new AccountDTO(
       memberId,
-      Money.of(currentBalance, "SEK"),
+      Money.of(currentMonthsBalance, "SEK"),
       Money.of(totalBalance, "SEK"),
       entries
     );
+  }
+
+  @Override
+  public List<AccountBalanceDTO> batchFindCurrentBalances(final List<String> memberIds) {
+    return memberIds.stream()
+      .map(memberId -> new AccountBalanceDTO(
+        memberId,
+        Money.of(calculateCurrentMonthsBalance(), "SEK"),
+        Money.of(calculateTotalBalance(), "SEK")
+      ))
+      .collect(toList());
   }
 
   @Override
@@ -113,6 +118,21 @@ public class AccountServiceStub implements AccountService {
   @Override
   public void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody, String approvedBy) {
 
+  }
+
+  private BigDecimal calculateCurrentMonthsBalance() {
+    return entries.stream()
+      .filter(accountEntry -> !YearMonth.from(accountEntry.getFromDate()).atEndOfMonth().isAfter(LocalDate.now().plusDays(1)))
+      .map(AccountEntryDTO::getAmount)
+      .map(amount -> amount.getNumber().numberValueExact(BigDecimal.class))
+      .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  private BigDecimal calculateTotalBalance() {
+    return entries.stream()
+      .map(AccountEntryDTO::getAmount)
+      .map(amount -> amount.getNumber().numberValueExact(BigDecimal.class))
+      .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 }
 
