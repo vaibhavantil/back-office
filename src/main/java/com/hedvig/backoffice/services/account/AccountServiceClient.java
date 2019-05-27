@@ -28,7 +28,8 @@ public interface AccountServiceClient {
 
   @GetMapping(path = "/_/schedule/states")
   List<SchedulerStateDto> getSubscriptionsPendingApproval(
-    @RequestParam("status") ChargeStatus status
+    @RequestParam("status") ChargeStatus status,
+    @RequestParam("limit") Integer limit
   );
 
   @PostMapping(path = "/_/schedule/approvals")
