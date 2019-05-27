@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.services.account;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
-import com.hedvig.backoffice.services.account.dto.AccountBalanceDTO;
 import com.hedvig.backoffice.services.account.dto.AccountDTO;
 import com.hedvig.backoffice.services.account.dto.AccountEntryRequestDTO;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
@@ -28,7 +27,7 @@ public interface AccountServiceClient {
   );
 
   @PostMapping(path = "/_/accounts/batchFind")
-  List<AccountBalanceDTO> batchFindCurrentBalances(@RequestBody List<String> memberIds);
+  List<AccountDTO> batchFindCurrentBalances(@RequestBody List<String> memberIds);
 
   @GetMapping(path = "/_/schedule/states")
   List<SchedulerStateDto> getSubscriptionsPendingApproval(
