@@ -1,19 +1,10 @@
 package com.hedvig.backoffice.services.messages;
 
 import com.hedvig.backoffice.repository.SubscriptionRepository;
-import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
-import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
-import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
-import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
+import com.hedvig.backoffice.services.messages.dto.*;
+
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -230,5 +221,23 @@ public class BotServiceStub implements BotService {
   @Override
   public Optional<FirebasePushTokenDTO> getFirebasePushToken(String memberId, String token) {
     return Optional.of(new FirebasePushTokenDTO(null));
+  }
+
+  @Override
+  public List<FileUploadDTO> files(String memberId, String token) {
+    List<FileUploadDTO> fileUploads = new ArrayList<>();
+    fileUploads.add(new FileUploadDTO(
+      "ae4e0980-f3ff-11e8-8f52-37917eb5f47f-img_20181112_193429.jpg",
+      Instant.now(),
+      "image/jpg",
+      memberId
+    ));
+    fileUploads.add(new FileUploadDTO(
+      "a2aae820-f321-11e8-bd6f-670ad6bb9d88-img_20181124_183848.jpg",
+      Instant.now(),
+      "image/jpg",
+      memberId
+    ));
+    return fileUploads;
   }
 }

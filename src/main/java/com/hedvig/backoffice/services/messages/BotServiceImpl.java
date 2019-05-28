@@ -4,6 +4,7 @@ import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
+import com.hedvig.backoffice.services.messages.dto.FileUploadDTO;
 import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
@@ -75,5 +76,10 @@ public class BotServiceImpl implements BotService {
       }
       return Optional.empty();
     }
+  }
+
+  @Override
+  public List<FileUploadDTO> files(String memberId, String token) {
+    return botServiceClient.getFileUploads(memberId, token);
   }
 }

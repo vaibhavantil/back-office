@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM amazoncorretto:11
 
 ADD target/back-office-0.0.1-SNAPSHOT.jar /
 
