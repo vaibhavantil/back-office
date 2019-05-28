@@ -3,11 +3,12 @@ package com.hedvig.backoffice.services.account;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.account.dto.AccountDTO;
 import com.hedvig.backoffice.services.account.dto.AccountEntryRequestDTO;
+import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
+import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @FeignClient(
   name = "account-service",
@@ -23,5 +24,19 @@ public interface AccountServiceClient {
   @GetMapping(path = "/_/accounts/{memberId}")
   AccountDTO getAccount(
     @PathVariable("memberId") String memberId
+  );
+
+  @PostMapping(path = "/_/accounts/batchFind")
+  List<AccountDTO> batchFindCurrentBalances(@RequestBody List<String> memberIds);
+
+  @GetMapping(path = "/_/schedule/states")
+  List<SchedulerStateDto> getSubscriptionsPendingApproval(
+    @RequestParam("status") ChargeStatus status
+  );
+
+  @PostMapping(path = "/_/schedule/approvals")
+  void addApprovedSubscriptions(
+    @RequestBody List<ApproveChargeRequestDto> requestBody,
+    @RequestParam("approvedBy") String approvedBy
   );
 }

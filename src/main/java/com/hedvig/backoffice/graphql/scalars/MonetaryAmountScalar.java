@@ -47,9 +47,13 @@ public class MonetaryAmountScalar extends GraphQLScalarType {
               } else if (in.get("amount") instanceof Integer) {
                 return Money.of(
                   BigDecimal.valueOf((int) in.get("amount")), (String) in.get("currency"));
+              } else if(in.get("amount") instanceof String) {
+                return Money.of(
+                  new BigDecimal((String) in.get("amount")), (String) in.get("currency"));
               }
 
-              throw new IllegalArgumentException("Amount \"" + in.get("amount") + "\" was not a double and not an integer");
+
+              throw new IllegalArgumentException("Amount \"" + in.get("amount") + "\" was not a valid number");
             } catch (Exception e) {
               throw new CoercingParseValueException("Could not parse value", e);
             }

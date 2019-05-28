@@ -8,6 +8,7 @@ import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
+import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
@@ -84,6 +85,16 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       new CreateBackofficeClaimDTO(memberId, date.atZone(SWEDEN_TZ).toInstant(), source), token);
   }
 
+  public Boolean approveMemberCharge(List<MemberChargeApproval> memberChargeApprovals, DataFetchingEnvironment env) throws AuthorizationException {
+    accountService.addApprovedSubscriptions(
+      memberChargeApprovals
+        .stream()
+        .map(ApproveChargeRequestDto::from)
+        .collect(Collectors.toList()),
+      GraphQLConfiguration.getEmail(env, personnelService)
+    );
+    return true;
+  }
 
   public CompletableFuture<Claim> updateClaimState(UUID id, ClaimState claimState,
                                                    DataFetchingEnvironment env) throws AuthorizationException {
