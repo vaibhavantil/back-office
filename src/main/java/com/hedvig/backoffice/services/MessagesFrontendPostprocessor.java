@@ -13,13 +13,15 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
+
 @Service
 public class MessagesFrontendPostprocessor {
   final AmazonS3 amazonS3;
   final String chatS3Bucket;
 
   public MessagesFrontendPostprocessor(AmazonS3 amazonS3,
-      @Value("${hedvig.chat.s3Bucket}") String chatS3Bucket) {
+      @Value("${hedvig.chat.s3Bucket}") String chatS3Bucket
+  ) {
     this.amazonS3 = amazonS3;
     this.chatS3Bucket = chatS3Bucket;
   }
@@ -41,5 +43,10 @@ public class MessagesFrontendPostprocessor {
         new Date(Instant.now().plus(30, ChronoUnit.MINUTES).toEpochMilli()), HttpMethod.GET);
 
     body.set("url", TextNode.valueOf("" + url));
+  }
+
+  public URL processFileUrl(String key) {
+    return amazonS3.generatePresignedUrl(chatS3Bucket, key,
+      new Date(Instant.now().plus(2, ChronoUnit.HOURS).toEpochMilli()), HttpMethod.GET);
   }
 }

@@ -56,13 +56,14 @@ public class PaymentServiceImpl implements PaymentService {
   }
 
   @Override
-  public ResponseEntity<UUID> payoutMember(String memberId, PayoutMemberRequest payoutMemberRequest) {
+  public ResponseEntity<UUID> payoutMember(String memberId, String handler, PayoutMemberRequest payoutMemberRequest) {
     PayoutRequest payoutRequest = new PayoutRequest(payoutMemberRequest.getAmount(), true); // TODO:  SanctionBypassed from front end
     return paymentServiceClient.payoutMember(
       memberId,
       payoutMemberRequest.getCategory(),
       payoutMemberRequest.getReferenceId(),
       payoutMemberRequest.getNote(),
+      handler,
       payoutRequest
     );
   }
