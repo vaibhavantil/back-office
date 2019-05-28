@@ -7,10 +7,13 @@ type QueryType {
   monthlyPayments(month: YearMonth!): [MonthlySubscription]
   member(id: ID!): Member
   claim(id: ID!): Claim
+  paymentSchedule(status: ChargeStatus!): [SchedulerState]
 }
 
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
+  addAccountEntryToMember(memberId: ID!, accountEntry: AccountEntryInput!): Member!
+  approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
   updateClaimState(id: ID!, state: ClaimState!): Claim
   createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
@@ -54,6 +57,7 @@ type Member {
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
   sanctionStatus: SanctionStatus
+  account: Account
   fileUploads: [FileUpload!]!
 }
 
@@ -74,6 +78,58 @@ enum SanctionStatus {
   NoHit,
   PartialHit,
   FullHit
+}
+
+type Account {
+  id: ID!
+  currentBalance: MonetaryAmount!
+  totalBalance: MonetaryAmount!
+  entries: [AccountEntry!]!
+}
+
+type SchedulerState {
+  id: ID!
+  member: Member!
+  status: ChargeStatus!
+  changedBy: String!
+  changedAt: Instant!
+  amount: MonetaryAmount
+  transactionId: ID
+}
+
+input MemberChargeApproval {
+  memberId: ID!
+  amount: MonetaryAmount!
+}
+
+input AccountEntryInput {
+  type: AccountEntryType!
+  amount: MonetaryAmount!
+  fromDate: LocalDate!
+  reference: String!
+  source: String!
+  title: String
+  comment: String
+}
+
+type AccountEntry {
+  id: ID!
+  type: AccountEntryType!
+  amount: MonetaryAmount!
+  fromDate: LocalDate!
+  reference: String!
+  source: String!
+  title: String
+  comment: String
+}
+
+enum AccountEntryType {
+  CORRECTION,
+  SUBSCRIPTION,
+  CAMPAIGN,
+  PAYOUT,
+  CHARGE,
+  RESERVED
 }
 
 enum ClaimSource {
@@ -233,6 +289,21 @@ enum ClaimState {
 enum ClaimPaymentType {
   Manual
   Automatic
+}
+
+enum ChargeStatus {
+  INITIATED,
+  WAITING_FOR_SUBSCRIPTION,
+  SCHEDULING_SUBSCRIPTION,
+  SCHEDULE_SUBSCRIPTION_FAILED,
+  SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL,
+  APPROVED_FOR_CHARGE,
+  SCHEDULING_CHARGE,
+  CHARGE_REQUESTING,
+  CHARGE_REQUEST_FAILED,
+  CHARGE_INITIATED,
+  CHARGE_FAILED,
+  CHARGE_COMPLETED,
 }
 
 # A String-representation of `java.time.YearMonth`. ex: `"2018-06"`

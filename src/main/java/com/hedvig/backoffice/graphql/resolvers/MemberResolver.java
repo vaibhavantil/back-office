@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLResolver;
+import com.hedvig.backoffice.graphql.dataloaders.AccountLoader;
 import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.services.MessagesFrontendPostprocessor;
 import com.hedvig.backoffice.services.meerkat.Meerkat;
@@ -10,13 +11,13 @@ import com.hedvig.backoffice.services.messages.dto.FileUploadDTO;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import org.springframework.stereotype.Component;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Component;
 
 @Component
 public class MemberResolver implements GraphQLResolver<Member> {
@@ -24,6 +25,7 @@ public class MemberResolver implements GraphQLResolver<Member> {
   private final PaymentService paymentService;
   private final ProductPricingService productPricingService;
   private final Meerkat meerkat;
+  private final AccountLoader accountLoader;
   private final BotService botService;
   private final MessagesFrontendPostprocessor messagesFrontendPostprocessor;
 
@@ -31,12 +33,14 @@ public class MemberResolver implements GraphQLResolver<Member> {
     PaymentService paymentService,
     ProductPricingService productPricingService,
     Meerkat meerkat,
+    AccountLoader accountLoader,
     BotService botService,
     MessagesFrontendPostprocessor messagesFrontendPostprocessor
   ) {
     this.paymentService = paymentService;
     this.productPricingService = productPricingService;
     this.meerkat = meerkat;
+    this.accountLoader = accountLoader;
     this.botService = botService;
     this.messagesFrontendPostprocessor = messagesFrontendPostprocessor;
   }
@@ -62,6 +66,10 @@ public class MemberResolver implements GraphQLResolver<Member> {
 
   public SanctionStatus getSanctionStatus(Member member) {
     return meerkat.getMemberSanctionStatus(String.format("%s %s", member.getFirstName(), member.getLastName()));
+  }
+
+  public CompletableFuture<Account> getAccount(Member member) {
+    return accountLoader.load(member.getMemberId());
   }
 
   public List<FileUpload> fileUploads(Member member) {

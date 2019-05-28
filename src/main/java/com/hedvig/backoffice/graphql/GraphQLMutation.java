@@ -7,6 +7,8 @@ import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.services.account.AccountService;
+import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
@@ -45,14 +47,17 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final PersonnelService personnelService;
   private final ClaimLoader claimLoader;
   private final ClaimsService claimsService;
+  private final AccountService accountService;
 
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
-                         MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService) {
+                         MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
+                         AccountService accountService) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.claimsService = claimsService;
+    this.accountService = accountService;
   }
 
   public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount,
@@ -63,6 +68,15 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return memberLoader.load(id);
   }
 
+  public CompletableFuture<Member> addAccountEntryToMember(
+    final String memberId,
+    final AccountEntryInput accountEntryInput,
+    final DataFetchingEnvironment env
+  ) throws AuthorizationException {
+    accountService.addAccountEntry(memberId, accountEntryInput, GraphQLConfiguration.getEmail(env, personnelService));
+    return memberLoader.load(memberId);
+  }
+
   public UUID createClaim(String memberId, LocalDateTime date, ClaimSource source,
                           DataFetchingEnvironment env) {
     GraphQLRequestContext context = env.getContext();
@@ -71,6 +85,16 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       new CreateBackofficeClaimDTO(memberId, date.atZone(SWEDEN_TZ).toInstant(), source), token);
   }
 
+  public Boolean approveMemberCharge(List<MemberChargeApproval> memberChargeApprovals, DataFetchingEnvironment env) throws AuthorizationException {
+    accountService.addApprovedSubscriptions(
+      memberChargeApprovals
+        .stream()
+        .map(ApproveChargeRequestDto::from)
+        .collect(Collectors.toList()),
+      GraphQLConfiguration.getEmail(env, personnelService)
+    );
+    return true;
+  }
 
   public CompletableFuture<Claim> updateClaimState(UUID id, ClaimState claimState,
                                                    DataFetchingEnvironment env) throws AuthorizationException {
