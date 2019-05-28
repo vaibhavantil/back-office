@@ -41,8 +41,19 @@ public class MonetaryAmountScalar extends GraphQLScalarType {
           public MonetaryAmount parseValue(Object input) throws CoercingParseValueException {
             try {
               Map<String, Object> in = (Map<String, Object>) input;
+              if (in.get("amount") instanceof Double) {
               return Money.of(
-                  BigDecimal.valueOf((Integer) in.get("amount")), (String) in.get("currency"));
+                  BigDecimal.valueOf((double) in.get("amount")), (String) in.get("currency"));
+              } else if (in.get("amount") instanceof Integer) {
+                return Money.of(
+                  BigDecimal.valueOf((int) in.get("amount")), (String) in.get("currency"));
+              } else if(in.get("amount") instanceof String) {
+                return Money.of(
+                  new BigDecimal((String) in.get("amount")), (String) in.get("currency"));
+              }
+
+
+              throw new IllegalArgumentException("Amount \"" + in.get("amount") + "\" was not a valid number");
             } catch (Exception e) {
               throw new CoercingParseValueException("Could not parse value", e);
             }
