@@ -6,20 +6,19 @@ import com.hedvig.backoffice.services.personnel.PersonnelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @MessageMapping("/messages")
-public class ChatController {
+public class MessagesController {
 
   private final ChatService chatService;
   private final PersonnelService personnelService;
 
   @Autowired
-  public ChatController(ChatService chatService, PersonnelService personnelService) {
+  public MessagesController(ChatService chatService, PersonnelService personnelService) {
     this.chatService = chatService;
     this.personnelService = personnelService;
   }
@@ -30,7 +29,7 @@ public class ChatController {
       @RequestBody BackOfficeResponseDTO message,
       @AuthenticationPrincipal String principalId) {
     chatService.append(
-        memberId, message.getMsg(), principalId, personnelService.getIdToken(principalId));
+        memberId, message.getMsg(), false, principalId, personnelService.getIdToken(principalId));
   }
 
   @MessageMapping("/history/{memberId}")
