@@ -89,7 +89,7 @@ type Account {
 
 type SchedulerState {
   id: ID!
-  member: Member!
+  member: Member
   status: ChargeStatus!
   changedBy: String!
   changedAt: Instant!
