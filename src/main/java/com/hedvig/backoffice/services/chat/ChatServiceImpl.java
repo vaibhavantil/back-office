@@ -11,18 +11,18 @@ import com.hedvig.backoffice.services.MessagesFrontendPostprocessor;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.dto.MemberDTO;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.notificationService.NotificationService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
-import com.hedvig.backoffice.services.members.dto.MemberDTO;
-import java.util.Date;
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -47,7 +47,7 @@ public class ChatServiceImpl implements ChatService {
   private final MessagesFrontendPostprocessor messagePostProcessor;
 
   public ChatServiceImpl(
-    SimpMessagingTemplate template,
+    SimpMessagingTemplate simpMessagingTemplate,
     BotService botService,
     MemberService memberService,
     ChatContextRepository chatContextRepository,
@@ -57,7 +57,7 @@ public class ChatServiceImpl implements ChatService {
     NotificationService notificationService,
     MessagesFrontendPostprocessor messagePostProcessor) {
 
-    this.template = template;
+    this.template = simpMessagingTemplate;
     this.botService = botService;
     this.memberService = memberService;
     this.chatContextRepository = chatContextRepository;
@@ -74,9 +74,9 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  public void append(String memberId, String message, String personnelId, String token) {
+  public void append(String memberId, String message, boolean forceSendMessage, String personnelId, String token) {
     try {
-      botService.response(memberId, message, token);
+      botService.response(memberId, message, forceSendMessage, token);
       sendNotification(memberId, token);
     } catch (ExternalServiceBadRequestException e) {
       send(memberId, personnelId, Message.error(400, e.getMessage()));

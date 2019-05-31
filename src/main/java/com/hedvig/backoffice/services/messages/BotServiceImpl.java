@@ -4,16 +4,17 @@ import com.hedvig.backoffice.services.messages.dto.BackOfficeMessage;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.messages.dto.ExpoPushTokenDTO;
-import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
 import com.hedvig.backoffice.services.messages.dto.FileUploadDTO;
+import com.hedvig.backoffice.services.messages.dto.FirebasePushTokenDTO;
+import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import feign.FeignException;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class BotServiceImpl implements BotService {
@@ -51,13 +52,13 @@ public class BotServiceImpl implements BotService {
   }
 
   @Override
-  public void response(String memberId, String message, String token) {
-    botServiceClient.response(new BackOfficeResponseDTO(memberId, message), token);
+  public void response(String memberId, String message, boolean forceSendMessage, String token) {
+    botServiceClient.response(new BackOfficeResponseDTO(memberId, message, forceSendMessage), token);
   }
 
   @Override
   public void answerQuestion(String memberId, String answer, String token) {
-    botServiceClient.answer(new BackOfficeResponseDTO(memberId, answer), token);
+    botServiceClient.answer(new BackOfficeResponseDTO(memberId, answer, false), token);
   }
 
   @Override

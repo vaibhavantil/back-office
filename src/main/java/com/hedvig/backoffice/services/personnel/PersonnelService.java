@@ -3,8 +3,9 @@ package com.hedvig.backoffice.services.personnel;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.web.dto.PersonnelDTO;
-import java.util.List;
 import org.springframework.security.core.Authentication;
+
+import java.util.List;
 
 public interface PersonnelService {
 
