@@ -15,6 +15,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.services.tickets.TicketsService;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -48,16 +49,18 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ClaimLoader claimLoader;
   private final ClaimsService claimsService;
   private final AccountService accountService;
+  private final TicketsService ticketsService;
 
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
                          MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
-                         AccountService accountService) {
+                         AccountService accountService, TicketsService ticketsService) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.claimsService = claimsService;
     this.accountService = accountService;
+    this.ticketsService = ticketsService;
   }
 
   public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount,

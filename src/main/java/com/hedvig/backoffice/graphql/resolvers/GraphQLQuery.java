@@ -18,6 +18,8 @@ import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.tickets.TicketsService;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,14 +30,17 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final ClaimLoader claimLoader;
   private final AccountService accountService;
   private final MemberService memberService;
+  private final TicketsService ticketService;
+
 
   public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
-      ClaimLoader claimLoader, AccountService accountService, MemberService memberService) {
+      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketsService ticketService) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.accountService = accountService;
     this.memberService = memberService;
+    this.ticketService = ticketService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {

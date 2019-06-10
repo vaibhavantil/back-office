@@ -60,36 +60,36 @@ tracker:
 
 hopeAutocompleteService:
   baseUrl: http://localhost:5000
-  stub: false
+  stub: true
 
 botservice:
   baseUrl: http://localhost:4081
   questionId: main.question
-  stub: false
+  stub: true
 
 memberservice:
   baseUrl: http://localhost:4084
-  stub: false
+  stub: true
 
 claims:
   baseUrl: http://localhost:4083
-  stub: false
+  stub: true
 
 productPricing:
   baseUrl: http://localhost:4085
-  stub: false
+  stub: true
 
 paymentService:
   baseUrl: http://localhost:8086
-  stub: false
+  stub: true
 
 meerkat:
   baseUrl: http://localhost:4123
-  stub: false
+  stub: true
 
 accountService:
   baseUrl: http://localhost:8090
-  stub: false
+  stub: true
 
 oauth:
   enabled: true

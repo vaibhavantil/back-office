@@ -8,6 +8,7 @@ type QueryType {
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
+  ticket (id: ID!): Ticket
 }
 
 type MutationType {
@@ -22,6 +23,7 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
+  createTicket ( assugnedTo: string, description: String, type: String, remindDate: LocalDate) : Ticket
 }
 
 type FileUpload {
@@ -29,6 +31,16 @@ type FileUpload {
   timestamp: Instant
   mimeType: String
   memberId: ID
+}
+
+type Ticket {
+  ticketId: ID
+  assignedTo: String
+  creationDate: LocalDate
+  priority: Number
+  type: String
+  remindDate: LocalDate
+  description: String
 }
 
 input ClaimInformationInput {
