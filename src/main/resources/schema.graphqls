@@ -8,7 +8,9 @@ type QueryType {
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
+  getAnswerSuggestion(question: String): Suggestion
 }
+
 
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
@@ -22,6 +24,10 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
+}
+
+type Suggestion {
+  message: String
 }
 
 type FileUpload {

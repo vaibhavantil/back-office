@@ -62,6 +62,10 @@ hopeAutocompleteService:
   baseUrl: http://localhost:5000
   stub: false
 
+autoAnswerSuggestionService:
+  baseUrl: http://localhost:5000/v0/answer
+  stub: false
+
 botservice:
   baseUrl: http://localhost:4081
   questionId: main.question
