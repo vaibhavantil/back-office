@@ -63,7 +63,7 @@ hopeAutocompleteService:
   stub: false
 
 autoAnswerSuggestionService:
-  baseUrl: http://localhost:5000/v0/answer
+  baseUrl: http://localhost:5000
   stub: false
 
 botservice:

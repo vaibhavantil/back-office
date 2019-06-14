@@ -18,8 +18,8 @@ import java.util.List;
 
 public interface AutoAnswerSuggestionServiceClient {
 
-  @GetMapping("/v0/answer?text=hej")
-  String getSuggestedAnswer(String question);
+  @GetMapping("/v0/answer")
+  String getSuggestedAnswer(@RequestParam("text") String question);
 
   }
 
