@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
 import java.time.YearMonth;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -20,6 +19,7 @@ import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.tickets.TicketsService;
 
+import com.hedvig.backoffice.services.tickets.dto.Ticket;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -42,6 +42,18 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.memberService = memberService;
     this.ticketService = ticketService;
   }
+
+  public Ticket ticket ( String id  ){
+    return this.ticketService.getTicketById(id);
+  }
+
+  //TODO clean-up stupid thing........
+  //param just because graphQL requires it?
+  public List<Ticket> tickets (String req ){
+    return this.ticketService.getAllTickets();
+  }
+
+
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
 

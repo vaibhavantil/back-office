@@ -9,6 +9,7 @@ type QueryType {
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
   ticket (id: ID!): Ticket
+  tickets (req: String ) : [Ticket]
 }
 
 type MutationType {
@@ -23,7 +24,9 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-  createTicket ( assugnedTo: string, description: String, type: String, remindDate: LocalDate) : Ticket
+  #createTicket ( assignedTo: string, description: String, type: String, remindDate: LocalDate) : Ticket
+  changeTicketDescription ( id: ID!, newDescription : String ) : Ticket
+  assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!) : Ticket
 }
 
 type FileUpload {
@@ -33,15 +36,38 @@ type FileUpload {
   memberId: ID
 }
 
+#TODO: Gotta nail the schema
 type Ticket {
-  ticketId: ID
+  id: ID
   assignedTo: String
   creationDate: LocalDate
-  priority: Number
-  type: String
-  remindDate: LocalDate
+  priority: TicketPriority
+  type: TicketType
+  remindNotificationDate: LocalDate
   description: String
+  status : TicketStatus
 }
+
+enum TicketPriority {
+  HIGH,
+  MEDIUM,
+  LOW,
+}
+
+enum TicketStatus {
+  RESOLVED,
+  WAITING,
+  WORKED_ON,
+}
+
+enum TicketType {
+  REMIND,
+  MESSAGE,
+  CLAIM,
+  CALL_ME,
+}
+
+
 
 input ClaimInformationInput {
   location: String

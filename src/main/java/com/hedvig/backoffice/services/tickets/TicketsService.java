@@ -1,10 +1,38 @@
 package com.hedvig.backoffice.services.tickets;
 
-import com.hedvig.backoffice.services.tickets.dto.Ticket;
+import com.hedvig.backoffice.services.tickets.dto.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public interface TicketsService {
 
-  Ticket getTicketById(String ticketId );
-  void createNewTicket ();
+  List<Ticket> getAllTickets ();
 
+  Ticket getTicketById( String ticketId );
+  void createNewTicket (  String          assignedTo,
+                          LocalDate creationDate,
+                          String          createdBy,
+                          TicketPriority priority,
+                          TicketType type,
+                          LocalDate       remindNotificationDate,
+                          String          description,
+                          TicketStatus status,
+                          List<TicketTag> tags);
+
+  void updateTicket (
+                       String ticketID,
+                       String          assignedTo,
+                       LocalDate creationDate,
+                       String          createdBy,
+                       TicketPriority priority,
+                       TicketType type,
+                       LocalDate       remindNotificationDate,
+                       String          description,
+                       TicketStatus status,
+                       List<TicketTag> tags );
+
+
+  Ticket changeDescription ( String ticketId, String newDescription ) ;
+  Ticket  assignToTeamMember ( String ticketId, String teamMemberId ) ;
 }
