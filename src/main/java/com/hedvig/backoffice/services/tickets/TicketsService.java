@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface TicketsService {
 
-  List<Ticket> getAllTickets ();
+  List<TicketDto> getAllTickets ();
 
-  Ticket getTicketById( String ticketId );
+  TicketDto getTicketById(String ticketId );
   void createNewTicket (  String          assignedTo,
                           LocalDate creationDate,
                           String          createdBy,
@@ -33,6 +33,6 @@ public interface TicketsService {
                        List<TicketTag> tags );
 
 
-  Ticket changeDescription ( String ticketId, String newDescription ) ;
-  Ticket  assignToTeamMember ( String ticketId, String teamMemberId ) ;
+  TicketDto changeDescription (String ticketId, String newDescription ) ;
+  TicketDto assignToTeamMember (String ticketId, String teamMemberId ) ;
 }

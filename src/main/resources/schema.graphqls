@@ -24,7 +24,7 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-  #createTicket ( assignedTo: string, description: String, type: String, remindDate: LocalDate) : Ticket
+  #createTicket ( assignedTo: string, description: String, type: String, remindDate: LocalDate) : TicketDto
   changeTicketDescription ( id: ID!, newDescription : String ) : Ticket
   assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!) : Ticket
 }

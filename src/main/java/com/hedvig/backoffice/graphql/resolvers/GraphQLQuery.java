@@ -19,7 +19,7 @@ import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.tickets.TicketsService;
 
-import com.hedvig.backoffice.services.tickets.dto.Ticket;
+import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,13 +43,13 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.ticketService = ticketService;
   }
 
-  public Ticket ticket ( String id  ){
+  public TicketDto ticket (String id  ){
     return this.ticketService.getTicketById(id);
   }
 
   //TODO clean-up stupid thing........
   //param just because graphQL requires it?
-  public List<Ticket> tickets (String req ){
+  public List<TicketDto> tickets (String req ){
     return this.ticketService.getAllTickets();
   }
 

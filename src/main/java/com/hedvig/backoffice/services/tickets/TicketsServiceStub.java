@@ -7,11 +7,41 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class TicketsServiceStub implements TicketsService{
-  private HashMap<String, Ticket> tickets = new HashMap<String, Ticket>();
+
+  @Override
+  public List<TicketDto> getAllTickets() {
+    return null;
+  }
+
+  @Override
+  public TicketDto getTicketById(String ticketId) {
+    return null;
+  }
+
+  @Override
+  public void createNewTicket(String assignedTo, LocalDate creationDate, String createdBy, TicketPriority priority, TicketType type, LocalDate remindNotificationDate, String description, TicketStatus status, List<TicketTag> tags) {
+
+  }
+
+  @Override
+  public void updateTicket(String ticketID, String assignedTo, LocalDate creationDate, String createdBy, TicketPriority priority, TicketType type, LocalDate remindNotificationDate, String description, TicketStatus status, List<TicketTag> tags) {
+
+  }
+
+  @Override
+  public TicketDto changeDescription(String ticketId, String newDescription) {
+    return null;
+  }
+
+  @Override
+  public TicketDto assignToTeamMember(String ticketId, String teamMemberId) {
+    return null;
+  }
+}
+ /* private HashMap<String, TicketDto> tickets = new HashMap<String, TicketDto>();
   private List<String> personnels = new ArrayList<String>();
 
   private List<PersonnelDTO> personnelDTOs = new ArrayList<PersonnelDTO>();
@@ -27,7 +57,7 @@ public class TicketsServiceStub implements TicketsService{
     tags.add( TicketTag.UNCATEGORIZED);
     tags.add( TicketTag.ETC);
 
-    this.tickets = new HashMap<String, Ticket>();
+    this.tickets = new HashMap<String, TicketDto>();
     this.personnelService = personnelService;
     this.personnelDTOs = this.personnelService.list();
 
@@ -36,7 +66,7 @@ public class TicketsServiceStub implements TicketsService{
     //Generate Fake Tickets
     int NUM_TICKETS = 10;
     for (int i = 0; i < NUM_TICKETS; i++  ){
-      Ticket t = new Ticket (
+      TicketDto t = new TicketDto(
           teamMembers[i % teamMembers.length],
         //  personnels.get( i % personnels.size()),
           LocalDate.now(),
@@ -54,14 +84,14 @@ public class TicketsServiceStub implements TicketsService{
   }
 
   @Override
-  public List<Ticket> getAllTickets() {
+  public List<TicketDto> getAllTickets() {
     return tickets.values().stream().collect(Collectors.toList());
   }
 
   @Override
-  public Ticket getTicketById(String ticketId) {
+  public TicketDto getTicketById(String ticketId) {
     try {
-      Ticket t = tickets.get(ticketId);
+      TicketDto t = tickets.get(ticketId);
       return t;
     }
     catch (Error e ) {
@@ -82,10 +112,10 @@ public class TicketsServiceStub implements TicketsService{
     TicketStatus status,
     List<TicketTag> tags
   ) {
-    Ticket newTicket = new Ticket( assignedTo, creationDate, createdBy, priority,
+    TicketDto newTicketDto = new TicketDto( assignedTo, creationDate, createdBy, priority,
       type, remindNotificationDate, description, status, tags );
 
-    tickets.put( newTicket.getId().toString(), newTicket );
+    tickets.put( newTicketDto.getId().toString(), newTicketDto);
   }
 
   @Override
@@ -104,22 +134,22 @@ public class TicketsServiceStub implements TicketsService{
   }
 
   @Override
-  public Ticket changeDescription(String ticketId, String newDescription) {
+  public TicketDto changeDescription(String ticketId, String newDescription) {
     try {
-      Ticket oldTicket = tickets.get(ticketId);
-      Ticket mutatedTicket = new Ticket (
-        oldTicket.getId(),
-        oldTicket.getAssignedTo(),
-        oldTicket.getCreationDate(),
-        oldTicket.getCreatedBy(),
-        oldTicket.getPriority(),
-        oldTicket.getType(),
-        oldTicket.getRemindNotificationDate(),
+      TicketDto oldTicketDto = tickets.get(ticketId);
+      TicketDto mutatedTicketDto = new TicketDto(
+        oldTicketDto.getId(),
+        oldTicketDto.getAssignedTo(),
+        oldTicketDto.getCreationDate(),
+        oldTicketDto.getCreatedBy(),
+        oldTicketDto.getPriority(),
+        oldTicketDto.getType(),
+        oldTicketDto.getRemindNotificationDate(),
         newDescription,
-        oldTicket.getStatus(),
-        oldTicket.getTags());
-      tickets.replace( ticketId, mutatedTicket);
-      return mutatedTicket;
+        oldTicketDto.getStatus(),
+        oldTicketDto.getTags());
+      tickets.replace( ticketId, mutatedTicketDto);
+      return mutatedTicketDto;
     }
     catch (Error e) {
       return null; // No go
@@ -128,26 +158,26 @@ public class TicketsServiceStub implements TicketsService{
   }
 
   @Override
-  public Ticket assignToTeamMember(String ticketId, String teamMemberId) {
+  public TicketDto assignToTeamMember(String ticketId, String teamMemberId) {
     try {
-      Ticket oldTicket = tickets.get(ticketId);
-      Ticket mutatedTicket = new Ticket (
-        oldTicket.getId(),
+      TicketDto oldTicketDto = tickets.get(ticketId);
+      TicketDto mutatedTicketDto = new TicketDto(
+        oldTicketDto.getId(),
         teamMemberId,
-        oldTicket.getCreationDate(),
-        oldTicket.getCreatedBy(),
-        oldTicket.getPriority(),
-        oldTicket.getType(),
-        oldTicket.getRemindNotificationDate(),
-        oldTicket.getDescription(),
-        oldTicket.getStatus(),
-        oldTicket.getTags());
-      tickets.replace( ticketId, mutatedTicket);
-      return mutatedTicket;
+        oldTicketDto.getCreationDate(),
+        oldTicketDto.getCreatedBy(),
+        oldTicketDto.getPriority(),
+        oldTicketDto.getType(),
+        oldTicketDto.getRemindNotificationDate(),
+        oldTicketDto.getDescription(),
+        oldTicketDto.getStatus(),
+        oldTicketDto.getTags());
+      tickets.replace( ticketId, mutatedTicketDto);
+      return mutatedTicketDto;
     }
     catch (Error e) {
       return null; // No go
       //TODO Handle error
     }
   }
-}
+}*/

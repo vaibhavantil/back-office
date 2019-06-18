@@ -3,12 +3,14 @@ package com.hedvig.backoffice.services.tickets.dto;
 import lombok.Value;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Value
-public class Ticket {
-  UUID id;
+public class TicketDto {
+  String id;
+  //UUID id;
   String assignedTo;
   LocalDate creationDate ;
   String createdBy;
@@ -19,7 +21,7 @@ public class Ticket {
   TicketStatus status;
   List<TicketTag> tags;
 
-  public Ticket(
+ /* public TicketDto(
                 String          assignedTo,
                 LocalDate       creationDate,
                 String          createdBy,
@@ -29,7 +31,7 @@ public class Ticket {
                 String          description,
                 TicketStatus    status,
                 List<TicketTag> tags                     ) {
-    this.id = UUID.randomUUID(); //Bad way to generate ID?
+    this.id = UUID.randomUUID().toString(); //Bad way to generate ID?
     this.assignedTo = assignedTo;
     this.creationDate = creationDate;
     this.createdBy = createdBy;
@@ -42,8 +44,8 @@ public class Ticket {
   }
 
   //Used for when mutating a ticket:
-  public Ticket(
-    UUID id,
+  public TicketDto(
+    String id,
     String          assignedTo,
     LocalDate       creationDate,
     String          createdBy,
@@ -64,8 +66,21 @@ public class Ticket {
     this.status = status;
     this.tags = tags;
   }
-
-
-
+*/
+  /*
+  //TODO: Just for dev. remove this later
+  public TicketDto ( String id, String assignedTo ) {
+    this.id = id;
+    this.assignedTo = assignedTo;
+    this.creationDate = LocalDate.now();
+    this.createdBy = "The King";
+    this.priority = TicketPriority.MEDIUM;
+    this.type = TicketType.REMIND;
+    this.remindNotificationDate = LocalDate.now();
+    this.description = "From the SQL-database";
+    this.status = TicketStatus.WAITING;
+    this.tags = null;
+  }
+*/
 
 }

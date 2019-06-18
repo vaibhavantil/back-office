@@ -16,7 +16,7 @@ import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.tickets.TicketsService;
-import com.hedvig.backoffice.services.tickets.dto.Ticket;
+import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -307,7 +307,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       data.setClaimID(id.toString());
       data.setName("TICKET");
       data.setType("TICKET");
-      data.setTitle("Ticket");
+      data.setTitle("TicketDto");
       data.setDate(now);
       data.setValue(claimInformationInput.getTicket());
       claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
@@ -317,11 +317,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
   //Tickets:
-  Ticket changeTicketDescription ( String id, String newDescription ) {
+  TicketDto changeTicketDescription (String id, String newDescription ) {
     return this.ticketsService.changeDescription( id, newDescription);
   }
 
-  Ticket assignTicketToTeamMember (String ticketId, String teamMemberId) {
+  TicketDto assignTicketToTeamMember (String ticketId, String teamMemberId) {
     return this.ticketsService.assignToTeamMember( ticketId, teamMemberId);
   }
 }

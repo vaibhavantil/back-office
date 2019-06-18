@@ -91,6 +91,10 @@ accountService:
   baseUrl: http://localhost:8090
   stub: true
 
+tickets:
+  baseUrl: http://localhost:8088
+  stub: false
+
 oauth:
   enabled: true
   hds: hedvig.com
