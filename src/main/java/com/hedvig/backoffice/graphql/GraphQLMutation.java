@@ -16,7 +16,7 @@ import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.tickets.TicketsService;
-import com.hedvig.backoffice.services.tickets.dto.TicketDto;
+import com.hedvig.backoffice.services.tickets.dto.*;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -29,12 +29,10 @@ import org.springframework.stereotype.Component;
 
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -314,6 +312,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     }
 
     return claimLoader.load(id);
+  }
+
+  //V The following TicketDto is not the same as above ^
+  //These are for the ticket-service in the Task Manager, // Spaghetti Coder
+  TicketDto createTicket ( String assignedTo, String createdBy,TicketPriority priority, LocalDate remindNotificationDate, String description) {
+    return this.ticketsService.createNewTicket(assignedTo, createdBy, priority, remindNotificationDate, description);
   }
 
   //Tickets:

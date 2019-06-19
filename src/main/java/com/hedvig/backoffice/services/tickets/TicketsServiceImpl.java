@@ -3,7 +3,9 @@ package com.hedvig.backoffice.services.tickets;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TicketsServiceImpl implements TicketsService {
   private final TicketServiceClient ticketServiceClient;
@@ -25,8 +27,32 @@ public class TicketsServiceImpl implements TicketsService {
   }
 
   @Override
-  public void createNewTicket(String assignedTo, LocalDate creationDate, String createdBy, TicketPriority priority, TicketType type, LocalDate remindNotificationDate, String description, TicketStatus status, List<TicketTag> tags) {
+  public TicketDto createNewTicket(String assignedTo,
+//                                LocalDate creationDate,
+                                String createdBy,
+                                TicketPriority priority,
+  //                              TicketType type,
+                                LocalDate remindNotificationDate,
+                                String description
+    //                            TicketStatus status,
+      //                          List<TicketTag> tags
+                                                          ) {
+    ArrayList<TicketTag> tags = new ArrayList<TicketTag>();
+    String id  = UUID.randomUUID().toString();
+    TicketDto ticket = new TicketDto(
+                                      id,
+                                      assignedTo,
+                                      LocalDate.now(),
+                                      createdBy,
+                                      priority,
+                                      TicketType.REMIND,
+                                      remindNotificationDate,
+                                      description,
+                                      TicketStatus.WAITING,
+                                      tags       );
 
+    this.ticketServiceClient.createTicket( id, ticket );
+    return ticket;
   }
 
   @Override

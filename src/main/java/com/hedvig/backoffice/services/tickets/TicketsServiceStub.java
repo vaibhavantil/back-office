@@ -22,8 +22,8 @@ public class TicketsServiceStub implements TicketsService{
   }
 
   @Override
-  public void createNewTicket(String assignedTo, LocalDate creationDate, String createdBy, TicketPriority priority, TicketType type, LocalDate remindNotificationDate, String description, TicketStatus status, List<TicketTag> tags) {
-
+  public TicketDto createNewTicket(String assignedTo, String createdBy, TicketPriority priority, LocalDate remindNotificationDate, String description) {
+    return null;
   }
 
   @Override

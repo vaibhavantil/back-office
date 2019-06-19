@@ -24,10 +24,13 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-  #createTicket ( assignedTo: string, description: String, type: String, remindDate: LocalDate) : TicketDto
+  createTicket ( assignedTo: String, createdBy: String, priority: TicketPriority, remindNotificationDate: LocalDate, description: String) : Ticket
   changeTicketDescription ( id: ID!, newDescription : String ) : Ticket
   assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!) : Ticket
 }
+
+
+
 
 type FileUpload {
   fileUploadUrl: URL

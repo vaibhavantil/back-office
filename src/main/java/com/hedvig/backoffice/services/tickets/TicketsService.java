@@ -10,15 +10,16 @@ public interface TicketsService {
   List<TicketDto> getAllTickets ();
 
   TicketDto getTicketById(String ticketId );
-  void createNewTicket (  String          assignedTo,
-                          LocalDate creationDate,
-                          String          createdBy,
+TicketDto createNewTicket (  String assignedTo,
+                     //     LocalDate creationDate,
+                          String createdBy,
                           TicketPriority priority,
-                          TicketType type,
-                          LocalDate       remindNotificationDate,
-                          String          description,
-                          TicketStatus status,
-                          List<TicketTag> tags);
+                     //     TicketType type,
+                          LocalDate remindNotificationDate,
+                          String description
+                     //     TicketStatus status,
+                     //     List<TicketTag> tags
+                                                  );
 
   void updateTicket (
                        String ticketID,
