@@ -5,4 +5,5 @@ public enum TicketType {
   MESSAGE,
   CLAIM,
   CALL_ME,
+  OTHER
 }

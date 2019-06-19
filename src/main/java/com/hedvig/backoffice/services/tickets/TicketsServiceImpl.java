@@ -28,7 +28,7 @@ public class TicketsServiceImpl implements TicketsService {
 
   @Override
   public TicketDto createNewTicket(String assignedTo,
-//                                LocalDate creationDate,
+//                                LocalDate creationDate, //This is assigned here V
                                 String createdBy,
                                 TicketPriority priority,
   //                              TicketType type,
@@ -62,11 +62,11 @@ public class TicketsServiceImpl implements TicketsService {
 
   @Override
   public TicketDto changeDescription(String ticketId, String newDescription) {
-    return null;
+    return this.ticketServiceClient.changeDescription(ticketId, newDescription);
   }
 
   @Override
-  public TicketDto assignToTeamMember(String ticketId, String teamMemberId) {
-    return null;
+  public TicketDto assignToTeamMember(String ticketId, String assignTo) {
+    return this.ticketServiceClient.changeAssignedTo(ticketId, assignTo);
   }
 }
