@@ -65,7 +65,7 @@ public class ExternalServicesConfig {
     AutowireCapableBeanFactory factory = context.getAutowireCapableBeanFactory();
     return stub
       ? factory.createBean(HopeAutocompleteServiceStub.class)
-      : factory.createBean(HopeAutocompleteServiceStub.class); //: factory.createBean(HopeAutocompleteServiceImpl.class);
+      : factory.createBean(HopeAutocompleteServiceImpl.class); //: factory.createBean(HopeAutocompleteServiceStub.class);
   }
 
   @Bean

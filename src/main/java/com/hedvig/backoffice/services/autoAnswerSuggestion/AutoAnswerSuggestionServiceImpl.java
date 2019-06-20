@@ -21,20 +21,7 @@ public class AutoAnswerSuggestionServiceImpl implements AutoAnswerSuggestionServ
     SuggestionDTO answer = new SuggestionDTO(autoAnswerSuggestionServiceClient.getSuggestedAnswer(question));
 
     return answer;
-    /*
-    try{
-      return AutoAnswerSuggestionServiceClient.getSuggestedAnswer(question);
-    } catch (FeignException e) {
-      if  (e.status() == 404) {
-        return "";
-      }
-      log.error("Something went wrong with AutoAnswerSuggestion. Status: {}, Message: {}", e.status(),
-        e.getMessage());
-      throw e;
-    } catch (ExternalServiceNotFoundException ex) {
-      return "";
-    }
-    */
+
     }
 
   }
