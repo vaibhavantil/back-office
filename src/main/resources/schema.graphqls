@@ -29,9 +29,6 @@ type MutationType {
   assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!) : Ticket
 }
 
-
-
-
 type FileUpload {
   fileUploadUrl: URL
   timestamp: Instant
@@ -39,11 +36,12 @@ type FileUpload {
   memberId: ID
 }
 
-#TODO: Gotta nail the schema
+#TODO:
 type Ticket {
   id: ID
   assignedTo: String
   creationDate: LocalDate
+  createdBy: String
   priority: TicketPriority
   type: TicketType
   remindNotificationDate: LocalDate
@@ -68,6 +66,7 @@ enum TicketType {
   MESSAGE,
   CLAIM,
   CALL_ME,
+  OTHER
 }
 
 
