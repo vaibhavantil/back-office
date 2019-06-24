@@ -9,6 +9,8 @@ import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO.SuggestionDTO;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
@@ -48,16 +50,18 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ClaimLoader claimLoader;
   private final ClaimsService claimsService;
   private final AccountService accountService;
+  private AutoAnswerSuggestionService autoAnswerSuggestionService;
 
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
                          MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
-                         AccountService accountService) {
+                         AccountService accountService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.claimsService = claimsService;
     this.accountService = accountService;
+    this.autoAnswerSuggestionService = autoAnswerSuggestionService;
   }
 
   public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount,
@@ -66,6 +70,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       GraphQLConfiguration.getEmail(env, personnelService), id, amount.toString());
     paymentService.chargeMember(id, amount);
     return memberLoader.load(id);
+  }
+
+  public SuggestionDTO autoLabelQuestion(String question, String label) {
+    autoAnswerSuggestionService.autoLabelQuestion(question, label);
+    return new SuggestionDTO("test response on auto labeling");
   }
 
   public CompletableFuture<Member> addAccountEntryToMember(

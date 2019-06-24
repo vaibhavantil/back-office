@@ -17,6 +17,12 @@ public class AutoAnswerSuggestionServiceImpl implements AutoAnswerSuggestionServ
 
 
   @Override
+  public void autoLabelQuestion(String question, String label){
+
+  }
+
+
+  @Override
   public SuggestionDTO getAnswerSuggestion(String question) {
     SuggestionDTO answer = new SuggestionDTO(autoAnswerSuggestionServiceClient.getSuggestedAnswer(question));
 

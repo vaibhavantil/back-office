@@ -6,4 +6,6 @@ public interface AutoAnswerSuggestionService {
 
   SuggestionDTO getAnswerSuggestion(String question);
 
+  void autoLabelQuestion(String question, String label);
+
 }
