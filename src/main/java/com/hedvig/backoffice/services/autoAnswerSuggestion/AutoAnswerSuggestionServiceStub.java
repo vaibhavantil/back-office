@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.autoAnswerSuggestion;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO.SuggestionDTO;
 import lombok.extern.slf4j.Slf4j;
 
+
 @Slf4j
 public class AutoAnswerSuggestionServiceStub implements AutoAnswerSuggestionService {
 
@@ -24,6 +25,7 @@ public class AutoAnswerSuggestionServiceStub implements AutoAnswerSuggestionServ
 
 /*
 the below is the string returned from python API
+
 [
   {
   "intent": "next_fee_date",

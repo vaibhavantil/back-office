@@ -25,16 +25,15 @@ import graphql.schema.DataFetchingEnvironment;
 import jersey.repackaged.com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -74,7 +73,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public SuggestionDTO autoLabelQuestion(String question, String label) {
     autoAnswerSuggestionService.autoLabelQuestion(question, label);
-    return new SuggestionDTO("test response on auto labeling");
+    return new SuggestionDTO("test reply auto labeling");
   }
 
   public CompletableFuture<Member> addAccountEntryToMember(

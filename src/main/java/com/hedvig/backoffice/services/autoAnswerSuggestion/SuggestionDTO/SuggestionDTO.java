@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO;
 
 import lombok.Value;
 
+
 @Value
 public class SuggestionDTO {
   String message;
