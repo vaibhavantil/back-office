@@ -316,8 +316,20 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   //V The following TicketDto is not the same as above ^
   //These are for the ticket-service in the Task Manager,
-  TicketDto createTicket ( String assignedTo, String createdBy, TicketPriority priority, LocalDate remindNotificationDate, String description) {
-    return this.ticketsService.createNewTicket(assignedTo, createdBy, priority, remindNotificationDate, description);
+  TicketDto createTicket ( String assignedTo,
+                           String createdBy,
+                           TicketPriority priority,
+                           LocalDate remindNotificationDate,
+                           LocalTime remindNotificationTime,
+                           String description)
+  {
+    return this.ticketsService.createNewTicket(
+        assignedTo,
+        createdBy,
+        priority,
+        remindNotificationDate,
+        remindNotificationTime,
+        description);
   }
 
   //Tickets:

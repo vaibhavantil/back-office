@@ -3,6 +3,8 @@ package com.hedvig.backoffice.services.tickets;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,16 +29,18 @@ public class TicketsServiceImpl implements TicketsService {
   }
 
   @Override
-  public TicketDto createNewTicket(String assignedTo,
-//                                LocalDate creationDate, //This is assigned here V
-                                String createdBy,
-                                TicketPriority priority,
-  //                              TicketType type,
-                                LocalDate remindNotificationDate,
-                                String description
-    //                            TicketStatus status,
-      //                          List<TicketTag> tags
-                                                          ) {
+  public TicketDto createNewTicket(
+      String assignedTo,
+//    LocalDate creationDate, //This is assigned here V
+      String createdBy,
+      TicketPriority priority,
+  //  TicketType type,
+      LocalDate remindNotificationDate,
+      LocalTime remindNotificationTime,
+      String description
+    //TicketStatus status,
+  //List<TicketTag> tags
+                              ) {
     ArrayList<TicketTag> tags = new ArrayList<TicketTag>();
     String id  = UUID.randomUUID().toString();
     TicketDto ticket = new TicketDto(
@@ -47,6 +51,7 @@ public class TicketsServiceImpl implements TicketsService {
                                       priority,
                                       TicketType.REMIND,
                                       remindNotificationDate,
+                                      remindNotificationTime,
                                       description,
                                       TicketStatus.WAITING,
                                       tags       );
@@ -56,7 +61,16 @@ public class TicketsServiceImpl implements TicketsService {
   }
 
   @Override
-  public void updateTicket(String ticketID, String assignedTo, LocalDate creationDate, String createdBy, TicketPriority priority, TicketType type, LocalDate remindNotificationDate, String description, TicketStatus status, List<TicketTag> tags) {
+  public void updateTicket(
+        String ticketID, String assignedTo,
+        LocalDate creationDate,
+        String createdBy,
+        TicketPriority priority,
+        TicketType type,
+        LocalDateTime remindNotificationDate,
+        String description,
+        TicketStatus status,
+        List<TicketTag> tags) {
 
   }
 

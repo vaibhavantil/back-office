@@ -24,7 +24,7 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-  createTicket ( assignedTo: String, createdBy: String, priority: TicketPriority, remindNotificationDate: LocalDate, description: String) : Ticket
+  createTicket ( assignedTo: String, createdBy: String, priority: TicketPriority, remindNotificationDate: LocalDate, remindNotificationTime: LocalTime, description: String) : Ticket
   changeTicketDescription ( id: ID!, newDescription : String ) : Ticket
   assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!) : Ticket
 }
@@ -45,6 +45,7 @@ type Ticket {
   priority: TicketPriority
   type: TicketType
   remindNotificationDate: LocalDate
+  remindNotificationTime: LocalTime
   description: String
   status : TicketStatus
 }
@@ -356,6 +357,8 @@ scalar Instant
 scalar ZonedDateTime
 # A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"`
 scalar LocalDate
+# A String-representation of `java.time.LocalTime`,
+scalar LocalTime
 # A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"`
 scalar LocalDateTime
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"

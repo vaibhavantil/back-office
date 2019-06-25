@@ -4,6 +4,8 @@ import com.hedvig.backoffice.services.tickets.dto.*;
 import com.hedvig.backoffice.web.dto.PersonnelDTO;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +24,19 @@ public class TicketsServiceStub implements TicketsService{
   }
 
   @Override
-  public TicketDto createNewTicket(String assignedTo, String createdBy, TicketPriority priority, LocalDate remindNotificationDate, String description) {
+  public TicketDto createNewTicket(
+      String assignedTo,
+      String createdBy,
+      TicketPriority priority,
+      LocalDate remindNotificationDate,
+      LocalTime remindNotificationTime,
+      String description
+  ) {
     return null;
   }
 
   @Override
-  public void updateTicket(String ticketID, String assignedTo, LocalDate creationDate, String createdBy, TicketPriority priority, TicketType type, LocalDate remindNotificationDate, String description, TicketStatus status, List<TicketTag> tags) {
+  public void updateTicket(String ticketID, String assignedTo, LocalDate creationDate, String createdBy, TicketPriority priority, TicketType type, LocalDateTime remindNotificationDate, String description, TicketStatus status, List<TicketTag> tags) {
 
   }
 
