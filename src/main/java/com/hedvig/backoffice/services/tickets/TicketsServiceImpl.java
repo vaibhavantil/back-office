@@ -1,11 +1,9 @@
 package com.hedvig.backoffice.services.tickets;
 
+import com.hedvig.backoffice.graphql.types.TicketIn;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,49 +27,27 @@ public class TicketsServiceImpl implements TicketsService {
   }
 
   @Override
-  public TicketDto createNewTicket(
-      String assignedTo,
-//    LocalDate creationDate, //This is assigned here V
-      String createdBy,
-      TicketPriority priority,
-  //  TicketType type,
-      LocalDate remindNotificationDate,
-      LocalTime remindNotificationTime,
-      String description
-    //TicketStatus status,
-  //List<TicketTag> tags
-                              ) {
-    ArrayList<TicketTag> tags = new ArrayList<TicketTag>();
+  public TicketDto createNewTicket( TicketIn t ) {
+
+    //This is where the ID is generated
     String id  = UUID.randomUUID().toString();
+
     TicketDto ticket = new TicketDto(
-                                      id,
-                                      assignedTo,
-                                      LocalDate.now(),
-                                      createdBy,
-                                      priority,
-                                      TicketType.REMIND,
-                                      remindNotificationDate,
-                                      remindNotificationTime,
-                                      description,
-                                      TicketStatus.WAITING,
-                                      tags       );
+        id,
+        t.getAssignedTo(),
+        Instant.now(), // Back-office timestamps the ticket
+        t.getCreatedBy(),
+        t.getPriority(),
+        t.getType(),
+        t.getRemindNotificationDate(),
+        t.getRemindNotificationTime(),
+        t.getDescription(),
+        t.getStatus()
+    );
 
     this.ticketServiceClient.createTicket( id, ticket );
+    //Obs, for now the ticket is returned directly from here...
     return ticket;
-  }
-
-  @Override
-  public void updateTicket(
-        String ticketID, String assignedTo,
-        LocalDate creationDate,
-        String createdBy,
-        TicketPriority priority,
-        TicketType type,
-        LocalDateTime remindNotificationDate,
-        String description,
-        TicketStatus status,
-        List<TicketTag> tags) {
-
   }
 
   @Override
@@ -83,4 +59,11 @@ public class TicketsServiceImpl implements TicketsService {
   public TicketDto assignToTeamMember(String ticketId, String assignTo) {
     return this.ticketServiceClient.changeAssignedTo(ticketId, assignTo);
   }
+
+  @Override
+  public TicketDto changeStatus(String ticketId, TicketStatus newStatus) {
+    return this.ticketServiceClient.changeStatus(ticketId, newStatus);
+  }
+
+
 }

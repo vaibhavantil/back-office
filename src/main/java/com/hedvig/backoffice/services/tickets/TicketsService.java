@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.tickets;
 
+import com.hedvig.backoffice.graphql.types.TicketIn;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
 import java.time.LocalDate;
@@ -13,34 +14,12 @@ public interface TicketsService {
 
   TicketDto getTicketById(String ticketId );
 
-  TicketDto createNewTicket (
-      String assignedTo,
-      //LocalDate creationDate,
-      String createdBy,
-      TicketPriority priority,
-     //TicketType type,
-      LocalDate  remindNotificationDate,
-      LocalTime remindNotificationTime,
-      String description
-   // TicketStatus status,
-   // List<TicketTag> tags
-                        );
-
-
-  void updateTicket (
-       String ticketID,
-       String assignedTo,
-       LocalDate creationDate,
-       String createdBy,
-       TicketPriority priority,
-       TicketType type,
-       LocalDateTime remindNotificationDate,
-       String description,
-       TicketStatus status,
-       List<TicketTag> tags );
-
+  TicketDto createNewTicket ( TicketIn ticket );
 
   TicketDto changeDescription (String ticketId, String newDescription ) ;
 
   TicketDto assignToTeamMember (String ticketId, String teamMemberId ) ;
+
+  TicketDto changeStatus (String ticketId, TicketStatus newStatus);
+
 }

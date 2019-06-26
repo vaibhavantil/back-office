@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
+import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,8 +32,6 @@ public interface TicketServiceClient {
   @PostMapping("/_/tickets/assign/{id}")
   TicketDto changeAssignedTo (@PathVariable String id, @RequestBody String assignTo);
 
-
-
-
-
+  @PostMapping("/_/tickets/status/{id}")
+  TicketDto changeStatus (@PathVariable String id, @RequestBody TicketStatus newStatus);
 }

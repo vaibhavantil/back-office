@@ -1,96 +1,48 @@
 package com.hedvig.backoffice.services.tickets;
-import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.graphql.types.TicketIn;
 import com.hedvig.backoffice.services.tickets.dto.*;
-import com.hedvig.backoffice.web.dto.PersonnelDTO;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class TicketsServiceStub implements TicketsService{
+public class TicketsServiceStub implements TicketsService {
 
-  @Override
-  public List<TicketDto> getAllTickets() {
-    return null;
-  }
+  private HashMap<String, TicketDto> tickets = new HashMap<String, TicketDto>();
 
-  @Override
-  public TicketDto getTicketById(String ticketId) {
-    return null;
-  }
-
-  @Override
-  public TicketDto createNewTicket(
-      String assignedTo,
-      String createdBy,
-      TicketPriority priority,
-      LocalDate remindNotificationDate,
-      LocalTime remindNotificationTime,
-      String description
-  ) {
-    return null;
-  }
-
-  @Override
-  public void updateTicket(String ticketID, String assignedTo, LocalDate creationDate, String createdBy, TicketPriority priority, TicketType type, LocalDateTime remindNotificationDate, String description, TicketStatus status, List<TicketTag> tags) {
-
-  }
-
-  @Override
-  public TicketDto changeDescription(String ticketId, String newDescription) {
-    return null;
-  }
-
-  @Override
-  public TicketDto assignToTeamMember(String ticketId, String teamMemberId) {
-    return null;
-  }
-}
- /* private HashMap<String, TicketDto> tickets = new HashMap<String, TicketDto>();
-  private List<String> personnels = new ArrayList<String>();
-
-  private List<PersonnelDTO> personnelDTOs = new ArrayList<PersonnelDTO>();
-  private final PersonnelService personnelService;
-
-
-  public TicketsServiceStub( PersonnelService personnelService
-  ) {
-    String[] teamMembers = {"Unassigned", "TeamMember2", "TeamMember3", "TeamMember4", "TeamMember5"};
-    TicketPriority[] priorities = { TicketPriority.LOW, TicketPriority.MEDIUM, TicketPriority.HIGH };
+  public TicketsServiceStub() {
+    String[] teamMembers = {"Matilda", "Karl", "Johanna", "Tomas", "Kalle", "Emma", "Sara", "Axel", "Unassigned"};
+    TicketPriority[] priorities = {TicketPriority.LOW, TicketPriority.MEDIUM, TicketPriority.HIGH};
     TicketType[] type = {TicketType.CALL_ME, TicketType.CLAIM, TicketType.MESSAGE, TicketType.REMIND};
-    List<TicketTag> tags = new ArrayList<TicketTag>();
-    tags.add( TicketTag.UNCATEGORIZED);
-    tags.add( TicketTag.ETC);
 
     this.tickets = new HashMap<String, TicketDto>();
-    this.personnelService = personnelService;
-    this.personnelDTOs = this.personnelService.list();
-
-    this.personnels = this.personnelDTOs.stream().map( person -> person.getName()).collect(Collectors.toList());
 
     //Generate Fake Tickets
     int NUM_TICKETS = 10;
-    for (int i = 0; i < NUM_TICKETS; i++  ){
+    for (int i = 0; i < NUM_TICKETS; i++) {
+      String id = UUID.randomUUID().toString();
       TicketDto t = new TicketDto(
-          teamMembers[i % teamMembers.length],
-        //  personnels.get( i % personnels.size()),
-          LocalDate.now(),
-          teamMembers[i % teamMembers.length],
-        ///personnels.get( i % personnels.size()),
-          priorities [i % priorities.length],
-          type [i % type.length],
-          null,
-          "A short description of the ticket contents",
-          TicketStatus.WAITING,
-          tags
-        );
-      tickets.put(t.getId().toString(), t );
+        id,
+        teamMembers[i % teamMembers.length],
+        Instant.now(),
+        teamMembers[i % teamMembers.length],
+        priorities[i % priorities.length],
+        type[i % type.length],
+        LocalDate.now(),
+        LocalTime.now(),
+        "A short description of the ticket contents",
+        TicketStatus.WAITING
+      );
+
+      tickets.put(id, t);
     }
   }
+
 
   @Override
   public List<TicketDto> getAllTickets() {
@@ -102,91 +54,101 @@ public class TicketsServiceStub implements TicketsService{
     try {
       TicketDto t = tickets.get(ticketId);
       return t;
-    }
-    catch (Error e ) {
+    } catch (Error e) {
       return null;
       // Handle error
     }
   }
 
   @Override
-  public void createNewTicket(
-    String          assignedTo,
-    LocalDate creationDate,
-    String          createdBy,
-    TicketPriority priority,
-    TicketType type,
-    LocalDate       remindNotificationDate,
-    String          description,
-    TicketStatus status,
-    List<TicketTag> tags
-  ) {
-    TicketDto newTicketDto = new TicketDto( assignedTo, creationDate, createdBy, priority,
-      type, remindNotificationDate, description, status, tags );
+  public TicketDto createNewTicket(TicketIn t) {
+    String id = UUID.randomUUID().toString();
+    TicketDto newT = new TicketDto(
+      id,
+      t.getAssignedTo(),
+      Instant.now(),
+      t.getCreatedBy(),
+      t.getPriority(),
+      t.getType(),
+      t.getRemindNotificationDate(),
+      t.getRemindNotificationTime(),
+      t.getDescription(),
+      t.getStatus()
+    );
 
-    tickets.put( newTicketDto.getId().toString(), newTicketDto);
-  }
+    tickets.put(id, newT);
 
-  @Override
-  public void updateTicket (
-    String ticketID,
-    String          assignedTo,
-    LocalDate creationDate,
-    String          createdBy,
-    TicketPriority priority,
-    TicketType type,
-    LocalDate       remindNotificationDate,
-    String          description,
-    TicketStatus status,
-    List<TicketTag> tags ) {
-    // Do some crazy
+    return newT;
   }
 
   @Override
   public TicketDto changeDescription(String ticketId, String newDescription) {
     try {
-      TicketDto oldTicketDto = tickets.get(ticketId);
-      TicketDto mutatedTicketDto = new TicketDto(
-        oldTicketDto.getId(),
-        oldTicketDto.getAssignedTo(),
-        oldTicketDto.getCreationDate(),
-        oldTicketDto.getCreatedBy(),
-        oldTicketDto.getPriority(),
-        oldTicketDto.getType(),
-        oldTicketDto.getRemindNotificationDate(),
+      TicketDto t = tickets.get(ticketId);
+      TicketDto updateT = new TicketDto(
+        t.getId(),
+        t.getAssignedTo(),
+        Instant.now(),
+        t.getCreatedBy(),
+        t.getPriority(),
+        t.getType(),
+        t.getRemindNotificationDate(),
+        t.getRemindNotificationTime(),
         newDescription,
-        oldTicketDto.getStatus(),
-        oldTicketDto.getTags());
-      tickets.replace( ticketId, mutatedTicketDto);
-      return mutatedTicketDto;
-    }
-    catch (Error e) {
-      return null; // No go
-      //TODO Handle error
+        t.getStatus()
+      );
+      tickets.replace(updateT.getId(), updateT);
+      return updateT;
+    } catch (Error e) {
+      return null;
     }
   }
 
   @Override
-  public TicketDto assignToTeamMember(String ticketId, String teamMemberId) {
+  public TicketDto assignToTeamMember(String ticketId, String assignTo) {
     try {
-      TicketDto oldTicketDto = tickets.get(ticketId);
-      TicketDto mutatedTicketDto = new TicketDto(
-        oldTicketDto.getId(),
-        teamMemberId,
-        oldTicketDto.getCreationDate(),
-        oldTicketDto.getCreatedBy(),
-        oldTicketDto.getPriority(),
-        oldTicketDto.getType(),
-        oldTicketDto.getRemindNotificationDate(),
-        oldTicketDto.getDescription(),
-        oldTicketDto.getStatus(),
-        oldTicketDto.getTags());
-      tickets.replace( ticketId, mutatedTicketDto);
-      return mutatedTicketDto;
-    }
-    catch (Error e) {
-      return null; // No go
-      //TODO Handle error
+      TicketDto t = tickets.get(ticketId);
+      TicketDto updateT = new TicketDto(
+        t.getId(),
+        assignTo,
+        Instant.now(),
+        t.getCreatedBy(),
+        t.getPriority(),
+        t.getType(),
+        t.getRemindNotificationDate(),
+        t.getRemindNotificationTime(),
+        t.getDescription(),
+        t.getStatus()
+      );
+      tickets.replace(updateT.getId(), updateT);
+      return updateT;
+    } catch (Error e) {
+      return null;
     }
   }
-}*/
+
+  @Override
+  public TicketDto changeStatus(String ticketId, TicketStatus newStatus) {
+    try {
+      TicketDto t = tickets.get(ticketId);
+      TicketDto updateT = new TicketDto(
+        t.getId(),
+        t.getAssignedTo(),
+        Instant.now(),
+        t.getCreatedBy(),
+        t.getPriority(),
+        t.getType(),
+        t.getRemindNotificationDate(),
+        t.getRemindNotificationTime(),
+        t.getDescription(),
+        newStatus
+      );
+      tickets.replace(updateT.getId(), updateT);
+      return updateT;
+    } catch (Error e) {
+      return null;
+    }
+  }
+
+
+}

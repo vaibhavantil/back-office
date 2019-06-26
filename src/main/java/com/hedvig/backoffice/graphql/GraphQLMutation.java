@@ -17,6 +17,7 @@ import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.tickets.TicketsService;
 import com.hedvig.backoffice.services.tickets.dto.*;
+import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -29,7 +30,6 @@ import org.springframework.stereotype.Component;
 
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -314,25 +314,15 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-  //V The following TicketDto is not the same as above ^
-  //These are for the ticket-service in the Task Manager,
-  TicketDto createTicket ( String assignedTo,
-                           String createdBy,
-                           TicketPriority priority,
-                           LocalDate remindNotificationDate,
-                           LocalTime remindNotificationTime,
-                           String description)
-  {
-    return this.ticketsService.createNewTicket(
-        assignedTo,
-        createdBy,
-        priority,
-        remindNotificationDate,
-        remindNotificationTime,
-        description);
-  }
 
   //Tickets:
+  //V The following TicketDto is not the same as above ^
+  //These are for the ticket-service in the Task Manager,
+  TicketDto createTicket ( TicketIn ticket )
+  {
+    return this.ticketsService.createNewTicket( ticket ) ;
+  }
+
   TicketDto changeTicketDescription (String id, String newDescription ) {
     return this.ticketsService.changeDescription( id, newDescription);
   }
@@ -341,5 +331,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return this.ticketsService.assignToTeamMember( ticketId, teamMemberId);
   }
 
+  TicketDto changeTicketStatus (String ticketId, TicketStatus newStatus) {
+    return this.ticketsService.changeStatus( ticketId, newStatus );
+  }
 
 }
