@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.autoAnswerSuggestion;
 
 import com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO.SuggestionDTO;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO.AutoLabelDTO;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -15,8 +16,8 @@ public class AutoAnswerSuggestionServiceImpl implements AutoAnswerSuggestionServ
 
 
   @Override
-  public void autoLabelQuestion(String question, String label){
-    autoAnswerSuggestionServiceClient.autoLabelQuestion(question, label);
+  public void autoLabelQuestion(String question, String label, String memberId, String messageId){
+    autoAnswerSuggestionServiceClient.autoLabelQuestion(question, label, memberId, messageId);
 
   }
 

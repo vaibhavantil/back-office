@@ -10,7 +10,7 @@ import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO.SuggestionDTO;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO.AutoLabelDTO;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
@@ -25,8 +25,6 @@ import graphql.schema.DataFetchingEnvironment;
 import jersey.repackaged.com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import javax.money.MonetaryAmount;
@@ -71,9 +69,9 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return memberLoader.load(id);
   }
 
-  public SuggestionDTO autoLabelQuestion(String question, String label) {
-    autoAnswerSuggestionService.autoLabelQuestion(question, label);
-    return new SuggestionDTO("test reply auto labeling");
+  public AutoLabelDTO autoLabelQuestion(String question, String label, String memberId, String messageId) {
+    autoAnswerSuggestionService.autoLabelQuestion(question, label, memberId, messageId);
+    return new AutoLabelDTO("test reply auto labeling");
   }
 
   public CompletableFuture<Member> addAccountEntryToMember(
