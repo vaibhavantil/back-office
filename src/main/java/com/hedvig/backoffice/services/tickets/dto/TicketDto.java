@@ -13,7 +13,7 @@ public class TicketDto {
   String assignedTo;
   Instant creationDate;
   String createdBy;
-  TicketPriority priority;
+  float priority; //0 <= priority <= 1
   TicketType type;
   LocalDate remindNotificationDate;
   LocalTime remindNotificationTime;

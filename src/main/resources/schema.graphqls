@@ -45,7 +45,7 @@ type Ticket {
   assignedTo: String
   creationDate: LocalDate
   createdBy: String
-  priority: TicketPriority
+  priority: Float
   type: TicketType
   remindNotificationDate: LocalDate
   remindNotificationTime: LocalTime
@@ -56,7 +56,7 @@ type Ticket {
 input TicketIn {
   assignedTo: String
   createdBy: String
-  priority: TicketPriority
+  priority: Float
   type: TicketType
   remindNotificationDate: LocalDate
   remindNotificationTime: LocalTime

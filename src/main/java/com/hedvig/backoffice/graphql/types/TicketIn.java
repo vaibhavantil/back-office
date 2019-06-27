@@ -24,7 +24,7 @@ import java.time.LocalTime;
 public class TicketIn {
   String assignedTo;
   String createdBy;
-  TicketPriority priority;
+  float priority; //0 <= priority <= 1
   TicketType type;
   LocalDate remindNotificationDate;
   LocalTime remindNotificationTime;

@@ -5,10 +5,7 @@ import com.hedvig.backoffice.services.tickets.dto.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TicketsServiceStub implements TicketsService {
@@ -21,6 +18,7 @@ public class TicketsServiceStub implements TicketsService {
     TicketType[] type = {TicketType.CALL_ME, TicketType.CLAIM, TicketType.MESSAGE, TicketType.REMIND};
 
     this.tickets = new HashMap<String, TicketDto>();
+    Random rand = new Random();
 
     //Generate Fake Tickets
     int NUM_TICKETS = 10;
@@ -31,7 +29,7 @@ public class TicketsServiceStub implements TicketsService {
         teamMembers[i % teamMembers.length],
         Instant.now(),
         teamMembers[i % teamMembers.length],
-        priorities[i % priorities.length],
+        rand.nextFloat(),
         type[i % type.length],
         LocalDate.now(),
         LocalTime.now(),
