@@ -69,7 +69,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return memberLoader.load(id);
   }
 
-  public AutoLabelDTO autoLabelQuestion(String question, String label, String memberId, String messageId) {
+  public AutoLabelDTO autoLabelQuestion(String question, String label, String memberId,  List<String> messageId) {
     autoAnswerSuggestionService.autoLabelQuestion(question, label, memberId, messageId);
     return new AutoLabelDTO("test reply auto labeling");
   }

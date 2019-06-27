@@ -24,7 +24,7 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-  autoLabelQuestion(question: String!, label: String!, memberId: String, messageId: String): AutoLabel
+  autoLabelQuestion(question: String!, label: String!, memberId: String, messageId: [String!]): AutoLabel
 }
 
 type Suggestion {
