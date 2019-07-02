@@ -31,7 +31,11 @@ type Suggestion {
   intent: String
   reply: String
   text: String
-  allReplies: String
+  allRepliesArray: [AllRepliesEntry]
+}
+type AllRepliesEntry {
+  intent: String
+  reply: String
 }
 
 type AutoLabel {
