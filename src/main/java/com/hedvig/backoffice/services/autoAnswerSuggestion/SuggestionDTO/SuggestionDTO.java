@@ -1,12 +1,13 @@
 package com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO;
 
-import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
+@Slf4j
 public class SuggestionDTO {
 
   String intent;
@@ -40,15 +41,14 @@ public class SuggestionDTO {
       }
 
     } catch (JSONException e) {
-
-      e.printStackTrace();
+      log.error("JSON error when parsing auto answer suggestion : {}", e);
     }
 
   }
 
   public class ReplyEntry {
-    String intent;
-    String reply;
+    private String intent;
+    private String reply;
 
     public ReplyEntry(String intent, String reply) {
       this.intent = intent;

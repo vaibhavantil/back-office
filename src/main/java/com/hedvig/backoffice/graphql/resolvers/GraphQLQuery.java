@@ -49,7 +49,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   }
 
   public SuggestionDTO getAnswerSuggestion(String question) {
-    return this.autoAnswerSuggestionService.getAnswerSuggestion(question);
+    return autoAnswerSuggestionService.getAnswerSuggestion(question);
   }
 
   public CompletableFuture<Member> member(String id) {

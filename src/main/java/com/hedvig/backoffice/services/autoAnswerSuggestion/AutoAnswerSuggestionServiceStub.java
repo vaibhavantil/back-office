@@ -59,11 +59,10 @@ public class AutoAnswerSuggestionServiceStub implements AutoAnswerSuggestionServ
   }
 
   @Override
-  public void autoLabelQuestion(String question, String label, String memberId,  List<String> messageId) {
-    System.out.println(question);
-    System.out.println(label);
-    System.out.println(memberId);
-    System.out.println(messageId);
+  public void autoLabelQuestion(String question, String label, String memberId,  List<String> messageIds) {
+    log.info(question);
+    log.info(label);
+    log.info(memberId);
 
   }
 

@@ -1,13 +1,9 @@
 package com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO;
 
-import lombok.Value;
-
-
-@Value
 public class AutoLabelDTO {
-  String message;
+  private Boolean message;
 
-  public AutoLabelDTO(String answer) {
+  public AutoLabelDTO(Boolean answer) {
 
     this.message = answer;
 

@@ -24,22 +24,22 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-  autoLabelQuestion(question: String!, label: String!, memberId: String, messageId: [String!]): AutoLabel
+  autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
 }
 
 type Suggestion {
-  intent: String
-  reply: String
-  text: String
-  allRepliesArray: [AllRepliesEntry]
+  intent: String!
+  reply: String!
+  text: String!
+  allRepliesArray: [AllRepliesEntry]!
 }
 type AllRepliesEntry {
-  intent: String
-  reply: String
+  intent: String!
+  reply: String!
 }
 
 type AutoLabel {
-  message: String
+  message: Boolean
 }
 
 type FileUpload {

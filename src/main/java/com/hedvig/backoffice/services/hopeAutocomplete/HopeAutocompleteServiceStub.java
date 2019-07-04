@@ -27,7 +27,6 @@ public class HopeAutocompleteServiceStub implements HopeAutocompleteService {
   @Override
   public void selectSuggestion(SelectSuggestionRequestBodyDto requestBody) {
 
-    //client.selectAutocompleteSuggestion(RemoteAutocompleteSuggestionRequestBodyDto.from(requestBody));
 
   }
 }

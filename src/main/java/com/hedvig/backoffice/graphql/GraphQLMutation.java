@@ -47,7 +47,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ClaimLoader claimLoader;
   private final ClaimsService claimsService;
   private final AccountService accountService;
-  private AutoAnswerSuggestionService autoAnswerSuggestionService;
+  private final AutoAnswerSuggestionService autoAnswerSuggestionService;
 
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
                          MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
@@ -69,9 +69,9 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return memberLoader.load(id);
   }
 
-  public AutoLabelDTO autoLabelQuestion(String question, String label, String memberId,  List<String> messageId) {
-    autoAnswerSuggestionService.autoLabelQuestion(question, label, memberId, messageId);
-    return new AutoLabelDTO("test reply auto labeling");
+  public AutoLabelDTO autoLabelQuestion(String question, String label, String memberId,  List<String> messageIds) {
+    autoAnswerSuggestionService.autoLabelQuestion(question, label, memberId, messageIds);
+    return new AutoLabelDTO(true);
   }
 
   public CompletableFuture<Member> addAccountEntryToMember(

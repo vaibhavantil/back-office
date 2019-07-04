@@ -25,7 +25,7 @@ public interface AutoAnswerSuggestionServiceClient {
   void autoLabelQuestion(@RequestParam("question") String question,
                          @RequestParam("label") String label,
                          @RequestParam("memberId") String memberId,
-                         @RequestParam("messageId")  List<String> messageId);
+                         @RequestParam("messageIds")  List<String> messageIds);
 
   }
 
