@@ -10,7 +10,7 @@ import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO.AutoLabelDTO;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.AutoLabelDTO;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;

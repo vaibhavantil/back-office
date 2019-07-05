@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.services.autoAnswerSuggestion;
 
-import com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO.SuggestionDTO;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import java.util.List;
 
 

@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO;
+package com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs;
 
 public class AutoLabelDTO {
   private Boolean message;

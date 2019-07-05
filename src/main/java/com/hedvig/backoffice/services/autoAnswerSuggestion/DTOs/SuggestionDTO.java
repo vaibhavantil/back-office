@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO;
+package com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.configurationprocessor.json.JSONException;
@@ -13,7 +13,7 @@ public class SuggestionDTO {
   String intent;
   String reply;
   String text;
-  ArrayList<ReplyEntry> allRepliesArray;
+  ArrayList<ReplyEntryDTO> allRepliesArray;
 
   public SuggestionDTO(String autoAnswerServiceReply) {
 
@@ -36,7 +36,7 @@ public class SuggestionDTO {
         if (allReplies.get(key) instanceof JSONObject) {
 
           JSONObject replyObj = allReplies.getJSONObject(key);
-          allRepliesArray.add(new ReplyEntry(key, replyObj.getString("reply")));
+          allRepliesArray.add(new ReplyEntryDTO(key, replyObj.getString("reply")));
         }
       }
 
@@ -46,11 +46,11 @@ public class SuggestionDTO {
 
   }
 
-  public class ReplyEntry {
+  public class ReplyEntryDTO {
     private String intent;
     private String reply;
 
-    public ReplyEntry(String intent, String reply) {
+    public ReplyEntryDTO(String intent, String reply) {
       this.intent = intent;
       this.reply = reply;
     }

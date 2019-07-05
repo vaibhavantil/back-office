@@ -16,7 +16,7 @@ import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.SuggestionDTO.SuggestionDTO;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import org.springframework.stereotype.Component;
