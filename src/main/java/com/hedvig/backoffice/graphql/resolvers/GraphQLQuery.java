@@ -48,7 +48,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
         .collect(Collectors.toList());
   }
 
-  public SuggestionDTO getAnswerSuggestion(String question) {
+  public List<SuggestionDTO> getAnswerSuggestion(String question) {
     return autoAnswerSuggestionService.getAnswerSuggestion(question);
   }
 

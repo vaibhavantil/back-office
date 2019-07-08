@@ -8,7 +8,7 @@ type QueryType {
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
-  getAnswerSuggestion(question: String): Suggestion
+  getAnswerSuggestion(question: String): [Suggestion!]!
 }
 
 
@@ -31,7 +31,7 @@ type Suggestion {
   intent: String!
   reply: String!
   text: String!
-  allRepliesArray: [AllRepliesEntry]!
+  allReplies: [AllRepliesEntry!]!
 }
 type AllRepliesEntry {
   intent: String!

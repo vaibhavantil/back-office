@@ -2,15 +2,10 @@ package com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs;
 
 import lombok.Value;
 
-import java.util.ArrayList;
-
 @Value
-public class SuggestionDTO {
-
+public class ReplyEntryDTO {
   String intent;
   String reply;
-  String text;
-  ArrayList<ReplyEntryDTO> allReplies;
-
 
 }
+

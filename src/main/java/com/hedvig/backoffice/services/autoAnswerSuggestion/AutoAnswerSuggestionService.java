@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AutoAnswerSuggestionService {
 
-  SuggestionDTO getAnswerSuggestion(String question);
+  List<SuggestionDTO> getAnswerSuggestion(String question);
 
   void autoLabelQuestion(String question, String label, String memberId, List<String> messageId);
 

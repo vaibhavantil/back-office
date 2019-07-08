@@ -20,10 +20,8 @@ public class AutoAnswerSuggestionServiceImpl implements AutoAnswerSuggestionServ
   }
 
   @Override
-  public SuggestionDTO getAnswerSuggestion(String question) {
-    SuggestionDTO answer = new SuggestionDTO(autoAnswerSuggestionServiceClient.getSuggestedAnswer(question));
-
-    return answer;
+  public List<SuggestionDTO> getAnswerSuggestion(String question) {
+    return autoAnswerSuggestionServiceClient.getSuggestedAnswer(question);
 
     }
 

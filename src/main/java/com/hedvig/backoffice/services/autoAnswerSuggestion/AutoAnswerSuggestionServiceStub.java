@@ -1,61 +1,55 @@
 package com.hedvig.backoffice.services.autoAnswerSuggestion;
 
+import com.google.common.collect.Lists;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.ReplyEntryDTO;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Slf4j
 public class AutoAnswerSuggestionServiceStub implements AutoAnswerSuggestionService {
 
+  private ArrayList<ReplyEntryDTO> allRepliesArray = new ArrayList<>();
+
+  public AutoAnswerSuggestionServiceStub() {
+
+    allRepliesArray.add(new ReplyEntryDTO("insurance_start_date",
+      "Om du har klickat i att du redan har en befintlig försäkring så\n" +
+        "    kommer din försäkring att aktiveras när vi får information om när\n" +
+        "    din nuvarande försäkrings bindningstid är slut. Du kommer att informeras\n" +
+        "    om när detta sker via mail och du kan även se i appen när din försäkring\n" +
+        "    är aktiv. Om du har valt att du inte har ett befintligt försäkringsbolag\n" +
+        "    kommer din försäkring aktiveras så fort du skriver på avtalet med\n" +
+        "    bankID \uD83D\uDE0A"));
+
+    allRepliesArray.add(new ReplyEntryDTO("do_you_offer_insurance_x",
+      "I dagsläget så erbjuder vi enbart hemförsäkring för hyres- och bostadsrätter, samt objektförsäkring för dyrare prylar. Vi hoppas att kunna erbjuda fler försäkringar i framtiden!"));
+
+    allRepliesArray.add(new ReplyEntryDTO("is_x_included",
+      "I vår hemförsäkring ingår ansvarsskydd, reseskydd, boendeskydd,\n" +
+        "    personskydd och drulle (allriskförsäkring)."));
+
+    allRepliesArray.add(new ReplyEntryDTO("next_fee_date",
+      "Pengarna dras från ditt bankkonto via autogiro den 27e varje månad"));
+
+    allRepliesArray.add(new ReplyEntryDTO("payment_info",
+      "Betalningen sker månadsvis via autogiro med hjälp av Trustly. Du kan se om pengarna dragits och om ditt autogiro är aktivt ... Du anmäler dit autogiro ..."));
+
+
+  }
+
   @Override
-  public SuggestionDTO getAnswerSuggestion(String question) {
+  public List<SuggestionDTO> getAnswerSuggestion(String question) {
 
-    String sampleAnswer = "[\n" +
-      "    {\n" +
-      "        \"allReplies\": {\n" +
-      "            \"bye\": {\n" +
-      "                \"reply\": \"Hejdå! \uD83D\uDC4B\\n\"\n" +
-      "            },\n" +
-      "            \"do_you_offer_insurance_x\": {\n" +
-      "                \"reply\": \"I dagsläget så erbjuder vi enbart hemförsäkring för hyres- och bostadsrätter, samt objektförsäkring för dyrare prylar. Vi hoppas att kunna erbjuda fler försäkringar i framtiden! ⭐\\n\"\n" +
-      "            },\n" +
-      "            \"hello\": {\n" +
-      "                \"fallback_to\": \"other\",\n" +
-      "                \"reply\": \"Hej du! \uD83D\uDE03\\n\",\n" +
-      "                \"requires\": [\n" +
-      "                    \"hej\",\n" +
-      "                    \"heej\",\n" +
-      "                    \"hejsan\",\n" +
-      "                    \"tja\",\n" +
-      "                    \"tjena\",\n" +
-      "                    \"hallå\",\n" +
-      "                    \"halloj\"\n" +
-      "                ]\n" +
-      "            },\n" +
-      "            \"insurance_start_date\": {\n" +
-      "                \"reply\": \"Om du har klickat i att du redan har en befintlig försäkring så kommer din försäkring att aktiveras när vi får information om när din nuvarande försäkrings bindningstid är slut. Du kommer att informeras om när detta sker via mail och du kan även se i appen när din försäkring är aktiv. Om du har valt att du inte har ett befintligt försäkringsbolag kommer din försäkring aktiveras så fort du skriver på avtalet med bankID \uD83D\uDE0A\\n\"\n" +
-      "            },\n" +
-      "            \"is_x_included\": {\n" +
-      "                \"reply\": \"I vår hemförsäkring ingår ansvarsskydd, reseskydd, boendeskydd, personskydd och drulle (allriskförsäkring). \uD83E\uDD29\\n\"\n" +
-      "            },\n" +
-      "            \"next_fee_date\": {\n" +
-      "                \"reply\": \"Pengarna dras från ditt bankkonto via autogiro den 27e varje månad \uD83D\uDCB8\\n\"\n" +
-      "            },\n" +
-      "            \"other\": {\n" +
-      "                \"reply\": \"\"\n" +
-      "            },\n" +
-      "            \"payment_info\": {\n" +
-      "                \"reply\": \"Ditt pris kan du se om du trycker på “profil” och sedan går till “betalning” \uD83D\uDE0E\\n\"\n" +
-      "            }\n" +
-      "        },\n" +
-      "        \"intent\": \"hello\",\n" +
-      "        \"reply\": \"Hej du! \uD83D\uDE03\",\n" +
-      "        \"text\": \"hej\"\n" +
-      "    }\n" +
-      "]";
+    final String intent = "next_fee_date";
+    final String reply = "Pengarna dras från ditt bankkonto via autogiro den 27e varje månad";
+    final String text = "När dras degen?";
 
-    return new SuggestionDTO(sampleAnswer);
+
+    return Lists.newArrayList(new SuggestionDTO(intent, reply, text, allRepliesArray));
   }
 
   @Override
