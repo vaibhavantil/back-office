@@ -26,8 +26,10 @@ public class TicketIn {
   String createdBy;
   float priority; //0 <= priority <= 1
   TicketType type;
-  LocalDate remindNotificationDate;
-  LocalTime remindNotificationTime;
+  RemindNotification reminder;
+//  LocalDate remindNotificationDate;
+//  LocalTime remindNotificationTime;
+ // String remindMessage;
   String description;
   TicketStatus status;
 }

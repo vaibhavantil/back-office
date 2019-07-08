@@ -33,6 +33,7 @@ public class TicketsServiceStub implements TicketsService {
         type[i % type.length],
         LocalDate.now(),
         LocalTime.now(),
+        "A message to remind you...",
         "A short description of the ticket contents",
         TicketStatus.WAITING
       );
@@ -59,17 +60,18 @@ public class TicketsServiceStub implements TicketsService {
   }
 
   @Override
-  public TicketDto createNewTicket(TicketIn t) {
+  public TicketDto createNewTicket(TicketIn t, String createdBy) {
     String id = UUID.randomUUID().toString();
     TicketDto newT = new TicketDto(
       id,
       t.getAssignedTo(),
       Instant.now(),
-      t.getCreatedBy(),
+      createdBy,
       t.getPriority(),
       t.getType(),
-      t.getRemindNotificationDate(),
-      t.getRemindNotificationTime(),
+      t.getReminder().getDate(),
+      t.getReminder().getTime(),
+      t.getReminder().getMessage(),
       t.getDescription(),
       t.getStatus()
     );
@@ -92,6 +94,7 @@ public class TicketsServiceStub implements TicketsService {
         t.getType(),
         t.getRemindNotificationDate(),
         t.getRemindNotificationTime(),
+        t.getRemindMessage(),
         newDescription,
         t.getStatus()
       );
@@ -115,6 +118,7 @@ public class TicketsServiceStub implements TicketsService {
         t.getType(),
         t.getRemindNotificationDate(),
         t.getRemindNotificationTime(),
+        t.getRemindMessage(),
         t.getDescription(),
         t.getStatus()
       );
@@ -138,6 +142,7 @@ public class TicketsServiceStub implements TicketsService {
         t.getType(),
         t.getRemindNotificationDate(),
         t.getRemindNotificationTime(),
+        t.getRemindMessage(),
         t.getDescription(),
         newStatus
       );

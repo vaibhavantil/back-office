@@ -14,7 +14,7 @@ public interface TicketsService {
 
   TicketDto getTicketById(String ticketId );
 
-  TicketDto createNewTicket ( TicketIn ticket );
+  TicketDto createNewTicket ( TicketIn ticket, String createdBy );
 
   TicketDto changeDescription (String ticketId, String newDescription ) ;
 

@@ -17,6 +17,7 @@ public class TicketDto {
   TicketType type;
   LocalDate remindNotificationDate;
   LocalTime remindNotificationTime;
+  String remindMessage;
   String description;
   TicketStatus status;
 

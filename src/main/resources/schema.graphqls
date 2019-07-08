@@ -47,8 +47,10 @@ type Ticket {
   createdBy: String
   priority: Float
   type: TicketType
+  #reminder: RemindNotification
   remindNotificationDate: LocalDate
   remindNotificationTime: LocalTime
+  remindMessage: String
   description: String
   status : TicketStatus
 }
@@ -58,12 +60,19 @@ input TicketIn {
   createdBy: String
   priority: Float
   type: TicketType
-  remindNotificationDate: LocalDate
-  remindNotificationTime: LocalTime
+  reminder: RemindNotification
+#  remindNotificationDate: LocalDate
+#  remindNotificationTime: LocalTime
+#  remindMessage: String
   description: String
   status : TicketStatus
 }
 
+input RemindNotification {
+  date: LocalDate
+  time: LocalTime
+  message: String
+}
 
 enum TicketPriority {
   HIGH,

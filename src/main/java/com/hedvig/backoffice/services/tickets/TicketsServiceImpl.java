@@ -27,7 +27,7 @@ public class TicketsServiceImpl implements TicketsService {
   }
 
   @Override
-  public TicketDto createNewTicket( TicketIn t ) {
+  public TicketDto createNewTicket( TicketIn t, String createdBy ) {
 
     //This is where the ID is generated
     String id  = UUID.randomUUID().toString();
@@ -36,11 +36,12 @@ public class TicketsServiceImpl implements TicketsService {
         id,
         t.getAssignedTo(),
         Instant.now(), // Back-office timestamps the ticket
-        t.getCreatedBy(),
+        createdBy,
         t.getPriority(),
         t.getType(),
-        t.getRemindNotificationDate(),
-        t.getRemindNotificationTime(),
+        t.getReminder().getDate(),
+        t.getReminder().getTime(),
+        t.getReminder().getMessage(),
         t.getDescription(),
         t.getStatus()
     );

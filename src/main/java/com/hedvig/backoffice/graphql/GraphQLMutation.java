@@ -318,9 +318,20 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   //Tickets:
   //V The following TicketDto is not the same as above ^
   //These are for the ticket-service in the Task Manager,
-  TicketDto createTicket ( TicketIn ticket )
+  TicketDto createTicket ( TicketIn ticket, DataFetchingEnvironment env )
   {
-    return this.ticketsService.createNewTicket( ticket ) ;
+    String createdBy;
+    try {
+     createdBy = GraphQLConfiguration.getEmail(env, personnelService);
+
+    }
+    catch (Exception e ) {
+      createdBy = "";
+      log.info("Could not get email from personnelService");
+      return null;
+
+    }
+    return this.ticketsService.createNewTicket( ticket, createdBy ) ;
   }
 
   TicketDto changeTicketDescription (String id, String newDescription ) {
