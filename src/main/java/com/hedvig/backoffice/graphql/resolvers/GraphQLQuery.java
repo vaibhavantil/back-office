@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
@@ -16,11 +17,15 @@ import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.tickets.TicketsService;
 
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
+import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
+
+import static graphql.servlet.GraphQLServlet.log;
 
 @Component
 public class GraphQLQuery implements GraphQLQueryResolver {
@@ -31,29 +36,19 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final AccountService accountService;
   private final MemberService memberService;
   private final TicketsService ticketService;
-
+  private final PersonnelService personnelService;
 
   public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
-      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketsService ticketService) {
+      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketsService ticketService,
+                      PersonnelService personnelService) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.accountService = accountService;
     this.memberService = memberService;
     this.ticketService = ticketService;
+    this.personnelService = personnelService;
   }
-
-  public TicketDto ticket (String id  ){
-    return this.ticketService.getTicketById(id);
-  }
-
-  //TODO clean-up stupid thing........
-  //param just because graphQL requires it?
-  public List<TicketDto> tickets (String req ){
-    return this.ticketService.getAllTickets();
-  }
-
-
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
 
@@ -88,4 +83,23 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       )
       .collect(Collectors.toList());
   }
+
+  public TicketDto ticket (String id  ){
+    return this.ticketService.getTicketById(id);
+  }
+
+  public List<TicketDto> tickets (){
+    return this.ticketService.getAllTickets();
+  }
+
+  public String me (DataFetchingEnvironment env) {
+    try {
+      return  GraphQLConfiguration.getEmail(env, personnelService);
+    }
+    catch (Exception e ) {
+      log.info("Exception occured when trying to access user email: " + e);
+      return null;
+    }
+  }
+
 }

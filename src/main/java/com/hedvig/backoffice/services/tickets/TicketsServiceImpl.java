@@ -1,9 +1,12 @@
 package com.hedvig.backoffice.services.tickets;
 
+import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.graphql.types.TicketIn;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +35,22 @@ public class TicketsServiceImpl implements TicketsService {
     //This is where the ID is generated
     String id  = UUID.randomUUID().toString();
 
+    LocalDate remindDate;
+    LocalTime remindTime ;
+    String remindMessage;
+
+    //A reminder is optional
+    if (t.getReminder() == null ) {
+      remindDate = null;
+      remindTime = null;
+      remindMessage = "";
+    }
+    else {
+      remindDate = t.getReminder().getDate();
+      remindTime = t.getReminder().getTime();
+      remindMessage = t.getReminder().getMessage();
+    }
+
     TicketDto ticket = new TicketDto(
         id,
         t.getAssignedTo(),
@@ -39,15 +58,15 @@ public class TicketsServiceImpl implements TicketsService {
         createdBy,
         t.getPriority(),
         t.getType(),
-        t.getReminder().getDate(),
-        t.getReminder().getTime(),
-        t.getReminder().getMessage(),
+        remindDate,
+        remindTime,
+        remindMessage,
         t.getDescription(),
         t.getStatus()
     );
 
     this.ticketServiceClient.createTicket( id, ticket );
-    //Obs, for now the ticket is returned directly from here...
+    //NB! For now the ticket is returned directly from here...
     return ticket;
   }
 
@@ -66,5 +85,9 @@ public class TicketsServiceImpl implements TicketsService {
     return this.ticketServiceClient.changeStatus(ticketId, newStatus);
   }
 
+  @Override
+  public TicketDto changeReminder(String ticketId, RemindNotification newReminder) {
+    return this.ticketServiceClient.changeReminder(ticketId, newReminder );
+  }
 
 }

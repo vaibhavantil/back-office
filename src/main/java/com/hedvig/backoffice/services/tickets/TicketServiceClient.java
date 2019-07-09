@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
+import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -34,4 +35,8 @@ public interface TicketServiceClient {
 
   @PostMapping("/_/tickets/status/{id}")
   TicketDto changeStatus (@PathVariable String id, @RequestBody TicketStatus newStatus);
+
+  @PostMapping("/_/tickets/reminder/{id}")
+  TicketDto changeReminder (@PathVariable String id, @RequestBody RemindNotification newReminder);
+
 }

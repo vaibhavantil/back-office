@@ -346,4 +346,9 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return this.ticketsService.changeStatus( ticketId, newStatus );
   }
 
+  TicketDto changeTicketReminder (String ticketId, RemindNotification newReminder ) {
+    return this.ticketsService.changeReminder(ticketId, newReminder);
+  }
+
 }
+

@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.tickets;
 
+import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.graphql.types.TicketIn;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
@@ -21,5 +22,7 @@ public interface TicketsService {
   TicketDto assignToTeamMember (String ticketId, String teamMemberId ) ;
 
   TicketDto changeStatus (String ticketId, TicketStatus newStatus);
+
+  TicketDto changeReminder (String ticketId, RemindNotification newReminder );
 
 }

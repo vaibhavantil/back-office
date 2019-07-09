@@ -9,7 +9,8 @@ type QueryType {
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
   ticket (id: ID!): Ticket
-  tickets (req: String ) : [Ticket]
+  tickets : [Ticket]
+  me : String
 }
 
 type MutationType {
@@ -24,12 +25,11 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-#  createTicket ( assignedTo: String, createdBy: String, priority: TicketPriority, remindNotificationDate: LocalDate, remindNotificationTime: LocalTime, description: String) : Ticket
   createTicket (ticket: TicketIn) : Ticket
   changeTicketDescription ( id: ID!, newDescription : String ) : Ticket
   assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!) : Ticket
-  changeTicketStatus( ticketId: ID!, newStatus: TicketStatus) : Ticket
-
+  changeTicketStatus (ticketId: ID!, newStatus: TicketStatus) : Ticket
+  changeTicketReminder( ticketId: ID!, newReminder: RemindNotification ) : Ticket
 }
 
 type FileUpload {
@@ -39,7 +39,6 @@ type FileUpload {
   memberId: ID
 }
 
-#TODO:
 type Ticket {
   id: ID
   assignedTo: String
@@ -47,7 +46,6 @@ type Ticket {
   createdBy: String
   priority: Float
   type: TicketType
-  #reminder: RemindNotification
   remindNotificationDate: LocalDate
   remindNotificationTime: LocalTime
   remindMessage: String
@@ -61,9 +59,6 @@ input TicketIn {
   priority: Float
   type: TicketType
   reminder: RemindNotification
-#  remindNotificationDate: LocalDate
-#  remindNotificationTime: LocalTime
-#  remindMessage: String
   description: String
   status : TicketStatus
 }

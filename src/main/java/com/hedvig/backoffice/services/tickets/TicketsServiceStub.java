@@ -1,4 +1,5 @@
 package com.hedvig.backoffice.services.tickets;
+import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.graphql.types.TicketIn;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
@@ -153,5 +154,28 @@ public class TicketsServiceStub implements TicketsService {
     }
   }
 
+  @Override
+  public TicketDto changeReminder(String ticketId, RemindNotification newReminder) {
+    try {
+      TicketDto t = tickets.get(ticketId);
+      TicketDto updateT = new TicketDto(
+        t.getId(),
+        t.getAssignedTo(),
+        Instant.now(),
+        t.getCreatedBy(),
+        t.getPriority(),
+        t.getType(),
+        newReminder.getDate(),
+        newReminder.getTime(),
+        newReminder.getMessage(),
+        t.getDescription(),
+        t.getStatus()
+      );
+      tickets.replace(updateT.getId(), updateT);
+      return updateT;
+    } catch (Error e) {
+      return null;
+    }
+  }
 
 }
