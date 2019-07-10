@@ -1,8 +1,8 @@
 package com.hedvig.backoffice.services.tickets;
+
 import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.graphql.types.TicketIn;
 import com.hedvig.backoffice.services.tickets.dto.*;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class TicketsServiceStub implements TicketsService {
 
-  private HashMap<String, TicketDto> tickets = new HashMap<String, TicketDto>();
+  private HashMap<String, TicketDto> tickets;
 
   public TicketsServiceStub() {
     String[] teamMembers = {"Matilda", "Karl", "Johanna", "Tomas", "Kalle", "Emma", "Sara", "Axel", "Unassigned"};

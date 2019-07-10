@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
@@ -39,7 +40,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final PersonnelService personnelService;
 
   public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
-      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketsService ticketService,
+                      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketsService ticketService,
                       PersonnelService personnelService) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
@@ -53,8 +54,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
 
     return productPricingService.getMonthlyPayments(month).stream()
-        .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getSubscription()))
-        .collect(Collectors.toList());
+      .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getSubscription()))
+      .collect(Collectors.toList());
   }
 
   public CompletableFuture<Member> member(String id) {
@@ -84,19 +85,18 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       .collect(Collectors.toList());
   }
 
-  public TicketDto ticket (String id  ){
-        return this.ticketService.getTicketById(id);
-   }
+  public TicketDto ticket(String id) {
+    return this.ticketService.getTicketById(id);
+  }
 
-  public List<TicketDto> tickets (){
+  public List<TicketDto> tickets() {
     return this.ticketService.getAllTickets();
   }
 
-  public String me (DataFetchingEnvironment env) {
+  public String me(DataFetchingEnvironment env) {
     try {
-      return  GraphQLConfiguration.getEmail(env, personnelService);
-    }
-    catch (Exception e ) {
+      return GraphQLConfiguration.getEmail(env, personnelService);
+    } catch (Exception e) {
       log.info("Exception occured when trying to access user email: " + e);
       return null;
     }

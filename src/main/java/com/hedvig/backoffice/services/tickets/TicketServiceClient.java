@@ -13,30 +13,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 @FeignClient(
-  name= "ticket-service",
+  name = "ticket-service",
   url = "${tickets.baseUrl}",
   configuration = FeignConfig.class)
 
 public interface TicketServiceClient {
   @GetMapping("/_/tickets/{id}")
-  TicketDto getTicket (@PathVariable("id") String id);
+  TicketDto getTicket(@PathVariable("id") String id);
 
-  @GetMapping ("/_/tickets/all")
-  List<TicketDto> getTickets ();
+  @GetMapping("/_/tickets/all")
+  List<TicketDto> getTickets();
 
   @PostMapping("/_/tickets/new/{id}")
-  TicketDto createTicket (@PathVariable String id, @RequestBody TicketDto ticket);
+  TicketDto createTicket(@PathVariable String id, @RequestBody TicketDto ticket);
 
   @PostMapping("/_/tickets/description/{id}")
-  TicketDto changeDescription (@PathVariable String id, @RequestBody String newDescription);
+  TicketDto changeDescription(@PathVariable String id, @RequestBody String newDescription);
 
   @PostMapping("/_/tickets/assign/{id}")
-  TicketDto changeAssignedTo (@PathVariable String id, @RequestBody String assignTo);
+  TicketDto changeAssignedTo(@PathVariable String id, @RequestBody String assignTo);
 
   @PostMapping("/_/tickets/status/{id}")
-  TicketDto changeStatus (@PathVariable String id, @RequestBody TicketStatus newStatus);
+  TicketDto changeStatus(@PathVariable String id, @RequestBody TicketStatus newStatus);
 
   @PostMapping("/_/tickets/reminder/{id}")
-  TicketDto changeReminder (@PathVariable String id, @RequestBody RemindNotification newReminder);
+  TicketDto changeReminder(@PathVariable String id, @RequestBody RemindNotification newReminder);
 
 }

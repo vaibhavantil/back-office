@@ -315,38 +315,35 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
 
-  //Tickets:
   //The following TicketDto is not the same as above ^
   //These are for the ticket-service in the Task Manager,
-  TicketDto createTicket ( TicketIn ticket, DataFetchingEnvironment env )
-  {
+  TicketDto createTicket(TicketIn ticket, DataFetchingEnvironment env) {
     String createdBy;
     try {
-     createdBy = GraphQLConfiguration.getEmail(env, personnelService);
+      createdBy = GraphQLConfiguration.getEmail(env, personnelService);
 
-    }
-    catch (Exception e ) {
+    } catch (Exception e) {
       createdBy = "";
       log.info("Could not get email from personnelService");
       return null;
 
     }
-    return this.ticketsService.createNewTicket( ticket, createdBy ) ;
+    return this.ticketsService.createNewTicket(ticket, createdBy);
   }
 
-  TicketDto changeTicketDescription (String id, String newDescription ) {
-    return this.ticketsService.changeDescription( id, newDescription);
+  TicketDto changeTicketDescription(String id, String newDescription) {
+    return this.ticketsService.changeDescription(id, newDescription);
   }
 
-  TicketDto assignTicketToTeamMember (String ticketId, String teamMemberId) {
-    return this.ticketsService.assignToTeamMember( ticketId, teamMemberId);
+  TicketDto assignTicketToTeamMember(String ticketId, String teamMemberId) {
+    return this.ticketsService.assignToTeamMember(ticketId, teamMemberId);
   }
 
-  TicketDto changeTicketStatus (String ticketId, TicketStatus newStatus) {
-    return this.ticketsService.changeStatus( ticketId, newStatus );
+  TicketDto changeTicketStatus(String ticketId, TicketStatus newStatus) {
+    return this.ticketsService.changeStatus(ticketId, newStatus);
   }
 
-  TicketDto changeTicketReminder (String ticketId, RemindNotification newReminder ) {
+  TicketDto changeTicketReminder(String ticketId, RemindNotification newReminder) {
     return this.ticketsService.changeReminder(ticketId, newReminder);
   }
 

@@ -13,7 +13,7 @@ import java.util.UUID;
 public class TicketsServiceImpl implements TicketsService {
   private final TicketServiceClient ticketServiceClient;
 
-  public TicketsServiceImpl (TicketServiceClient ticketServiceClient) {
+  public TicketsServiceImpl(TicketServiceClient ticketServiceClient) {
     this.ticketServiceClient = ticketServiceClient;
   }
 
@@ -30,42 +30,41 @@ public class TicketsServiceImpl implements TicketsService {
   }
 
   @Override
-  public TicketDto createNewTicket( TicketIn t, String createdBy ) {
+  public TicketDto createNewTicket(TicketIn t, String createdBy) {
 
     //This is where the ID is generated
-    String id  = UUID.randomUUID().toString();
+    String id = UUID.randomUUID().toString();
 
     LocalDate remindDate;
-    LocalTime remindTime ;
+    LocalTime remindTime;
     String remindMessage;
 
     //Reminder is optional. I.E can be null
-    if (t.getReminder() == null ) {
+    if (t.getReminder() == null) {
       remindDate = null;
       remindTime = null;
       remindMessage = "";
-    }
-    else {
+    } else {
       remindDate = t.getReminder().getDate();
       remindTime = t.getReminder().getTime();
       remindMessage = t.getReminder().getMessage();
     }
 
     TicketDto ticket = new TicketDto(
-        id,
-        t.getAssignedTo(),
-        Instant.now(), // Back-office timestamps the ticket
-        createdBy,
-        t.getPriority(),
-        t.getType(),
-        remindDate,
-        remindTime,
-        remindMessage,
-        t.getDescription(),
-        t.getStatus()
+      id,
+      t.getAssignedTo(),
+      Instant.now(), // Back-office timestamps the ticket
+      createdBy,
+      t.getPriority(),
+      t.getType(),
+      remindDate,
+      remindTime,
+      remindMessage,
+      t.getDescription(),
+      t.getStatus()
     );
 
-    return this.ticketServiceClient.createTicket( id, ticket );
+    return this.ticketServiceClient.createTicket(id, ticket);
   }
 
   @Override
@@ -85,7 +84,7 @@ public class TicketsServiceImpl implements TicketsService {
 
   @Override
   public TicketDto changeReminder(String ticketId, RemindNotification newReminder) {
-    return this.ticketServiceClient.changeReminder(ticketId, newReminder );
+    return this.ticketServiceClient.changeReminder(ticketId, newReminder);
   }
 
 }
