@@ -15,13 +15,11 @@ public class TicketsServiceStub implements TicketsService {
 
   public TicketsServiceStub() {
     String[] teamMembers = {"Matilda", "Karl", "Johanna", "Tomas", "Kalle", "Emma", "Sara", "Axel", "Unassigned"};
-    TicketPriority[] priorities = {TicketPriority.LOW, TicketPriority.MEDIUM, TicketPriority.HIGH};
     TicketType[] type = {TicketType.CALL_ME, TicketType.CLAIM, TicketType.MESSAGE, TicketType.REMIND};
 
     this.tickets = new HashMap<String, TicketDto>();
     Random rand = new Random();
 
-    //Generate Fake Tickets
     int NUM_TICKETS = 10;
     for (int i = 0; i < NUM_TICKETS; i++) {
       String id = UUID.randomUUID().toString();
@@ -38,7 +36,6 @@ public class TicketsServiceStub implements TicketsService {
         "A short description of the ticket contents",
         TicketStatus.WAITING
       );
-
       tickets.put(id, t);
     }
   }
@@ -56,7 +53,6 @@ public class TicketsServiceStub implements TicketsService {
       return t;
     } catch (Error e) {
       return null;
-      // Handle error
     }
   }
 

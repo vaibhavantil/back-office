@@ -316,7 +316,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
 
   //Tickets:
-  //V The following TicketDto is not the same as above ^
+  //The following TicketDto is not the same as above ^
   //These are for the ticket-service in the Task Manager,
   TicketDto createTicket ( TicketIn ticket, DataFetchingEnvironment env )
   {

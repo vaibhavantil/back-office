@@ -85,8 +85,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   }
 
   public TicketDto ticket (String id  ){
-    return this.ticketService.getTicketById(id);
-  }
+        return this.ticketService.getTicketById(id);
+   }
 
   public List<TicketDto> tickets (){
     return this.ticketService.getAllTickets();

@@ -69,12 +69,6 @@ input RemindNotification {
   message: String
 }
 
-enum TicketPriority {
-  HIGH,
-  MEDIUM,
-  LOW,
-}
-
 enum TicketStatus {
   RESOLVED,
   WAITING,

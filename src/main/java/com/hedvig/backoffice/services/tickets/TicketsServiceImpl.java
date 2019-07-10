@@ -39,7 +39,7 @@ public class TicketsServiceImpl implements TicketsService {
     LocalTime remindTime ;
     String remindMessage;
 
-    //A reminder is optional
+    //Reminder is optional. I.E can be null
     if (t.getReminder() == null ) {
       remindDate = null;
       remindTime = null;
@@ -65,9 +65,7 @@ public class TicketsServiceImpl implements TicketsService {
         t.getStatus()
     );
 
-    this.ticketServiceClient.createTicket( id, ticket );
-    //NB! For now the ticket is returned directly from here...
-    return ticket;
+    return this.ticketServiceClient.createTicket( id, ticket );
   }
 
   @Override

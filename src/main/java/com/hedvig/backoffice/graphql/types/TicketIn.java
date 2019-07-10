@@ -2,12 +2,8 @@ package com.hedvig.backoffice.graphql.types;
 
 import lombok.Value;
 
-import com.hedvig.backoffice.services.tickets.dto.TicketPriority;
 import com.hedvig.backoffice.services.tickets.dto.TicketType;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 
 /*

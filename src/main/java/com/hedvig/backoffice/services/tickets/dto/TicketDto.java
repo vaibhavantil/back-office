@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 @Value
 public class TicketDto {
-  String id; //Change to UUID id; maybe?
+  String id; //Change to UUID id maybe?
   String assignedTo;
   Instant creationDate;
   String createdBy;
