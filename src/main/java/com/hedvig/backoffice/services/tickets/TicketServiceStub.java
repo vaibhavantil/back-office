@@ -9,11 +9,11 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TicketsServiceStub implements TicketsService {
+public class TicketServiceStub implements TicketService {
 
   private HashMap<String, TicketDto> tickets;
 
-  public TicketsServiceStub() {
+  public TicketServiceStub() {
     String[] teamMembers = {"Matilda", "Karl", "Johanna", "Tomas", "Kalle", "Emma", "Sara", "Axel", "Unassigned"};
     TicketType[] type = {TicketType.CALL_ME, TicketType.CLAIM, TicketType.MESSAGE, TicketType.REMIND};
 

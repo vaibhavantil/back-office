@@ -7,7 +7,7 @@ import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 
 import java.util.List;
 
-public interface TicketsService {
+public interface TicketService {
 
   List<TicketDto> getAllTickets();
 

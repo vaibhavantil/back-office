@@ -6,6 +6,7 @@ import lombok.Value;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.UUID;
 
 @Value
 public class TicketDto {

@@ -10,10 +10,10 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
-public class TicketsServiceImpl implements TicketsService {
+public class TicketServiceImpl implements TicketService {
   private final TicketServiceClient ticketServiceClient;
 
-  public TicketsServiceImpl(TicketServiceClient ticketServiceClient) {
+  public TicketServiceImpl(TicketServiceClient ticketServiceClient) {
     this.ticketServiceClient = ticketServiceClient;
   }
 
@@ -32,14 +32,12 @@ public class TicketsServiceImpl implements TicketsService {
   @Override
   public TicketDto createNewTicket(TicketIn t, String createdBy) {
 
-    //This is where the ID is generated
     String id = UUID.randomUUID().toString();
 
     LocalDate remindDate;
     LocalTime remindTime;
     String remindMessage;
 
-    //Reminder is optional. I.E can be null
     if (t.getReminder() == null) {
       remindDate = null;
       remindTime = null;
@@ -53,7 +51,7 @@ public class TicketsServiceImpl implements TicketsService {
     TicketDto ticket = new TicketDto(
       id,
       t.getAssignedTo(),
-      Instant.now(), // Back-office timestamps the ticket
+      Instant.now(),
       createdBy,
       t.getPriority(),
       t.getType(),

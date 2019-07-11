@@ -20,7 +20,7 @@ import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.tickets.TicketsService;
+import com.hedvig.backoffice.services.tickets.TicketService;
 
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import graphql.schema.DataFetchingEnvironment;
@@ -36,11 +36,11 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final ClaimLoader claimLoader;
   private final AccountService accountService;
   private final MemberService memberService;
-  private final TicketsService ticketService;
+  private final TicketService ticketService;
   private final PersonnelService personnelService;
 
   public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
-                      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketsService ticketService,
+                      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketService ticketService,
                       PersonnelService personnelService) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;

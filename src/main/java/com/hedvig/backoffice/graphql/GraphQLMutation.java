@@ -15,7 +15,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
-import com.hedvig.backoffice.services.tickets.TicketsService;
+import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.*;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import graphql.ErrorType;
@@ -48,18 +48,18 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ClaimLoader claimLoader;
   private final ClaimsService claimsService;
   private final AccountService accountService;
-  private final TicketsService ticketsService;
+  private final TicketService ticketService;
 
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
                          MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
-                         AccountService accountService, TicketsService ticketsService) {
+                         AccountService accountService, TicketService ticketService) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.claimsService = claimsService;
     this.accountService = accountService;
-    this.ticketsService = ticketsService;
+    this.ticketService = ticketService;
   }
 
   public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount,
@@ -314,37 +314,31 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-
-  //The following TicketDto is not the same as above ^
-  //These are for the ticket-service in the Task Manager,
   TicketDto createTicket(TicketIn ticket, DataFetchingEnvironment env) {
-    String createdBy;
     try {
-      createdBy = GraphQLConfiguration.getEmail(env, personnelService);
-
+      String createdBy = GraphQLConfiguration.getEmail(env, personnelService);
+      return this.ticketService.createNewTicket(ticket, createdBy);
     } catch (Exception e) {
-      createdBy = "";
-      log.info("Could not get email from personnelService");
-      return null;
-
+      String errorMessage = "Error when creating ticket: Unverified user. Could not get email from personnelService.";
+      log.error(errorMessage, e);
+      throw new RuntimeException(errorMessage, e);
     }
-    return this.ticketsService.createNewTicket(ticket, createdBy);
   }
 
   TicketDto changeTicketDescription(String id, String newDescription) {
-    return this.ticketsService.changeDescription(id, newDescription);
+    return this.ticketService.changeDescription(id, newDescription);
   }
 
   TicketDto assignTicketToTeamMember(String ticketId, String teamMemberId) {
-    return this.ticketsService.assignToTeamMember(ticketId, teamMemberId);
+    return this.ticketService.assignToTeamMember(ticketId, teamMemberId);
   }
 
   TicketDto changeTicketStatus(String ticketId, TicketStatus newStatus) {
-    return this.ticketsService.changeStatus(ticketId, newStatus);
+    return this.ticketService.changeStatus(ticketId, newStatus);
   }
 
   TicketDto changeTicketReminder(String ticketId, RemindNotification newReminder) {
-    return this.ticketsService.changeReminder(ticketId, newReminder);
+    return this.ticketService.changeReminder(ticketId, newReminder);
   }
 
 }
