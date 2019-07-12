@@ -25,7 +25,7 @@ public class ClaimsServiceImpl implements ClaimsService {
   private final String bucketName;
 
   @Autowired
-  public ClaimsServiceImpl(@Value("${claims.baseUrl}") String baseUrl, ClaimsServiceClient client, AmazonS3 amazonS3, @Value("${claims.bucketName") String bucketName) {
+  public ClaimsServiceImpl(ClaimsServiceClient client, AmazonS3 amazonS3, @Value("${claims.bucketName}") String bucketName) {
     this.client = client;
     this.amazonS3 = amazonS3;
     this.bucketName = bucketName;
@@ -135,7 +135,12 @@ public class ClaimsServiceImpl implements ClaimsService {
       .stream()
       .map(c -> {
         val signedAudioUrl = signAudioUrl(c.getAudioURL());
-        return c.toBuilder().audioURL(signedAudioUrl).build();
+        val claimWithSigned = c.toBuilder().audioURL(signedAudioUrl).build();
+        claimWithSigned.setId(c.getId());
+        claimWithSigned.setClaimID(c.getClaimID());
+        claimWithSigned.setDate(c.getDate());
+        claimWithSigned.setUserId(c.getUserId());
+        return claimWithSigned;
       })
       .collect(Collectors.toList());
   }
