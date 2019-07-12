@@ -1,9 +1,7 @@
 package com.hedvig.backoffice.graphql.types;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import lombok.Value;
-import lombok.val;
 
 import org.javamoney.moneta.Money;
 
