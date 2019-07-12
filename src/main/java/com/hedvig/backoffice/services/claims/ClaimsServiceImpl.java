@@ -1,24 +1,35 @@
 package com.hedvig.backoffice.services.claims;
 
+import com.amazonaws.HttpMethod;
+import com.amazonaws.services.s3.AmazonS3;
 import com.hedvig.backoffice.services.claims.dto.*;
 import feign.FeignException;
+import jdk.internal.jline.internal.Nullable;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class ClaimsServiceImpl implements ClaimsService {
 
   private final ClaimsServiceClient client;
+  private final AmazonS3 amazonS3;
+  private final String bucketName;
 
   @Autowired
-  public ClaimsServiceImpl(@Value("${claims.baseUrl}") String baseUrl, ClaimsServiceClient client) {
+  public ClaimsServiceImpl(@Value("${claims.baseUrl}") String baseUrl, ClaimsServiceClient client, AmazonS3 amazonS3, @Value("${claims.bucketName") String bucketName) {
     this.client = client;
+    this.amazonS3 = amazonS3;
+    this.bucketName = bucketName;
   }
 
   @Override
@@ -121,7 +132,13 @@ public class ClaimsServiceImpl implements ClaimsService {
 
   @Override
   public List<Claim> getClaimsByIds(List<UUID> ids) {
-    return client.getClaimsByIds(new ClaimsByIdsDto(ids));
+    return client.getClaimsByIds(new ClaimsByIdsDto(ids))
+      .stream()
+      .map(c -> {
+        val signedAudioUrl = signAudioUrl(c.getAudioURL());
+        return c.toBuilder().audioURL(signedAudioUrl).build();
+      })
+      .collect(Collectors.toList());
   }
 
   @Override
@@ -132,5 +149,14 @@ public class ClaimsServiceImpl implements ClaimsService {
   @Override
   public void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token) {
     client.markEmployeeClaim(dto, token);
+  }
+
+  private String signAudioUrl(String audioUrl) {
+    if (audioUrl == null || audioUrl.equals("ManualClaim")) {
+      return audioUrl;
+    }
+    String[] split = audioUrl.split("/");
+    String key = split[split.length - 1];
+    return amazonS3.generatePresignedUrl(bucketName, key, new Date(Instant.now().plus(30, ChronoUnit.MINUTES).toEpochMilli()), HttpMethod.GET).toString();
   }
 }
