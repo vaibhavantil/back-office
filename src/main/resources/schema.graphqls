@@ -25,7 +25,7 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-  createTicket (ticket: TicketIn) : Ticket
+  createTicket (ticket: TicketInput) : Ticket
   changeTicketDescription ( id: ID!, newDescription : String ) : Ticket
   assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!) : Ticket
   changeTicketStatus (ticketId: ID!, newStatus: TicketStatus) : Ticket
@@ -39,6 +39,18 @@ type FileUpload {
   memberId: ID
 }
 
+input TicketInput {
+  assignedTo: String
+  priority: Float
+  type: TicketType
+  remindNotificationDate: LocalDate
+  remindNotificationTime: LocalTime
+  remindMessage: String
+  description: String
+  status : TicketStatus
+}
+
+
 type Ticket {
   id: ID
   assignedTo: String
@@ -49,16 +61,6 @@ type Ticket {
   remindNotificationDate: LocalDate
   remindNotificationTime: LocalTime
   remindMessage: String
-  description: String
-  status : TicketStatus
-}
-
-input TicketIn {
-  assignedTo: String
-  createdBy: String
-  priority: Float
-  type: TicketType
-  reminder: RemindNotification
   description: String
   status : TicketStatus
 }

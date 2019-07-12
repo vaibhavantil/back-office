@@ -4,22 +4,17 @@ import lombok.Value;
 import com.hedvig.backoffice.services.tickets.dto.TicketType;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 
-
-/*
-  Note: TicketIn is used when creating new tickets on the front-end.
-  It lacks an ID field and createdDate field. Those are set here
-  in the back-office.
-  [Front-end] -> TicketIn -> [Back-office] -> TicketDto -> ...[Ticket-service]
-*/
-
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Value
-public class TicketIn {
+public class TicketInput {
   String assignedTo;
-  String createdBy;
   float priority; //0 <= priority <= 1
   TicketType type;
-  RemindNotification reminder;
+  LocalDate remindNotificationDate;
+  LocalTime remindNotificationTime;
+  String remindMessage;
   String description;
   TicketStatus status;
 }

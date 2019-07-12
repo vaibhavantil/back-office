@@ -2,8 +2,7 @@ package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.graphql.types.RemindNotification;
-import com.hedvig.backoffice.services.tickets.dto.TicketDto;
-import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
+import com.hedvig.backoffice.services.tickets.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.UUID;
 
 @FeignClient(
   name = "ticket-service",
@@ -19,24 +19,28 @@ import java.util.List;
 
 public interface TicketServiceClient {
   @GetMapping("/_/tickets/{id}")
-  TicketDto getTicket(@PathVariable("id") String id);
+  TicketDto getTicket(@PathVariable("id") UUID id);
 
   @GetMapping("/_/tickets/all")
   List<TicketDto> getTickets();
 
-  @PostMapping("/_/tickets/new/{id}")
-  TicketDto createTicket(@PathVariable String id, @RequestBody TicketDto ticket);
+  @PostMapping("/_/tickets/new/")
+  TicketDto createTicket(@RequestBody TicketDto ticket);
 
   @PostMapping("/_/tickets/description/{id}")
-  TicketDto changeDescription(@PathVariable String id, @RequestBody String newDescription);
+  TicketDto changeDescription(@PathVariable UUID id,
+                              @RequestBody NewDescriptionDto newDescription);
 
   @PostMapping("/_/tickets/assign/{id}")
-  TicketDto changeAssignedTo(@PathVariable String id, @RequestBody String assignTo);
+  TicketDto changeAssignedTo(@PathVariable UUID id,
+                             @RequestBody NewAssignedToDto assignedTo);
 
   @PostMapping("/_/tickets/status/{id}")
-  TicketDto changeStatus(@PathVariable String id, @RequestBody TicketStatus newStatus);
+  TicketDto changeStatus(@PathVariable UUID id,
+                         @RequestBody NewStatusDto newStatus);
 
   @PostMapping("/_/tickets/reminder/{id}")
-  TicketDto changeReminder(@PathVariable String id, @RequestBody RemindNotification newReminder);
+  TicketDto changeReminder(@PathVariable UUID id,
+                           @RequestBody NewReminderDto newReminder);
 
 }

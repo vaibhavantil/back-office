@@ -85,7 +85,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       .collect(Collectors.toList());
   }
 
-  public TicketDto ticket(String id) {
+  public TicketDto ticket(UUID  id) {
     return this.ticketService.getTicketById(id);
   }
 

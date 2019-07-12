@@ -1,12 +1,8 @@
 package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.graphql.types.RemindNotification;
-import com.hedvig.backoffice.graphql.types.TicketIn;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,64 +21,33 @@ public class TicketServiceImpl implements TicketService {
   }
 
   @Override
-  public TicketDto getTicketById(String ticketId) {
+  public TicketDto getTicketById(UUID ticketId) {
     return ticketServiceClient.getTicket(ticketId);
   }
 
   @Override
-  public TicketDto createNewTicket(TicketIn t, String createdBy) {
-
-    String id = UUID.randomUUID().toString();
-
-    LocalDate remindDate;
-    LocalTime remindTime;
-    String remindMessage;
-
-    if (t.getReminder() == null) {
-      remindDate = null;
-      remindTime = null;
-      remindMessage = "";
-    } else {
-      remindDate = t.getReminder().getDate();
-      remindTime = t.getReminder().getTime();
-      remindMessage = t.getReminder().getMessage();
-    }
-
-    TicketDto ticket = new TicketDto(
-      id,
-      t.getAssignedTo(),
-      Instant.now(),
-      createdBy,
-      t.getPriority(),
-      t.getType(),
-      remindDate,
-      remindTime,
-      remindMessage,
-      t.getDescription(),
-      t.getStatus()
-    );
-
-    return this.ticketServiceClient.createTicket(id, ticket);
+  public TicketDto createNewTicket(TicketDto ticket, String createdBy) {
+    return this.ticketServiceClient.createTicket(ticket);
   }
 
   @Override
-  public TicketDto changeDescription(String ticketId, String newDescription) {
-    return this.ticketServiceClient.changeDescription(ticketId, newDescription);
+  public TicketDto changeDescription(UUID ticketId, String newDescription, String modifiedBy) {
+    return this.ticketServiceClient.changeDescription(ticketId, new NewDescriptionDto( newDescription,  modifiedBy));
   }
 
   @Override
-  public TicketDto assignToTeamMember(String ticketId, String assignTo) {
-    return this.ticketServiceClient.changeAssignedTo(ticketId, assignTo);
+  public TicketDto assignToTeamMember(UUID ticketId, String assignTo, String modifiedBy) {
+    return this.ticketServiceClient.changeAssignedTo(ticketId,new NewAssignedToDto(assignTo, modifiedBy));
   }
 
   @Override
-  public TicketDto changeStatus(String ticketId, TicketStatus newStatus) {
-    return this.ticketServiceClient.changeStatus(ticketId, newStatus);
+  public TicketDto changeStatus(UUID ticketId, TicketStatus newStatus, String modifiedBy) {
+    return this.ticketServiceClient.changeStatus(ticketId, new NewStatusDto(newStatus, modifiedBy));
   }
 
   @Override
-  public TicketDto changeReminder(String ticketId, RemindNotification newReminder) {
-    return this.ticketServiceClient.changeReminder(ticketId, newReminder);
+  public TicketDto changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy) {
+    return this.ticketServiceClient.changeReminder(ticketId, new NewReminderDto( newReminder, modifiedBy));
   }
 
 }

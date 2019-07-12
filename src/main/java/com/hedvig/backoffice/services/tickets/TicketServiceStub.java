@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.graphql.types.RemindNotification;
-import com.hedvig.backoffice.graphql.types.TicketIn;
 import com.hedvig.backoffice.services.tickets.dto.*;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -11,18 +10,18 @@ import java.util.stream.Collectors;
 
 public class TicketServiceStub implements TicketService {
 
-  private HashMap<String, TicketDto> tickets;
+  private HashMap<UUID, TicketDto> tickets;
 
   public TicketServiceStub() {
     String[] teamMembers = {"Matilda", "Karl", "Johanna", "Tomas", "Kalle", "Emma", "Sara", "Axel", "Unassigned"};
     TicketType[] type = {TicketType.CALL_ME, TicketType.CLAIM, TicketType.MESSAGE, TicketType.REMIND};
 
-    this.tickets = new HashMap<String, TicketDto>();
+    this.tickets = new HashMap<UUID, TicketDto>();
     Random rand = new Random();
 
     int NUM_TICKETS = 10;
     for (int i = 0; i < NUM_TICKETS; i++) {
-      String id = UUID.randomUUID().toString();
+      UUID id = UUID.randomUUID();
       TicketDto t = new TicketDto(
         id,
         teamMembers[i % teamMembers.length],
@@ -47,7 +46,7 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public TicketDto getTicketById(String ticketId) {
+  public TicketDto getTicketById(UUID ticketId) {
     try {
       TicketDto t = tickets.get(ticketId);
       return t;
@@ -57,8 +56,8 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public TicketDto createNewTicket(TicketIn t, String createdBy) {
-    String id = UUID.randomUUID().toString();
+  public TicketDto createNewTicket(TicketDto t, String createdBy) {
+    UUID id = UUID.randomUUID();
     TicketDto newT = new TicketDto(
       id,
       t.getAssignedTo(),
@@ -66,9 +65,9 @@ public class TicketServiceStub implements TicketService {
       createdBy,
       t.getPriority(),
       t.getType(),
-      t.getReminder().getDate(),
-      t.getReminder().getTime(),
-      t.getReminder().getMessage(),
+      t.getRemindNotificationDate(),
+      t.getRemindNotificationTime(),
+      t.getRemindMessage(),
       t.getDescription(),
       t.getStatus()
     );
@@ -79,7 +78,7 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public TicketDto changeDescription(String ticketId, String newDescription) {
+  public TicketDto changeDescription(UUID ticketId, String newDescription, String modifiedBy ) {
     try {
       TicketDto t = tickets.get(ticketId);
       TicketDto updateT = new TicketDto(
@@ -103,7 +102,7 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public TicketDto assignToTeamMember(String ticketId, String assignTo) {
+  public TicketDto assignToTeamMember(UUID ticketId, String assignTo, String modifiedBy) {
     try {
       TicketDto t = tickets.get(ticketId);
       TicketDto updateT = new TicketDto(
@@ -127,7 +126,7 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public TicketDto changeStatus(String ticketId, TicketStatus newStatus) {
+  public TicketDto changeStatus(UUID ticketId, TicketStatus newStatus, String modifiedBy) {
     try {
       TicketDto t = tickets.get(ticketId);
       TicketDto updateT = new TicketDto(
@@ -151,7 +150,7 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public TicketDto changeReminder(String ticketId, RemindNotification newReminder) {
+  public TicketDto changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy) {
     try {
       TicketDto t = tickets.get(ticketId);
       TicketDto updateT = new TicketDto(

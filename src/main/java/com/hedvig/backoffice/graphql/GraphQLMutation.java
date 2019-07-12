@@ -314,31 +314,53 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-  TicketDto createTicket(TicketIn ticket, DataFetchingEnvironment env) {
+  TicketDto createTicket(TicketInput ticket, DataFetchingEnvironment env) {
+    String createdBy = getUserIdentity(env);
+    TicketDto t = new TicketDto(
+      null,
+      ticket.getAssignedTo(),
+      null,
+      createdBy,
+      ticket.getPriority(),
+      ticket.getType(),
+      ticket.getRemindNotificationDate(),
+      ticket.getRemindNotificationTime(),
+      ticket.getRemindMessage(),
+      ticket.getDescription(),
+      ticket.getStatus()
+    );
+    return this.ticketService.createNewTicket(t, createdBy);
+  }
+
+  TicketDto changeTicketDescription(UUID ticketId, String newDescription, DataFetchingEnvironment env) {
+    String modifiedBy = getUserIdentity(env);
+    return this.ticketService.changeDescription(ticketId, newDescription, modifiedBy);
+  }
+
+  TicketDto assignTicketToTeamMember(UUID ticketId, String teamMemberId, DataFetchingEnvironment env) {
+    String modifiedBy = getUserIdentity(env);
+
+    return this.ticketService.assignToTeamMember(ticketId, teamMemberId, modifiedBy);
+  }
+
+  TicketDto changeTicketStatus(UUID ticketId, TicketStatus newStatus, DataFetchingEnvironment env) {
+    String modifiedBy = getUserIdentity(env);
+    return this.ticketService.changeStatus(ticketId, newStatus, modifiedBy);
+  }
+
+  TicketDto changeTicketReminder(UUID ticketId, RemindNotification newReminder, DataFetchingEnvironment env) {
+    String modifiedBy = getUserIdentity(env);
+    return this.ticketService.changeReminder(ticketId, newReminder, modifiedBy);
+  }
+
+  private  String getUserIdentity(DataFetchingEnvironment env ) {
     try {
-      String createdBy = GraphQLConfiguration.getEmail(env, personnelService);
-      return this.ticketService.createNewTicket(ticket, createdBy);
+      return GraphQLConfiguration.getEmail(env, personnelService);
     } catch (Exception e) {
-      String errorMessage = "Error when creating ticket: Unverified user. Could not get email from personnelService.";
+      String errorMessage = "Error: Unverified user. Could not get email from personnelService.";
       log.error(errorMessage, e);
       throw new RuntimeException(errorMessage, e);
     }
-  }
-
-  TicketDto changeTicketDescription(String id, String newDescription) {
-    return this.ticketService.changeDescription(id, newDescription);
-  }
-
-  TicketDto assignTicketToTeamMember(String ticketId, String teamMemberId) {
-    return this.ticketService.assignToTeamMember(ticketId, teamMemberId);
-  }
-
-  TicketDto changeTicketStatus(String ticketId, TicketStatus newStatus) {
-    return this.ticketService.changeStatus(ticketId, newStatus);
-  }
-
-  TicketDto changeTicketReminder(String ticketId, RemindNotification newReminder) {
-    return this.ticketService.changeReminder(ticketId, newReminder);
   }
 
 }
