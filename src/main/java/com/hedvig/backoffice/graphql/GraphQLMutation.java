@@ -316,19 +316,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   TicketDto createTicket(TicketInput ticket, DataFetchingEnvironment env) {
     String createdBy = getUserIdentity(env);
-    TicketDto t = new TicketDto(
-      null,
-      ticket.getAssignedTo(),
-      null,
-      createdBy,
-      ticket.getPriority(),
-      ticket.getType(),
-      ticket.getRemindNotificationDate(),
-      ticket.getRemindNotificationTime(),
-      ticket.getRemindMessage(),
-      ticket.getDescription(),
-      ticket.getStatus()
-    );
+    CreateTicketDto t = CreateTicketDto.fromTicketInput( ticket, createdBy);
+
     return this.ticketService.createNewTicket(t, createdBy);
   }
 

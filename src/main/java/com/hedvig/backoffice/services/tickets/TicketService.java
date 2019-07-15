@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.graphql.types.RemindNotification;
+import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 
@@ -13,7 +14,7 @@ public interface TicketService {
 
   TicketDto getTicketById(UUID ticketId);
 
-  TicketDto createNewTicket(TicketDto ticket, String createdBy);
+  TicketDto createNewTicket(CreateTicketDto ticket, String createdBy);
 
   TicketDto changeDescription(UUID ticketId, String newDescription, String modifiedBy);
 

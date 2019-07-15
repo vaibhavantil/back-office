@@ -56,7 +56,7 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public TicketDto createNewTicket(TicketDto t, String createdBy) {
+  public TicketDto createNewTicket(CreateTicketDto t, String createdBy) {
     UUID id = UUID.randomUUID();
     TicketDto newT = new TicketDto(
       id,
