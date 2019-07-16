@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @FeignClient(
   name = "ticket-service",
-  url = "${tickets.baseUrl}",
+  url = "${tickets.baseUrl:ticket-service}",
   configuration = FeignConfig.class)
 
 public interface TicketServiceClient {
