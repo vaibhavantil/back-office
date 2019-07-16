@@ -4,15 +4,16 @@ import lombok.Value;
 import com.hedvig.backoffice.services.tickets.dto.TicketType;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Value
 public class TicketInput {
   private String assignedTo;
-  @javax.validation.constraints.Min(0)
-  @javax.validation.constraints.Max(1)
-  @javax.validation.Valid
+  @Min(0)
+  @Max(1)
   private float priority;
   private TicketType type;
   private LocalDate remindNotificationDate;

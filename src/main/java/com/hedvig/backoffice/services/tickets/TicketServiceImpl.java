@@ -15,9 +15,7 @@ public class TicketServiceImpl implements TicketService {
 
   @Override
   public List<TicketDto> getAllTickets() {
-    List<TicketDto> ticketDtos = this.ticketServiceClient.getTickets();
-    int size = ticketDtos.size();
-    return ticketDtos;
+    return this.ticketServiceClient.getTickets();
   }
 
   @Override

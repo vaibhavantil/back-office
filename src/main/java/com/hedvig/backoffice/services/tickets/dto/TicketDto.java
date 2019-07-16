@@ -2,6 +2,8 @@ package com.hedvig.backoffice.services.tickets.dto;
 
 import lombok.Value;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,9 +15,8 @@ public class TicketDto {
   private String assignedTo;
   private Instant creationDate;
   private String createdBy;
-  @javax.validation.constraints.Min(0)
-  @javax.validation.constraints.Max(1)
-  @javax.validation.Valid
+  @Min(0)
+  @Max(1)
   private float priority;
   private TicketType type;
   private LocalDate remindNotificationDate;

@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TicketServiceStub implements TicketService {
 
-
   private HashMap<UUID, TicketDto> tickets;
 
   public TicketServiceStub() {
