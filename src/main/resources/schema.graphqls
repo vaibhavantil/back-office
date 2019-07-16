@@ -9,7 +9,7 @@ type QueryType {
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
   ticket (id: ID!): Ticket
-  tickets: [Ticket!]
+  tickets: [Ticket!]!
   me: String
 }
 

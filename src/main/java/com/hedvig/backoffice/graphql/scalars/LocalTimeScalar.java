@@ -15,17 +15,31 @@ public class LocalTimeScalar extends GraphQLScalarType {
       new Coercing<LocalTime, String>() {
         @Override
         public String serialize(Object o) throws CoercingSerializeException {
-          return fmt.format((LocalTime)o);
+          if (o instanceof LocalTime) {
+            return fmt.format((LocalTime) o);
+          } else {
+            throw new CoercingSerializeException("Could not serialize :" + o.toString() + "as a LocalTime");
+          }
         }
 
         @Override
         public LocalTime parseValue(Object o) throws CoercingParseValueException {
-          return LocalTime.from(fmt.parse((String)o));
+          try {
+            return LocalTime.from(fmt.parse((String) o));
+          } catch (Exception e) {
+            throw new CoercingParseValueException("Could not parse value as a Local Time", e);
+          }
         }
 
         @Override
         public LocalTime parseLiteral(Object o) throws CoercingParseLiteralException {
-          return LocalTime.from(fmt.parse((String)o));
+
+          try {
+
+            return LocalTime.from(fmt.parse((String) o));
+          } catch (Exception e) {
+            throw new CoercingParseLiteralException("Could parse literal as Local Time", e);
+          }
         }
       });
   }
