@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class NewDescriptionDto {
-  String description;
-  String modifiedBy;
+  private String description;
+  private String modifiedBy;
 }

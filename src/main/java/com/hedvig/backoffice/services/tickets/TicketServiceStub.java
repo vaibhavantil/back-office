@@ -2,18 +2,32 @@ package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.services.tickets.dto.*;
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class TicketServiceStub implements TicketService {
+
 
   private HashMap<UUID, TicketDto> tickets;
 
   public TicketServiceStub() {
-    String[] teamMembers = {"Matilda", "Karl", "Johanna", "Tomas", "Kalle", "Emma", "Sara", "Axel", "Unassigned"};
+    String[] teamMembers = {
+      "matilda@hedvig.com",
+      "karl@hedvig.com",
+      "johanna@hedvig.com",
+      "tomas@hedvig.com",
+      "kalle@hedvig.com",
+      "emma@hedvig.com",
+      "sara@hedvig.com",
+      "axel@hedvig.com",
+      "Unassigned"
+    };
     TicketType[] type = {TicketType.CALL_ME, TicketType.CLAIM, TicketType.MESSAGE, TicketType.REMIND};
 
     this.tickets = new HashMap<UUID, TicketDto>();
@@ -78,7 +92,7 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public TicketDto changeDescription(UUID ticketId, String newDescription, String modifiedBy ) {
+  public TicketDto changeDescription(UUID ticketId, String newDescription, String modifiedBy) {
     try {
       TicketDto t = tickets.get(ticketId);
       TicketDto updateT = new TicketDto(
@@ -97,6 +111,7 @@ public class TicketServiceStub implements TicketService {
       tickets.replace(updateT.getId(), updateT);
       return updateT;
     } catch (Error e) {
+      log.error("Could not change description, error:\n" + e.toString());
       return null;
     }
   }
@@ -121,6 +136,7 @@ public class TicketServiceStub implements TicketService {
       tickets.replace(updateT.getId(), updateT);
       return updateT;
     } catch (Error e) {
+      log.error("Could not assign to Team Member, error:\n" + e.toString());
       return null;
     }
   }
@@ -145,6 +161,7 @@ public class TicketServiceStub implements TicketService {
       tickets.replace(updateT.getId(), updateT);
       return updateT;
     } catch (Error e) {
+      log.error("Could not change status, error:\n" + e.toString());
       return null;
     }
   }
@@ -169,6 +186,7 @@ public class TicketServiceStub implements TicketService {
       tickets.replace(updateT.getId(), updateT);
       return updateT;
     } catch (Error e) {
+      log.error("Could not change reminder, error:\n" + e.toString());
       return null;
     }
   }

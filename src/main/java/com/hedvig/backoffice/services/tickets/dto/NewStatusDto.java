@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class NewStatusDto {
-  TicketStatus status;
-  String modifiedBy;
+  private TicketStatus status;
+  private String modifiedBy;
 }

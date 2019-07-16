@@ -9,8 +9,8 @@ type QueryType {
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
   ticket (id: ID!): Ticket
-  tickets : [Ticket]
-  me : String
+  tickets: [Ticket!]
+  me: String
 }
 
 type MutationType {
@@ -25,11 +25,11 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-  createTicket (ticket: TicketInput) : Ticket
-  changeTicketDescription ( id: ID!, newDescription : String ) : Ticket
-  assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!) : Ticket
-  changeTicketStatus (ticketId: ID!, newStatus: TicketStatus) : Ticket
-  changeTicketReminder( ticketId: ID!, newReminder: RemindNotification ) : Ticket
+  createTicket (ticket: TicketInput): Ticket
+  changeTicketDescription ( id: ID!, newDescription : String ): Ticket
+  assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!): Ticket
+  changeTicketStatus (ticketId: ID!, newStatus: TicketStatus): Ticket
+  changeTicketReminder( ticketId: ID!, newReminder: RemindNotification ): Ticket
 }
 
 type FileUpload {
@@ -336,7 +336,7 @@ type Ticket {
   remindNotificationTime: LocalTime
   remindMessage: String
   description: String
-  status : TicketStatus
+  status: TicketStatus
 }
 
 input RemindNotification {

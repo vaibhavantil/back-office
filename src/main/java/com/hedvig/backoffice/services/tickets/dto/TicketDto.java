@@ -9,16 +9,19 @@ import java.util.UUID;
 
 @Value
 public class TicketDto {
-  UUID id;
-  String assignedTo;
-  Instant creationDate;
-  String createdBy;
-  float priority; //0 <= priority <= 1
-  TicketType type;
-  LocalDate remindNotificationDate;
-  LocalTime remindNotificationTime;
-  String remindMessage;
-  String description;
-  TicketStatus status;
+  private UUID id;
+  private String assignedTo;
+  private Instant creationDate;
+  private String createdBy;
+  @javax.validation.constraints.Min(0)
+  @javax.validation.constraints.Max(1)
+  @javax.validation.Valid
+  private float priority;
+  private TicketType type;
+  private LocalDate remindNotificationDate;
+  private LocalTime remindNotificationTime;
+  private String remindMessage;
+  private String description;
+  private TicketStatus status;
 
 }

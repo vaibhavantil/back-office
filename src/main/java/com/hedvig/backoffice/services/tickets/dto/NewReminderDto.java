@@ -5,6 +5,6 @@ import lombok.Value;
 
 @Value
 public class NewReminderDto {
-  RemindNotification reminder;
-  String modifiedBy;
+  private RemindNotification reminder;
+  private String modifiedBy;
 }

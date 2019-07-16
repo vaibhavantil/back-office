@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class NewAssignedToDto {
-  String assignedTo;
-  String modifiedBy;
+  private String assignedTo;
+  private String modifiedBy;
 }
