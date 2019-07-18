@@ -18,6 +18,12 @@ import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
+import com.hedvig.backoffice.services.itemPricing.dto.CategoryDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.PayloadDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemBodyDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.PricepointDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,14 +34,16 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final ClaimLoader claimLoader;
   private final AccountService accountService;
   private final MemberService memberService;
+  private final ItemPricingService itemPricingService;
 
   public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
-      ClaimLoader claimLoader, AccountService accountService, MemberService memberService) {
+      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, ItemPricingService itemPricingService) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.accountService = accountService;
     this.memberService = memberService;
+    this.itemPricingService = itemPricingService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -71,4 +79,17 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       )
       .collect(Collectors.toList());
   }
+
+  public List<CategoryDTO> categories() {
+    return itemPricingService.getCategories();
+  }
+
+  public ItemSearchDTO items(PayloadDTO payload) {
+    return itemPricingService.getItems(payload);
+  }
+
+  public List<PricepointDTO> prices(String date, List<String> ids) {
+    return itemPricingService.getPrices(date, ids);
+  }
+
 }
