@@ -47,9 +47,10 @@ public class AutoAnswerSuggestionServiceStub implements AutoAnswerSuggestionServ
     final String intent = "next_fee_date";
     final String reply = "Pengarna dras från ditt bankkonto via autogiro den 27e varje månad";
     final String text = "När dras degen?";
+    final Float confidence = 0.784f;
 
 
-    return Lists.newArrayList(new SuggestionDTO(intent, reply, text, allRepliesArray));
+    return Lists.newArrayList(new SuggestionDTO(intent, reply, text, confidence, allRepliesArray));
   }
 
   @Override
