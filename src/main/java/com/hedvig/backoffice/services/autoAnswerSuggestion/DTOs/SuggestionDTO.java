@@ -10,7 +10,7 @@ public class SuggestionDTO {
   String intent;
   String reply;
   String text;
-  Float confidence;
+  Double confidence;
   ArrayList<ReplyEntryDTO> allReplies;
 
 
