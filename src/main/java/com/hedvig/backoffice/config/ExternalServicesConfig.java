@@ -6,6 +6,9 @@ import com.hedvig.backoffice.services.account.AccountServiceStub;
 import com.hedvig.backoffice.services.assettracker.AssetTrackerClient;
 import com.hedvig.backoffice.services.assettracker.AssetTrackerClientImpl;
 import com.hedvig.backoffice.services.assettracker.AssetTrackerClientStub;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionServiceImpl;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionServiceStub;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.ClaimsServiceImpl;
 import com.hedvig.backoffice.services.claims.ClaimsServiceStub;
@@ -60,7 +63,9 @@ public class ExternalServicesConfig {
   @Bean
   public HopeAutocompleteService hopeAutocompleteService(@Value("${hopeAutocompleteService.stub:false}") boolean stub) {
     AutowireCapableBeanFactory factory = context.getAutowireCapableBeanFactory();
-    return stub ? factory.createBean(HopeAutocompleteServiceStub.class) : factory.createBean(HopeAutocompleteServiceImpl.class);
+    return stub
+      ? factory.createBean(HopeAutocompleteServiceStub.class)
+      : factory.createBean(HopeAutocompleteServiceImpl.class);
   }
 
   @Bean
@@ -132,5 +137,12 @@ public class ExternalServicesConfig {
     return stub
       ? factory.createBean(AccountServiceStub.class)
       : factory.createBean(AccountServiceImpl.class);
+  }
+  @Bean
+  public AutoAnswerSuggestionService autoAnswerSuggestionService(@Value("${autoAnswerSuggestionService.stub:false}") boolean stub){
+    val factory = context.getAutowireCapableBeanFactory();
+    return stub
+      ? factory.createBean(AutoAnswerSuggestionServiceStub.class)
+      : factory.createBean(AutoAnswerSuggestionServiceImpl.class);
   }
 }

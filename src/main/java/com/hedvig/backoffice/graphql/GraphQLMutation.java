@@ -9,6 +9,8 @@ import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.AutoLabelDTO;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
@@ -29,10 +31,7 @@ import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -48,16 +47,18 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ClaimLoader claimLoader;
   private final ClaimsService claimsService;
   private final AccountService accountService;
+  private final AutoAnswerSuggestionService autoAnswerSuggestionService;
 
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
                          MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
-                         AccountService accountService) {
+                         AccountService accountService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.claimsService = claimsService;
     this.accountService = accountService;
+    this.autoAnswerSuggestionService = autoAnswerSuggestionService;
   }
 
   public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount,
@@ -66,6 +67,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       GraphQLConfiguration.getEmail(env, personnelService), id, amount.toString());
     paymentService.chargeMember(id, amount);
     return memberLoader.load(id);
+  }
+
+  public AutoLabelDTO autoLabelQuestion(String question, String label, String memberId,  List<String> messageIds) {
+    autoAnswerSuggestionService.autoLabelQuestion(question, label, memberId, messageIds);
+    return new AutoLabelDTO(true);
   }
 
   public CompletableFuture<Member> addAccountEntryToMember(

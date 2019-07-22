@@ -60,6 +60,10 @@ tracker:
 
 hopeAutocompleteService:
   baseUrl: http://localhost:5000
+  stub: true
+
+autoAnswerSuggestionService:
+  baseUrl: http://localhost:5001
   stub: false
 
 botservice:
