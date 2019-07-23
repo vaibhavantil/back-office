@@ -24,8 +24,10 @@ public interface ItemPricingServiceClient {
   List<CategoryDTO> getCategories();
 
   @GetMapping("/api/v1/prices")
-  List<PricepointDTO> getPrices(@RequestParam String date,
-                                @RequestParam List<String> ids);
+  List<PricepointDTO> getPrices(
+    @RequestParam String date,
+    @RequestParam List<String> ids
+  );
 
   @PostMapping("/api/v1/items/search")
   ItemSearchDTO getItems(@RequestBody PayloadDTO payload);

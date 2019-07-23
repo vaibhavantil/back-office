@@ -1,7 +1,7 @@
 package com.hedvig.backoffice.services.itemPricing.dto;
 
 import lombok.Value;
-import java.util.List;
+import java.math.BigDecimal;
 
 @Value
 public class PricepointDTO {
@@ -9,7 +9,7 @@ public class PricepointDTO {
   String itemId;
   String date;
 
-  double lower;
-  double mean;
-  double upper;
+  BigDecimal lower;
+  BigDecimal mean;
+  BigDecimal upper;
 }

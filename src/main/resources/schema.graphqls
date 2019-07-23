@@ -28,45 +28,45 @@ type MutationType {
 }
 
 type PricePoint {
-  _id: String
-  itemId: String
-  date: String
-  lower: Float
-  mean: Float
-  upper: Float
+  _id: String!
+  itemId: String!
+  date: String!
+  lower: Float!
+  mean: Float!
+  upper: Float!
 }
 
 type Category {
-  id: String
-  name: String
+  id: String!
+  name: String!
 }
 
 input Payload {
-  category:  String
-  query: String
-  filters: [Filter]
+  category:  String!
+  query: String!
+  filters: [Filter!]!
 }
 
 input Filter {
-  name: String
-  value: String
+  name: String!
+  value: String!
 }
 
 type ItemSearch {
-  products: [Item]
-  suggestions: [FilterSuggestion]
+  products: [Item!]!
+  suggestions: [FilterSuggestion!]!
 }
 
 type FilterSuggestion {
-  name: String
-  items:  [String]
-  others: [String]
+  name: String!
+  items:  [String!]!
+  others: [String!]!
 }
 
 type Item {
-  category: String
-  id: String
-  name: String
+  category: String!
+  id: String!
+  name: String!
 }
 
 
