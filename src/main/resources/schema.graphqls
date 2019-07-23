@@ -10,7 +10,7 @@ type QueryType {
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
   categories: [Category!]
   items(payload: Payload!): ItemSearch!
-  prices(date: String!, ids: [String!]!): [PricePoint]
+  prices(date: String!, ids: [String!]!): [PricePoint!]!
 }
 
 type MutationType {
