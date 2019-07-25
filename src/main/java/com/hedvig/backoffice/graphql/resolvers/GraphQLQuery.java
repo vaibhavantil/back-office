@@ -40,14 +40,11 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final MemberService memberService;
   private final TicketService ticketService;
   private final PersonnelService personnelService;
-
-  public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
-                      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketService ticketService,
-                      PersonnelService personnelService) {
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
 
   public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
-      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
+                      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketService ticketService,
+                      PersonnelService personnelService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
