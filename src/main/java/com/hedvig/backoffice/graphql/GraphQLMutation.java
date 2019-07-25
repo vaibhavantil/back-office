@@ -51,16 +51,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ClaimsService claimsService;
   private final AccountService accountService;
   private final TicketService ticketService;
-
-  public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
-                         MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
-                         AccountService accountService, TicketService ticketService) {
-
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
 
+
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
                          MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
-                         AccountService accountService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
+                         AccountService accountService, TicketService ticketService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
 
     this.paymentService = paymentService;
     this.personnelService = personnelService;
@@ -68,7 +64,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.claimLoader = claimLoader;
     this.claimsService = claimsService;
     this.accountService = accountService;
-
     this.ticketService = ticketService;
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
   }
