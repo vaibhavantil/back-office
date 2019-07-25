@@ -150,6 +150,7 @@ public class ExternalServicesConfig {
     return stub
       ? factory.createBean(TicketServiceStub.class)
       : factory.createBean(TicketServiceImpl.class);
+  }
 
   @Bean
   public AutoAnswerSuggestionService autoAnswerSuggestionService(@Value("${autoAnswerSuggestionService.stub:false}") boolean stub){
