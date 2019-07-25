@@ -8,7 +8,10 @@ type QueryType {
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
+  ticket (id: ID!): Ticket
+  tickets: [Ticket!]!
   getAnswerSuggestion(question: String): [Suggestion!]!
+  me: String
 }
 
 
@@ -24,6 +27,12 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
+
+  createTicket (ticket: TicketInput): Ticket
+  changeTicketDescription ( id: ID!, newDescription : String ): Ticket
+  assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!): Ticket
+  changeTicketStatus (ticketId: ID!, newStatus: TicketStatus): Ticket
+  changeTicketReminder( ticketId: ID!, newReminder: RemindNotification ): Ticket
   autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
 }
 
@@ -325,6 +334,51 @@ enum ChargeStatus {
   CHARGE_COMPLETED,
 }
 
+input TicketInput {
+  assignedTo: String
+  priority: Float
+  type: TicketType
+  remindNotificationDate: LocalDate
+  remindNotificationTime: LocalTime
+  remindMessage: String
+  description: String
+  status : TicketStatus
+}
+
+type Ticket {
+  id: ID
+  assignedTo: String
+  creationDate: LocalDate
+  createdBy: String
+  priority: Float
+  type: TicketType
+  remindNotificationDate: LocalDate
+  remindNotificationTime: LocalTime
+  remindMessage: String
+  description: String
+  status: TicketStatus
+}
+
+input RemindNotification {
+  date: LocalDate
+  time: LocalTime
+  message: String
+}
+
+enum TicketStatus {
+  RESOLVED,
+  WAITING,
+  WORKED_ON,
+}
+
+enum TicketType {
+  REMIND,
+  MESSAGE,
+  CLAIM,
+  CALL_ME,
+  OTHER
+}
+
 # A String-representation of `java.time.YearMonth`. ex: `"2018-06"`
 scalar YearMonth
 # An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100,  "currency": "SEK"}`
@@ -335,6 +389,8 @@ scalar Instant
 scalar ZonedDateTime
 # A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"`
 scalar LocalDate
+# A String-representation of `java.time.LocalTime`,
+scalar LocalTime
 # A String-representation of `java.time.LocalDateTIme`. ex: `"2018-06-11T20:08:30.123456"`
 scalar LocalDateTime
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
