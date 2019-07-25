@@ -17,6 +17,8 @@ import com.hedvig.backoffice.graphql.types.SchedulerStatus;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
@@ -42,6 +44,10 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
                       ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketService ticketService,
                       PersonnelService personnelService) {
+  private final AutoAnswerSuggestionService autoAnswerSuggestionService;
+
+  public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
+      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
@@ -49,6 +55,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.memberService = memberService;
     this.ticketService = ticketService;
     this.personnelService = personnelService;
+    this.autoAnswerSuggestionService = autoAnswerSuggestionService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -56,6 +63,10 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.getMonthlyPayments(month).stream()
       .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getSubscription()))
       .collect(Collectors.toList());
+  }
+
+  public List<SuggestionDTO> getAnswerSuggestion(String question) {
+    return autoAnswerSuggestionService.getAnswerSuggestion(question);
   }
 
   public CompletableFuture<Member> member(String id) {
@@ -101,5 +112,4 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       return null;
     }
   }
-
 }

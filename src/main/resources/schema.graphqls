@@ -10,8 +10,10 @@ type QueryType {
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
   ticket (id: ID!): Ticket
   tickets: [Ticket!]!
-  me: String
+  getAnswerSuggestion(question: String): [Suggestion!]!
+
 }
+
 
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
@@ -25,11 +27,29 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
+
   createTicket (ticket: TicketInput): Ticket
   changeTicketDescription ( id: ID!, newDescription : String ): Ticket
   assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!): Ticket
   changeTicketStatus (ticketId: ID!, newStatus: TicketStatus): Ticket
   changeTicketReminder( ticketId: ID!, newReminder: RemindNotification ): Ticket
+  autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
+}
+
+type Suggestion {
+  intent: String!
+  reply: String!
+  text: String!
+  confidence: Float!
+  allReplies: [AllRepliesEntry!]!
+}
+type AllRepliesEntry {
+  intent: String!
+  reply: String!
+}
+
+type AutoLabel {
+  message: Boolean
 }
 
 type FileUpload {
