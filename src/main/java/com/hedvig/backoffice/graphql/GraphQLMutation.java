@@ -353,6 +353,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return this.ticketService.changeReminder(ticketId, newReminder, modifiedBy);
   }
 
+  TicketDto changeTicketPriority(UUID ticketId, float newPriority, DataFetchingEnvironment env) {
+    String modifiedBy = getUserIdentity(env);
+    return this.ticketService.changePriority(ticketId, newPriority, modifiedBy);
+  }
+
+
   private  String getUserIdentity(DataFetchingEnvironment env ) {
     try {
       return GraphQLConfiguration.getEmail(env, personnelService);

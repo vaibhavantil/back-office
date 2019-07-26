@@ -190,4 +190,29 @@ public class TicketServiceStub implements TicketService {
     }
   }
 
+  @Override
+  public TicketDto changePriority(UUID ticketId, float newPriority, String modifiedBy) {
+    try {
+      TicketDto t = tickets.get(ticketId);
+      TicketDto updateT = new TicketDto(
+        t.getId(),
+        t.getAssignedTo(),
+        Instant.now(),
+        t.getCreatedBy(),
+        newPriority,
+        t.getType(),
+        t.getRemindNotificationDate(),
+        t.getRemindNotificationTime(),
+        t.getRemindMessage(),
+        t.getDescription(),
+        t.getStatus()
+      );
+      tickets.replace(updateT.getId(), updateT);
+      return updateT;
+    } catch (Error e) {
+      log.error("Could not change priority, error:\n" + e.toString());
+      return null;
+    }
+  }
+
 }

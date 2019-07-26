@@ -43,4 +43,9 @@ public interface TicketServiceClient {
   TicketDto changeReminder(@PathVariable UUID id,
                            @RequestBody NewReminderDto newReminder);
 
+  @PostMapping("/_/tickets/reminder/{id}")
+  TicketDto changePriority(@PathVariable UUID id,
+                           @RequestBody NewPriorityDto newPriorityDto);
+
+
 }

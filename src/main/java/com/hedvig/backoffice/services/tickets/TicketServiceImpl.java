@@ -48,4 +48,10 @@ public class TicketServiceImpl implements TicketService {
     return this.ticketServiceClient.changeReminder(ticketId, new NewReminderDto( newReminder, modifiedBy));
   }
 
+  @Override
+  public TicketDto changePriority(UUID ticketId, float newPriority, String modifiedBy) {
+    float p = Math.max(0f,Math.min(newPriority, 1.0f));
+    return this.ticketServiceClient.changePriority(ticketId, new NewPriorityDto( p, modifiedBy));
+  }
+
 }

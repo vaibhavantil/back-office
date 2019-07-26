@@ -24,4 +24,6 @@ public interface TicketService {
 
   TicketDto changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy);
 
+  TicketDto changePriority(UUID ticketId, float newPriority, String modifiedBy);
+
 }
