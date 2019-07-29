@@ -199,7 +199,7 @@ public class TicketServiceStub implements TicketService {
         t.getAssignedTo(),
         Instant.now(),
         t.getCreatedBy(),
-        newPriority,
+        Math.max(0f,Math.min(newPriority, 1.0f)),
         t.getType(),
         t.getRemindNotificationDate(),
         t.getRemindNotificationTime(),
