@@ -2,7 +2,6 @@ package com.hedvig.backoffice.graphql.types;
 
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import lombok.Value;
-
 import org.javamoney.moneta.Money;
 
 import javax.money.MonetaryAmount;
@@ -47,5 +46,4 @@ public class Claim {
       dto.getData(),
       dto.isCoveringEmployee());
   }
-
 }

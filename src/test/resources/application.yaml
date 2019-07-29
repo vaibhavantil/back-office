@@ -75,7 +75,6 @@ memberservice:
 
 claims:
   baseUrl: http://localhost:7083
-  bucketName: ""
   stub: false
 
 productPricing:
