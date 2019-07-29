@@ -17,6 +17,9 @@ import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.services.tickets.TicketService;
+import com.hedvig.backoffice.services.tickets.dto.*;
+import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -47,17 +50,21 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ClaimLoader claimLoader;
   private final ClaimsService claimsService;
   private final AccountService accountService;
+  private final TicketService ticketService;
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
+
 
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
                          MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
-                         AccountService accountService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
+                         AccountService accountService, TicketService ticketService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
+
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.claimsService = claimsService;
     this.accountService = accountService;
+    this.ticketService = ticketService;
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
   }
 
@@ -309,7 +316,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       data.setClaimID(id.toString());
       data.setName("TICKET");
       data.setType("TICKET");
-      data.setTitle("Ticket");
+      data.setTitle("TicketDto");
       data.setDate(now);
       data.setValue(claimInformationInput.getTicket());
       claimsService.addData(data, GraphQLConfiguration.getIdToken(env, personnelService));
@@ -317,4 +324,44 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
     return claimLoader.load(id);
   }
+
+  TicketDto createTicket(TicketInput ticket, DataFetchingEnvironment env) {
+    String createdBy = getUserIdentity(env);
+    CreateTicketDto t = CreateTicketDto.fromTicketInput( ticket, createdBy);
+
+    return this.ticketService.createNewTicket(t, createdBy);
+  }
+
+  TicketDto changeTicketDescription(UUID ticketId, String newDescription, DataFetchingEnvironment env) {
+    String modifiedBy = getUserIdentity(env);
+    return this.ticketService.changeDescription(ticketId, newDescription, modifiedBy);
+  }
+
+  TicketDto assignTicketToTeamMember(UUID ticketId, String teamMemberId, DataFetchingEnvironment env) {
+    String modifiedBy = getUserIdentity(env);
+
+    return this.ticketService.assignToTeamMember(ticketId, teamMemberId, modifiedBy);
+  }
+
+  TicketDto changeTicketStatus(UUID ticketId, TicketStatus newStatus, DataFetchingEnvironment env) {
+    String modifiedBy = getUserIdentity(env);
+    return this.ticketService.changeStatus(ticketId, newStatus, modifiedBy);
+  }
+
+  TicketDto changeTicketReminder(UUID ticketId, RemindNotification newReminder, DataFetchingEnvironment env) {
+    String modifiedBy = getUserIdentity(env);
+    return this.ticketService.changeReminder(ticketId, newReminder, modifiedBy);
+  }
+
+  private  String getUserIdentity(DataFetchingEnvironment env ) {
+    try {
+      return GraphQLConfiguration.getEmail(env, personnelService);
+    } catch (Exception e) {
+      String errorMessage = "Error: Unverified user. Could not get email from personnelService.";
+      log.error(errorMessage, e);
+      throw new RuntimeException(errorMessage, e);
+    }
+  }
+
 }
+

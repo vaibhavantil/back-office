@@ -33,6 +33,11 @@ import com.hedvig.backoffice.services.payments.PaymentServiceStub;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceImpl;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceStub;
+
+
+import com.hedvig.backoffice.services.tickets.TicketService;
+import com.hedvig.backoffice.services.tickets.TicketServiceImpl;
+import com.hedvig.backoffice.services.tickets.TicketServiceStub;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -138,6 +143,15 @@ public class ExternalServicesConfig {
       ? factory.createBean(AccountServiceStub.class)
       : factory.createBean(AccountServiceImpl.class);
   }
+
+  @Bean
+  public TicketService ticketService(@Value("${tickets.stub:false}") boolean stub ) {
+    val factory = context.getAutowireCapableBeanFactory();
+    return stub
+      ? factory.createBean(TicketServiceStub.class)
+      : factory.createBean(TicketServiceImpl.class);
+  }
+
   @Bean
   public AutoAnswerSuggestionService autoAnswerSuggestionService(@Value("${autoAnswerSuggestionService.stub:false}") boolean stub){
     val factory = context.getAutowireCapableBeanFactory();
