@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
   name = "itemPricing-service",
-  url = "${itemPricingService.baseUrl:itemPricing}",
+  url = "${itemPricingService.baseUrl:item-pricing-service}",
   configuration = FeignConfig.class)
 
 public interface ItemPricingServiceClient {
