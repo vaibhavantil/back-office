@@ -69,7 +69,7 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public TicketDto createNewTicket(CreateTicketDto t, String createdBy) {
+  public void createNewTicket(CreateTicketDto t, String createdBy) {
     UUID id = UUID.randomUUID();
     TicketDto newT = new TicketDto(
       id,
@@ -86,12 +86,10 @@ public class TicketServiceStub implements TicketService {
     );
 
     tickets.put(id, newT);
-
-    return newT;
   }
 
   @Override
-  public TicketDto changeDescription(UUID ticketId, String newDescription, String modifiedBy) {
+  public void changeDescription(UUID ticketId, String newDescription, String modifiedBy) {
     try {
       TicketDto t = tickets.get(ticketId);
       TicketDto updateT = new TicketDto(
@@ -108,15 +106,13 @@ public class TicketServiceStub implements TicketService {
         t.getStatus()
       );
       tickets.replace(updateT.getId(), updateT);
-      return updateT;
     } catch (Error e) {
       log.error("Could not change description, error:\n" + e.toString());
-      return null;
     }
   }
 
   @Override
-  public TicketDto assignToTeamMember(UUID ticketId, String assignTo, String modifiedBy) {
+  public void assignToTeamMember(UUID ticketId, String assignTo, String modifiedBy) {
     try {
       TicketDto t = tickets.get(ticketId);
       TicketDto updateT = new TicketDto(
@@ -133,15 +129,13 @@ public class TicketServiceStub implements TicketService {
         t.getStatus()
       );
       tickets.replace(updateT.getId(), updateT);
-      return updateT;
     } catch (Error e) {
       log.error("Could not assign to Team Member, error:\n" + e.toString());
-      return null;
     }
   }
 
   @Override
-  public TicketDto changeStatus(UUID ticketId, TicketStatus newStatus, String modifiedBy) {
+  public void changeStatus(UUID ticketId, TicketStatus newStatus, String modifiedBy) {
     try {
       TicketDto t = tickets.get(ticketId);
       TicketDto updateT = new TicketDto(
@@ -158,15 +152,13 @@ public class TicketServiceStub implements TicketService {
         newStatus
       );
       tickets.replace(updateT.getId(), updateT);
-      return updateT;
     } catch (Error e) {
       log.error("Could not change status, error:\n" + e.toString());
-      return null;
     }
   }
 
   @Override
-  public TicketDto changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy) {
+  public void changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy) {
     try {
       TicketDto t = tickets.get(ticketId);
       TicketDto updateT = new TicketDto(
@@ -183,15 +175,13 @@ public class TicketServiceStub implements TicketService {
         t.getStatus()
       );
       tickets.replace(updateT.getId(), updateT);
-      return updateT;
     } catch (Error e) {
       log.error("Could not change reminder, error:\n" + e.toString());
-      return null;
     }
   }
 
   @Override
-  public TicketDto changePriority(UUID ticketId, float newPriority, String modifiedBy) {
+  public void changePriority(UUID ticketId, float newPriority, String modifiedBy) {
     try {
       TicketDto t = tickets.get(ticketId);
       TicketDto updateT = new TicketDto(
@@ -208,10 +198,8 @@ public class TicketServiceStub implements TicketService {
         t.getStatus()
       );
       tickets.replace(updateT.getId(), updateT);
-      return updateT;
     } catch (Error e) {
       log.error("Could not change priority, error:\n" + e.toString());
-      return null;
     }
   }
 

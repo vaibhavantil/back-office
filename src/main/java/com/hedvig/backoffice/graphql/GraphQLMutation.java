@@ -325,37 +325,40 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-  TicketDto createTicket(TicketInput ticket, DataFetchingEnvironment env) {
+  void createTicket(TicketInput ticket, DataFetchingEnvironment env) {
     String createdBy = getUserIdentity(env);
     CreateTicketDto t = CreateTicketDto.fromTicketInput( ticket, createdBy);
-
-    return this.ticketService.createNewTicket(t, createdBy);
+    this.ticketService.createNewTicket(t, createdBy);
   }
 
-  TicketDto changeTicketDescription(UUID ticketId, String newDescription, DataFetchingEnvironment env) {
+  UUID changeTicketDescription(UUID ticketId, String newDescription, DataFetchingEnvironment env) {
     String modifiedBy = getUserIdentity(env);
-    return this.ticketService.changeDescription(ticketId, newDescription, modifiedBy);
+    this.ticketService.changeDescription(ticketId, newDescription, modifiedBy);
+    return ticketId;
   }
 
-  TicketDto assignTicketToTeamMember(UUID ticketId, String teamMemberId, DataFetchingEnvironment env) {
+  UUID assignTicketToTeamMember(UUID ticketId, String teamMemberId, DataFetchingEnvironment env) {
     String modifiedBy = getUserIdentity(env);
-
-    return this.ticketService.assignToTeamMember(ticketId, teamMemberId, modifiedBy);
+    this.ticketService.assignToTeamMember(ticketId, teamMemberId, modifiedBy);
+    return ticketId;
   }
 
-  TicketDto changeTicketStatus(UUID ticketId, TicketStatus newStatus, DataFetchingEnvironment env) {
+  UUID  changeTicketStatus(UUID ticketId, TicketStatus newStatus, DataFetchingEnvironment env) {
     String modifiedBy = getUserIdentity(env);
-    return this.ticketService.changeStatus(ticketId, newStatus, modifiedBy);
+    this.ticketService.changeStatus(ticketId, newStatus, modifiedBy);
+    return ticketId;
   }
 
-  TicketDto changeTicketReminder(UUID ticketId, RemindNotification newReminder, DataFetchingEnvironment env) {
+  UUID changeTicketReminder(UUID ticketId, RemindNotification newReminder, DataFetchingEnvironment env) {
     String modifiedBy = getUserIdentity(env);
-    return this.ticketService.changeReminder(ticketId, newReminder, modifiedBy);
+    this.ticketService.changeReminder(ticketId, newReminder, modifiedBy);
+    return ticketId;
   }
 
-  TicketDto changeTicketPriority(UUID ticketId, float newPriority, DataFetchingEnvironment env) {
+  UUID changeTicketPriority(UUID ticketId, float newPriority, DataFetchingEnvironment env) {
     String modifiedBy = getUserIdentity(env);
-    return this.ticketService.changePriority(ticketId, newPriority, modifiedBy);
+    this.ticketService.changePriority(ticketId, newPriority, modifiedBy);
+    return ticketId;
   }
 
 

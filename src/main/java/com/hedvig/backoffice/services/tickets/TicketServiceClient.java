@@ -25,26 +25,26 @@ public interface TicketServiceClient {
   List<TicketDto> getTickets();
 
   @PostMapping("/_/tickets/new/")
-  TicketDto createTicket(@RequestBody CreateTicketDto ticket);
+  void createTicket(@RequestBody CreateTicketDto ticket);
 
   @PostMapping("/_/tickets/description/{id}")
-  TicketDto changeDescription(@PathVariable UUID id,
+  void changeDescription(@PathVariable UUID id,
                               @RequestBody NewDescriptionDto newDescription);
 
   @PostMapping("/_/tickets/assign/{id}")
-  TicketDto changeAssignedTo(@PathVariable UUID id,
+  void changeAssignedTo(@PathVariable UUID id,
                              @RequestBody NewAssignedToDto assignedTo);
 
   @PostMapping("/_/tickets/status/{id}")
-  TicketDto changeStatus(@PathVariable UUID id,
+  void changeStatus(@PathVariable UUID id,
                          @RequestBody NewStatusDto newStatus);
 
   @PostMapping("/_/tickets/reminder/{id}")
-  TicketDto changeReminder(@PathVariable UUID id,
+  void changeReminder(@PathVariable UUID id,
                            @RequestBody NewReminderDto newReminder);
 
   @PostMapping("/_/tickets/priority/{id}")
-  TicketDto changePriority(@PathVariable UUID id,
+  void changePriority(@PathVariable UUID id,
                            @RequestBody NewPriorityDto newPriorityDto);
 
 

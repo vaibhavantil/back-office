@@ -14,16 +14,16 @@ public interface TicketService {
 
   TicketDto getTicketById(UUID ticketId);
 
-  TicketDto createNewTicket(CreateTicketDto ticket, String createdBy);
+  void createNewTicket(CreateTicketDto ticket, String createdBy);
 
-  TicketDto changeDescription(UUID ticketId, String newDescription, String modifiedBy);
+  void changeDescription(UUID ticketId, String newDescription, String modifiedBy);
 
-  TicketDto assignToTeamMember(UUID ticketId, String teamMemberId, String modifiedBy);
+  void assignToTeamMember(UUID ticketId, String teamMemberId, String modifiedBy);
 
-  TicketDto changeStatus(UUID ticketId, TicketStatus newStatus, String modifiedBy);
+  void changeStatus(UUID ticketId, TicketStatus newStatus, String modifiedBy);
 
-  TicketDto changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy);
+  void changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy);
 
-  TicketDto changePriority(UUID ticketId, float newPriority, String modifiedBy);
+  void changePriority(UUID ticketId, float newPriority, String modifiedBy);
 
 }
