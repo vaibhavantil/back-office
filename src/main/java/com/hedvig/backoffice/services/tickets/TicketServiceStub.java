@@ -68,7 +68,7 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public void createNewTicket(CreateTicketDto ticketIn, String createdBy) {
+  public UUID createNewTicket(CreateTicketDto ticketIn, String createdBy) {
     UUID id = UUID.randomUUID();
     TicketDto newTicket = new TicketDto(
       id,
@@ -83,8 +83,8 @@ public class TicketServiceStub implements TicketService {
       ticketIn.getDescription(),
       ticketIn.getStatus()
     );
-
     tickets.put(id, newTicket);
+    return id;
   }
 
   @Override

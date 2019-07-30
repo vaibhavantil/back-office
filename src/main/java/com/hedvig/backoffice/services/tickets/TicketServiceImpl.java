@@ -24,8 +24,8 @@ public class TicketServiceImpl implements TicketService {
   }
 
   @Override
-  public void createNewTicket(CreateTicketDto ticket, String createdBy) {
-    this.ticketServiceClient.createTicket(ticket);
+  public UUID createNewTicket(CreateTicketDto ticket, String createdBy) {
+    return this.ticketServiceClient.createTicket(ticket);
   }
 
   @Override

@@ -25,7 +25,7 @@ public interface TicketServiceClient {
   List<TicketDto> getTickets();
 
   @PostMapping("/_/tickets/new/")
-  void createTicket(@RequestBody CreateTicketDto ticket);
+  UUID createTicket(@RequestBody CreateTicketDto ticket);
 
   @PostMapping("/_/tickets/description/{id}")
   void changeDescription(@PathVariable UUID id,

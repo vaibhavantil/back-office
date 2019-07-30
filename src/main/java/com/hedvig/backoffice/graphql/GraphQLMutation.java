@@ -325,10 +325,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-  void createTicket(TicketInput ticket, DataFetchingEnvironment env) {
+  UUID createTicket(TicketInput ticket, DataFetchingEnvironment env) {
     String createdBy = getUserIdentity(env);
     CreateTicketDto t = CreateTicketDto.fromTicketInput( ticket, createdBy);
-    this.ticketService.createNewTicket(t, createdBy);
+    return this.ticketService.createNewTicket(t, createdBy);
   }
 
   UUID changeTicketDescription(UUID ticketId, String newDescription, DataFetchingEnvironment env) {

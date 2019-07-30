@@ -14,7 +14,7 @@ public interface TicketService {
 
   TicketDto getTicketById(UUID ticketId);
 
-  void createNewTicket(CreateTicketDto ticket, String createdBy);
+  UUID createNewTicket(CreateTicketDto ticket, String createdBy);
 
   void changeDescription(UUID ticketId, String newDescription, String modifiedBy);
 
