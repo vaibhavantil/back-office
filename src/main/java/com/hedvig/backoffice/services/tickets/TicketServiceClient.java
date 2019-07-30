@@ -45,7 +45,7 @@ public interface TicketServiceClient {
 
   @PostMapping("/_/tickets/priority/{id}")
   void changePriority(@PathVariable UUID id,
-                           @RequestBody NewPriorityDto newPriorityDto);
+                           @RequestBody NewPriorityDto newPriority);
 
 
 }
