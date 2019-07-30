@@ -6,5 +6,6 @@ public enum AccountEntryType {
   CAMPAIGN,
   PAYOUT,
   CHARGE,
-  RESERVED
+  REFERRAL_DISCOUNT,
+  FREE_MONTH_DISCOUNT
 }
