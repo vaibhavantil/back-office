@@ -28,11 +28,11 @@ type MutationType {
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
   createTicket (ticket: TicketInput): ID
-  changeTicketDescription ( ticketId: ID!, newDescription : String ): ID
-  assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!): ID
+  changeTicketDescription (ticketId: ID!, newDescription : String): ID
+  assignTicketToTeamMember(ticketId: ID!, teamMemberId: ID!): ID
   changeTicketStatus (ticketId: ID!, newStatus: TicketStatus): ID
-  changeTicketReminder( ticketId: ID!, newReminder: RemindNotification ): ID
-  changeTicketPriority( ticketId: ID!, newPriority: Float): ID
+  changeTicketReminder(ticketId: ID!, newReminder: RemindNotification): ID
+  changeTicketPriority(ticketId: ID!, newPriority: Float): ID
   autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
 }
 

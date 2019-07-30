@@ -35,7 +35,7 @@ public class TicketServiceStub implements TicketService {
     int NUM_TICKETS = 10;
     for (int i = 0; i < NUM_TICKETS; i++) {
       UUID id = UUID.randomUUID();
-      TicketDto t = new TicketDto(
+      TicketDto ticket = new TicketDto(
         id,
         teamMembers[i % teamMembers.length],
         Instant.now(),
@@ -48,7 +48,7 @@ public class TicketServiceStub implements TicketService {
         "A short description of the ticket contents",
         TicketStatus.WAITING
       );
-      tickets.put(id, t);
+      tickets.put(id, ticket);
     }
   }
 
@@ -61,146 +61,137 @@ public class TicketServiceStub implements TicketService {
   @Override
   public TicketDto getTicketById(UUID ticketId) {
     try {
-      TicketDto t = tickets.get(ticketId);
-      return t;
+      return tickets.get(ticketId);
     } catch (Error e) {
       return null;
     }
   }
 
   @Override
-  public void createNewTicket(CreateTicketDto t, String createdBy) {
+  public void createNewTicket(CreateTicketDto ticketIn, String createdBy) {
     UUID id = UUID.randomUUID();
-    TicketDto newT = new TicketDto(
+    TicketDto newTicket = new TicketDto(
       id,
-      t.getAssignedTo(),
+      ticketIn.getAssignedTo(),
       Instant.now(),
       createdBy,
+      ticketIn.getPriority(),
+      ticketIn.getType(),
+      ticketIn.getRemindNotificationDate(),
+      ticketIn.getRemindNotificationTime(),
+      ticketIn.getRemindMessage(),
+      ticketIn.getDescription(),
+      ticketIn.getStatus()
+    );
+
+    tickets.put(id, newTicket);
+  }
+
+  @Override
+  public void changeDescription(UUID ticketId, String newDescription, String modifiedBy) {
+    TicketDto t = tickets.get(ticketId);
+    TicketDto updatedTicket = new TicketDto(
+      t.getId(),
+      t.getAssignedTo(),
+      Instant.now(),
+      t.getCreatedBy(),
       t.getPriority(),
       t.getType(),
       t.getRemindNotificationDate(),
       t.getRemindNotificationTime(),
       t.getRemindMessage(),
-      t.getDescription(),
+      newDescription,
       t.getStatus()
     );
-
-    tickets.put(id, newT);
-  }
-
-  @Override
-  public void changeDescription(UUID ticketId, String newDescription, String modifiedBy) {
-    try {
-      TicketDto t = tickets.get(ticketId);
-      TicketDto updateT = new TicketDto(
-        t.getId(),
-        t.getAssignedTo(),
-        Instant.now(),
-        t.getCreatedBy(),
-        t.getPriority(),
-        t.getType(),
-        t.getRemindNotificationDate(),
-        t.getRemindNotificationTime(),
-        t.getRemindMessage(),
-        newDescription,
-        t.getStatus()
-      );
-      tickets.replace(updateT.getId(), updateT);
-    } catch (Error e) {
-      log.error("Could not change description, error:\n" + e.toString());
+    if (tickets.replace(updatedTicket.getId(), updatedTicket) == null) {
+      log.error("Error when trying to replace value, could not find entry for id: {}", ticketId);
     }
   }
 
   @Override
   public void assignToTeamMember(UUID ticketId, String assignTo, String modifiedBy) {
-    try {
-      TicketDto t = tickets.get(ticketId);
-      TicketDto updateT = new TicketDto(
-        t.getId(),
-        assignTo,
-        Instant.now(),
-        t.getCreatedBy(),
-        t.getPriority(),
-        t.getType(),
-        t.getRemindNotificationDate(),
-        t.getRemindNotificationTime(),
-        t.getRemindMessage(),
-        t.getDescription(),
-        t.getStatus()
-      );
-      tickets.replace(updateT.getId(), updateT);
-    } catch (Error e) {
-      log.error("Could not assign to Team Member, error:\n" + e.toString());
+    TicketDto ticket = tickets.get(ticketId);
+    TicketDto updatedTicket = new TicketDto(
+      ticket.getId(),
+      assignTo,
+      Instant.now(),
+      ticket.getCreatedBy(),
+      ticket.getPriority(),
+      ticket.getType(),
+      ticket.getRemindNotificationDate(),
+      ticket.getRemindNotificationTime(),
+      ticket.getRemindMessage(),
+      ticket.getDescription(),
+      ticket.getStatus()
+    );
+    if (tickets.replace(updatedTicket.getId(), updatedTicket) == null) {
+      log.error("Error when trying to replace value, could not find entry for id: {}", ticketId);
     }
   }
 
   @Override
   public void changeStatus(UUID ticketId, TicketStatus newStatus, String modifiedBy) {
-    try {
-      TicketDto t = tickets.get(ticketId);
-      TicketDto updateT = new TicketDto(
-        t.getId(),
-        t.getAssignedTo(),
-        Instant.now(),
-        t.getCreatedBy(),
-        t.getPriority(),
-        t.getType(),
-        t.getRemindNotificationDate(),
-        t.getRemindNotificationTime(),
-        t.getRemindMessage(),
-        t.getDescription(),
-        newStatus
-      );
-      tickets.replace(updateT.getId(), updateT);
-    } catch (Error e) {
-      log.error("Could not change status, error:\n" + e.toString());
+    TicketDto ticket = tickets.get(ticketId);
+    TicketDto updatedTicket = new TicketDto(
+      ticket.getId(),
+      ticket.getAssignedTo(),
+      Instant.now(),
+      ticket.getCreatedBy(),
+      ticket.getPriority(),
+      ticket.getType(),
+      ticket.getRemindNotificationDate(),
+      ticket.getRemindNotificationTime(),
+      ticket.getRemindMessage(),
+      ticket.getDescription(),
+      newStatus
+    );
+    if (tickets.replace(updatedTicket.getId(), updatedTicket) == null) {
+      log.error("Error when trying to replace value, could not find entry for id: {}", ticketId);
     }
   }
 
   @Override
   public void changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy) {
-    try {
-      TicketDto t = tickets.get(ticketId);
-      TicketDto updateT = new TicketDto(
-        t.getId(),
-        t.getAssignedTo(),
-        Instant.now(),
-        t.getCreatedBy(),
-        t.getPriority(),
-        t.getType(),
-        newReminder.getDate(),
-        newReminder.getTime(),
-        newReminder.getMessage(),
-        t.getDescription(),
-        t.getStatus()
-      );
-      tickets.replace(updateT.getId(), updateT);
-    } catch (Error e) {
-      log.error("Could not change reminder, error:\n" + e.toString());
+    TicketDto ticket = tickets.get(ticketId);
+    TicketDto updatedTicket = new TicketDto(
+      ticket.getId(),
+      ticket.getAssignedTo(),
+      Instant.now(),
+      ticket.getCreatedBy(),
+      ticket.getPriority(),
+      ticket.getType(),
+      newReminder.getDate(),
+      newReminder.getTime(),
+      newReminder.getMessage(),
+      ticket.getDescription(),
+      ticket.getStatus()
+    );
+    if (tickets.replace(updatedTicket.getId(), updatedTicket) == null) {
+      log.error("Error when trying to replace value, could not find entry for id: {}", ticketId);
     }
+
   }
 
   @Override
   public void changePriority(UUID ticketId, float newPriority, String modifiedBy) {
-    try {
-      TicketDto t = tickets.get(ticketId);
-      TicketDto updateT = new TicketDto(
-        t.getId(),
-        t.getAssignedTo(),
-        Instant.now(),
-        t.getCreatedBy(),
-        Math.max(0f,Math.min(newPriority, 1.0f)),
-        t.getType(),
-        t.getRemindNotificationDate(),
-        t.getRemindNotificationTime(),
-        t.getRemindMessage(),
-        t.getDescription(),
-        t.getStatus()
-      );
-      tickets.replace(updateT.getId(), updateT);
-    } catch (Error e) {
-      log.error("Could not change priority, error:\n" + e.toString());
+    TicketDto ticket = tickets.get(ticketId);
+    TicketDto updatedTicket = new TicketDto(
+      ticket.getId(),
+      ticket.getAssignedTo(),
+      Instant.now(),
+      ticket.getCreatedBy(),
+      Math.max(0f, Math.min(newPriority, 1.0f)),
+      ticket.getType(),
+      ticket.getRemindNotificationDate(),
+      ticket.getRemindNotificationTime(),
+      ticket.getRemindMessage(),
+      ticket.getDescription(),
+      ticket.getStatus()
+    );
+    if (tickets.replace(updatedTicket.getId(), updatedTicket) == null) {
+      log.error("Error when trying to replace value, could not find entry for id: {}", ticketId);
     }
+
   }
 
 }

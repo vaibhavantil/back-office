@@ -50,8 +50,7 @@ public class TicketServiceImpl implements TicketService {
 
   @Override
   public void changePriority(UUID ticketId, float newPriority, String modifiedBy) {
-    float priority = Math.max(0f,Math.min(newPriority, 1.0f));
-    this.ticketServiceClient.changePriority(ticketId, new NewPriorityDto( priority, modifiedBy));
+    this.ticketServiceClient.changePriority(ticketId, new NewPriorityDto( newPriority, modifiedBy));
   }
 
 }
