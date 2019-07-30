@@ -60,6 +60,10 @@ hopeAutocompleteService:
   baseUrl: http://localhost:5000
   stub: false
 
+autoAnswerSuggestionService:
+  baseUrl: http://localhost:5001
+  stub: false
+
 botservice:
   baseUrl: http://localhost:7081
   questionId: main.question
@@ -71,6 +75,7 @@ memberservice:
 
 claims:
   baseUrl: http://localhost:7083
+  bucketName: ""
   stub: false
 
 productPricing:

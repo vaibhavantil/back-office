@@ -1,12 +1,19 @@
 package com.hedvig.backoffice.services.claims.dto;
 
 import com.hedvig.backoffice.services.claims.ClaimState;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
+@Builder(toBuilder=true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Claim extends ClaimBackOffice {
 
   private String audioURL;

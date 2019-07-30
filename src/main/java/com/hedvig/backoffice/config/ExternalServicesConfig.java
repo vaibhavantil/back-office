@@ -6,6 +6,9 @@ import com.hedvig.backoffice.services.account.AccountServiceStub;
 import com.hedvig.backoffice.services.assettracker.AssetTrackerClient;
 import com.hedvig.backoffice.services.assettracker.AssetTrackerClientImpl;
 import com.hedvig.backoffice.services.assettracker.AssetTrackerClientStub;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionServiceImpl;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionServiceStub;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.ClaimsServiceImpl;
 import com.hedvig.backoffice.services.claims.ClaimsServiceStub;
@@ -33,6 +36,11 @@ import com.hedvig.backoffice.services.itemPricing.ItemPricingServiceStub;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceImpl;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceStub;
+
+
+import com.hedvig.backoffice.services.tickets.TicketService;
+import com.hedvig.backoffice.services.tickets.TicketServiceImpl;
+import com.hedvig.backoffice.services.tickets.TicketServiceStub;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +71,9 @@ public class ExternalServicesConfig {
   @Bean
   public HopeAutocompleteService hopeAutocompleteService(@Value("${hopeAutocompleteService.stub:false}") boolean stub) {
     AutowireCapableBeanFactory factory = context.getAutowireCapableBeanFactory();
-    return stub ? factory.createBean(HopeAutocompleteServiceStub.class) : factory.createBean(HopeAutocompleteServiceImpl.class);
+    return stub
+      ? factory.createBean(HopeAutocompleteServiceStub.class)
+      : factory.createBean(HopeAutocompleteServiceImpl.class);
   }
 
   @Bean
@@ -145,5 +155,21 @@ public class ExternalServicesConfig {
     return stub
       ? factory.createBean(AccountServiceStub.class)
       : factory.createBean(AccountServiceImpl.class);
+  }
+
+  @Bean
+  public TicketService ticketService(@Value("${tickets.stub:false}") boolean stub ) {
+    val factory = context.getAutowireCapableBeanFactory();
+    return stub
+      ? factory.createBean(TicketServiceStub.class)
+      : factory.createBean(TicketServiceImpl.class);
+  }
+
+  @Bean
+  public AutoAnswerSuggestionService autoAnswerSuggestionService(@Value("${autoAnswerSuggestionService.stub:false}") boolean stub){
+    val factory = context.getAutowireCapableBeanFactory();
+    return stub
+      ? factory.createBean(AutoAnswerSuggestionServiceStub.class)
+      : factory.createBean(AutoAnswerSuggestionServiceImpl.class);
   }
 }

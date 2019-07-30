@@ -1,12 +1,13 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
 import java.time.YearMonth;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
@@ -16,7 +17,10 @@ import com.hedvig.backoffice.graphql.types.SchedulerStatus;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
+import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
 import com.hedvig.backoffice.services.itemPricing.dto.CategoryDTO;
@@ -24,7 +28,12 @@ import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.PayloadDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.ItemBodyDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.PricepointDTO;
+import com.hedvig.backoffice.services.tickets.TicketService;
+import com.hedvig.backoffice.services.tickets.dto.TicketDto;
+import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
+
+import static graphql.servlet.GraphQLServlet.log;
 
 @Component
 public class GraphQLQuery implements GraphQLQueryResolver {
@@ -35,22 +44,33 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final AccountService accountService;
   private final MemberService memberService;
   private final ItemPricingService itemPricingService;
+  private final TicketService ticketService;
+  private final PersonnelService personnelService;
+  private final AutoAnswerSuggestionService autoAnswerSuggestionService;
 
   public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
-      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, ItemPricingService itemPricingService) {
+                      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketService ticketService,
+                      PersonnelService personnelService, AutoAnswerSuggestionService autoAnswerSuggestionService, ItemPricingService itemPricingService) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.accountService = accountService;
     this.memberService = memberService;
     this.itemPricingService = itemPricingService;
+    this.ticketService = ticketService;
+    this.personnelService = personnelService;
+    this.autoAnswerSuggestionService = autoAnswerSuggestionService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
 
     return productPricingService.getMonthlyPayments(month).stream()
-        .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getSubscription()))
-        .collect(Collectors.toList());
+      .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getSubscription()))
+      .collect(Collectors.toList());
+  }
+
+  public List<SuggestionDTO> getAnswerSuggestion(String question) {
+    return autoAnswerSuggestionService.getAnswerSuggestion(question);
   }
 
   public CompletableFuture<Member> member(String id) {
@@ -92,4 +112,20 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return itemPricingService.getPrices(date, ids);
   }
 
+  public TicketDto ticket(UUID  id) {
+    return this.ticketService.getTicketById(id);
+  }
+
+  public List<TicketDto> tickets() {
+    return this.ticketService.getAllTickets();
+  }
+
+  public String me(DataFetchingEnvironment env) {
+    try {
+      return GraphQLConfiguration.getEmail(env, personnelService);
+    } catch (Exception e) {
+      log.info("Exception occured when trying to access user email: " + e);
+      return null;
+    }
+  }
 }

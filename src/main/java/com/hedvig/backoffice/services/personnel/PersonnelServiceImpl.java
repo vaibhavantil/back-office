@@ -24,9 +24,9 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 public class PersonnelServiceImpl implements PersonnelService {
-
   private final PersonnelRepository personnelRepository;
   private final AuthorizationCodeResourceDetails clientDetails;
   private final ObjectMapper mapper;
