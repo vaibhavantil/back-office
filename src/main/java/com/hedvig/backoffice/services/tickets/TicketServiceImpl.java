@@ -24,28 +24,33 @@ public class TicketServiceImpl implements TicketService {
   }
 
   @Override
-  public TicketDto createNewTicket(CreateTicketDto ticket, String createdBy) {
+  public UUID createNewTicket(CreateTicketDto ticket, String createdBy) {
     return this.ticketServiceClient.createTicket(ticket);
   }
 
   @Override
-  public TicketDto changeDescription(UUID ticketId, String newDescription, String modifiedBy) {
-    return this.ticketServiceClient.changeDescription(ticketId, new NewDescriptionDto( newDescription,  modifiedBy));
+  public void changeDescription(UUID ticketId, String newDescription, String modifiedBy) {
+    this.ticketServiceClient.changeDescription(ticketId, new NewDescriptionDto( newDescription,  modifiedBy));
   }
 
   @Override
-  public TicketDto assignToTeamMember(UUID ticketId, String assignTo, String modifiedBy) {
-    return this.ticketServiceClient.changeAssignedTo(ticketId,new NewAssignedToDto(assignTo, modifiedBy));
+  public void assignToTeamMember(UUID ticketId, String assignTo, String modifiedBy) {
+    this.ticketServiceClient.changeAssignedTo(ticketId,new NewAssignedToDto(assignTo, modifiedBy));
   }
 
   @Override
-  public TicketDto changeStatus(UUID ticketId, TicketStatus newStatus, String modifiedBy) {
-    return this.ticketServiceClient.changeStatus(ticketId, new NewStatusDto(newStatus, modifiedBy));
+  public void changeStatus(UUID ticketId, TicketStatus newStatus, String modifiedBy) {
+    this.ticketServiceClient.changeStatus(ticketId, new NewStatusDto(newStatus, modifiedBy));
   }
 
   @Override
-  public TicketDto changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy) {
-    return this.ticketServiceClient.changeReminder(ticketId, new NewReminderDto( newReminder, modifiedBy));
+  public void changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy) {
+    this.ticketServiceClient.changeReminder(ticketId, new NewReminderDto( newReminder, modifiedBy));
+  }
+
+  @Override
+  public void changePriority(UUID ticketId, float newPriority, String modifiedBy) {
+    this.ticketServiceClient.changePriority(ticketId, new NewPriorityDto( newPriority, modifiedBy));
   }
 
 }
