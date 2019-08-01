@@ -33,12 +33,16 @@ public class TicketServiceStub implements TicketService {
     Random rand = new Random();
 
     int NUM_TICKETS = 10;
+
+    //@TODO(Change this so that we actually get tickets with memberId and referenceID when appropriate)
     for (int i = 0; i < NUM_TICKETS; i++) {
       UUID id = UUID.randomUUID();
       TicketDto ticket = new TicketDto(
         id,
         teamMembers[i % teamMembers.length],
         Instant.now(),
+        "",//memberID
+        "",//referenceID
         teamMembers[i % teamMembers.length],
         rand.nextFloat(),
         type[i % type.length],
@@ -74,6 +78,8 @@ public class TicketServiceStub implements TicketService {
       id,
       ticketIn.getAssignedTo(),
       Instant.now(),
+      "",//memberID
+      "",//referenceID
       createdBy,
       ticketIn.getPriority(),
       ticketIn.getType(),
@@ -94,6 +100,8 @@ public class TicketServiceStub implements TicketService {
       t.getId(),
       t.getAssignedTo(),
       Instant.now(),
+      "",//memberID
+      "",//referenceID
       t.getCreatedBy(),
       t.getPriority(),
       t.getType(),
@@ -115,6 +123,8 @@ public class TicketServiceStub implements TicketService {
       ticket.getId(),
       assignTo,
       Instant.now(),
+      "",//memberID
+      "",//referenceID
       ticket.getCreatedBy(),
       ticket.getPriority(),
       ticket.getType(),
@@ -136,6 +146,8 @@ public class TicketServiceStub implements TicketService {
       ticket.getId(),
       ticket.getAssignedTo(),
       Instant.now(),
+      "",//memberID
+      "",//referenceID
       ticket.getCreatedBy(),
       ticket.getPriority(),
       ticket.getType(),
@@ -157,6 +169,8 @@ public class TicketServiceStub implements TicketService {
       ticket.getId(),
       ticket.getAssignedTo(),
       Instant.now(),
+      "",//memberID
+      "",//referenceID
       ticket.getCreatedBy(),
       ticket.getPriority(),
       ticket.getType(),
@@ -179,6 +193,8 @@ public class TicketServiceStub implements TicketService {
       ticket.getId(),
       ticket.getAssignedTo(),
       Instant.now(),
+      "",//memberID
+      "",//referenceID
       ticket.getCreatedBy(),
       Math.max(0f, Math.min(newPriority, 1.0f)),
       ticket.getType(),

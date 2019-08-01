@@ -14,6 +14,8 @@ public class TicketDto {
   private UUID id;
   private String assignedTo;
   private Instant creationDate;
+  private String memberId;
+  private String referenceId;
   private String createdBy;
   @Min(0)
   @Max(1)
