@@ -30,27 +30,27 @@ public class TicketServiceImpl implements TicketService {
 
   @Override
   public void changeDescription(UUID ticketId, String newDescription, String modifiedBy) {
-    this.ticketServiceClient.changeDescription(ticketId, new NewDescriptionDto( newDescription,  modifiedBy));
+    this.ticketServiceClient.changeDescription(ticketId, new ChangeDescriptionDto( newDescription,  modifiedBy));
   }
 
   @Override
   public void assignToTeamMember(UUID ticketId, String assignTo, String modifiedBy) {
-    this.ticketServiceClient.changeAssignedTo(ticketId,new NewAssignedToDto(assignTo, modifiedBy));
+    this.ticketServiceClient.changeAssignedTo(ticketId,new ChangeAssignToDto(assignTo, modifiedBy));
   }
 
   @Override
   public void changeStatus(UUID ticketId, TicketStatus newStatus, String modifiedBy) {
-    this.ticketServiceClient.changeStatus(ticketId, new NewStatusDto(newStatus, modifiedBy));
+    this.ticketServiceClient.changeStatus(ticketId, new ChangeStatusDto(newStatus, modifiedBy));
   }
 
   @Override
   public void changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy) {
-    this.ticketServiceClient.changeReminder(ticketId, new NewReminderDto( newReminder, modifiedBy));
+    this.ticketServiceClient.changeReminder(ticketId, new ChangeReminderDto( newReminder, modifiedBy));
   }
 
   @Override
   public void changePriority(UUID ticketId, float newPriority, String modifiedBy) {
-    this.ticketServiceClient.changePriority(ticketId, new NewPriorityDto( newPriority, modifiedBy));
+    this.ticketServiceClient.changePriority(ticketId, new ChangePriorityDto( newPriority, modifiedBy));
   }
 
 }
