@@ -397,6 +397,8 @@ type Ticket {
   assignedTo: String
   creationDate: LocalDate
   createdBy: String
+  memberId: String
+  referenceId: String
   priority: Float
   type: TicketType
   remindNotificationDate: LocalDate
