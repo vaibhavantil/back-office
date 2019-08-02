@@ -395,7 +395,7 @@ input TicketInput {
 type Ticket {
   id: ID
   assignedTo: String
-  creationDate: LocalDate
+  createdAt: Instant
   createdBy: String
   memberId: String
   referenceId: String
