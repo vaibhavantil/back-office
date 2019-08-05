@@ -26,7 +26,7 @@ public class Question {
 
   private Instant date;
 
-  @ManyToOne private QuestionGroupDTO group;
+  @ManyToOne private QuestionGroup group;
 
   public Question(long id, String message, Instant date) {
     this.id = id;

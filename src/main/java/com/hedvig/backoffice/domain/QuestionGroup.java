@@ -21,7 +21,7 @@ import org.hibernate.annotations.Type;
 @Getter
 @Setter
 @NoArgsConstructor
-public class QuestionGroupDTO {
+public class QuestionGroup {
 
   @Id @GeneratedValue private Long id;
 
@@ -41,7 +41,7 @@ public class QuestionGroupDTO {
   @OrderBy("date")
   private Set<Question> questions = new HashSet<>();
 
-  public QuestionGroupDTO(Subscription subscription) {
+  public QuestionGroup(Subscription subscription) {
     this.subscription = subscription;
   }
 
