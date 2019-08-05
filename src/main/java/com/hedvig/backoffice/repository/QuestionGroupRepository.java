@@ -12,19 +12,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface QuestionGroupRepository extends JpaRepository<QuestionGroup, Long> {
 
-  @Query("select g from QuestionGroupDTO g where g.answer is null and g.subscription = :subscription")
+  @Query("select g from QuestionGroup g where g.answer is null and g.subscription = :subscription")
   Optional<QuestionGroup> findUnasweredBySub(@Param("subscription") Subscription subscription);
 
   @Query(
-      "select g from QuestionGroupDTO g where g.answer is null and g.subscription.memberId = :memberId")
+      "select g from QuestionGroup g where g.answer is null and g.subscription.memberId = :memberId")
   Optional<QuestionGroup> findUnasweredByMemberId(@Param("memberId") String memberId);
 
-  @Query("select g from QuestionGroupDTO g where g.answer is not null order by g.date")
+  @Query("select g from QuestionGroup g where g.answer is not null order by g.date")
   List<QuestionGroup> answered();
 
-  @Query("select g from QuestionGroupDTO g where g.answer is null order by g.date")
+  @Query("select g from QuestionGroup g where g.answer is null order by g.date")
   List<QuestionGroup> notAnswered();
 
-  @Query("select count(g) from QuestionGroupDTO g where g.answer is null")
+  @Query("select count(g) from QuestionGroup g where g.answer is null")
   Long notAnsweredCount();
 }
