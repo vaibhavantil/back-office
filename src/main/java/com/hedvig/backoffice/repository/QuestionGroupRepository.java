@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.repository;
 
 import com.hedvig.backoffice.domain.QuestionGroup;
-import com.hedvig.backoffice.domain.QuestionGroupDTO;
 import com.hedvig.backoffice.domain.Subscription;
 import java.util.List;
 import java.util.Optional;
