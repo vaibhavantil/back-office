@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
-import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.services.tickets.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,23 +28,23 @@ public interface TicketServiceClient {
 
   @PostMapping("/_/tickets/description/{id}")
   void changeDescription(@PathVariable UUID id,
-                              @RequestBody NewDescriptionDto newDescription);
+                              @RequestBody ChangeDescriptionDto newDescription);
 
   @PostMapping("/_/tickets/assign/{id}")
   void changeAssignedTo(@PathVariable UUID id,
-                             @RequestBody NewAssignedToDto assignedTo);
+                             @RequestBody ChangeAssignToDto assignedTo);
 
   @PostMapping("/_/tickets/status/{id}")
   void changeStatus(@PathVariable UUID id,
-                         @RequestBody NewStatusDto newStatus);
+                         @RequestBody ChangeStatusDto newStatus);
 
   @PostMapping("/_/tickets/reminder/{id}")
   void changeReminder(@PathVariable UUID id,
-                           @RequestBody NewReminderDto newReminder);
+                           @RequestBody ChangeReminderDto newReminder);
 
   @PostMapping("/_/tickets/priority/{id}")
   void changePriority(@PathVariable UUID id,
-                           @RequestBody NewPriorityDto newPriority);
+                           @RequestBody ChangePriorityDto newPriority);
 
 
 }

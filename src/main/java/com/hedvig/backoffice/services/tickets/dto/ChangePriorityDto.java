@@ -6,9 +6,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 @Value
-public class NewPriorityDto {
+public class ChangePriorityDto {
   @Min(0)
   @Max(1)
   private float priority;
-  private String modifiedBy;
+  private String changedBy;
 }

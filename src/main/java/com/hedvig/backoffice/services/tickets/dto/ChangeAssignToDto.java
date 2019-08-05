@@ -3,7 +3,7 @@ package com.hedvig.backoffice.services.tickets.dto;
 import lombok.Value;
 
 @Value
-public class NewAssignedToDto {
+public class ChangeAssignToDto {
   private String assignedTo;
-  private String modifiedBy;
+  private String changedBy;
 }
