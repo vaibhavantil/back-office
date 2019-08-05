@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.services.questions.dto;
 
-import com.hedvig.backoffice.domain.QuestionGroup;
 import com.hedvig.backoffice.web.dto.PersonnelDTO;
 import java.time.Instant;
 import java.util.List;
@@ -21,7 +20,7 @@ public class QuestionGroupDTO {
   private PersonnelDTO personnel;
   private List<QuestionDTO> questions;
 
-  public static QuestionGroupDTO fromDomain(QuestionGroup group) {
+  public static QuestionGroupDTO fromDomain(com.hedvig.backoffice.domain.QuestionGroupDTO group) {
     return new QuestionGroupDTO(
         group.getId(),
         group.getSubscription().getMemberId(),

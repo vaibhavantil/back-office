@@ -2,7 +2,7 @@ package com.hedvig.backoffice.services.questions;
 
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Question;
-import com.hedvig.backoffice.domain.QuestionGroup;
+import com.hedvig.backoffice.domain.QuestionGroupDTO;
 import com.hedvig.backoffice.domain.Subscription;
 import com.hedvig.backoffice.repository.QuestionGroupRepository;
 import com.hedvig.backoffice.repository.QuestionRepository;
@@ -13,7 +13,7 @@ import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.notificationService.NotificationService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
-import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
+import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.updates.UpdateType;
 import com.hedvig.backoffice.services.updates.UpdatesService;
 import java.time.Instant;
@@ -35,7 +35,9 @@ public class QuestionServiceImpl implements QuestionService {
   private final ExpoNotificationService expoNotificationService;
   private final PersonnelService personnelService;
   private final NotificationService notificationService;
+  private final TicketService ticketService;
   private final MessagesFrontendPostprocessor messagesPostprocessor;
+
 
   @Autowired
   public QuestionServiceImpl(
@@ -47,6 +49,7 @@ public class QuestionServiceImpl implements QuestionService {
     ExpoNotificationService expoNotificationService,
     PersonnelService personnelService,
     NotificationService notificationService,
+    TicketService ticketService,
     MessagesFrontendPostprocessor messagesPostprocessor) {
 
     this.questionRepository = questionRepository;
@@ -57,49 +60,50 @@ public class QuestionServiceImpl implements QuestionService {
     this.expoNotificationService = expoNotificationService;
     this.personnelService = personnelService;
     this.notificationService = notificationService;
+    this.ticketService = ticketService;
     this.messagesPostprocessor = messagesPostprocessor;
   }
 
-  private QuestionGroupDTO postProcessQuestionGroup(QuestionGroupDTO group) {
+  private com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO postProcessQuestionGroup(com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO group) {
     group.getQuestions().forEach(q -> messagesPostprocessor.processMessage(q.getMessage()));
     return group;
   }
 
   @Override
-  public List<QuestionGroupDTO> list() {
+  public List<com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO> list() {
     return questionGroupRepository
         .findAll()
         .stream()
-        .map(QuestionGroupDTO::fromDomain)
+        .map(com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO::fromDomain)
         .map(this::postProcessQuestionGroup)
         .collect(Collectors.toList());
   }
 
   @Override
-  public List<QuestionGroupDTO> answered() {
+  public List<com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO> answered() {
     return questionGroupRepository
         .answered()
         .stream()
-        .map(QuestionGroupDTO::fromDomain)
+        .map(com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO::fromDomain)
       .map(this::postProcessQuestionGroup)
         .collect(Collectors.toList());
   }
 
   @Override
-  public List<QuestionGroupDTO> notAnswered() {
+  public List<com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO> notAnswered() {
     return questionGroupRepository
         .notAnswered()
         .stream()
-        .map(QuestionGroupDTO::fromDomain)
+        .map(com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO::fromDomain)
       .map(this::postProcessQuestionGroup)
         .collect(Collectors.toList());
   }
 
   @Transactional
   @Override
-  public QuestionGroupDTO answer(String memberId, String message, Personnel personnel)
+  public com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO answer(String memberId, String message, Personnel personnel)
       throws QuestionNotFoundException {
-    QuestionGroup group =
+    QuestionGroupDTO group =
         questionGroupRepository
             .findUnasweredByMemberId(memberId)
             .orElseThrow(() -> new QuestionNotFoundException(memberId));
@@ -112,13 +116,13 @@ public class QuestionServiceImpl implements QuestionService {
     questionGroupRepository.save(group);
     updatesService.changeOn(-1, UpdateType.QUESTIONS);
 
-    return QuestionGroupDTO.fromDomain(group);
+    return com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO.fromDomain(group);
   }
 
   @Override
-  public QuestionGroupDTO done(String memberId, Personnel personnel)
+  public com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO done(String memberId, Personnel personnel)
       throws QuestionNotFoundException {
-    QuestionGroup group =
+    QuestionGroupDTO group =
         questionGroupRepository
             .findUnasweredByMemberId(memberId)
             .orElseThrow(() -> new QuestionNotFoundException(memberId));
@@ -128,7 +132,7 @@ public class QuestionServiceImpl implements QuestionService {
     questionGroupRepository.save(group);
     updatesService.changeOn(-1, UpdateType.QUESTIONS);
 
-    return QuestionGroupDTO.fromDomain(group);
+    return com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO.fromDomain(group);
   }
 
   @Transactional
@@ -141,8 +145,8 @@ public class QuestionServiceImpl implements QuestionService {
       if (question.isPresent()) continue;
 
       Subscription sub = subscriptionService.getOrCreateSubscription("" + message.getHeader().getFromId());
-      QuestionGroup group =
-          questionGroupRepository.findUnasweredBySub(sub).orElseGet(() -> new QuestionGroup(sub));
+      QuestionGroupDTO group =
+          questionGroupRepository.findUnasweredBySub(sub).orElseGet(() -> new QuestionGroupDTO(sub));
 
       group.addQuestion(
           question.orElseGet(
@@ -153,6 +157,9 @@ public class QuestionServiceImpl implements QuestionService {
                       message.getTimestamp())));
       group.correctDate(message.getTimestamp());
       questionGroupRepository.save(group);
+
+      //TICKET SERVICE INTEGRATION
+      ticketService.createTicketFromQuestions(com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO.fromDomain(group));
     }
 
     long count = Optional.ofNullable(questionGroupRepository.notAnsweredCount()).orElse(0L);
