@@ -1,17 +1,12 @@
 package com.hedvig.backoffice.services.questions.dto;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedvig.backoffice.domain.Question;
-import java.io.IOException;
-import java.time.Instant;
-import java.util.Optional;
-
 import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.time.Instant;
+import java.util.Optional;
 
 @Data
 @AllArgsConstructor
