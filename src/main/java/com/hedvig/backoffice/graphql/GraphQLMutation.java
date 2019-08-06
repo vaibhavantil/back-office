@@ -2,6 +2,7 @@ package com.hedvig.backoffice.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.google.common.collect.ImmutableMap;
+import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
@@ -17,6 +18,8 @@ import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
+import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.*;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
@@ -25,6 +28,7 @@ import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
 import graphql.language.SourceLocation;
 import graphql.schema.DataFetchingEnvironment;
+import graphql.servlet.GraphQLContext;
 import jersey.repackaged.com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -32,6 +36,7 @@ import org.springframework.stereotype.Component;
 
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -52,11 +57,13 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final AccountService accountService;
   private final TicketService ticketService;
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
-
+  private final QuestionService questionsService;
 
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
                          MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
-                         AccountService accountService, TicketService ticketService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
+                         AccountService accountService, TicketService ticketService, AutoAnswerSuggestionService autoAnswerSuggestionService,
+                        QuestionService questionsService
+  ) {
 
     this.paymentService = paymentService;
     this.personnelService = personnelService;
@@ -66,6 +73,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.accountService = accountService;
     this.ticketService = ticketService;
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
+    this.questionsService = questionsService;
   }
 
   public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount,
@@ -370,6 +378,23 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       log.error(errorMessage, e);
       throw new RuntimeException(errorMessage, e);
     }
+  }
+
+  //Hijacked Question-service for the purpose of creating and updating tickets.
+  Boolean questionIsDone(String memberId, DataFetchingEnvironment env )  {
+    GraphQLRequestContext context = env.getContext();
+    Principal principal = context.getUserPrincipal();
+
+     try {
+      Personnel personnel =
+        personnelService.getPersonnel(principal.getName());
+        questionsService.done(memberId, personnel);
+    } catch (Exception e ) {
+       String errorMessage = "Error when trying to update message as done!";
+       log.error(errorMessage, e);
+       throw new RuntimeException(errorMessage, e);
+     }
+    return true;
   }
 
 }
