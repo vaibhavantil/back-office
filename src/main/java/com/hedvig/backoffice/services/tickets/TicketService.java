@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.graphql.types.RemindNotification;
+import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
@@ -25,5 +26,7 @@ public interface TicketService {
   void changeReminder(UUID ticketId, RemindNotification newReminder, String modifiedBy);
 
   void changePriority(UUID ticketId, float newPriority, String modifiedBy);
+
+  void createTicketFromQuestions (QuestionGroupDTO questionGroupDTO);
 
 }

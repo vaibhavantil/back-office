@@ -1,10 +1,14 @@
 package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.graphql.types.RemindNotification;
+import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
+import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class TicketServiceImpl implements TicketService {
   private final TicketServiceClient ticketServiceClient;
@@ -53,4 +57,31 @@ public class TicketServiceImpl implements TicketService {
     this.ticketServiceClient.changePriority(ticketId, new ChangePriorityDto( newPriority, modifiedBy));
   }
 
+  @Override
+  public void createTicketFromQuestions(QuestionGroupDTO questionGroup) {
+    List<QuestionDTO> questions = questionGroup.getQuestions();
+    if (questions.isEmpty()) {
+      return;
+    }
+
+    QuestionDTO lastQuestion = questions.stream()
+      .sorted(Comparator.comparing(QuestionDTO::getDate).reversed())
+      .collect(Collectors.toList()).get(0);
+
+    //TODO:("Make a big string out of everything and put it in description?")
+      CreateTicketDto ticketDto = new CreateTicketDto(
+        "question-service",
+        "Unassigned",
+        questionGroup.getMemberId().toString(),
+        questionGroup.getId().toString(),
+        null,
+        TicketType.MESSAGE,
+        null, null, null,
+        lastQuestion.getMessage().toString(),
+        TicketStatus.WAITING
+    );
+
+      ticketServiceClient.createTicket(ticketDto);
+
+  }
 }

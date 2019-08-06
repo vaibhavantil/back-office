@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.graphql.types.RemindNotification;
+import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.tickets.dto.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -208,6 +209,11 @@ public class TicketServiceStub implements TicketService {
       log.error("Error when trying to replace value, could not find entry for id: {}", ticketId);
     }
 
+  }
+
+  @Override
+  public void createTicketFromQuestions(QuestionGroupDTO questionGroupDTO) {
+    //TODO("To be implemented")
   }
 
 }

@@ -12,9 +12,11 @@ import java.time.LocalTime;
 public class CreateTicketDto {
     private String createdBy;
     private String assignedTo;
+    private String memberId;
+    private String referenceId;
     @Min(0)
     @Max(1)
-    private float priority;
+    private Float priority;
     private TicketType type;
     private LocalDate remindNotificationDate;
     private LocalTime remindNotificationTime;
@@ -26,6 +28,8 @@ public class CreateTicketDto {
       return new CreateTicketDto (
         createdBy,
         t.getAssignedTo(),
+        null,
+        null,
         t.getPriority(),
         t.getType(),
         t.getRemindNotificationDate(),
