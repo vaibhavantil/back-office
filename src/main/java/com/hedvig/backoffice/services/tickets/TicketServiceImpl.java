@@ -5,8 +5,10 @@ import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class TicketServiceImpl implements TicketService {
   private final TicketServiceClient ticketServiceClient;
@@ -62,17 +64,11 @@ public class TicketServiceImpl implements TicketService {
       return;
     }
 
-    int lastQuestionIndex = 0;
-    Long lastDate = 0L;
-    for (int i = 0; i <questions.size() ; i++ ){
-      if( questions.get(i).getDate() > lastDate) {
-        lastDate = questions.get(i).getDate();
-        lastQuestionIndex = i;
-      }
-    }
-    QuestionDTO lastQuestion = questions.get(lastQuestionIndex);
-    //TODO:("Make a big string out of everything and put it in description?")
+    QuestionDTO lastQuestion = questions.stream()
+      .sorted(Comparator.comparing(QuestionDTO::getDate).reversed())
+      .collect(Collectors.toList()).get(0);
 
+    //TODO:("Make a big string out of everything and put it in description?")
       CreateTicketDto ticketDto = new CreateTicketDto(
         "question-service",
         "Unassigned",

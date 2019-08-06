@@ -39,7 +39,6 @@ public class QuestionServiceImpl implements QuestionService {
   private final TicketService ticketService;
   private final MessagesFrontendPostprocessor messagesPostprocessor;
 
-
   @Autowired
   public QuestionServiceImpl(
     QuestionRepository questionRepository,
@@ -175,5 +174,4 @@ public class QuestionServiceImpl implements QuestionService {
 
     expoNotificationService.sendNotification(memberId, personnelToken);
   }
-
 }
