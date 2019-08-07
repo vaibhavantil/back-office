@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.tickets;
 import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
+import com.hedvig.backoffice.services.tickets.dto.FullHistoryTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 
@@ -14,6 +15,8 @@ public interface TicketService {
   List<TicketDto> getAllTickets(Boolean resolved);
 
   TicketDto getTicketById(UUID ticketId);
+
+  FullHistoryTicketDto getTicketWithFullHistory(UUID ticketId);
 
   UUID createNewTicket(CreateTicketDto ticket, String createdBy);
 

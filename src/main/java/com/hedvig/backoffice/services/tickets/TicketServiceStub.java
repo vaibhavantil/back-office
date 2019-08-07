@@ -83,6 +83,12 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
+  public FullHistoryTicketDto getTicketWithFullHistory(UUID ticketId) {
+    //TODO("Implement this")
+    return null;
+  }
+
+  @Override
   public UUID createNewTicket(CreateTicketDto ticketIn, String createdBy) {
     UUID id = UUID.randomUUID();
     TicketDto newTicket = new TicketDto(
