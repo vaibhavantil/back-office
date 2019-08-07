@@ -41,6 +41,11 @@ public class TicketServiceImpl implements TicketService {
   }
 
   @Override
+  public FullHistoryTicketDto getTicketWithFullHistory(UUID ticketId) {
+    return ticketServiceClient.getTicketWithFullHistory(ticketId);
+  }
+
+  @Override
   public UUID createNewTicket(CreateTicketDto ticket, String createdBy) {
     return this.ticketServiceClient.createTicket(ticket);
   }

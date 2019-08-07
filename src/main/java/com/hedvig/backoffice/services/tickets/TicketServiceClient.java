@@ -20,6 +20,9 @@ public interface TicketServiceClient {
   @GetMapping("/_/tickets/{id}")
   TicketDto getTicket(@PathVariable("id") UUID id);
 
+  @GetMapping("/_/tickets/history/{id}")
+  FullHistoryTicketDto getTicketWithFullHistory(@PathVariable("id") UUID id);
+
   @GetMapping("/_/tickets/all")
   List<TicketDto> getTickets();
 
@@ -59,6 +62,7 @@ public interface TicketServiceClient {
   @PostMapping("/_/tickets/priority/{id}")
   void changePriority(@PathVariable UUID id,
                            @RequestBody ChangePriorityDto newPriority);
+
 
 
 

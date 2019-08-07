@@ -12,6 +12,7 @@ type QueryType {
   items(payload: Payload!): ItemSearch!
   prices(date: String!, ids: [String!]!): [PricePoint!]!
   ticket (id: ID!): Ticket
+  ticketWithFullHistory( id: ID!): TicketHistory
   tickets (resolved: Boolean): [Ticket!]!
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
@@ -409,10 +410,40 @@ type Ticket {
   status: TicketStatus
 }
 
+type TicketHistory {
+  id: ID
+  createdAt: Instant
+  createdBy: String
+  type: TicketType
+  revisions: [TicketRevision]
+}
+
+type TicketRevision {
+  assignedTo: String
+  manualPriority: Float
+  remindDate: LocalDate
+  remindTime: LocalTime
+  remindMessage: String
+  status: TicketStatus
+  changedAt: Instant
+  changeType: TicketChangeType
+  changedBy: String
+  description: String
+}
+
 input RemindNotification {
   date: LocalDate
   time: LocalTime
   message: String
+}
+
+enum TicketChangeType {
+  TICKET_CREATED,
+  CHANGED_REMINDER,
+  CHANGED_ASSIGNED_TO,
+  CHANGED_DESCRIPTION,
+  CHANGED_STATUS,
+  CHANGED_PRIORITY,
 }
 
 enum TicketStatus {
