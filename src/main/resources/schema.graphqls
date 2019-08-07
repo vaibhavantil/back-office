@@ -12,7 +12,7 @@ type QueryType {
   items(payload: Payload!): ItemSearch!
   prices(date: String!, ids: [String!]!): [PricePoint!]!
   ticket (id: ID!): Ticket
-  tickets: [Ticket!]!
+  tickets (resolved: Boolean): [Ticket!]!
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
 }

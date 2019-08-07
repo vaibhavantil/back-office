@@ -18,8 +18,13 @@ public class TicketServiceImpl implements TicketService {
   }
 
   @Override
-  public List<TicketDto> getAllTickets() {
-    return this.ticketServiceClient.getTickets();
+  public List<TicketDto> getAllTickets(Boolean onlyResolvedTickets) {
+    if (onlyResolvedTickets == null) {
+      return this.ticketServiceClient.getTickets();
+    } else if (onlyResolvedTickets) {
+      return this.ticketServiceClient.getResolvedTickets();
+    }
+      return this.ticketServiceClient.getUnresolvedTickets();
   }
 
   @Override
@@ -80,8 +85,12 @@ public class TicketServiceImpl implements TicketService {
         lastQuestion.getMessage().toString(),
         TicketStatus.WAITING
     );
-
       ticketServiceClient.createTicket(ticketDto);
+  }
 
+  @Override
+  public void setQuestionGroupAsDone(String groupId, String changedBy) {
+    ChangeStatusDto newStatus = new ChangeStatusDto(TicketStatus.RESOLVED, changedBy);
+    ticketServiceClient.changeStatusThroughRefId(groupId, newStatus );
   }
 }

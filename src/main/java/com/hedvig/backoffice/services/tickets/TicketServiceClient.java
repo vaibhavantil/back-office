@@ -23,6 +23,12 @@ public interface TicketServiceClient {
   @GetMapping("/_/tickets/all")
   List<TicketDto> getTickets();
 
+  @GetMapping("/_/tickets/all/unresolved")
+  List<TicketDto> getUnresolvedTickets();
+
+  @GetMapping("/_/tickets/all/resolved")
+  List<TicketDto> getResolvedTickets();
+
   @PostMapping("/_/tickets/new/")
   UUID createTicket(@RequestBody CreateTicketDto ticket);
 
@@ -38,6 +44,11 @@ public interface TicketServiceClient {
   void changeStatus(@PathVariable UUID id,
                          @RequestBody ChangeStatusDto newStatus);
 
+  @PostMapping("/_/tickets/status/ref/{referenceId}")
+  void changeStatusThroughRefId (@PathVariable String referenceId,
+                                 @RequestBody ChangeStatusDto newStatus);
+
+
   @PostMapping("/_/tickets/reminder/{id}")
   void changeReminder(@PathVariable UUID id,
                            @RequestBody ChangeReminderDto newReminder);
@@ -45,6 +56,7 @@ public interface TicketServiceClient {
   @PostMapping("/_/tickets/priority/{id}")
   void changePriority(@PathVariable UUID id,
                            @RequestBody ChangePriorityDto newPriority);
+
 
 
 }
