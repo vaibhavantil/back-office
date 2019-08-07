@@ -77,15 +77,16 @@ public class TicketServiceImpl implements TicketService {
       CreateTicketDto ticketDto = new CreateTicketDto(
         "question-service",
         "Unassigned",
-        questionGroup.getMemberId().toString(),
+        questionGroup.getMemberId(),
         questionGroup.getId().toString(),
         null,
         TicketType.MESSAGE,
         null, null, null,
-        lastQuestion.getMessage().toString(),
+        lastQuestion.getMessage().getBody().toString(),
         TicketStatus.WAITING
     );
-      ticketServiceClient.createTicket(ticketDto);
+
+      ticketServiceClient.createTicketFromQuestion(ticketDto);
   }
 
   @Override
