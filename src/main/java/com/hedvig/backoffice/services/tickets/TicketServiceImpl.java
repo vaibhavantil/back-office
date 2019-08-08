@@ -17,6 +17,14 @@ public class TicketServiceImpl implements TicketService {
     this.ticketServiceClient = ticketServiceClient;
   }
 
+  /**
+   * getAllTicket
+   * @param onlyResolvedTickets
+   * When null we fetch all tickets (tickets of all TicketStatus)
+   * If true we fetch only tickets of TicketStatus.RESOLVED
+   * If false we fetch tickets of _both_ TicketStatus.WAITING and TicketStatus.WORKED_ON
+   */
+
   @Override
   public List<TicketDto> getAllTickets(Boolean onlyResolvedTickets) {
     if (onlyResolvedTickets == null) {
