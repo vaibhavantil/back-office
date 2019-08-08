@@ -132,7 +132,7 @@ public class QuestionServiceImpl implements QuestionService {
     questionGroupRepository.save(group);
 
     //ticket-service update here:
-    ticketService.setQuestionGroupAsDone(group.getId().toString(), personnel.getEmail());
+//    ticketService.setQuestionGroupAsDone(group.getId().toString(), personnel.getEmail());
 
     updatesService.changeOn(-1, UpdateType.QUESTIONS);
     return QuestionGroupDTO.fromDomain(group);
