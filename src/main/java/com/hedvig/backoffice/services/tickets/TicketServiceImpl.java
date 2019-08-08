@@ -1,13 +1,14 @@
 package com.hedvig.backoffice.services.tickets;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.hedvig.backoffice.domain.Question;
+import com.hedvig.backoffice.domain.QuestionGroup;
 import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TicketServiceImpl implements TicketService {
@@ -76,26 +77,31 @@ public class TicketServiceImpl implements TicketService {
   }
 
   @Override
-  public void createTicketFromQuestions(QuestionGroupDTO questionGroup) {
-    List<QuestionDTO> questions = questionGroup.getQuestions();
+  public void createTicketFromQuestions(QuestionGroup questionGroup) {
+    List<Question> questions = new ArrayList<Question>();
+
+    questionGroup.getQuestions().addAll(questions);
     if (questions.isEmpty()) {
       return;
     }
-
-    QuestionDTO lastQuestion = questions.stream()
-      .sorted(Comparator.comparing(QuestionDTO::getDate).reversed())
+    Question lastQuestion = questions.stream()
+      .sorted(Comparator.comparing(Question::getDate).reversed())
       .collect(Collectors.toList()).get(0);
+
+      //We do this only to get the associated MemberID =/
+    QuestionGroupDTO questionGroupDto = QuestionGroupDTO.fromDomain(questionGroup);
+
 
     //TODO:("Make a big string out of everything and put it in description?")
       CreateTicketDto ticketDto = new CreateTicketDto(
         "question-service",
         "Unassigned",
-        questionGroup.getMemberId(),
+        questionGroupDto.getMemberId(),
         questionGroup.getId().toString(),
         null,
         TicketType.MESSAGE,
         null, null, null,
-        lastQuestion.getMessage().getBody().toString(),
+        lastQuestion.getMessage(),
         TicketStatus.WAITING
     );
 

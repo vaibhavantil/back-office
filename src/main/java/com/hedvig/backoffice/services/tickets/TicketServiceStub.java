@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.tickets;
 
+import com.hedvig.backoffice.domain.QuestionGroup;
 import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.tickets.dto.*;
@@ -228,7 +229,7 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public void createTicketFromQuestions(QuestionGroupDTO questionGroupDTO) {
+  public void createTicketFromQuestions(QuestionGroup questionGroup) {
     //TODO("To be implemented")
   }
 

@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.tickets;
 
+import com.hedvig.backoffice.domain.QuestionGroup;
 import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
@@ -30,7 +31,7 @@ public interface TicketService {
 
   void changePriority(UUID ticketId, float newPriority, String modifiedBy);
 
-  void createTicketFromQuestions (QuestionGroupDTO questionGroupDTO);
+  void createTicketFromQuestions (QuestionGroup questionGroup);
 
   void setQuestionGroupAsDone(String groupId, String changedBy );
 
