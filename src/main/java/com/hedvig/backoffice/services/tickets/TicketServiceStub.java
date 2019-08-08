@@ -59,8 +59,18 @@ public class TicketServiceStub implements TicketService {
 
 
   @Override
-  public List<TicketDto> getAllTickets() {
-    return tickets.values().stream().collect(Collectors.toList());
+  public List<TicketDto> getAllTickets(Boolean onlyResolvedTickets) {
+    if (onlyResolvedTickets == null) {
+      return tickets.values().stream().collect(Collectors.toList());
+    } else if (onlyResolvedTickets) {
+      return tickets.values().stream()
+        .filter(ticketDto -> ticketDto.getStatus() == TicketStatus.RESOLVED)
+        .collect(Collectors.toList());
+    }
+
+    return tickets.values().stream()
+      .filter(ticketDto -> ticketDto.getStatus() != TicketStatus.RESOLVED)
+      .collect(Collectors.toList());
   }
 
   @Override
@@ -214,6 +224,12 @@ public class TicketServiceStub implements TicketService {
   @Override
   public void createTicketFromQuestions(QuestionGroupDTO questionGroupDTO) {
     //TODO("To be implemented")
+  }
+
+  @Override
+  public void setQuestionGroupAsDone(String groupId, String changedBy) {
+    //TODO("To be implemented")
+
   }
 
 }

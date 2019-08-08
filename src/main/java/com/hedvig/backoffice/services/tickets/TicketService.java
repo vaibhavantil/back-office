@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface TicketService {
 
-  List<TicketDto> getAllTickets();
+  List<TicketDto> getAllTickets(Boolean resolved);
 
   TicketDto getTicketById(UUID ticketId);
 
@@ -28,5 +28,8 @@ public interface TicketService {
   void changePriority(UUID ticketId, float newPriority, String modifiedBy);
 
   void createTicketFromQuestions (QuestionGroupDTO questionGroupDTO);
+
+  void setQuestionGroupAsDone(String groupId, String changedBy );
+
 
 }

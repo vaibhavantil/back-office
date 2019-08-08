@@ -12,7 +12,7 @@ type QueryType {
   items(payload: Payload!): ItemSearch!
   prices(date: String!, ids: [String!]!): [PricePoint!]!
   ticket (id: ID!): Ticket
-  tickets: [Ticket!]!
+  tickets (resolved: Boolean): [Ticket!]!
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
 }
@@ -37,6 +37,7 @@ type MutationType {
   changeTicketReminder(ticketId: ID!, newReminder: RemindNotification): ID
   changeTicketPriority(ticketId: ID!, newPriority: Float): ID
   autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
+  questionIsDone(memberId: ID!): Boolean
 }
 
 type Suggestion {

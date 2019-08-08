@@ -17,9 +17,22 @@ public class TicketServiceImpl implements TicketService {
     this.ticketServiceClient = ticketServiceClient;
   }
 
+  /**
+   * getAllTicket
+   * @param onlyResolvedTickets
+   * When null we fetch all tickets (tickets of all TicketStatus)
+   * If true we fetch only tickets of TicketStatus.RESOLVED
+   * If false we fetch tickets of _both_ TicketStatus.WAITING and TicketStatus.WORKED_ON
+   */
+
   @Override
-  public List<TicketDto> getAllTickets() {
-    return this.ticketServiceClient.getTickets();
+  public List<TicketDto> getAllTickets(Boolean onlyResolvedTickets) {
+    if (onlyResolvedTickets == null) {
+      return this.ticketServiceClient.getTickets();
+    } else if (onlyResolvedTickets) {
+      return this.ticketServiceClient.getResolvedTickets();
+    }
+      return this.ticketServiceClient.getUnresolvedTickets();
   }
 
   @Override
@@ -72,16 +85,21 @@ public class TicketServiceImpl implements TicketService {
       CreateTicketDto ticketDto = new CreateTicketDto(
         "question-service",
         "Unassigned",
-        questionGroup.getMemberId().toString(),
+        questionGroup.getMemberId(),
         questionGroup.getId().toString(),
         null,
         TicketType.MESSAGE,
         null, null, null,
-        lastQuestion.getMessage().toString(),
+        lastQuestion.getMessage().getBody().toString(),
         TicketStatus.WAITING
     );
 
-      ticketServiceClient.createTicket(ticketDto);
+      ticketServiceClient.createTicketFromQuestion(ticketDto);
+  }
 
+  @Override
+  public void setQuestionGroupAsDone(String groupId, String changedBy) {
+    ChangeStatusDto newStatus = new ChangeStatusDto(TicketStatus.RESOLVED, changedBy);
+    ticketServiceClient.changeStatusThroughRefId(groupId, newStatus );
   }
 }
