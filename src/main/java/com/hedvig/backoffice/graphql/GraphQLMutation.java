@@ -62,7 +62,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
                          MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
                          AccountService accountService, TicketService ticketService, AutoAnswerSuggestionService autoAnswerSuggestionService,
-                        QuestionService questionsService
+  AccountService accountService,
+  TicketService ticketService,
+  AutoAnswerSuggestionService autoAnswerSuggestionService,
+  QuestionService questionsService
   ) {
 
     this.paymentService = paymentService;
