@@ -1,8 +1,9 @@
 package com.hedvig.backoffice.services.tickets;
 
+import com.hedvig.backoffice.domain.QuestionGroup;
 import com.hedvig.backoffice.graphql.types.RemindNotification;
-import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
+import com.hedvig.backoffice.services.tickets.dto.FullTicketHistoryDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 
@@ -14,6 +15,8 @@ public interface TicketService {
   List<TicketDto> getAllTickets(Boolean resolved);
 
   TicketDto getTicketById(UUID ticketId);
+
+  FullTicketHistoryDto getTicketWithFullHistory(UUID ticketId);
 
   UUID createNewTicket(CreateTicketDto ticket, String createdBy);
 
@@ -27,7 +30,7 @@ public interface TicketService {
 
   void changePriority(UUID ticketId, float newPriority, String modifiedBy);
 
-  void createTicketFromQuestions (QuestionGroupDTO questionGroupDTO);
+  void createTicketFromQuestions (QuestionGroup questionGroup);
 
   void setQuestionGroupAsDone(String groupId, String changedBy );
 

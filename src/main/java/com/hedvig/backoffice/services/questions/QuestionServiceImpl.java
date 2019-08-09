@@ -162,7 +162,7 @@ public class QuestionServiceImpl implements QuestionService {
       questionGroupRepository.save(group);
 
       //TICKET SERVICE INTEGRATION
-      ticketService.createTicketFromQuestions(QuestionGroupDTO.fromDomain(group));
+      ticketService.createTicketFromQuestions(group);
     }
 
     long count = Optional.ofNullable(questionGroupRepository.notAnsweredCount()).orElse(0L);
