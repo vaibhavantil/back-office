@@ -116,7 +116,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return this.ticketService.getTicketById(id);
   }
 
-  public FullTicketHistoryDto ticketWithFullHistory(UUID  id) {
+  public FullTicketHistoryDto getFullTicketHistory(UUID  id) {
     return this.ticketService.getTicketWithFullHistory(id);
   }
 
