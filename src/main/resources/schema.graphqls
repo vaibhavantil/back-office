@@ -11,6 +11,9 @@ type QueryType {
   categories: [Category!]
   items(payload: Payload!): ItemSearch!
   prices(date: String!, ids: [String!]!): [PricePoint!]!
+  inventory(claimId: ID!): [InventoryItem]
+  filters(categoryId: String!): [FilterSuggestion!]!
+  inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
 }
 
 type MutationType {
@@ -25,6 +28,41 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
+  addInventoryItem(item: InventoryItemInput!): Boolean
+  removeInventoryItem(inventoryItemId: ID!): Boolean
+}
+
+input FilterPayload {
+  filters: [Filter!]!
+  inventoryItemId: ID!
+}
+
+input InventoryItemInput {
+  inventoryItemId: String
+  claimId: String!
+  itemName: String!
+  categoryName: String!
+  categoryId: String!
+  value: Float!
+  source: String!
+  upperRange: Float
+  lowerRange: Float
+  itemId: String
+  filters: [Filter]
+}
+
+type InventoryItem {
+  inventoryItemId: ID!
+  claimId: String!
+  itemName: String!
+  categoryName: String!
+  categoryId: String!
+  value: Float!
+  source: String!
+  upperRange: Float
+  lowerRange: Float
+  itemId: String
+  filters: [FilterOutput]
 }
 
 type PricePoint {
@@ -48,6 +86,11 @@ input Payload {
 }
 
 input Filter {
+  name: String!
+  value: String!
+}
+
+type FilterOutput {
   name: String!
   value: String!
 }

@@ -24,6 +24,9 @@ import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.PayloadDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.ItemBodyDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.PricepointDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.FilterSuggestionDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.FilterDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -90,6 +93,18 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
   public List<PricepointDTO> prices(String date, List<String> ids) {
     return itemPricingService.getPrices(date, ids);
+  }
+
+  public List<InventoryItemDTO> inventory(String claimId) {
+    return itemPricingService.getInventory(claimId);
+  }
+
+  public List<FilterSuggestionDTO> filters(String categoryId) {
+    return itemPricingService.getAllFilters(categoryId);
+  }
+
+  public List<FilterDTO> inventoryItemFilters(String inventoryItemId) {
+    return itemPricingService.getInventoryItemFilters(inventoryItemId);
   }
 
 }

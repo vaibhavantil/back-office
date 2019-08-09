@@ -15,6 +15,9 @@ import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
+import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.FilterPayloadDTO;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -48,16 +51,18 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ClaimLoader claimLoader;
   private final ClaimsService claimsService;
   private final AccountService accountService;
+  private final ItemPricingService itemPricingService;
 
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
                          MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
-                         AccountService accountService) {
+                         AccountService accountService, ItemPricingService itemPricingService ) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.claimsService = claimsService;
     this.accountService = accountService;
+    this.itemPricingService = itemPricingService;
   }
 
   public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount,
@@ -311,4 +316,20 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
     return claimLoader.load(id);
   }
+
+  public boolean addInventoryItem(InventoryItemDTO item) {
+    return itemPricingService.addInventoryItem(item);
+  }
+  public boolean removeInventoryItem(String inventoryItemId) {
+    boolean first_check = itemPricingService.removeInventoryItem(inventoryItemId);
+
+    if (first_check == true) {
+      boolean second_check = itemPricingService.removeInventoryFilters(inventoryItemId);
+      if (second_check == true) {
+        return itemPricingService.removeInventoryItem(inventoryItemId);
+      }
+    }
+    return false;
+  }
+
 }
