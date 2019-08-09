@@ -2,7 +2,6 @@ package com.hedvig.backoffice.services.tickets;
 
 import com.hedvig.backoffice.domain.QuestionGroup;
 import com.hedvig.backoffice.graphql.types.RemindNotification;
-import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.tickets.dto.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -84,7 +83,7 @@ public class TicketServiceStub implements TicketService {
   }
 
   @Override
-  public FullHistoryTicketDto getTicketWithFullHistory(UUID ticketId) {
+  public FullTicketHistoryDto getTicketWithFullHistory(UUID ticketId) {
     //TODO("Implement this")
     return null;
   }

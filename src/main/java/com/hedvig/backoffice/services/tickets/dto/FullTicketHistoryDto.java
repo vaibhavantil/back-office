@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Value
-public class FullHistoryTicketDto {
+public class FullTicketHistoryDto {
   UUID id;
   Instant createdAt;
   String createdBy;

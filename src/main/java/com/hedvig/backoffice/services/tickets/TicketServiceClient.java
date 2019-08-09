@@ -21,7 +21,7 @@ public interface TicketServiceClient {
   TicketDto getTicket(@PathVariable("id") UUID id);
 
   @GetMapping("/_/tickets/history/{id}")
-  FullHistoryTicketDto getTicketWithFullHistory(@PathVariable("id") UUID id);
+  FullTicketHistoryDto getTicketWithFullHistory(@PathVariable("id") UUID id);
 
   @GetMapping("/_/tickets/all")
   List<TicketDto> getTickets();

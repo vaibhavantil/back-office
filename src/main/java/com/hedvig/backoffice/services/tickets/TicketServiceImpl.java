@@ -1,11 +1,9 @@
 package com.hedvig.backoffice.services.tickets;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.hedvig.backoffice.domain.Question;
 import com.hedvig.backoffice.domain.QuestionGroup;
 import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
-import com.hedvig.backoffice.services.questions.dto.QuestionDTO;
 import com.hedvig.backoffice.services.tickets.dto.*;
 
 import java.util.*;
@@ -42,7 +40,7 @@ public class TicketServiceImpl implements TicketService {
   }
 
   @Override
-  public FullHistoryTicketDto getTicketWithFullHistory(UUID ticketId) {
+  public FullTicketHistoryDto getTicketWithFullHistory(UUID ticketId) {
     return ticketServiceClient.getTicketWithFullHistory(ticketId);
   }
 
