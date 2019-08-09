@@ -90,12 +90,11 @@ public class TicketServiceImpl implements TicketService {
     QuestionGroupDTO questionGroupDto = QuestionGroupDTO.fromDomain(questionGroup);
 
 
-    //TODO:("Make a big string out of everything and put it in description?")
       CreateTicketDto ticketDto = new CreateTicketDto(
         "question-service",
         "Unassigned",
         questionGroupDto.getMemberId(),
-        questionGroup.getId().toString(),
+        questionGroupDto.getId().toString(),
         null,
         TicketType.MESSAGE,
         null, null, null,
