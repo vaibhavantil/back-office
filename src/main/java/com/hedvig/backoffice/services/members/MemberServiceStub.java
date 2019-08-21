@@ -1,28 +1,31 @@
 package com.hedvig.backoffice.services.members;
 
-import com.hedvig.backoffice.services.members.dto.MemberDTO;
+import com.hedvig.backoffice.graphql.types.WhitelistMember;
+import com.hedvig.backoffice.graphql.types.Whitelisted;
+import com.hedvig.backoffice.services.members.dto.*;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
+
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
-import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.web.dto.MemberStatus;
-import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+
+import static com.hedvig.backoffice.services.members.dto.Flag.RED;
 
 public class MemberServiceStub implements MemberService {
 
@@ -172,6 +175,70 @@ public class MemberServiceStub implements MemberService {
   @Override
   public void setFraudulentStatus(String memberId, MemberFraudulentStatusDTO dto, String token) {
 
+  }
+
+  @Override
+  public void whitelistMember(String memberId, String whitelistedBy) {
+
+  }
+
+  @Override
+  public Optional<PersonDTO> getPerson(String memberId) {
+
+    List<Flag> personFlags = new ArrayList<>();
+    personFlags.add(RED);
+    personFlags.add(RED);
+
+    List <PaymentDefaultDTO> paymentDefaults = new ArrayList<>();
+    paymentDefaults.add(new PaymentDefaultDTO(
+      2017,
+      12,
+      "AV",
+      "AV",
+      Money.of(200, "SEK"),
+      "6",
+      "AB"
+    ));
+    paymentDefaults.add(new PaymentDefaultDTO(
+      2019,
+      8,
+      "AI",
+      "AI name",
+      Money.of(125, "SEK"),
+      "5",
+      "AB"
+    ));
+
+    DebtDTO debtDTO = new DebtDTO(
+      paymentDefaults,
+      LocalDate.parse("2019-01-01"),
+      Money.of(10000, "SEK"),
+      10,
+      Money.of(20, "SEK"),
+      2,
+      Money.of(34, "SEK"),
+      Instant.now(),
+      LocalDateTime.now()
+    );
+
+    Whitelisted whitelisted = new Whitelisted(
+      Instant.now(),
+      "blah@hedvig.com"
+    );
+
+    PersonStatusDTO personStatusDTO = new PersonStatusDTO(
+      RED,
+      true
+    );
+
+    PersonDTO personDTO = new PersonDTO(
+      personFlags,
+      debtDTO,
+      Optional.of(whitelisted),
+      personStatusDTO
+    );
+
+    return Optional.of(personDTO);
   }
 
   private enum FraudulentStatus {
