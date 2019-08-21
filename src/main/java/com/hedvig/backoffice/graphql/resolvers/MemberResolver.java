@@ -103,7 +103,7 @@ public class MemberResolver implements GraphQLResolver<Member> {
     String memberId = member.getMemberId();
     Optional<PersonDTO> personDTO = memberService.getPerson(memberId);
 
-    personDTO.orElseThrow(() -> new NullPointerException("No person exists!"));
+    personDTO.orElseThrow(() -> new NullPointerException("No person with id " + memberId + " exists!"));
 
       Person person = new Person(
         personDTO.get().getPersonFlags(),
