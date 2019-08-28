@@ -15,6 +15,8 @@ import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
+import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.dto.WhitelistMemberDTO;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.tickets.TicketService;
@@ -52,11 +54,14 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final AccountService accountService;
   private final TicketService ticketService;
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
+  private final MemberService memberService;
 
 
   public GraphQLMutation(PaymentService paymentService, PersonnelService personnelService,
                          MemberLoader memberLoader, ClaimLoader claimLoader, ClaimsService claimsService,
-                         AccountService accountService, TicketService ticketService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
+                         AccountService accountService, TicketService ticketService, AutoAnswerSuggestionService autoAnswerSuggestionService,
+                         MemberService memberService
+                         ) {
 
     this.paymentService = paymentService;
     this.personnelService = personnelService;
@@ -66,6 +71,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.accountService = accountService;
     this.ticketService = ticketService;
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
+    this.memberService = memberService;
   }
 
   public CompletableFuture<Member> chargeMember(String id, MonetaryAmount amount,
@@ -363,5 +369,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     }
   }
 
+   public Boolean whitelistMember (String memberId, DataFetchingEnvironment env) throws AuthorizationException {
+      String email = getUserIdentity(env);
+      memberService.whitelistMember(memberId, email);
+      return true;
+  }
 }
 

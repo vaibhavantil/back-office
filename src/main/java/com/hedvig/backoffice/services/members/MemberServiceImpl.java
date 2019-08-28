@@ -1,16 +1,16 @@
 package com.hedvig.backoffice.services.members;
 
 import java.util.List;
-import com.hedvig.backoffice.services.members.dto.ChargeMembersDTO;
-import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
-import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
-import com.hedvig.backoffice.services.members.dto.MemberDTO;
+import java.util.Optional;
+
+import com.hedvig.backoffice.graphql.types.WhitelistMember;
+import com.hedvig.backoffice.services.members.dto.*;
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
-import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 
 public class MemberServiceImpl implements MemberService {
 
@@ -61,5 +61,15 @@ public class MemberServiceImpl implements MemberService {
   public void setFraudulentStatus(String memberId, MemberFraudulentStatusDTO dto, String token) {
     client.setFraudulentStatus(memberId, dto, token);
     logger.info("Change member status for "+memberId+": "+dto.getFraudulentStatus()+", "+dto.getFraudulentStatusDescription());
+  }
+
+  @Override
+  public Optional<PersonDTO> getPerson(String memberId) {
+    return client.getPerson(memberId);
+  }
+
+  @Override
+  public void whitelistMember(String memberId, String whitelistedBy) {
+    client.whitelistMember(memberId, whitelistedBy);
   }
 }

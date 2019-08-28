@@ -1,16 +1,16 @@
 package com.hedvig.backoffice.services.members;
 
 import java.util.List;
+import java.util.Optional;
+
 import com.hedvig.backoffice.config.feign.FeignConfig;
-import com.hedvig.backoffice.services.members.dto.ChargeMembersDTO;
-import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
-import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
-import com.hedvig.backoffice.services.members.dto.MemberDTO;
+import com.hedvig.backoffice.graphql.types.WhitelistMember;
+import com.hedvig.backoffice.services.members.dto.*;
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
-import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,4 +54,14 @@ public interface MemberServiceClient {
 
   @PostMapping("/i/member/many")
   List<MemberDTO> getMembers(@RequestBody ChargeMembersDTO memberIds);
+
+
+  @GetMapping("/_/person/member/{memberId}")
+  Optional<PersonDTO> getPerson(@PathVariable("memberId") String memberId);
+
+  @PostMapping("/_/person/member/whitelist/{memberId}")
+  void whitelistMember(
+    @PathVariable("memberId") String memberId,
+    @RequestParam("whitelistedBy") String whitelistedBy
+  );
 }
