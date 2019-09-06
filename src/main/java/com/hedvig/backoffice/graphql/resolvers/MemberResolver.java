@@ -6,6 +6,8 @@ import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.services.MessagesFrontendPostprocessor;
 import com.hedvig.backoffice.services.meerkat.Meerkat;
 import com.hedvig.backoffice.services.meerkat.dto.SanctionStatus;
+import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.dto.*;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.FileUploadDTO;
 import com.hedvig.backoffice.services.payments.PaymentService;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -28,6 +31,7 @@ public class MemberResolver implements GraphQLResolver<Member> {
   private final AccountLoader accountLoader;
   private final BotService botService;
   private final MessagesFrontendPostprocessor messagesFrontendPostprocessor;
+  private final MemberService memberService;
 
   public MemberResolver (
     PaymentService paymentService,
@@ -35,7 +39,8 @@ public class MemberResolver implements GraphQLResolver<Member> {
     Meerkat meerkat,
     AccountLoader accountLoader,
     BotService botService,
-    MessagesFrontendPostprocessor messagesFrontendPostprocessor
+    MessagesFrontendPostprocessor messagesFrontendPostprocessor,
+    MemberService memberService
   ) {
     this.paymentService = paymentService;
     this.productPricingService = productPricingService;
@@ -43,6 +48,7 @@ public class MemberResolver implements GraphQLResolver<Member> {
     this.accountLoader = accountLoader;
     this.botService = botService;
     this.messagesFrontendPostprocessor = messagesFrontendPostprocessor;
+    this.memberService = memberService;
   }
 
   public List<Transaction> getTransactions(Member member) {
@@ -92,4 +98,19 @@ public class MemberResolver implements GraphQLResolver<Member> {
     }
     return fileUploads;
   }
-}
+
+  public Person getPerson(Member member) {
+    String memberId = member.getMemberId();
+    Optional<PersonDTO> personDTO = memberService.getPerson(memberId);
+
+    personDTO.orElseThrow(() -> new NullPointerException("No person with id " + memberId + " exists!"));
+
+      Person person = new Person(
+        personDTO.get().getPersonFlags(),
+        personDTO.get().getDebt(),
+        personDTO.get().getWhitelisted(),
+        personDTO.get().getStatus()
+      );
+      return person;
+    }
+  }

@@ -36,6 +36,7 @@ type MutationType {
   changeTicketPriority(ticketId: ID!, newPriority: Float): ID
   autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
   questionIsDone(memberId: ID!): Boolean
+  whitelistMember(memberId: ID!): Boolean
 }
 
 type Suggestion {
@@ -59,6 +60,51 @@ type FileUpload {
   timestamp: Instant
   mimeType: String
   memberId: ID
+}
+
+type PaymentDefault {
+  year: Int
+  week: Int
+  paymentDefaultType: String
+  paymentDefaultTypeText: String
+  amount: MonetaryAmount
+  caseId: String
+  claimant: String
+}
+
+type Debt {
+  paymentDefaults: [PaymentDefault]
+  debtDate: LocalDate
+  totalAmountPublicDebt: MonetaryAmount
+  numberPublicDebts: Int
+  totalAmountPrivateDebt: MonetaryAmount
+  numberPrivateDebts: Int
+  totalAmountDebt: MonetaryAmount
+  checkedAt: Instant
+  fromDateTime: LocalDateTime
+}
+
+type Person {
+  personFlags: [Flag]
+  debt: Debt
+  whitelisted: Whitelisted
+  status: PersonStatus
+}
+
+type PersonStatus {
+  flag: Flag
+  whitelisted: Boolean
+}
+
+type Whitelisted {
+  whitelistedAt: Instant
+  whitelistedBy: String
+}
+
+enum Flag {
+  GREEN,
+  AMBER,
+  RED
 }
 
 input ClaimInformationInput {
@@ -89,6 +135,7 @@ type Member {
   sanctionStatus: SanctionStatus
   account: Account
   fileUploads: [FileUpload!]!
+  person: Person
 }
 
 type Transaction {
