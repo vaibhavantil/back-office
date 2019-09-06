@@ -19,14 +19,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Subscription {
 
-  @Id @GeneratedValue private long id;
+  @Id @GeneratedValue public long id;
 
-  @NotNull private String memberId;
+  @NotNull public String memberId;
 
   public Subscription(String memberId) {
     this.memberId = memberId;
   }
 
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "subscription", cascade = CascadeType.REMOVE)
-  private Set<ChatContext> chats = new HashSet<>();
+  public Set<ChatContext> chats = new HashSet<>();
 }

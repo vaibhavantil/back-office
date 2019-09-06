@@ -28,7 +28,7 @@ import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.PayloadDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.PricepointDTO;
 import com.hedvig.backoffice.services.tickets.TicketService;
-import com.hedvig.backoffice.services.tickets.dto.FullTicketHistoryDto;
+import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
@@ -116,8 +116,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return this.ticketService.getTicketById(id);
   }
 
-  public FullTicketHistoryDto getFullTicketHistory(UUID  id) {
-    return this.ticketService.getTicketWithFullHistory(id);
+  public TicketHistoryDto getFullTicketHistory(UUID  id) {
+    return this.ticketService.getTicketHistory(id);
   }
 
 

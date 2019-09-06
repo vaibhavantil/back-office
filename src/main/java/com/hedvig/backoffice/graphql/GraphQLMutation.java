@@ -18,7 +18,6 @@ import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
-import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.*;
@@ -28,7 +27,6 @@ import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
 import graphql.language.SourceLocation;
 import graphql.schema.DataFetchingEnvironment;
-import graphql.servlet.GraphQLContext;
 import jersey.repackaged.com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -341,8 +339,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   UUID createTicket(TicketInput ticket, DataFetchingEnvironment env) {
     String createdBy = getUserIdentity(env);
-    CreateTicketDto t = CreateTicketDto.fromTicketInput(ticket, createdBy);
-    return this.ticketService.createNewTicket(t, createdBy);
+    CreateTicketDto ticketDto = CreateTicketDto.Companion.from(ticket, createdBy);
+    return this.ticketService.createTicket(ticketDto, createdBy);
   }
 
   UUID changeTicketDescription(UUID ticketId, String newDescription, DataFetchingEnvironment env) {
@@ -353,7 +351,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   UUID assignTicketToTeamMember(UUID ticketId, String teamMemberId, DataFetchingEnvironment env) {
     String modifiedBy = getUserIdentity(env);
-    this.ticketService.assignToTeamMember(ticketId, teamMemberId, modifiedBy);
+    this.ticketService.changeAssignedTo(ticketId, teamMemberId, modifiedBy);
     return ticketId;
   }
 
@@ -375,7 +373,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return ticketId;
   }
 
-
   private String getUserIdentity(DataFetchingEnvironment env) {
     try {
       return GraphQLConfiguration.getEmail(env, personnelService);
@@ -386,14 +383,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     }
   }
 
-  //Hijacked Question-service for the purpose of creating and updating tickets.
   Boolean questionIsDone(String memberId, DataFetchingEnvironment env) {
     GraphQLRequestContext context = env.getContext();
     Principal principal = context.getUserPrincipal();
 
     try {
-      Personnel personnel =
-        personnelService.getPersonnel(principal.getName());
+      Personnel personnel = personnelService.getPersonnel(principal.getName());
       questionsService.done(memberId, personnel);
     } catch (Exception e) {
       String errorMessage = "Error when trying to update message as done!";

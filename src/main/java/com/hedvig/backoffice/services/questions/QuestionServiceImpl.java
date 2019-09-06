@@ -120,19 +120,16 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public QuestionGroupDTO done(String memberId, Personnel personnel)
-      throws QuestionNotFoundException {
-    QuestionGroup group =
-        questionGroupRepository
-            .findUnasweredByMemberId(memberId)
-            .orElseThrow(() -> new QuestionNotFoundException(memberId));
+  public QuestionGroupDTO done(String memberId, Personnel personnel) throws QuestionNotFoundException {
+    QuestionGroup group = questionGroupRepository
+        .findUnasweredByMemberId(memberId)
+        .orElseThrow(() -> new QuestionNotFoundException(memberId));
     group.setAnswerDate(Instant.now());
     group.setAnswer("");
     group.setPersonnel(personnel);
     questionGroupRepository.save(group);
 
-    //ticket-service update here:
-//    ticketService.setQuestionGroupAsDone(group.getId().toString(), personnel.getEmail());
+    ticketService.setQuestionGroupAsDone(group.getId().toString());
 
     updatesService.changeOn(-1, UpdateType.QUESTIONS);
     return QuestionGroupDTO.fromDomain(group);

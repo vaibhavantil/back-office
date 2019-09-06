@@ -23,23 +23,23 @@ import org.hibernate.annotations.Type;
 @NoArgsConstructor
 public class QuestionGroup {
 
-  @Id @GeneratedValue private Long id;
+  @Id @GeneratedValue public Long id;
 
-  private Instant date;
+  public Instant date;
 
-  private Instant answerDate;
+  public Instant answerDate;
 
   @Lob
   @Type(type = "org.hibernate.type.TextType")
-  private String answer;
+  public String answer;
 
-  @ManyToOne private Personnel personnel;
+  @ManyToOne public Personnel personnel;
 
-  @ManyToOne private Subscription subscription;
+  @ManyToOne public Subscription subscription;
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "group")
   @OrderBy("date")
-  private Set<Question> questions = new HashSet<>();
+  public Set<Question> questions = new HashSet<>();
 
   public QuestionGroup(Subscription subscription) {
     this.subscription = subscription;
