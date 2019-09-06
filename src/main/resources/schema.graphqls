@@ -401,9 +401,9 @@ enum TicketChangeType {
 }
 
 enum TicketStatus {
-  RESOLVED,
   WAITING,
-  WORKED_ON,
+  WORKING_ON,
+  RESOLVED,
 }
 
 enum TicketType {
