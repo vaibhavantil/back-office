@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.tickets
 
 import com.hedvig.backoffice.domain.QuestionGroup
 import com.hedvig.backoffice.graphql.types.RemindNotification
+import com.hedvig.backoffice.services.messages.dto.BotMessageDTO
 import com.hedvig.backoffice.services.tickets.dto.CreateMessageTicketDto
 import com.hedvig.backoffice.services.tickets.dto.*
 import org.jvnet.hk2.annotations.Service
@@ -56,17 +57,20 @@ class TicketServiceImpl @Autowired constructor(
     }
 
     override fun createTicketFromQuestions(questionGroup: QuestionGroup) {
+
         if (questionGroup.questions.isEmpty()) {
           return
         }
 
         val lastQuestion = questionGroup.questions.toList().maxBy { question -> question.date }!!
 
+        val lastQuestionText = BotMessageDTO.fromJson(lastQuestion.message).body.path("text").textValue()
+
         val messageTicket = CreateMessageTicketDto(
             createdBy = "back-office",
             memberId = questionGroup.subscription.memberId,
             groupId = questionGroup.id.toString(),
-            text = lastQuestion.message
+            text = lastQuestionText
         )
 
         ticketServiceClient.createMessageTicket(messageTicket)
