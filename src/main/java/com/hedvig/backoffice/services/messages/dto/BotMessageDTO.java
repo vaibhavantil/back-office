@@ -19,7 +19,7 @@ public class BotMessageDTO {
   Long globalId;
   String id;
   BotMessageHeaderDTO header;
-  JsonNode body;
+  public JsonNode body;
   Instant timestamp;
   String author;
 
