@@ -64,7 +64,7 @@ class TicketServiceImpl @Autowired constructor(
 
         val lastQuestion = questionGroup.questions.toList().maxBy { question -> question.date }!!
 
-        val lastQuestionText = BotMessageDTO.fromJson(lastQuestion.message).body.path("text").textValue()
+        val lastQuestionText = BotMessageDTO.fromJson(lastQuestion.message).body.get("text")?.textValue()
 
         val messageTicket = CreateMessageTicketDto(
             createdBy = "back-office",
