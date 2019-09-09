@@ -23,6 +23,7 @@ import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.tickets.TicketService;
+import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import graphql.schema.DataFetchingEnvironment;
@@ -40,6 +41,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final MemberService memberService;
   private final TicketService ticketService;
   private final PersonnelService personnelService;
+
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
 
   public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
@@ -97,8 +99,13 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return this.ticketService.getTicketById(id);
   }
 
-  public List<TicketDto> tickets() {
-    return this.ticketService.getAllTickets();
+  public TicketHistoryDto getFullTicketHistory(UUID  id) {
+    return this.ticketService.getTicketHistory(id);
+  }
+
+
+  public List<TicketDto> tickets(Boolean resolved) {
+    return ticketService.getAllTickets(resolved);
   }
 
   public String me(DataFetchingEnvironment env) {

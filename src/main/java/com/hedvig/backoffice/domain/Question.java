@@ -17,16 +17,16 @@ import org.hibernate.annotations.Type;
 @NoArgsConstructor
 public class Question {
 
-  @Id private Long id;
+  @Id public Long id;
 
   @NotNull
   @Lob
   @Type(type = "org.hibernate.type.TextType")
-  private String message;
+  public String message;
 
-  private Instant date;
+  public Instant date;
 
-  @ManyToOne private QuestionGroup group;
+  @ManyToOne public QuestionGroup group;
 
   public Question(long id, String message, Instant date) {
     this.id = id;

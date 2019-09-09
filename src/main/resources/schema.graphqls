@@ -9,7 +9,8 @@ type QueryType {
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
   ticket (id: ID!): Ticket
-  tickets: [Ticket!]!
+  getFullTicketHistory( id: ID!): TicketHistory
+  tickets (resolved: Boolean): [Ticket!]!
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
 }
@@ -27,13 +28,14 @@ type MutationType {
   setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
   updateReserve(id: ID!, amount: MonetaryAmount!): Claim
   setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-
-  createTicket (ticket: TicketInput): Ticket
-  changeTicketDescription ( id: ID!, newDescription : String ): Ticket
-  assignTicketToTeamMember( ticketId: ID!, teamMemberId: ID!): Ticket
-  changeTicketStatus (ticketId: ID!, newStatus: TicketStatus): Ticket
-  changeTicketReminder( ticketId: ID!, newReminder: RemindNotification ): Ticket
+  createTicket (ticket: TicketInput): ID
+  changeTicketDescription (ticketId: ID!, newDescription : String): ID
+  assignTicketToTeamMember(ticketId: ID!, teamMemberId: ID!): ID
+  changeTicketStatus (ticketId: ID!, newStatus: TicketStatus): ID
+  changeTicketReminder(ticketId: ID!, newReminder: RemindNotification): ID
+  changeTicketPriority(ticketId: ID!, newPriority: Float): ID
   autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
+  questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
 }
 
@@ -396,8 +398,10 @@ input TicketInput {
 type Ticket {
   id: ID
   assignedTo: String
-  creationDate: LocalDate
+  createdAt: Instant
   createdBy: String
+  memberId: String
+  referenceId: String
   priority: Float
   type: TicketType
   remindNotificationDate: LocalDate
@@ -407,16 +411,46 @@ type Ticket {
   status: TicketStatus
 }
 
+type TicketHistory {
+  id: ID
+  createdAt: Instant
+  createdBy: String
+  type: TicketType
+  revisions: [TicketRevision]
+}
+
+type TicketRevision {
+  assignedTo: String
+  manualPriority: Float
+  remindDate: LocalDate
+  remindTime: LocalTime
+  remindMessage: String
+  status: TicketStatus
+  changedAt: Instant
+  changeType: TicketChangeType
+  changedBy: String
+  description: String
+}
+
 input RemindNotification {
   date: LocalDate
   time: LocalTime
   message: String
 }
 
+enum TicketChangeType {
+  TICKET_CREATED,
+  CHANGED_REMINDER,
+  CHANGED_ASSIGNED_TO,
+  CHANGED_DESCRIPTION,
+  CHANGED_STATUS,
+  CHANGED_PRIORITY,
+}
+
 enum TicketStatus {
-  RESOLVED,
   WAITING,
-  WORKED_ON,
+  WORKING_ON,
+  RESOLVED,
 }
 
 enum TicketType {

@@ -14,6 +14,7 @@ import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.notificationService.NotificationService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
+import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.updates.UpdateType;
 import com.hedvig.backoffice.services.updates.UpdatesService;
 import java.time.Instant;
@@ -35,6 +36,7 @@ public class QuestionServiceImpl implements QuestionService {
   private final ExpoNotificationService expoNotificationService;
   private final PersonnelService personnelService;
   private final NotificationService notificationService;
+  private final TicketService ticketService;
   private final MessagesFrontendPostprocessor messagesPostprocessor;
 
   @Autowired
@@ -47,6 +49,7 @@ public class QuestionServiceImpl implements QuestionService {
     ExpoNotificationService expoNotificationService,
     PersonnelService personnelService,
     NotificationService notificationService,
+    TicketService ticketService,
     MessagesFrontendPostprocessor messagesPostprocessor) {
 
     this.questionRepository = questionRepository;
@@ -57,6 +60,7 @@ public class QuestionServiceImpl implements QuestionService {
     this.expoNotificationService = expoNotificationService;
     this.personnelService = personnelService;
     this.notificationService = notificationService;
+    this.ticketService = ticketService;
     this.messagesPostprocessor = messagesPostprocessor;
   }
 
@@ -116,18 +120,18 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public QuestionGroupDTO done(String memberId, Personnel personnel)
-      throws QuestionNotFoundException {
-    QuestionGroup group =
-        questionGroupRepository
-            .findUnasweredByMemberId(memberId)
-            .orElseThrow(() -> new QuestionNotFoundException(memberId));
+  public QuestionGroupDTO done(String memberId, Personnel personnel) throws QuestionNotFoundException {
+    QuestionGroup group = questionGroupRepository
+        .findUnasweredByMemberId(memberId)
+        .orElseThrow(() -> new QuestionNotFoundException(memberId));
     group.setAnswerDate(Instant.now());
     group.setAnswer("");
     group.setPersonnel(personnel);
     questionGroupRepository.save(group);
-    updatesService.changeOn(-1, UpdateType.QUESTIONS);
 
+    ticketService.setQuestionGroupAsDone(group.getId().toString());
+
+    updatesService.changeOn(-1, UpdateType.QUESTIONS);
     return QuestionGroupDTO.fromDomain(group);
   }
 
@@ -153,6 +157,9 @@ public class QuestionServiceImpl implements QuestionService {
                       message.getTimestamp())));
       group.correctDate(message.getTimestamp());
       questionGroupRepository.save(group);
+
+      //TICKET SERVICE INTEGRATION
+      ticketService.createTicketFromQuestions(group);
     }
 
     long count = Optional.ofNullable(questionGroupRepository.notAnsweredCount()).orElse(0L);
@@ -167,5 +174,4 @@ public class QuestionServiceImpl implements QuestionService {
 
     expoNotificationService.sendNotification(memberId, personnelToken);
   }
-
 }
