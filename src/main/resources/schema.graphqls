@@ -450,6 +450,7 @@ enum TicketChangeType {
 enum TicketStatus {
   WAITING,
   WORKING_ON,
+  ON_HOLD,
   RESOLVED,
 }
 
