@@ -2,6 +2,8 @@ package com.hedvig.backoffice.web.dto;
 
 import java.util.List;
 import java.util.UUID;
+
+import com.hedvig.backoffice.services.product_pricing.dto.ExtraBuilding;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
@@ -24,4 +26,10 @@ public class InsuranceModificationDTO {
   public Integer personsInHouseHold;
 
   public List<SafetyIncreaserType> safetyIncreasers;
+
+  public Integer ancillaryArea;
+  public Integer yearOfConstruction;
+  public Integer numberOfBathrooms;
+  public List<ExtraBuilding> extraBuildings;
+  public Boolean isSubleted;
 }

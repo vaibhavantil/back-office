@@ -11,6 +11,16 @@ public enum ClaimTypes {
   FireDamageClaim,
   ApplianceClaim,
   ConfirmedFraudClaim,
+  LiabilityClaim,
+  LegalProtectionClaim,
+  WaterDamageBathroomClaim,
+  WaterDamageKitchenClaim,
+  BurglaryClaim,
+  FloodingClaim,
+  EarthquakeClaim,
+  InstallationsClaim,
+  SnowPressureClaim,
+  StormDamageClaim,
+  VerminAndPestsClaim,
   TestClaim,
-  LiabilityClaim
 }

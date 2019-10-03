@@ -64,4 +64,14 @@ public class InsuranceStatusDTO {
   private Instant signedOn;
 
   private List<TraceInfoDTO> traceProduct;
+
+  private Integer ancillaryArea;
+
+  private Integer yearOfConstruction;
+
+  private Integer numberOfBathrooms;
+
+  private List<ExtraBuilding> extraBuildings;
+
+  private  Boolean isSubleted;
 }

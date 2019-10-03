@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.graphql.types;
+package com.hedvig.backoffice.graphql.types.claims;
 
 import com.hedvig.backoffice.graphql.UnionType;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
@@ -11,11 +11,11 @@ import java.util.List;
 
 @Value
 @UnionType
-public class TestClaim {
+public class ConfirmedFraudClaim {
 
   LocalDate date;
 
-  public static TestClaim fromClaimData(List<ClaimData> d) {
+  public static ConfirmedFraudClaim fromClaimData(List<ClaimData> d) {
     LocalDate date = null;
 
     val claimWithoutDuplicates = ClaimData.withoutDuplicates(d);
@@ -25,7 +25,7 @@ public class TestClaim {
         date = LocalDateTime.parse(cwd.getValue()).toLocalDate();
       }
     }
-    return new TestClaim(date);
+    return new ConfirmedFraudClaim(date);
   }
 
 }

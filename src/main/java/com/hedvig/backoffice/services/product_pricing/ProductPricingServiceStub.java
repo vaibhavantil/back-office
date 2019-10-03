@@ -86,7 +86,13 @@ public class ProductPricingServiceStub implements ProductPricingService {
                 null,
                 false,
                 null,
-                new ArrayList<>());
+                new ArrayList<>(),
+                null,
+                null,
+                null,
+                null,
+                null
+              );
 
             if (insurance.getInsuranceState() == ProductState.SIGNED) {
               long randomSignedOnDate =
@@ -264,7 +270,13 @@ public class ProductPricingServiceStub implements ProductPricingService {
           c.getCertificateUrl(),
           c.isCancellationEmailSent(),
           c.getSignedOn(),
-          new ArrayList<>());
+          new ArrayList<>(),
+          null,
+          null,
+          null,
+          null,
+          null
+          );
 
       insurances.add(updated);
 

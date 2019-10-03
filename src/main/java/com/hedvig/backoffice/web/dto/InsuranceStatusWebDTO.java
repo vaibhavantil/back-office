@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.web.dto;
 
+import com.hedvig.backoffice.services.product_pricing.dto.ExtraBuilding;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,12 @@ public class InsuranceStatusWebDTO {
   LocalDateTime signedOn;
   List<TraceInfoDTO> traceProduct;
 
+  Integer ancillaryArea;
+  Integer yearOfConstruction;
+  Integer numberOfBathrooms;
+  List<ExtraBuilding> extraBuildings;
+  Boolean isSubleted;
+
   public InsuranceStatusWebDTO(InsuranceStatusDTO ins) {
     this.productId = ins.getProductId();
     this.memberId = ins.getMemberId();
@@ -67,5 +74,10 @@ public class InsuranceStatusWebDTO {
     this.cancellationEmailSent = ins.isCancellationEmailSent();
     this.signedOn = toLocalDateTime(ins.getSignedOn(), SWEDEN_TZ);
     this.traceProduct = ins.getTraceProduct();
+    this.ancillaryArea = ins.getAncillaryArea();
+    this.yearOfConstruction = ins.getYearOfConstruction();
+    this.numberOfBathrooms = ins.getNumberOfBathrooms();
+    this.extraBuildings = ins.getExtraBuildings();
+    this.isSubleted = ins.getIsSubleted();
   }
 }
