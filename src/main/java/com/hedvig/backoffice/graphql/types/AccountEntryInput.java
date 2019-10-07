@@ -4,6 +4,7 @@ import com.hedvig.backoffice.services.account.dto.AccountEntryType;
 import lombok.Value;
 
 import javax.money.MonetaryAmount;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
 
