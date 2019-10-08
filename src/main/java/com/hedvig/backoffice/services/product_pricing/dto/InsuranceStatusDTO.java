@@ -71,7 +71,7 @@ public class InsuranceStatusDTO {
 
   private Integer numberOfBathrooms;
 
-  private List<ExtraBuilding> extraBuildings;
+  private List<ExtraBuildingDTO> extraBuildings;
 
   private  Boolean isSubleted;
 }
