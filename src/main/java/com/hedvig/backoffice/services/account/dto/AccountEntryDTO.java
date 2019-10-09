@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.account.dto;
 import lombok.Value;
 
 import javax.money.MonetaryAmount;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,4 +19,6 @@ public class AccountEntryDTO {
   Optional<String> title;
   Optional<String> comment;
   String addedBy;
+  Optional<Instant> failedAt;
+  Optional<Instant> chargedAt;
 }
