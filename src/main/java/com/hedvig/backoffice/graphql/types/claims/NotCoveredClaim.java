@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.graphql.types;
+package com.hedvig.backoffice.graphql.types.claims;
 
 import com.hedvig.backoffice.graphql.UnionType;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;

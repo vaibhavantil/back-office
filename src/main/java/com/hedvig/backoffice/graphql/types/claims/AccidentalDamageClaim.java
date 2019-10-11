@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.graphql.types;
+package com.hedvig.backoffice.graphql.types.claims;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

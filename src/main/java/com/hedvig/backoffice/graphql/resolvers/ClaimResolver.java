@@ -3,20 +3,9 @@ package com.hedvig.backoffice.graphql.resolvers;
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.hedvig.backoffice.graphql.Util;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
-import com.hedvig.backoffice.graphql.types.AccidentalDamageClaim;
-import com.hedvig.backoffice.graphql.types.ApplianceClaim;
-import com.hedvig.backoffice.graphql.types.AssaultClaim;
+import com.hedvig.backoffice.graphql.types.claims.*;
 import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.ConfirmedFraudClaim;
-import com.hedvig.backoffice.graphql.types.FireDamageClaim;
-import com.hedvig.backoffice.graphql.types.LiabilityClaim;
-import com.hedvig.backoffice.graphql.types.LuggageDelayClaim;
 import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.graphql.types.NotCoveredClaim;
-import com.hedvig.backoffice.graphql.types.TestClaim;
-import com.hedvig.backoffice.graphql.types.TheftClaim;
-import com.hedvig.backoffice.graphql.types.TravelAccidentClaim;
-import com.hedvig.backoffice.graphql.types.WaterDamageClaim;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
@@ -67,14 +56,44 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
       case ConfirmedFraudClaim: {
         return ConfirmedFraudClaim.fromClaimData(claim.get_claimData());
       }
-      case TestClaim: {
-        return TestClaim.fromClaimData(claim.get_claimData());
-      }
       case LiabilityClaim: {
         return LiabilityClaim.fromClaimData(claim.get_claimData());
       }
       case ApplianceClaim: {
         return ApplianceClaim.fromClaimData(claim.get_claimData());
+      }
+      case LegalProtectionClaim: {
+        return LegalProtectionClaim.fromClaimData(claim.get_claimData());
+      }
+      case WaterDamageBathroomClaim: {
+        return WaterDamageBathroomClaim.fromClaimData(claim.get_claimData());
+      }
+      case WaterDamageKitchenClaim: {
+        return WaterDamageKitchenClaim.fromClaimData(claim.get_claimData());
+      }
+      case BurglaryClaim: {
+        return BurglaryClaim.fromClaimData(claim.get_claimData());
+      }
+      case FloodingClaim: {
+        return FloodingClaim.fromClaimData(claim.get_claimData());
+      }
+      case EarthquakeClaim: {
+        return EarthquakeClaim.fromClaimData(claim.get_claimData());
+      }
+      case InstallationsClaim: {
+        return InstallationsClaim.fromClaimData(claim.get_claimData());
+      }
+      case SnowPressureClaim: {
+        return SnowPressureClaim.fromClaimData(claim.get_claimData());
+      }
+      case StormDamageClaim: {
+        return StormDamageClaim.fromClaimData(claim.get_claimData());
+      }
+      case VerminAndPestsClaim: {
+        return VerminAndPestsClaim.fromClaimData(claim.get_claimData());
+      }
+      case TestClaim: {
+        return TestClaim.fromClaimData(claim.get_claimData());
       }
     }
     throw new RuntimeException(String.format("Unsupported claim type: %s", claim.get_type()));

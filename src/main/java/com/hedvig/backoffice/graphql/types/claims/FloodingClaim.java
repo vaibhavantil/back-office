@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.graphql.types;
+package com.hedvig.backoffice.graphql.types.claims;
 
 import com.hedvig.backoffice.graphql.UnionType;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
@@ -9,31 +9,22 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@UnionType
 @Value
-public class FireDamageClaim {
-  String location;
+@UnionType
+public class FloodingClaim {
   LocalDate date;
 
-  public static FireDamageClaim fromClaimData(List<ClaimData> claimData) {
-    String location = null;
+  public static FloodingClaim fromClaimData(List<ClaimData> claimData) {
     LocalDate date = null;
-
     val claimDataWithoutDuplicates = ClaimData.withoutDuplicates(claimData);
-
     for (val cd : claimDataWithoutDuplicates) {
       switch (cd.getName()) {
         case "DATE": {
           date = LocalDateTime.parse(cd.getValue()).toLocalDate();
           break;
         }
-        case "PLACE": {
-          location = cd.getValue();
-          break;
-        }
       }
     }
-
-    return new FireDamageClaim(location, date);
+    return new FloodingClaim(date);
   }
 }

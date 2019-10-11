@@ -250,10 +250,41 @@ enum ClaimTypes {
   FireDamageClaim,
   ApplianceClaim,
   ConfirmedFraudClaim,
-  TestClaim,
-  LiabilityClaim
+  LiabilityClaim,
+  LegalProtectionClaim,
+  WaterDamageBathroomClaim,
+  WaterDamageKitchenClaim,
+  BurglaryClaim,
+  FloodingClaim,
+  EarthquakeClaim,
+  InstallationsClaim,
+  SnowPressureClaim,
+  StormDamageClaim,
+  VerminAndPestsClaim,
+  TestClaim
 }
-union ClaimType = TheftClaim | AccidentalDamageClaim | AssaultClaim | WaterDamageClaim | TravelAccidentClaim | LuggageDelayClaim | NotCoveredClaim | FireDamageClaim | ConfirmedFraudClaim | TestClaim | LiabilityClaim | ApplianceClaim
+union ClaimType = TheftClaim
+  | AccidentalDamageClaim
+  | AssaultClaim
+  | WaterDamageClaim
+  | TravelAccidentClaim
+  | LuggageDelayClaim
+  | NotCoveredClaim
+  | FireDamageClaim
+  | ConfirmedFraudClaim
+  | LiabilityClaim
+  | ApplianceClaim
+  | LegalProtectionClaim
+  | WaterDamageBathroomClaim
+  | WaterDamageKitchenClaim
+  | BurglaryClaim
+  | FloodingClaim
+  | EarthquakeClaim
+  | InstallationsClaim
+  | SnowPressureClaim
+  | StormDamageClaim
+  | VerminAndPestsClaim
+  | TestClaim
 
 type TheftClaim {
   location: String
@@ -298,10 +329,6 @@ type ConfirmedFraudClaim {
   date: LocalDate
 }
 
-type TestClaim {
-  date: LocalDate
-}
-
 type LiabilityClaim {
   date: LocalDate
   location: String
@@ -321,6 +348,61 @@ type ApplianceClaim {
   date: LocalDate
   item: String
 }
+
+type LegalProtectionClaim {
+  date: LocalDate
+}
+
+type WaterDamageBathroomClaim {
+  date: LocalDate
+}
+
+type WaterDamageKitchenClaim {
+  date: LocalDate
+}
+
+type BurglaryClaim {
+  location: String
+  date: LocalDate
+  item: String
+  policeReport: String
+  receipt: String
+}
+
+type FloodingClaim {
+  date: LocalDate
+}
+
+type EarthquakeClaim {
+  date: LocalDate
+}
+
+type InstallationsClaim {
+  date: LocalDate
+  item: String
+  location: String
+}
+
+type SnowPressureClaim {
+  date: LocalDate
+}
+
+type StormDamageClaim {
+  date: LocalDate
+}
+
+type VerminAndPestsClaim {
+  date: LocalDate
+}
+
+type NotCoveredClaim {
+  date: LocalDate
+}
+
+type TestClaim {
+  date: LocalDate
+}
+
 
 type ClaimPayment {
   id: String

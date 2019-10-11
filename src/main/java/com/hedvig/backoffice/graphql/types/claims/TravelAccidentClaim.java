@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.graphql.types;
+package com.hedvig.backoffice.graphql.types.claims;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,17 +10,15 @@ import lombok.val;
 
 @Value
 @UnionType
-public class TheftClaim {
+public class TravelAccidentClaim {
   String location;
   LocalDate date;
-  String item;
   String policeReport;
   String receipt;
 
-  public static TheftClaim fromClaimData(List<ClaimData> claimData) {
+  public static TravelAccidentClaim fromClaimData(List<ClaimData> claimData) {
     String location = null;
     LocalDate date = null;
-    String item = null;
     String policeReport = null;
     String receipt = null;
 
@@ -36,10 +34,6 @@ public class TheftClaim {
           location = cd.getValue();
           break;
         }
-        case "ITEM": {
-          item = cd.getValue();
-          break;
-        }
         case "POLICE_REPORT": {
           policeReport = cd.getValue();
           break;
@@ -51,6 +45,6 @@ public class TheftClaim {
       }
     }
 
-    return new TheftClaim(location, date, item, policeReport, receipt);
+    return new TravelAccidentClaim(location, date, policeReport, receipt);
   }
 }
