@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.graphql.types;
+package com.hedvig.backoffice.graphql.types.claims;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,35 +10,34 @@ import lombok.val;
 
 @Value
 @UnionType
-public class LuggageDelayClaim {
+public class AssaultClaim {
   String location;
   LocalDate date;
-  String ticket;
+  String policeReport;
 
-  public static LuggageDelayClaim fromClaimData(List<ClaimData> claimData) {
+  public static AssaultClaim fromClaimData(List<ClaimData> claimData) {
     String location = null;
     LocalDate date = null;
-    String ticket = null;
+    String policeReport = null;
 
     val claimDataWithoutDuplicates = ClaimData.withoutDuplicates(claimData);
 
     for (val cd : claimDataWithoutDuplicates) {
       switch (cd.getName()) {
-        case "DATE": {
-          date = LocalDateTime.parse(cd.getValue()).toLocalDate();
-          break;
-        }
         case "PLACE": {
           location = cd.getValue();
           break;
         }
-        case "TICKET": {
-          ticket = cd.getValue();
+        case "DATE": {
+          date = LocalDateTime.parse(cd.getValue()).toLocalDate();
+          break;
+        }
+        case "POLICE_REPORT": {
+          policeReport = cd.getValue();
           break;
         }
       }
     }
-
-    return new LuggageDelayClaim(location, date, ticket);
+    return new AssaultClaim(location, date, policeReport);
   }
 }

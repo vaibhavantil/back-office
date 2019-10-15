@@ -14,8 +14,6 @@ public class Util {
         return "Assault";
       case AccidentalDamageClaim:
         return "DRULLE";
-      case WaterDamageClaim:
-        return "Water Damage - Bathroom";
       case TravelAccidentClaim:
         return "Travel - Accident and Health";
       case LuggageDelayClaim:
@@ -32,6 +30,28 @@ public class Util {
         return "Liability";
       case ApplianceClaim:
         return "Appliance";
+      case LegalProtectionClaim:
+        return "Legal Protection";
+      case WaterDamageClaim:
+        return "Water Damage - Other";
+      case WaterDamageBathroomClaim:
+        return "Water Damage - Bathroom";
+      case WaterDamageKitchenClaim:
+        return "Water Damage - Kitchen";
+      case BurglaryClaim:
+        return "Burglary";
+      case FloodingClaim:
+        return "Flooding";
+      case EarthquakeClaim:
+        return "Earthquake";
+      case InstallationsClaim:
+        return "Installations";
+      case SnowPressureClaim:
+        return "Snow Pressure";
+      case StormDamageClaim:
+        return "Storm Damage";
+      case VerminAndPestsClaim:
+        return "Vermin And Pests";
       default:
         throw new RuntimeException(String.format("Unmappable ClaimTypes.%s", type.toString()));
     }
@@ -69,8 +89,27 @@ public class Util {
       case "Travel - Delayed Luggage":
         return ClaimTypes.LuggageDelayClaim;
       case "Water Damage - Bathroom":
+        return ClaimTypes.WaterDamageBathroomClaim;
       case "Water Damage - Kitchen":
+        return ClaimTypes.WaterDamageKitchenClaim;
+      case "Water Damage - Other":
         return ClaimTypes.WaterDamageClaim;
+      case "Legal Protection":
+        return ClaimTypes.LegalProtectionClaim;
+      case "Burglary":
+        return ClaimTypes.BurglaryClaim;
+      case "Flooding":
+        return ClaimTypes.FloodingClaim;
+      case "Earthquake":
+        return ClaimTypes.EarthquakeClaim;
+      case "Installations":
+        return ClaimTypes.InstallationsClaim;
+      case "Snow Pressure":
+        return ClaimTypes.SnowPressureClaim;
+      case "Storm Damage":
+        return ClaimTypes.StormDamageClaim;
+      case "Vermin And Pests":
+        return ClaimTypes.VerminAndPestsClaim;
       default:
         throw new RuntimeException(
           String.format("Unmappable ClaimService ClaimType: %s", claimServiceType));

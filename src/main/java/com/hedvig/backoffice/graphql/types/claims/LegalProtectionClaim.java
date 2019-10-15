@@ -1,19 +1,20 @@
-package com.hedvig.backoffice.graphql.types;
+package com.hedvig.backoffice.graphql.types.claims;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import com.hedvig.backoffice.graphql.UnionType;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import lombok.Value;
 import lombok.val;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Value
 @UnionType
-public class WaterDamageClaim {
+public class LegalProtectionClaim {
   LocalDate date;
 
-  public static WaterDamageClaim fromClaimData(List<ClaimData> claimData) {
+  public static LegalProtectionClaim fromClaimData(List<ClaimData> claimData) {
     LocalDate date = null;
     val claimDataWithoutDuplicates = ClaimData.withoutDuplicates(claimData);
     for (val cd : claimDataWithoutDuplicates) {
@@ -24,6 +25,6 @@ public class WaterDamageClaim {
         }
       }
     }
-    return new WaterDamageClaim(date);
+    return new LegalProtectionClaim(date);
   }
 }
