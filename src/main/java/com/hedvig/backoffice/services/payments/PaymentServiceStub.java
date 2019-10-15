@@ -33,7 +33,7 @@ public class PaymentServiceStub implements PaymentService {
   }
 
   @Override
-  public void chargeMember(String memberId, MonetaryAmount amount) {}
+  public void chargeMember(String memberId, MonetaryAmount amount, String requestedBy) {}
 
   @Override
   public Transaction getTransactionById(UUID id) {

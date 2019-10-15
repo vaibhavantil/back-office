@@ -92,9 +92,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     MonetaryAmount amount,
     DataFetchingEnvironment env
   ) throws AuthorizationException {
+    String email = GraphQLConfiguration.getEmail(env, personnelService);
     log.info("Personnel with email '{}' attempting to charge member '{}' the amount '{}'",
-      GraphQLConfiguration.getEmail(env, personnelService), id, amount.toString());
-    paymentService.chargeMember(id, amount);
+      email, id, amount.toString());
+    paymentService.chargeMember(id, amount, email);
     return memberLoader.load(id);
   }
 
