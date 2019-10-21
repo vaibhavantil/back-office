@@ -121,7 +121,7 @@ type MonthlySubscription {
 }
 
 type Member {
-  memberId: ID
+  memberId: ID!
   signedOn: Instant
   firstName: String
   lastName: String
@@ -132,6 +132,8 @@ type Member {
   transactions: [Transaction]
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
+  fraudulentStatus: String
+  fraudulentStatusDescription: String
   sanctionStatus: SanctionStatus
   account: Account
   fileUploads: [FileUpload!]!

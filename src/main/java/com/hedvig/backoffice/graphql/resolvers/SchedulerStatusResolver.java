@@ -32,7 +32,7 @@ public class SchedulerStatusResolver implements GraphQLResolver<SchedulerStatus>
     try {
       return Member.Companion.fromDTO(memberService.findByMemberId(schedulerStatus.getMemberId(), token));
     } catch (Exception e) {
-      return new Member(schedulerStatus.getMemberId(), Instant.now(), "UNKNOWN", "UNKNOWN", "Unknown", "Unknown", "Unknown", "Unknown");
+      return new Member(schedulerStatus.getMemberId(), "UNKNOWN", "UNKNOWN", "Unknown", "Unknown", "Unknown", "Unknown",  Instant.now(), "Unknown", "Unknown");
     }
   }
 }
