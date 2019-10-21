@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.services.account.dto;
 
-import com.hedvig.backoffice.graphql.types.AccountEntryInput;
+import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import lombok.Value;
 
 import javax.money.MonetaryAmount;

@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.graphql.types;
+package com.hedvig.backoffice.graphql.types.account;
 
 import com.hedvig.backoffice.services.account.dto.AccountEntryType;
 import lombok.Value;

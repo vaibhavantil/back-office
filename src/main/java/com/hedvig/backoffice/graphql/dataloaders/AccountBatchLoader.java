@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.graphql.dataloaders;
 
-import com.hedvig.backoffice.graphql.types.Account;
+import com.hedvig.backoffice.graphql.types.account.Account;
 import com.hedvig.backoffice.services.account.AccountService;
 import org.dataloader.BatchLoader;
 import org.springframework.stereotype.Component;

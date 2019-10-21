@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.services.account;
 
-import com.hedvig.backoffice.graphql.types.AccountEntryInput;
+import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.services.account.dto.*;
 import org.javamoney.moneta.Money;
 
@@ -119,6 +119,16 @@ public class AccountServiceStub implements AccountService {
   @Override
   public void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody, String approvedBy) {
 
+  }
+
+  @Override
+  public NumberFailedChargesDto getNumberFailedCharges(String memberId) {
+    int numberFailedCharges = (int)(10 * Math.random());
+    return new NumberFailedChargesDto(
+      memberId,
+      numberFailedCharges,
+      numberFailedCharges > 0 ? Instant.now() : null
+    );
   }
 
   private BigDecimal calculateCurrentMonthsBalance() {
