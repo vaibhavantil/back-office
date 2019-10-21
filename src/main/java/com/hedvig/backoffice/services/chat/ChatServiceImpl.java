@@ -155,14 +155,14 @@ public class ChatServiceImpl implements ChatService {
 
     ChatContext chat = new ChatContext();
 
-    chat.setMemberId(member.getMemberId().toString());
+    chat.setMemberId(member.getMemberId() + "");
     chat.setSubId(subId);
     chat.setSessionId(sessionId);
     chat.setActive(true);
     chat.setTimestamp(new Date().toInstant());
     chat.setPersonnel(personnel);
 
-    Subscription sub = subscriptionService.getOrCreateSubscription(member.getMemberId().toString());
+    Subscription sub = subscriptionService.getOrCreateSubscription(member.getMemberId() + "");
 
     chat.setSubscription(sub);
     chatContextRepository.save(chat);
