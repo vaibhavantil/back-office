@@ -204,6 +204,8 @@ type AccountEntry {
   source: String!
   title: String
   comment: String
+  failedAt: Instant
+  chargedAt: Instant
 }
 
 enum AccountEntryType {

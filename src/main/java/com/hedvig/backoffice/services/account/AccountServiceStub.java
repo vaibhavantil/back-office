@@ -30,7 +30,9 @@ public class AccountServiceStub implements AccountService {
         "123123",
         Optional.of("Title"),
         Optional.of("Valborg campaign 2019"),
-        "system"
+        "system",
+        Optional.empty(),
+        Optional.empty()
       )
     );
     entries.add(
@@ -43,7 +45,9 @@ public class AccountServiceStub implements AccountService {
         UUID.randomUUID().toString(),
         Optional.of("Monthly insurance fee"),
         Optional.empty(),
-        "system"
+        "system",
+        Optional.empty(),
+        Optional.empty()
       )
     );
   }
@@ -84,7 +88,9 @@ public class AccountServiceStub implements AccountService {
       accountEntryInput.getReference(),
       accountEntryInput.getTitle(),
       accountEntryInput.getComment(),
-      addedBy
+      addedBy,
+      Optional.empty(),
+      Optional.empty()
     );
     entries.add(newAccountEntry);
   }

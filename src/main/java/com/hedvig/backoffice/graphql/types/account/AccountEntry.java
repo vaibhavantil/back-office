@@ -5,6 +5,7 @@ import com.hedvig.backoffice.services.account.dto.AccountEntryType;
 import lombok.Value;
 
 import javax.money.MonetaryAmount;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,6 +20,8 @@ public class AccountEntry {
   String reference;
   Optional<String> title;
   Optional<String> comment;
+  Optional<Instant> failedAt;
+  Optional<Instant> chargedAt;
 
   public static AccountEntry from(AccountEntryDTO accountEntryDTO) {
     return new AccountEntry(
@@ -29,7 +32,9 @@ public class AccountEntry {
       accountEntryDTO.getSource(),
       accountEntryDTO.getReference(),
       accountEntryDTO.getTitle(),
-      accountEntryDTO.getComment()
+      accountEntryDTO.getComment(),
+      accountEntryDTO.getFailedAt(),
+      accountEntryDTO.getChargedAt()
     );
   }
 }
