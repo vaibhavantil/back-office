@@ -5,6 +5,8 @@ import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO
 import com.hedvig.backoffice.web.dto.MemberStatus
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
+import org.springframework.http.HttpStatus
+import java.lang.NullPointerException
 
 class MemberServiceImpl(private val client: MemberServiceClient) : MemberService {
 
@@ -51,8 +53,12 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
     logger.info("Change member status for " + memberId + ": " + dto.fraudulentStatus + ", " + dto.fraudulentStatusDescription)
   }
 
-  override fun getPerson(memberId: String): PersonDTO? {
-    return client.getPerson(memberId)
+  override fun getPerson(memberId: String): PersonDTO {
+    val response = client.getPerson(memberId)
+    if (response.statusCode == HttpStatus.NOT_FOUND) {
+      throw Exception("No person info found for member=${memberId}")
+    }
+    return response.body!!
   }
 
   override fun whitelistMember(memberId: String, whitelistedBy: String) {

@@ -14,6 +14,7 @@ import com.hedvig.backoffice.services.messages.BotService
 import com.hedvig.backoffice.services.payments.PaymentService
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService
 import org.springframework.stereotype.Component
+import java.lang.NullPointerException
 import java.time.YearMonth
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -43,7 +44,7 @@ class MemberResolver(
   fun getDirectDebitStatus(member: Member): DirectDebitStatus {
     val statusDTO = paymentService.getDirectDebitStatusByMemberId(member.memberId)
       ?: return DirectDebitStatus(member.memberId, false)
-    return DirectDebitStatus(statusDTO.memberId, statusDTO.isDirectDebitActivated)
+    return DirectDebitStatus(statusDTO.memberId, statusDTO.directDebitActivated)
   }
 
   fun getSanctionStatus(member: Member): SanctionStatus {
@@ -78,10 +79,8 @@ class MemberResolver(
   fun getPerson(member: Member): Person {
     val memberId = member.memberId
     val personDTO = memberService.getPerson(memberId)
-      ?: throw NullPointerException("No person with id $memberId exists!")
-
     return Person(
-      personFlags = personDTO.personFlags,
+      personFlags = listOf(personDTO.flags.debtFlag),
       debt = personDTO.debt,
       whitelisted = personDTO.whitelisted,
       status = personDTO.status

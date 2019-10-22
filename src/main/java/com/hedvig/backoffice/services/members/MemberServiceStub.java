@@ -194,9 +194,7 @@ public class MemberServiceStub implements MemberService {
   @Override
   public PersonDTO getPerson(String memberId) {
 
-    List<Flag> personFlags = new ArrayList<>();
-    personFlags.add(RED);
-    personFlags.add(RED);
+    PersonFlags personFlags = new PersonFlags(RED);
 
     List<PaymentDefaultDTO> paymentDefaults = new ArrayList<>();
     paymentDefaults.add(new PaymentDefaultDTO(
