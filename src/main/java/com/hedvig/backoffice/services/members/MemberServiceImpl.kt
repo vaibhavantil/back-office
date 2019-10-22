@@ -51,7 +51,7 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
     logger.info("Change member status for " + memberId + ": " + dto.fraudulentStatus + ", " + dto.fraudulentStatusDescription)
   }
 
-  override fun getPerson(memberId: String): PersonDTO? {
+  override fun getPerson(memberId: String): PersonDTO {
     return client.getPerson(memberId)
   }
 

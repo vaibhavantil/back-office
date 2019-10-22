@@ -61,7 +61,7 @@ interface MemberServiceClient {
 
 
   @GetMapping("/_/person/member/{memberId}")
-  fun getPerson(@PathVariable("memberId") memberId: String): PersonDTO?
+  fun getPerson(@PathVariable("memberId") memberId: String): PersonDTO
 
   @PostMapping("/_/person/member/whitelist/{memberId}")
   fun whitelistMember(

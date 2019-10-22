@@ -5,7 +5,7 @@ import lombok.Value
 import java.util.Optional
 
 data class PersonDTO(
-    val personFlags: List<Flag>,
+    val flags: PersonFlags,
     val debt: DebtDTO,
     val whitelisted: Whitelisted?,
     val status: PersonStatusDTO

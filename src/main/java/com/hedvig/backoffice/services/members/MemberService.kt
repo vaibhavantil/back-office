@@ -31,7 +31,7 @@ interface MemberService {
 
     fun setFraudulentStatus(memberId: String, dto: MemberFraudulentStatusDTO, token: String)
 
-    fun getPerson(memberId: String): PersonDTO?
+    fun getPerson(memberId: String): PersonDTO
 
     fun whitelistMember(memberId: String, whitelistedBy: String)
 }
