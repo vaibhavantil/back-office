@@ -78,17 +78,13 @@ class MemberResolver(
 
   fun getPerson(member: Member): Person {
     val memberId = member.memberId
-    return try {
-      val personDTO = memberService.getPerson(memberId)
-      Person(
-        personFlags = listOf(personDTO.flags.debtFlag),
-        debt = personDTO.debt,
-        whitelisted = personDTO.whitelisted,
-        status = personDTO.status
-      )
-    } catch (exception: Exception) {
-      throw NullPointerException("No person found (exception: $exception)")
-    }
+    val personDTO = memberService.getPerson(memberId)
+    return Person(
+      personFlags = listOf(personDTO.flags.debtFlag),
+      debt = personDTO.debt,
+      whitelisted = personDTO.whitelisted,
+      status = personDTO.status
+    )
   }
 
   fun getNumberFailedCharges(member: Member): NumberFailedCharges {

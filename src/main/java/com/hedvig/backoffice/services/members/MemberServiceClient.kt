@@ -6,6 +6,7 @@ import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO
 import com.hedvig.backoffice.web.dto.MemberStatus
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.data.domain.Sort
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @FeignClient(name = "member-service", url = "\${memberservice.baseUrl}", configuration = [FeignConfig::class])
@@ -61,7 +62,7 @@ interface MemberServiceClient {
 
 
   @GetMapping("/_/person/member/{memberId}")
-  fun getPerson(@PathVariable("memberId") memberId: String): PersonDTO
+  fun getPerson(@PathVariable("memberId") memberId: String): ResponseEntity<PersonDTO>
 
   @PostMapping("/_/person/member/whitelist/{memberId}")
   fun whitelistMember(
