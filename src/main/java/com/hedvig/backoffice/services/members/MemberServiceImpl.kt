@@ -1,72 +1,65 @@
 package com.hedvig.backoffice.services.members
 
-import java.util.Optional
-
-import com.hedvig.backoffice.graphql.types.WhitelistMember
 import com.hedvig.backoffice.services.members.dto.*
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO
 import com.hedvig.backoffice.web.dto.MemberStatus
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
-import org.springframework.http.ResponseEntity
 
 class MemberServiceImpl(private val client: MemberServiceClient) : MemberService {
 
-    init {
+  init {
+    logger.info("MEMBER SERVICE:")
+    logger.info("class: " + MemberServiceImpl::class.java.name)
+  }
 
-        logger.info("MEMBER SERVICE:")
-        logger.info("class: " + MemberServiceImpl::class.java.name)
-    }
+  override fun search(status: MemberStatus, query: String, token: String): List<MemberDTO> {
+    return client.search(status, query, token)
+  }
 
-    override fun search(status: MemberStatus, query: String, token: String): List<MemberDTO> {
-        return client.search(status, query, token)
-    }
+  override fun searchPaged(
+    status: MemberStatus?,
+    query: String,
+    page: Int?,
+    pageSize: Int?,
+    sortBy: MembersSortColumn,
+    sortDirection: Sort.Direction,
+    token: String
+  ): MembersSearchResultDTO {
+    return client.searchPaged(status, query, page, pageSize, sortBy, sortDirection, token)
+  }
 
-    override fun searchPaged(
-      status: MemberStatus?,
-      query: String,
-      page: Int?,
-      pageSize: Int?,
-      sortBy: MembersSortColumn,
-      sortDirection: Sort.Direction,
-      token: String
-    ): MembersSearchResultDTO {
-        return client.searchPaged(status, query, page, pageSize, sortBy, sortDirection, token)
-    }
+  override fun findByMemberId(memberId: String, token: String): MemberDTO {
+    return client.member(memberId, token)
+  }
 
-    override fun findByMemberId(memberId: String, token: String): MemberDTO {
-        return client.member(memberId, token)
-    }
+  override fun editMember(memberId: String, memberDTO: MemberDTO, token: String) {
+    if (client.member(memberId, token) != memberDTO)
+      client.editMember(memberId, memberDTO, token)
+  }
 
-    override fun editMember(memberId: String, memberDTO: MemberDTO, token: String) {
-        if (client.member(memberId, token) != memberDTO)
-            client.editMember(memberId, memberDTO, token)
-    }
+  override fun cancelInsurance(hid: String, dto: InsuranceCancellationDTO, token: String) {
+    client.cancelInsurance(hid, dto, token)
+  }
 
-    override fun cancelInsurance(hid: String, dto: InsuranceCancellationDTO, token: String) {
-        client.cancelInsurance(hid, dto, token)
-    }
+  override fun getMembersByIds(ids: List<String>): List<MemberDTO> {
+    return client.getMembers(ChargeMembersDTO(ids))
+  }
 
-    override fun getMembersByIds(ids: List<String>): List<MemberDTO> {
-        return client.getMembers(ChargeMembersDTO(ids))
-    }
+  override fun setFraudulentStatus(memberId: String, dto: MemberFraudulentStatusDTO, token: String) {
+    client.setFraudulentStatus(memberId, dto, token)
+    logger.info("Change member status for " + memberId + ": " + dto.fraudulentStatus + ", " + dto.fraudulentStatusDescription)
+  }
 
-    override fun setFraudulentStatus(memberId: String, dto: MemberFraudulentStatusDTO, token: String) {
-        client.setFraudulentStatus(memberId, dto, token)
-        logger.info("Change member status for " + memberId + ": " + dto.fraudulentStatus + ", " + dto.fraudulentStatusDescription)
-    }
+  override fun getPerson(memberId: String): PersonDTO? {
+    return client.getPerson(memberId)
+  }
 
-    override fun getPerson(memberId: String): PersonDTO? {
-        return client.getPerson(memberId)
-    }
+  override fun whitelistMember(memberId: String, whitelistedBy: String) {
+    client.whitelistMember(memberId, whitelistedBy)
+  }
 
-    override fun whitelistMember(memberId: String, whitelistedBy: String) {
-        client.whitelistMember(memberId, whitelistedBy)
-    }
-
-    companion object {
-
-        private val logger = LoggerFactory.getLogger(MemberServiceImpl::class.java)
-    }
+  companion object {
+    private val logger = LoggerFactory.getLogger(MemberServiceImpl::class.java)
+  }
 }
