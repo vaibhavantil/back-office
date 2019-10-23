@@ -117,6 +117,14 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return memberLoader.load(memberId);
   }
 
+  public CompletableFuture<Member> backfillSubscriptions(
+    final String memberId,
+    final DataFetchingEnvironment env
+  ) throws AuthorizationException {
+    accountService.backfillSubscriptions(memberId, GraphQLConfiguration.getEmail(env, personnelService));
+    return memberLoader.load(memberId);
+  }
+
   public UUID createClaim(
     String memberId,
     LocalDateTime date,

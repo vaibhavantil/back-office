@@ -31,6 +31,11 @@ public class AccountServiceImpl implements AccountService {
   }
 
   @Override
+  public void backfillSubscriptions(String memberId, String backfilledBy) {
+    accountServiceClient.backfillSubscriptions(memberId, backfilledBy);
+  }
+
+  @Override
   public List<SchedulerStateDto> subscriptionSchedulesAwaitingApproval(ChargeStatus status) {
     return accountServiceClient.getSubscriptionsPendingApproval(status);
   }

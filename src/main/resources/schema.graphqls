@@ -37,6 +37,7 @@ type MutationType {
   autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
   questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
+  backfillSubscriptions(memberId: ID!): Member!
 }
 
 type Suggestion {

@@ -96,6 +96,11 @@ public class AccountServiceStub implements AccountService {
   }
 
   @Override
+  public void backfillSubscriptions(String memberId, String backfilledBy) {
+    //TODO: enter stub info
+  }
+
+  @Override
   public List<SchedulerStateDto> subscriptionSchedulesAwaitingApproval(ChargeStatus chargeStatus) {
     List<SchedulerStateDto> subscriptionsPendingApproval = new ArrayList<>();
     subscriptionsPendingApproval.add(new SchedulerStateDto(

@@ -39,4 +39,7 @@ public interface AccountServiceClient {
     @RequestBody List<ApproveChargeRequestDto> requestBody,
     @RequestParam("approvedBy") String approvedBy
   );
+
+  @PostMapping(path = "/_/schedule/backfill/{memberId}")
+  void backfillSubscriptions(@PathVariable String memberId, @RequestParam String backfilledBy);
 }
