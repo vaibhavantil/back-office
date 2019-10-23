@@ -21,7 +21,7 @@ public class MemberBatchLoader implements BatchLoader<String, Member> {
   @Override
   public CompletionStage<List<Member>> load(List<String> keys) {
     return CompletableFuture.supplyAsync(() -> {
-      return memberService.getMembersByIds(keys).stream().map(m -> Member.fromDTO(m))
+      return memberService.getMembersByIds(keys).stream().map(m -> Member.Companion.fromDTO(m))
           .sorted(Comparator.comparing(item -> keys.indexOf(item.getMemberId())))
           .collect(Collectors.toList());
     });
