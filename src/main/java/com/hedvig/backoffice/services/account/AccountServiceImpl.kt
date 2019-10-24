@@ -22,4 +22,8 @@ class AccountServiceImpl(private val accountServiceClient: AccountServiceClient)
 
   override fun getNumberFailedCharges(memberId: String): NumberFailedChargesDto =
     accountServiceClient.getNumberFailedCharges(memberId)
+
+  override fun backfillSubscriptions(memberId: String, backfilledBy: String) =
+    accountServiceClient.backfillSubscriptions(memberId, backfilledBy)
+
 }

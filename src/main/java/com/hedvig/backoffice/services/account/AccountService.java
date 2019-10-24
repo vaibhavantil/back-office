@@ -15,6 +15,8 @@ public interface AccountService {
 
   void addAccountEntry(String memberId, AccountEntryInput accountEntryInput, String addedBy);
 
+  void backfillSubscriptions(String memberId, String backfilledBy);
+
   List<SchedulerStateDto> subscriptionSchedulesAwaitingApproval(ChargeStatus status);
 
   void addApprovedSubscriptions(List<ApproveChargeRequestDto> requestBody, String approvedBy);

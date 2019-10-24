@@ -36,4 +36,10 @@ interface AccountServiceClient {
 
   @GetMapping("/_/numberFailedCharges/{memberId}")
   fun getNumberFailedCharges(@PathVariable memberId: String): NumberFailedChargesDto
+
+  @PostMapping("/_/schedule/subscription/backfill/{memberId}")
+  fun backfillSubscriptions(
+    @PathVariable memberId: String,
+    @RequestParam backfilledBy: String
+  )
 }
