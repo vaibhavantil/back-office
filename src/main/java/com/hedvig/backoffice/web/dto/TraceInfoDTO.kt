@@ -4,12 +4,12 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 data class TraceInfoDTO(
-    val date: LocalDateTime,
+    val date: LocalDateTime? = null,
     val oldValue: String? = null,
-    val newValue: String,
-    val fieldName: String,
+    val newValue: String? = null,
+    val fieldName: String? = null,
     val productId: UUID? = null,
-    val memberId: Long,
-    val userId: String,
-    val isSuccess: Boolean
+    val memberId: Long? = null,
+    val userId: String? = null,
+    val isSuccess: Boolean? = null
 )
