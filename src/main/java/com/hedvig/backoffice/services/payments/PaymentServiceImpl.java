@@ -45,8 +45,8 @@ public class PaymentServiceImpl implements PaymentService {
   }
 
   @Override
-  public void chargeMember(String memberId, MonetaryAmount amount) {
-    paymentServiceClient.chargeMember(memberId, new ChargeRequestDTO(amount));
+  public void chargeMember(String memberId, MonetaryAmount amount, String requestedBy) {
+    paymentServiceClient.chargeMember(memberId, new ChargeRequestDTO(amount, requestedBy));
   }
 
   @Override

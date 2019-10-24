@@ -15,7 +15,7 @@ public interface PaymentService {
 
   List<DirectDebitStatusDTO> getDirectDebitStatuses(List<String> memberIds);
 
-  void chargeMember(String memberId, MonetaryAmount amount);
+  void chargeMember(String memberId, MonetaryAmount amount, String requestedBy);
 
   Transaction getTransactionById(UUID id);
 
