@@ -15,7 +15,7 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
     logger.info("class: " + MemberServiceImpl::class.java.name)
   }
 
-  override fun search(status: MemberStatus, query: String, token: String): List<MemberDTO> {
+  override fun search(status: MemberStatus?, query: String, token: String): List<MemberDTO> {
     return client.search(status, query, token)
   }
 
