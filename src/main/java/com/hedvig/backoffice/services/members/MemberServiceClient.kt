@@ -14,7 +14,7 @@ interface MemberServiceClient {
 
   @GetMapping("/i/member/search?status={status}&query={query}")
   fun search(
-    @PathVariable("status") status: MemberStatus,
+    @PathVariable("status") status: MemberStatus?,
     @PathVariable("query") query: String,
     @RequestHeader("Authorization") token: String
   ): List<MemberDTO>
