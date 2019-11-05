@@ -5,20 +5,17 @@ import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
-import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
-import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
+import com.hedvig.backoffice.web.dto.ProductSortColumns;
+import com.hedvig.backoffice.web.dto.ProductState;
 import java.io.IOException;
 import java.time.YearMonth;
 import java.util.List;
-
-import com.hedvig.backoffice.web.dto.ProductSortColumns;
-import com.hedvig.backoffice.web.dto.ProductState;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -129,17 +126,6 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   @Override
   public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
     return client.getInsurancesByMember(memberId, token);
-  }
-
-  @Override
-  public InsuranceStatusDTO createmodifiedProduct(
-    String memberId, InsuranceModificationDTO changeRequest, String token) {
-    return client.createmodifiedProduct(memberId, changeRequest, token);
-  }
-
-  @Override
-  public void modifyProduct(String memberId, ModifyInsuranceRequestDTO request, String token) {
-    client.modifyProduct(memberId, request, token);
   }
 
   @Override

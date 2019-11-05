@@ -3,18 +3,15 @@ package com.hedvig.backoffice.services.product_pricing;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
-import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
-import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
-import java.util.List;
-
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
+import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,18 +76,6 @@ public interface ProductPricingClient {
   @GetMapping("/_/insurance/{memberId}/insurances")
   List<InsuranceStatusDTO> getInsurancesByMember(
     @PathVariable("memberId") String memberId, @RequestHeader("Authorization") String token);
-
-  @PostMapping("/_/insurance/{memberId}/createmodifiedProduct")
-  InsuranceStatusDTO createmodifiedProduct(
-    @PathVariable("memberId") String memberId,
-    @RequestBody InsuranceModificationDTO changeRequest,
-    @RequestHeader("Authorization") String token);
-
-  @PostMapping("/_/insurance/{memberId}/modifyProduct")
-  void modifyProduct(
-    @PathVariable("memberId") String memberId,
-    @RequestBody ModifyInsuranceRequestDTO request,
-    @RequestHeader("Authorization") String token);
 
   @GetMapping("/_/insurance/monthlyBilling?year={year}&month={month}")
   List<MonthlySubscriptionDTO> getMonthlySubscriptions(
