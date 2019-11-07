@@ -2,6 +2,9 @@ package com.hedvig.backoffice.services.underwriter
 
 import com.hedvig.backoffice.services.members.MemberService
 import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.IncompleteApartmentQuoteDataDto
+import com.hedvig.backoffice.services.underwriter.dtos.IncompleteHouseQuoteDataDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
 import com.hedvig.backoffice.web.dto.CreateQuoteFromProductDto
@@ -25,8 +28,8 @@ class UnderwriterServiceImpl(
         originatingProductId = quoteDto.originatingProductId,
         currentInsurer = quoteDto.currentInsurer,
         birthDate = member.birthDate,
-        incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData,
-        incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData,
+        incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData?.let((IncompleteApartmentQuoteDataDto)::from),
+        incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData?.let((IncompleteHouseQuoteDataDto)::from),
         quotingPartner = null
       )
     )
@@ -35,7 +38,9 @@ class UnderwriterServiceImpl(
     return createdQuote
   }
 
-  override fun activateQuote(quoteId: UUID, activationDate: LocalDate?, terminationDate: LocalDate?) {
+  override fun activateQuote(quoteId: UUID, activationDate: LocalDate?, terminationDate: LocalDate?): QuoteDto =
     underwriterClient.activateQuote(quoteId, ActivateQuoteRequestDto(activationDate, terminationDate))
-  }
+
+  override fun getQuotes(memberId: String): List<QuoteDto> =
+    underwriterClient.getQuotes(memberId)
 }

@@ -3,35 +3,34 @@ package com.hedvig.backoffice.web;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
-import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
-import com.hedvig.backoffice.services.underwriter.UnderwriterService;
-import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto;
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto;
-import com.hedvig.backoffice.web.dto.CreateQuoteFromProductDto;
-import com.hedvig.backoffice.web.dto.InsuranceSearchResultWebDTO;
-import com.hedvig.backoffice.web.dto.InsuranceStatusWebDTO;
-import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
-import com.hedvig.backoffice.web.dto.MemberSearchResultWebDTO;
-import com.hedvig.backoffice.web.dto.MemberStatus;
-import com.hedvig.backoffice.web.dto.MemberWebDTO;
-import com.hedvig.backoffice.web.dto.ProductSortColumns;
-import com.hedvig.backoffice.web.dto.ProductState;
+
 import java.io.IOException;
 import java.security.Principal;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
+
+import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
+import com.hedvig.backoffice.web.dto.InsuranceSearchResultWebDTO;
+import com.hedvig.backoffice.web.dto.InsuranceStatusWebDTO;
+import com.hedvig.backoffice.web.dto.MemberSearchResultWebDTO;
+import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
+import com.hedvig.backoffice.web.dto.MemberStatus;
+import com.hedvig.backoffice.web.dto.MemberWebDTO;
+import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
+import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
+import com.hedvig.backoffice.web.dto.ProductSortColumns;
+import com.hedvig.backoffice.web.dto.ProductState;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -56,19 +55,15 @@ public class MemberController {
 
   private final MemberService memberService;
   private final ProductPricingService productPricingService;
-  private final UnderwriterService underwriterService;
   private final PersonnelService personnelService;
 
   @Autowired
   public MemberController(
-    MemberService memberService,
-    ProductPricingService productPricingService,
-    UnderwriterService underwriterService,
-    PersonnelService personnelService
-  ) {
+      MemberService memberService,
+      ProductPricingService productPricingService,
+      PersonnelService personnelService) {
     this.memberService = memberService;
     this.productPricingService = productPricingService;
-    this.underwriterService = underwriterService;
     this.personnelService = personnelService;
   }
 
@@ -244,22 +239,21 @@ public class MemberController {
     return ResponseEntity.noContent().build();
   }
 
-  @PostMapping("/insurance/{memberId}/quotes")
-  public ResponseEntity<QuoteResponseDto> createQuote(
+  @PostMapping("/insurance/{memberId}/createmodifiedProduct")
+  public ResponseEntity<InsuranceStatusWebDTO> createmodifiedProduct(
       @PathVariable("memberId") String memberId,
-      @RequestBody @Valid CreateQuoteFromProductDto changeRequest,
+      @RequestBody @Valid InsuranceModificationDTO changeRequest,
       @AuthenticationPrincipal Principal principal) {
-    return ResponseEntity.ok(underwriterService.createAndCompleteQuote(memberId, changeRequest));
+    InsuranceStatusDTO insurance = productPricingService.createmodifiedProduct(memberId, changeRequest, principal.getName());
+    return ResponseEntity.ok(new InsuranceStatusWebDTO(insurance));
   }
 
-  @PostMapping("/insurance/{memberId}/quotes/{quoteId}/activate")
-  public ResponseEntity<?> activateQuote(
+  @PostMapping("/insurance/{memberId}/modifyProduct")
+  public ResponseEntity<?> modifyProduct(
       @PathVariable("memberId") String memberId,
-      @PathVariable("quoteId") UUID quoteId,
-      @Valid @RequestBody ActivateQuoteRequestDto request
-  ) {
-    // TODO check so quote belongs to member?
-    underwriterService.activateQuote(quoteId, request.getActivationDate(), request.getTerminationDate());
+      @RequestBody ModifyInsuranceRequestDTO request,
+      @AuthenticationPrincipal Principal principal) {
+    productPricingService.modifyProduct(memberId, request, principal.getName());
     return ResponseEntity.noContent().build();
   }
 }
