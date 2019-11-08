@@ -5,6 +5,7 @@ import java.util.*
 data class ClaimFileDTO (
   val id: Long,
   val bucket: String?,
+  val key: String,
   val claimId: UUID?,
   val contentType: String,
   val data: ByteArray,

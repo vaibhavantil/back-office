@@ -49,4 +49,9 @@ public class MessagesFrontendPostprocessor {
     return amazonS3.generatePresignedUrl(chatS3Bucket, key,
       new Date(Instant.now().plus(2, ChronoUnit.HOURS).toEpochMilli()), HttpMethod.GET);
   }
+
+  public URL processFileUrl(String key, String s3Bucket) {
+    return amazonS3.generatePresignedUrl(s3Bucket, key,
+      new Date(Instant.now().plus(2, ChronoUnit.HOURS).toEpochMilli()), HttpMethod.GET);
+  }
 }

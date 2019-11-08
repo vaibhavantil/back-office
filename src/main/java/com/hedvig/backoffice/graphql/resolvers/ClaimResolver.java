@@ -7,7 +7,9 @@ import com.hedvig.backoffice.graphql.types.AccidentalDamageClaim;
 import com.hedvig.backoffice.graphql.types.ApplianceClaim;
 import com.hedvig.backoffice.graphql.types.AssaultClaim;
 import com.hedvig.backoffice.graphql.types.Claim;
+import com.hedvig.backoffice.graphql.types.ClaimFileUpload;
 import com.hedvig.backoffice.graphql.types.ConfirmedFraudClaim;
+import com.hedvig.backoffice.graphql.types.FileUpload;
 import com.hedvig.backoffice.graphql.types.FireDamageClaim;
 import com.hedvig.backoffice.graphql.types.LiabilityClaim;
 import com.hedvig.backoffice.graphql.types.LuggageDelayClaim;
@@ -17,7 +19,15 @@ import com.hedvig.backoffice.graphql.types.TestClaim;
 import com.hedvig.backoffice.graphql.types.TheftClaim;
 import com.hedvig.backoffice.graphql.types.TravelAccidentClaim;
 import com.hedvig.backoffice.graphql.types.WaterDamageClaim;
+import com.hedvig.backoffice.services.MessagesFrontendPostprocessor;
+import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.claims.dto.ClaimFileDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimsFilesUploadDTO;
+import com.hedvig.backoffice.services.messages.dto.FileUploadDTO;
 import graphql.schema.DataFetchingEnvironment;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
@@ -26,13 +36,39 @@ import java.util.concurrent.CompletableFuture;
 public class ClaimResolver implements GraphQLResolver<Claim> {
 
   private final MemberLoader memberLoader;
+  private final MessagesFrontendPostprocessor messagesFrontendPostprocessor;
+  private final ClaimsService claimsService;
 
-  public ClaimResolver(MemberLoader memberLoader) {
+  public ClaimResolver(MemberLoader memberLoader,
+                       MessagesFrontendPostprocessor messagesFrontendPostprocessor,
+                       ClaimsService claimsService) {
     this.memberLoader = memberLoader;
+    this.messagesFrontendPostprocessor = messagesFrontendPostprocessor;
+    this.claimsService = claimsService;
   }
 
   public CompletableFuture<Member> getMember(Claim claim) {
     return memberLoader.load(claim.getMemberId());
+  }
+
+  public List<ClaimFileUpload> claimFiles(Claim claim) {
+    val claimFiles = claimsService.allClaimsFiles(claim.getId());
+
+    List<ClaimFileDTO> claimFileDTOS = claimFiles.getBody().getClaimsFiles();
+
+    if(claimFileDTOS.isEmpty()) return new ArrayList<>();
+
+    List<ClaimFileUpload> claimFileUploads = new ArrayList<>();
+
+    claimFileDTOS.forEach(claimFile -> {
+      ClaimFileUpload claimUpload = new ClaimFileUpload(
+        messagesFrontendPostprocessor.processFileUrl(claimFile.getKey(), claimFile.getBucket()),
+        claimFile.getClaimId()
+      );
+      claimFileUploads.add(claimUpload);
+      }
+    );
+    return claimFileUploads;
   }
 
   public Object getType(Claim claim, DataFetchingEnvironment env) {

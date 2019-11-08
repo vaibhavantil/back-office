@@ -170,10 +170,10 @@ public class ClaimsServiceImpl implements ClaimsService {
     ArrayList claimFiles = new ArrayList<ClaimFileDTO>();
     ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimFiles);
 
-//    TODO: add key here
     ClaimFileDTO claimFileDTO = new ClaimFileDTO(
       Long.parseLong("1234"),
       uploadResults.getBucket(),
+      uploadResults.getKey(),
       claimId,
       claimFile.getContentType(),
       claimFile.getBytes(),

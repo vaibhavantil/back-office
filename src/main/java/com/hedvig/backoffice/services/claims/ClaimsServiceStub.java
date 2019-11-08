@@ -280,7 +280,39 @@ public class ClaimsServiceStub implements ClaimsService {
 
   @Override
   public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(UUID claimId) {
-    return null;
+
+    List claimUploads = new ArrayList<>();
+
+    claimUploads.add( new ClaimFileDTO(
+      Long.parseLong("1233"),
+      "com-hedvig-claims-files",
+      "claim65fcf30d-491f-4e5a-88d5-abfbfc83edf4test74.jpg",
+      claimId,
+      "",
+      new byte[0],
+      "testFile123",
+      UUID.randomUUID(),
+      "123l",
+      Long.parseLong("12345"),
+      "12345"
+    ));
+
+    claimUploads.add( new ClaimFileDTO(
+      Long.parseLong("4321"),
+      "com-hedvig-claims-files",
+      "claime0ede8d4-2c23-4329-beda-d14e96ff1279picture.html",
+      claimId,
+      "",
+      new byte[0],
+      "testFile321",
+      UUID.randomUUID(),
+      "123l",
+      Long.parseLong("5643"),
+      "12345"
+    ));
+
+    ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimUploads);
+    return ResponseEntity.ok(claimsFilesUploadDTO);
   }
 
   @Override
