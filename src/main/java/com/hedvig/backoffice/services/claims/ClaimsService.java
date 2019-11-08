@@ -1,11 +1,16 @@
 package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.services.claims.dto.*;
+import java.io.IOException;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ClaimsService {
 
@@ -41,4 +46,8 @@ public interface ClaimsService {
   UUID createClaim(CreateBackofficeClaimDTO claimData, String token);
 
   void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token);
+
+  ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(UUID claimId);
+
+  ResponseEntity<Void> uploadClaimsFiles(UUID claimId, MultipartFile claimFile, UploadResult uploadResults) throws IOException;
 }

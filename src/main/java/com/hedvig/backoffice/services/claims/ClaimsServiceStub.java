@@ -23,6 +23,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
@@ -274,6 +276,16 @@ public class ClaimsServiceStub implements ClaimsService {
   public void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token) {
     Claim c = find(dto.getClaimId(), token);
     c.setCoveringEmployee(dto.isCoveringEmployee());
+  }
+
+  @Override
+  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(UUID claimId) {
+    return null;
+  }
+
+  @Override
+  public ResponseEntity<Void> uploadClaimsFiles(UUID claimId, MultipartFile claimFile, UploadResult uploadResults) throws IOException {
+    return null;
   }
 
   private void addEvent(Claim claim, String message) {

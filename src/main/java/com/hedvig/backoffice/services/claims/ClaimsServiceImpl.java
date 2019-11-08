@@ -4,6 +4,8 @@ import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.hedvig.backoffice.services.claims.dto.*;
 import feign.FeignException;
+import java.io.IOException;
+import java.util.ArrayList;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 public class ClaimsServiceImpl implements ClaimsService {
 
@@ -153,6 +157,35 @@ public class ClaimsServiceImpl implements ClaimsService {
   @Override
   public void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token) {
     client.markEmployeeClaim(dto, token);
+  }
+
+  @Override
+  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(UUID claimId) {
+    return client.allClaimsFiles(claimId);
+  }
+
+  @Override
+  public ResponseEntity<Void> uploadClaimsFiles(UUID claimId, MultipartFile claimFile, UploadResult uploadResults) throws IOException {
+
+    ArrayList claimFiles = new ArrayList<ClaimFileDTO>();
+    ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimFiles);
+
+//    TODO: add key here
+    ClaimFileDTO claimFileDTO = new ClaimFileDTO(
+      Long.parseLong("1234"),
+      uploadResults.getBucket(),
+      claimId,
+      claimFile.getContentType(),
+      claimFile.getBytes(),
+      claimFile.getOriginalFilename(),
+      UUID.randomUUID(),
+      "",
+      claimFile.getSize(),
+      "1234"
+    );
+    claimFiles.add(claimFileDTO);
+
+    return client.uploadClaimsFiles(claimsFilesUploadDTO);
   }
 
   private String signAudioUrl(String audioUrl) {

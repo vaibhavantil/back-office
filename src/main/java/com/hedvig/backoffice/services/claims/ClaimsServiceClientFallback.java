@@ -1,9 +1,11 @@
 package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.services.claims.dto.*;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -109,5 +111,17 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   @Override
   public void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token) {
     log.error("request to claim.service failed");
+  }
+
+  @Override
+  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(UUID claimId) {
+    log.error("request to claim-service failed");
+    return null;
+  }
+
+  @Override
+  public ResponseEntity<Void> uploadClaimsFiles(ClaimsFilesUploadDTO dto) {
+    log.error("request to claim-service failed");
+    return null;
   }
 }
