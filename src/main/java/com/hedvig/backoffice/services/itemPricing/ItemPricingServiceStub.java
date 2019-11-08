@@ -8,6 +8,9 @@ import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.PayloadDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.ItemDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.PricepointDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.FilterPayloadDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.FilterDTO;
 import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
@@ -43,6 +46,49 @@ public class ItemPricingServiceStub implements ItemPricingService {
     prices.add(new PricepointDTO("123:123", "123", "2019-06-07", new BigDecimal(6000), new BigDecimal(6010), new BigDecimal(6020)));
 
     return prices;
+  }
+
+  @Override
+  public List<InventoryItemDTO> getInventory(String claimId) {
+
+    ArrayList<InventoryItemDTO> inventory = new ArrayList<InventoryItemDTO>();
+
+    inventory.add(new InventoryItemDTO("4fe5c0f3-6790-4f49-bb1b-fd7397601232", "4fe5c0f3-6790-4f49-bb1b-fd7397609442", "Samsung Something", "Mobiltelefoner", "1", new BigDecimal(5000), "Custom", null, null, null, null));
+
+    return inventory;
+  }
+
+  @Override
+  public boolean addInventoryItem(InventoryItemDTO item) {
+    return true;
+  }
+
+  @Override
+  public boolean removeInventoryItem(String inventoryItemId) {
+    return true;
+  }
+
+  @Override
+  public boolean removeInventoryFilters(String inventoryItemId) {
+    return true;
+  }
+
+  @Override
+  public List<FilterSuggestionDTO> getAllFilters(String categoryId) {
+    ArrayList<FilterSuggestionDTO> filters = new ArrayList<FilterSuggestionDTO>();
+
+    filters.add(new FilterSuggestionDTO("Some Filter", new ArrayList<String>(), new ArrayList<String>()));
+
+    return filters;
+  }
+
+  @Override
+  public List<FilterDTO> getInventoryItemFilters(String inventoryItemId) {
+    ArrayList<FilterDTO> filters = new ArrayList<FilterDTO>();
+
+    filters.add(new FilterDTO("FilterName", "FilterValue"));
+
+    return null;
   }
 
 }

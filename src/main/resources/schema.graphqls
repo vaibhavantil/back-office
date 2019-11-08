@@ -16,6 +16,9 @@ type QueryType {
   tickets (resolved: Boolean): [Ticket!]!
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
+  inventory(claimId: ID!): [InventoryItem]
+  filters(categoryId: String!): [FilterSuggestion!]!
+  inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
 }
 
 type MutationType {
@@ -40,6 +43,8 @@ type MutationType {
   questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
+  addInventoryItem(item: InventoryItemInput!): Boolean
+  removeInventoryItem(inventoryItemId: ID!): Boolean
 }
 
 type Suggestion {
@@ -56,6 +61,39 @@ type AllRepliesEntry {
 
 type AutoLabel {
   message: Boolean
+}
+
+input FilterPayload {
+  filters: [Filter!]!
+  inventoryItemId: ID!
+}
+
+input InventoryItemInput {
+  inventoryItemId: String
+  claimId: String!
+  itemName: String!
+  categoryName: String!
+  categoryId: String!
+  value: Float!
+  source: String!
+  upperRange: Float
+  lowerRange: Float
+  itemId: String
+  filters: [Filter]
+}
+
+type InventoryItem {
+  inventoryItemId: ID!
+  claimId: String!
+  itemName: String!
+  categoryName: String!
+  categoryId: String!
+  value: Float!
+  source: String!
+  upperRange: Float
+  lowerRange: Float
+  itemId: String
+  filters: [FilterOutput]
 }
 
 type PricePoint {
@@ -79,6 +117,11 @@ input Payload {
 }
 
 input Filter {
+  name: String!
+  value: String!
+}
+
+type FilterOutput {
   name: String!
   value: String!
 }

@@ -1,11 +1,5 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
-import java.time.YearMonth;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
@@ -19,19 +13,22 @@ import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
+import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
+import com.hedvig.backoffice.services.itemPricing.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
-import com.hedvig.backoffice.services.itemPricing.dto.CategoryDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.PayloadDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.PricepointDTO;
 import com.hedvig.backoffice.services.tickets.TicketService;
-import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
+import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
+
+import java.time.YearMonth;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static graphql.servlet.GraphQLServlet.log;
 
@@ -133,4 +130,17 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       return null;
     }
   }
+
+  public List<InventoryItemDTO> inventory(String claimId) {
+    return itemPricingService.getInventory(claimId);
+  }
+
+  public List<FilterSuggestionDTO> filters(String categoryId) {
+    return itemPricingService.getAllFilters(categoryId);
+  }
+
+  public List<FilterDTO> inventoryItemFilters(String inventoryItemId) {
+    return itemPricingService.getInventoryItemFilters(inventoryItemId);
+  }
+
 }
