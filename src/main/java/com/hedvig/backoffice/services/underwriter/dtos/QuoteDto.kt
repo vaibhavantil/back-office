@@ -36,7 +36,17 @@ data class ExtraBuilding(
   val area: Int,
   val hasWaterConnected: Boolean,
   val displayName: String?
-)
+) {
+  companion object {
+    fun from(extraBuilding: com.hedvig.backoffice.graphql.types.ExtraBuilding): ExtraBuilding =
+      ExtraBuilding(
+        type = extraBuilding.type,
+        area = extraBuilding.area,
+        hasWaterConnected = extraBuilding.hasWaterConnected,
+        displayName = extraBuilding.displayName
+      )
+  }
+}
 
 data class QuoteDto(
   val id: UUID,

@@ -5,6 +5,7 @@ import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.IncompleteApartmentQuoteDataDto
 import com.hedvig.backoffice.services.underwriter.dtos.IncompleteHouseQuoteDataDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
 import com.hedvig.backoffice.web.dto.CreateQuoteFromProductDto
@@ -37,6 +38,9 @@ class UnderwriterServiceImpl(
     underwriterClient.completeQuote(createdQuote.id)
     return createdQuote
   }
+
+  override fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto): QuoteDto =
+    underwriterClient.updateQuote(quoteId, quoteDto)
 
   override fun activateQuote(quoteId: UUID, activationDate: LocalDate?, terminationDate: LocalDate?): QuoteDto =
     underwriterClient.activateQuote(quoteId, ActivateQuoteRequestDto(activationDate, terminationDate))

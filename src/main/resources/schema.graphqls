@@ -48,6 +48,7 @@ type MutationType {
   activateQuote(id: ID!, activationDate: LocalDate!, terminationDate: LocalDate): Quote!
   # Creates a quote from a product and returns the quote id
   createQuoteFromProduct(memberId: ID!, quoteData: QuoteFromProductInput!): ID!
+  updateQuote(quoteId: ID!, quoteData: QuoteInput!): Quote!
 }
 
 type Suggestion {
@@ -246,7 +247,7 @@ type Quote {
   currentInsurer: String
   startDate: String
   validity: Int
-  member: Member
+  memberId: ID
   isComplete: Boolean
   data: QuoteData
   signedProductId: ID
@@ -316,6 +317,38 @@ type ExtraBuilding {
   displayName: String
 }
 
+
+input QuoteInput {
+  productType: QuoteProductType
+  currentInsurer: String
+  apartmentData: ApartmentQuoteInput
+  houseData: HouseQuoteInput
+  originatingProductId: ID
+}
+
+input ApartmentQuoteInput {
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  subType: ApartmentSubType
+}
+
+input HouseQuoteInput {
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  ancillaryArea: Int
+  yearOfConstruction: Int
+  numberOfBathrooms: Int
+  extraBuildings: [ExtraBuildingInput!]
+  isSubleted: Boolean
+}
 
 input QuoteFromProductInput {
   incompleteHouseQuoteData: HouseQuoteDataInput
