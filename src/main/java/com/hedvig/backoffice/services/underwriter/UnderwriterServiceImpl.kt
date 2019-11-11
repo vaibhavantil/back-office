@@ -4,6 +4,7 @@ import com.hedvig.backoffice.services.members.MemberService
 import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.IncompleteApartmentQuoteDataDto
 import com.hedvig.backoffice.services.underwriter.dtos.IncompleteHouseQuoteDataDto
+import com.hedvig.backoffice.services.underwriter.dtos.ProductType
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
@@ -29,6 +30,11 @@ class UnderwriterServiceImpl(
         originatingProductId = quoteDto.originatingProductId,
         currentInsurer = quoteDto.currentInsurer,
         birthDate = member.birthDate,
+        productType = if (quoteDto.incompleteApartmentQuoteData != null) {
+          ProductType.APARTMENT
+        } else {
+          ProductType.HOUSE
+        },
         incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData?.let((IncompleteApartmentQuoteDataDto)::from),
         incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData?.let((IncompleteHouseQuoteDataDto)::from),
         quotingPartner = null

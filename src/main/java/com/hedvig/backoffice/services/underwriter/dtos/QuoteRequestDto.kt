@@ -13,6 +13,7 @@ data class QuoteRequestDto(
   val birthDate: LocalDate?,
   val ssn: String?,
   val quotingPartner: String?,
+  val productType: com.hedvig.backoffice.services.underwriter.dtos.ProductType?,
   val incompleteHouseQuoteData: IncompleteHouseQuoteDataDto?,
   val incompleteApartmentQuoteData: IncompleteApartmentQuoteDataDto?,
   val memberId: String? = null,

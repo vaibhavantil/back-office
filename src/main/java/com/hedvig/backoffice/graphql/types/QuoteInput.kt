@@ -14,7 +14,6 @@ data class QuoteInput(
 )
 
 sealed class QuoteInputData {
-  @UnionType
   data class ApartmentQuoteInput(
     val street: String? = null,
     val city: String? = null,
@@ -25,7 +24,6 @@ sealed class QuoteInputData {
     val subType: com.hedvig.backoffice.services.product_pricing.dto.ProductType? = null
   ) : QuoteInputData()
 
-  @UnionType
   data class HouseQuoteInput(
     val street: String?,
     val city: String?,
