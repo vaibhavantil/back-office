@@ -56,12 +56,13 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
 
     List<ClaimFileDTO> claimFileDTOS = claimFiles.getBody().getClaimsFiles();
 
-    if(claimFileDTOS.isEmpty()) return new ArrayList<>();
-
     List<ClaimFileUpload> claimFileUploads = new ArrayList<>();
+
+    if(claimFileDTOS.isEmpty()) return claimFileUploads;
 
     claimFileDTOS.forEach(claimFile -> {
       ClaimFileUpload claimUpload = new ClaimFileUpload(
+        claimFile.getClaimFileId(),
         messagesFrontendPostprocessor.processFileUrl(claimFile.getKey(), claimFile.getBucket()),
         claimFile.getClaimId()
       );

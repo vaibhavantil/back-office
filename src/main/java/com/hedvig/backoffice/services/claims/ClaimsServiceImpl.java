@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.claims;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
+import com.hedvig.backoffice.graphql.types.ClaimFileUpload;
 import com.hedvig.backoffice.services.claims.dto.*;
 import feign.FeignException;
 import java.io.IOException;
@@ -27,12 +28,15 @@ public class ClaimsServiceImpl implements ClaimsService {
   private final ClaimsServiceClient client;
   private final AmazonS3 amazonS3;
   private final String bucketName;
+  private final UploadClaimFiles uploadClaimFiles;
 
   @Autowired
-  public ClaimsServiceImpl(ClaimsServiceClient client, AmazonS3 amazonS3, @Value("${claims.bucketName}") String bucketName) {
+  public ClaimsServiceImpl(ClaimsServiceClient client, AmazonS3 amazonS3, @Value("${claims.bucketName}") String bucketName,
+  UploadClaimFiles uploadClaimFiles) {
     this.client = client;
     this.amazonS3 = amazonS3;
     this.bucketName = bucketName;
+    this.uploadClaimFiles = uploadClaimFiles;
   }
 
   @Override
@@ -165,27 +169,35 @@ public class ClaimsServiceImpl implements ClaimsService {
   }
 
   @Override
-  public ResponseEntity<Void> uploadClaimsFiles(UUID claimId, MultipartFile claimFile, UploadResult uploadResults) throws IOException {
+  public ResponseEntity<Void> uploadClaimsFiles(UUID claimId, MultipartFile[] claimFiles) throws IOException {
+    ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
+    ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimFileDtos);
 
-    ArrayList claimFiles = new ArrayList<ClaimFileDTO>();
-    ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimFiles);
+       for (MultipartFile claimFile : claimFiles) {
+         val uploadResults = uploadClaimFiles.uploadClaimFilesToS3Bucket(claimFile.getContentType(),
+           claimFile.getBytes(), claimId, claimFile.getOriginalFilename());
 
-    ClaimFileDTO claimFileDTO = new ClaimFileDTO(
-      Long.parseLong("1234"),
-      uploadResults.getBucket(),
-      uploadResults.getKey(),
-      claimId,
-      claimFile.getContentType(),
-      claimFile.getBytes(),
-      claimFile.getOriginalFilename(),
-      UUID.randomUUID(),
-      "",
-      claimFile.getSize(),
-      "1234"
-    );
-    claimFiles.add(claimFileDTO);
-
+         ClaimFileDTO claimFileDTO = new ClaimFileDTO(
+           UUID.randomUUID(),
+           uploadResults.getBucket(),
+           uploadResults.getKey(),
+           claimId,
+           claimFile.getContentType(),
+           claimFile.getBytes(),
+           claimFile.getOriginalFilename(),
+           UUID.randomUUID(),
+           "",
+           claimFile.getSize(),
+           "1234"
+      );
+         claimFileDtos.add(claimFileDTO);
+    }
     return client.uploadClaimsFiles(claimsFilesUploadDTO);
+  }
+
+  @Override
+  public void deleteClaimFile(UUID claimId, UUID claimFileId) {
+    this.client.deleteClaimFile(claimId, claimFileId);
   }
 
   private String signAudioUrl(String audioUrl) {

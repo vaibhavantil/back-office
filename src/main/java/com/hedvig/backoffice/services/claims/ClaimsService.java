@@ -49,5 +49,7 @@ public interface ClaimsService {
 
   ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(UUID claimId);
 
-  ResponseEntity<Void> uploadClaimsFiles(UUID claimId, MultipartFile claimFile, UploadResult uploadResults) throws IOException;
+  ResponseEntity<Void> uploadClaimsFiles(UUID claimId, MultipartFile[] claimFiles) throws IOException;
+
+  void deleteClaimFile(UUID claimId, UUID claimFileId);
 }

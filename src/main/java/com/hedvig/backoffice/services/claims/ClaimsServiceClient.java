@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.claims;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.claims.dto.*;
 import java.util.UUID;
+import javax.ws.rs.core.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -69,9 +70,12 @@ public interface ClaimsServiceClient {
   @PostMapping("/_/claims/employee")
   void markEmployeeClaim(@RequestBody EmployeeClaimRequestDTO req, @RequestHeader("Authorization") String token);
 
-  @GetMapping("/_/{claimId}/claimFiles")
+  @GetMapping("/_/claims/{claimId}/claimFiles")
   ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(@PathVariable UUID claimId);
 
-  @PostMapping("/i/claims/claimFiles")
+  @PostMapping("/_/claims/claimFiles")
   ResponseEntity<Void> uploadClaimsFiles(@RequestBody ClaimsFilesUploadDTO dto);
+
+  @DeleteMapping("/_/claims/{claimId}/deleteClaimFile/{claimFileId}")
+  ResponseEntity<Void> deleteClaimFile(@PathVariable UUID claimId, @PathVariable UUID claimFileId);
 }

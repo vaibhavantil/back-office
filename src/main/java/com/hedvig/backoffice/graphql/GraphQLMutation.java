@@ -472,5 +472,13 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     memberService.whitelistMember(memberId, email);
     return true;
   }
+
+  public Boolean deleteClaimFile(
+    UUID claimId,
+    UUID claimFileId
+  ) {
+    claimsService.deleteClaimFile(claimId, claimFileId);
+    return true;
+  }
 }
 

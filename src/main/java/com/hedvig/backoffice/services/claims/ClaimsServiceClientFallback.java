@@ -124,4 +124,9 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
     log.error("request to claim-service failed");
     return null;
   }
+
+  @Override
+  public ResponseEntity<Void> deleteClaimFile(UUID claimId, UUID claimFileId) {
+    return null;
+  }
 }

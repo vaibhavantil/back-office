@@ -4,6 +4,7 @@ import java.net.URL
 import java.util.*
 
 data class ClaimFileUpload(
+   val claimFileId: UUID,
    val fileUploadUrl: URL,
    val claimId: UUID
 )

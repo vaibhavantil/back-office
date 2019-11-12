@@ -3,7 +3,7 @@ package com.hedvig.backoffice.services.claims.dto
 import java.util.*
 
 data class ClaimFileDTO (
-  val id: Long,
+  val claimFileId: UUID,
   val bucket: String?,
   val key: String,
   val claimId: UUID?,

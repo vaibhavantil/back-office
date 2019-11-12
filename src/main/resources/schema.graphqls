@@ -37,6 +37,7 @@ type MutationType {
   autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
   questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
+  deleteClaimFile(claimId: ID!, claimFileId: ID!): Boolean
 }
 
 type Suggestion {
@@ -63,6 +64,7 @@ type FileUpload {
 }
 
 type ClaimFileUpload {
+  claimFileId: ID
   fileUploadUrl: URL
   claimId: ID
 }

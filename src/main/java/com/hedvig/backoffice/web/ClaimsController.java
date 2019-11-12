@@ -24,6 +24,7 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 import com.hedvig.backoffice.web.dto.CreateClaimDTO;
+import javax.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -161,8 +162,7 @@ public class ClaimsController {
 
   @PostMapping("/{claimId}/claimFiles")
   public void uploadFiles(@PathVariable("claimId") UUID claimId,
-                          @RequestParam MultipartFile claimFile) throws IOException {
-    val uploadResults = uploadClaimFiles.uploadClaimFiles(claimFile.getContentType(), claimFile.getBytes(), claimId, claimFile.getOriginalFilename());
-    claimsService.uploadClaimsFiles(claimId, claimFile, uploadResults);
+                          @RequestParam("files") MultipartFile[] files) throws IOException {
+    claimsService.uploadClaimsFiles(claimId, files);
   }
 }

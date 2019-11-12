@@ -34,8 +34,10 @@ public class ClaimsServiceStub implements ClaimsService {
 
   private List<Claim> claims;
   private List<ClaimType> types;
+  private UploadClaimFiles uploadClaimFiles;
 
-  public ClaimsServiceStub(MemberService memberService, SystemSettingsService settingsService) {
+  public ClaimsServiceStub(MemberService memberService, SystemSettingsService settingsService, UploadClaimFiles uploadClaimFiles) {
+    this.uploadClaimFiles = uploadClaimFiles;
     long minSignedOnDay = LocalDate.of(2011, 1, 3).toEpochDay();
     long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
     try {
@@ -284,7 +286,7 @@ public class ClaimsServiceStub implements ClaimsService {
     List claimUploads = new ArrayList<>();
 
     claimUploads.add( new ClaimFileDTO(
-      Long.parseLong("1233"),
+      UUID.randomUUID(),
       "com-hedvig-claims-files",
       "claim65fcf30d-491f-4e5a-88d5-abfbfc83edf4test74.jpg",
       claimId,
@@ -298,7 +300,7 @@ public class ClaimsServiceStub implements ClaimsService {
     ));
 
     claimUploads.add( new ClaimFileDTO(
-      Long.parseLong("4321"),
+      UUID.randomUUID(),
       "com-hedvig-claims-files",
       "claime0ede8d4-2c23-4329-beda-d14e96ff1279picture.html",
       claimId,
@@ -316,8 +318,34 @@ public class ClaimsServiceStub implements ClaimsService {
   }
 
   @Override
-  public ResponseEntity<Void> uploadClaimsFiles(UUID claimId, MultipartFile claimFile, UploadResult uploadResults) throws IOException {
-    return null;
+  public ResponseEntity<Void> uploadClaimsFiles(UUID claimId, MultipartFile[] claimFiles) throws IOException {
+    ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
+
+    for (MultipartFile claimFile : claimFiles) {
+      val uploadResults = uploadClaimFiles.uploadClaimFilesToS3Bucket(claimFile.getContentType(),
+        claimFile.getBytes(), claimId, claimFile.getOriginalFilename());
+
+      ClaimFileDTO claimFileDTO = new ClaimFileDTO(
+        UUID.randomUUID(),
+        uploadResults.getBucket(),
+        uploadResults.getKey(),
+        claimId,
+        claimFile.getContentType(),
+        claimFile.getBytes(),
+        claimFile.getOriginalFilename(),
+        UUID.randomUUID(),
+        "",
+        claimFile.getSize(),
+        "1234"
+      );
+      claimFileDtos.add(claimFileDTO);
+    }
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  public void deleteClaimFile(UUID claimId, UUID claimFileId) {
+
   }
 
   private void addEvent(Claim claim, String message) {
