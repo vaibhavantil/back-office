@@ -28,7 +28,7 @@ import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
-import com.hedvig.backoffice.web.dto.CreateQuoteFromProductDto;
+import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;

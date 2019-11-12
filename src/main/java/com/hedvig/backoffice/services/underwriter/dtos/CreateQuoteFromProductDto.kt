@@ -1,8 +1,7 @@
-package com.hedvig.backoffice.web.dto
+package com.hedvig.backoffice.services.underwriter.dtos
 
 import java.util.UUID
 import com.hedvig.backoffice.graphql.types.QuoteFromProductInput
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteData
 
 data class CreateQuoteFromProductDto(
   val incompleteHouseQuoteData: QuoteData.HouseQuoteData?,

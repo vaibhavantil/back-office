@@ -1,10 +1,9 @@
 package com.hedvig.backoffice.services.underwriter
 
-import com.hedvig.backoffice.graphql.types.QuoteInput
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
-import com.hedvig.backoffice.web.dto.CreateQuoteFromProductDto
+import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
 import java.time.LocalDate
 import java.util.UUID
 

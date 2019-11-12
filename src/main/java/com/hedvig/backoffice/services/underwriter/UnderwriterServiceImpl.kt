@@ -9,7 +9,7 @@ import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
-import com.hedvig.backoffice.web.dto.CreateQuoteFromProductDto
+import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.util.UUID
