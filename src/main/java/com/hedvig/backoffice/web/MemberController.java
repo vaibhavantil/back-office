@@ -18,6 +18,7 @@ import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberSearchResultWebDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import com.hedvig.backoffice.web.dto.MemberWebDTO;
+import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
 import java.io.IOException;
@@ -232,6 +233,15 @@ public class MemberController {
   public ResponseEntity<?> setFraudulentStatus(
     @PathVariable String memberId, @RequestBody @Valid MemberFraudulentStatusDTO dto, @AuthenticationPrincipal Principal principal) {
     memberService.setFraudulentStatus(memberId, dto, personnelService.getIdToken(principal.getName()));
+    return ResponseEntity.noContent().build();
+  }
+
+  @PostMapping("/insurance/{memberId}/modifyProduct")
+  public ResponseEntity<?> modifyProduct(
+    @PathVariable("memberId") String memberId,
+    @RequestBody ModifyInsuranceRequestDTO request,
+    @AuthenticationPrincipal Principal principal) {
+    productPricingService.modifyProduct(memberId, request, principal.getName());
     return ResponseEntity.noContent().build();
   }
 }

@@ -12,6 +12,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyD
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
+import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
 import com.hedvig.backoffice.web.dto.SafetyIncreaserType;
@@ -231,6 +232,32 @@ public class ProductPricingServiceStub implements ProductPricingService {
       .stream()
       .filter(x -> x.getMemberId().equals(memberId))
       .collect(Collectors.toList());
+  }
+
+  @Override
+  public void modifyProduct(String memberId, ModifyInsuranceRequestDTO request, String token) {
+
+    Optional<InsuranceStatusDTO> current =
+      insurances
+        .stream()
+        .filter(x -> x.getProductId().equals(request.insuranceIdToBeReplaced.toString()))
+        .findFirst();
+
+    Optional<InsuranceStatusDTO> updated =
+      insurances
+        .stream()
+        .filter(x -> x.getProductId().equals(request.insuranceIdToReplace.toString()))
+        .findFirst();
+
+    if (current.isPresent() && updated.isPresent()) {
+
+      InsuranceStatusDTO c = current.get();
+      InsuranceStatusDTO u = updated.get();
+      c.setInsuranceActiveTo(request.terminationDate.atStartOfDay());
+
+      u.setInsuranceState(ProductState.SIGNED);
+      u.setInsuranceActiveFrom(request.activationDate.atStartOfDay());
+    }
   }
 
   @Override

@@ -11,6 +11,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyD
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
+import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
 import java.io.IOException;
@@ -126,6 +127,11 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   @Override
   public List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token) {
     return client.getInsurancesByMember(memberId, token);
+  }
+
+  @Override
+  public void modifyProduct(String memberId, ModifyInsuranceRequestDTO request, String token) {
+    client.modifyProduct(memberId, request, token);
   }
 
   @Override
