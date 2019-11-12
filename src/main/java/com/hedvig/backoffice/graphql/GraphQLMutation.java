@@ -404,8 +404,9 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return Quote.from(underwriterService.activateQuote(id, activationDate, terminationDate));
   }
 
-  public UUID createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData) {
-    return underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData)).getId();
+  public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData) {
+    final UUID createdQuoteId = underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData)).getId();
+    return Quote.from(underwriterService.getQuote(createdQuoteId));
   }
 
   public Quote updateQuote(final UUID quoteId, final QuoteInput quoteInput) {

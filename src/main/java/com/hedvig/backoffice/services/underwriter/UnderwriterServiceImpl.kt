@@ -51,4 +51,7 @@ class UnderwriterServiceImpl(
 
   override fun getQuotes(memberId: String): List<QuoteDto> =
     underwriterClient.getQuotes(memberId)
+
+  override fun getQuote(quoteId: UUID): QuoteDto =
+    underwriterClient.getQuote(quoteId)
 }

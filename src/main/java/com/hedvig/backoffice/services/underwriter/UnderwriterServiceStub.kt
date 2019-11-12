@@ -51,4 +51,6 @@ class UnderwriterServiceStub : UnderwriterService {
   override fun activateQuote(quoteId: UUID, activationDate: LocalDate?, terminationDate: LocalDate?): QuoteDto = QUOTE_DTO_MOCK
 
   override fun getQuotes(memberId: String): List<QuoteDto> = listOf(QUOTE_DTO_MOCK)
+
+  override fun getQuote(id: UUID): QuoteDto = QUOTE_DTO_MOCK
 }

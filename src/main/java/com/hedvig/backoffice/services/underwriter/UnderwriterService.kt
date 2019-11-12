@@ -12,4 +12,5 @@ interface UnderwriterService {
   fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto): QuoteDto
   fun activateQuote(quoteId: UUID, activationDate: LocalDate?, terminationDate: LocalDate?): QuoteDto
   fun getQuotes(memberId: String): List<QuoteDto>
+  fun getQuote(id: UUID): QuoteDto
 }

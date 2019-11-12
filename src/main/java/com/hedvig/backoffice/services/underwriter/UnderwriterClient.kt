@@ -37,4 +37,7 @@ interface UnderwriterClient {
 
   @GetMapping("/_/v1/quotes/members/{memberId}")
   fun getQuotes(@PathVariable("memberId") memberId: String): List<QuoteDto>
+
+  @GetMapping("/_/v1/quotes/{quoteId}")
+  fun getQuote(@PathVariable("quoteId") quoteId: UUID): QuoteDto
 }

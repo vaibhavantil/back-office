@@ -47,7 +47,7 @@ type MutationType {
   removeInventoryItem(inventoryItemId: ID!): Boolean
   activateQuote(id: ID!, activationDate: LocalDate!, terminationDate: LocalDate): Quote!
   # Creates a quote from a product and returns the quote id
-  createQuoteFromProduct(memberId: ID!, quoteData: QuoteFromProductInput!): ID!
+  createQuoteFromProduct(memberId: ID!, quoteData: QuoteFromProductInput!): Quote!
   updateQuote(quoteId: ID!, quoteData: QuoteInput!): Quote!
 }
 
