@@ -90,7 +90,7 @@ sealed class QuoteData {
       fun from(apartmentQuoteDataInput: ApartmentQuoteDataInput): ApartmentQuoteData =
         ApartmentQuoteData(
           id = null,
-          ssn = apartmentQuoteDataInput.firstName,
+          ssn = apartmentQuoteDataInput.ssn,
           firstName = apartmentQuoteDataInput.firstName,
           lastName = apartmentQuoteDataInput.lastName,
           street = apartmentQuoteDataInput.street,
@@ -125,7 +125,7 @@ sealed class QuoteData {
       fun from(houseQuoteDataInput: HouseQuoteDataInput): HouseQuoteData =
         HouseQuoteData(
           id = null,
-          ssn = houseQuoteDataInput.firstName,
+          ssn = houseQuoteDataInput.ssn,
           firstName = houseQuoteDataInput.firstName,
           lastName = houseQuoteDataInput.lastName,
           street = houseQuoteDataInput.street,

@@ -41,6 +41,9 @@ import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceStub;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.TicketServiceImpl;
 import com.hedvig.backoffice.services.tickets.TicketServiceStub;
+import com.hedvig.backoffice.services.underwriter.UnderwriterService;
+import com.hedvig.backoffice.services.underwriter.UnderwriterServiceImpl;
+import com.hedvig.backoffice.services.underwriter.UnderwriterServiceStub;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -134,6 +137,16 @@ public class ExternalServicesConfig {
   }
 
   @Bean
+  public UnderwriterService underwriterService(
+    @Value("${underwriter.stub:false}") boolean stub
+  ) {
+    val factory = context.getAutowireCapableBeanFactory();
+    return stub
+      ? factory.createBean(UnderwriterServiceStub.class)
+      : factory.createBean(UnderwriterServiceImpl.class);
+  }
+
+  @Bean
   public PaymentService paymentService(@Value("${paymentService.stub:false}") boolean stub) {
     val factory = context.getAutowireCapableBeanFactory();
     return stub
@@ -166,7 +179,7 @@ public class ExternalServicesConfig {
   }
 
   @Bean
-  public AutoAnswerSuggestionService autoAnswerSuggestionService(@Value("${autoAnswerSuggestionService.stub:false}") boolean stub){
+  public AutoAnswerSuggestionService autoAnswerSuggestionService(@Value("${autoAnswerSuggestionService.stub:false}") boolean stub) {
     val factory = context.getAutowireCapableBeanFactory();
     return stub
       ? factory.createBean(AutoAnswerSuggestionServiceStub.class)

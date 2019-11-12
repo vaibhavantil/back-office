@@ -236,6 +236,18 @@ type Member {
   quotes: [Quote!]!
 }
 
+interface IQuoteData {
+  id: ID!
+  ssn:  String
+  firstName: String
+  lastName: String
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+}
+
 type Quote {
   id: ID!
   createdAt: Instant
@@ -268,7 +280,7 @@ enum QuoteState {
 
 union QuoteData = ApartmentQuoteData | HouseQuoteData
 
-type ApartmentQuoteData {
+type ApartmentQuoteData implements IQuoteData{
   id: ID!
   ssn:  String
   firstName: String
@@ -292,7 +304,7 @@ enum ApartmentSubType {
   HOUSE
 }
 
-type HouseQuoteData {
+type HouseQuoteData implements IQuoteData {
   id: ID!
   ssn: String
   firstName: String

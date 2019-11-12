@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.underwriter
 
 import com.hedvig.backoffice.services.members.MemberService
 import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
 import com.hedvig.backoffice.services.underwriter.dtos.IncompleteApartmentQuoteDataDto
 import com.hedvig.backoffice.services.underwriter.dtos.IncompleteHouseQuoteDataDto
 import com.hedvig.backoffice.services.underwriter.dtos.ProductType
@@ -9,12 +10,9 @@ import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
-import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
-import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.util.UUID
 
-@Component // TODO make proper impl
 class UnderwriterServiceImpl(
   private val underwriterClient: UnderwriterClient,
   private val memberService: MemberService

@@ -60,7 +60,7 @@ data class Quote(
         data = when {
           quote.data is com.hedvig.backoffice.services.underwriter.dtos.QuoteData.ApartmentQuoteData -> QuoteData.ApartmentQuoteData(
             id = quote.data.id!!,
-            ssn = quote.data.firstName,
+            ssn = quote.data.ssn,
             firstName = quote.data.firstName,
             lastName = quote.data.lastName,
             street = quote.data.street,
@@ -72,7 +72,7 @@ data class Quote(
           )
           quote.data is com.hedvig.backoffice.services.underwriter.dtos.QuoteData.HouseQuoteData -> QuoteData.HouseQuoteData(
             id = quote.data.id!!,
-            ssn = quote.data.firstName,
+            ssn = quote.data.ssn,
             firstName = quote.data.firstName,
             lastName = quote.data.lastName,
             street = quote.data.street,
