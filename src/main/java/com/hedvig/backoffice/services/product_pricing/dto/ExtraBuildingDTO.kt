@@ -6,6 +6,5 @@ data class ExtraBuildingDTO(
   val id: UUID?,
   val type: ExtraBuildingType,
   val area: Int,
-  val hasWaterConnected: Boolean,
-  val displayName: String?
+  val hasWaterConnected: Boolean
 )

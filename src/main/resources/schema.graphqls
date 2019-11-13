@@ -326,7 +326,6 @@ type ExtraBuilding {
   type: String!
   area: Int!
   hasWaterConnected: Boolean!
-  displayName: String
 }
 
 

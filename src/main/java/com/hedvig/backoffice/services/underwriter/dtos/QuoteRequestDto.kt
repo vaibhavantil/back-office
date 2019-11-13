@@ -50,7 +50,6 @@ data class IncompleteHouseQuoteDataDto(
             id = UUID.randomUUID(),
             area = extraBuilding.area,
             hasWaterConnected = extraBuilding.hasWaterConnected,
-            displayName = extraBuilding.displayName,
             type = ExtraBuildingType.valueOf(extraBuilding.type)
           )
         },
