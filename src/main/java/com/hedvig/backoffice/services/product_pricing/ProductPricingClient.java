@@ -9,6 +9,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyD
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
+import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
@@ -77,6 +78,12 @@ public interface ProductPricingClient {
   @GetMapping("/_/insurance/{memberId}/insurances")
   List<InsuranceStatusDTO> getInsurancesByMember(
     @PathVariable("memberId") String memberId, @RequestHeader("Authorization") String token);
+
+  @PostMapping("/_/insurance/{memberId}/createmodifiedProduct")
+  InsuranceStatusDTO createmodifiedProduct(
+    @PathVariable("memberId") String memberId,
+    @RequestBody InsuranceModificationDTO changeRequest,
+    @RequestHeader("Authorization") String token);
 
   @PostMapping("/_/insurance/{memberId}/modifyProduct")
   void modifyProduct(

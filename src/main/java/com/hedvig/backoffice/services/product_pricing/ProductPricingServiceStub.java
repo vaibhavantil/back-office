@@ -12,6 +12,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyD
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
+import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
@@ -232,6 +233,63 @@ public class ProductPricingServiceStub implements ProductPricingService {
       .stream()
       .filter(x -> x.getMemberId().equals(memberId))
       .collect(Collectors.toList());
+  }
+
+  @Override
+  public InsuranceStatusDTO createmodifiedProduct(
+    String memberId, InsuranceModificationDTO changeRequest, String token) {
+    Optional<InsuranceStatusDTO> current =
+      insurances
+        .stream()
+        .filter(x -> x.getProductId().equals(changeRequest.idToBeReplaced.toString()))
+        .findFirst();
+
+    if (current.isPresent()) {
+
+      InsuranceStatusDTO c = current.get();
+
+      InsuranceStatusDTO updated =
+        new InsuranceStatusDTO(
+          UUID.randomUUID().toString(),
+          changeRequest.memberId,
+          c.getMemberFirstName(),
+          c.getMemberLastName(),
+          changeRequest.street,
+          changeRequest.city,
+          changeRequest.zipCode,
+          changeRequest.floor,
+          changeRequest.livingSpace,
+          changeRequest.safetyIncreasers,
+          c.getInsuranceStatus(),
+          ProductState.QUOTE,
+          changeRequest.personsInHouseHold,
+          c.getCurrentTotalPrice(),
+          c.getNewTotalPrice(),
+          c.getInsuredAtOtherCompany(),
+          c.getCurrentInsurer(),
+          changeRequest.getHouseType(),
+          null,
+          null,
+          false,
+          c.getCertificateUrl(),
+          c.isCancellationEmailSent(),
+          c.getSignedOn(),
+          new ArrayList<>(),
+          null,
+          null,
+          null,
+          null,
+          null
+        );
+
+      insurances.add(updated);
+
+      return updated;
+
+    } else {
+      log.error("createmodifiedProduct, no product foudn with id {}", changeRequest.idToBeReplaced);
+    }
+    return null;
   }
 
   @Override
