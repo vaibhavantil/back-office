@@ -84,7 +84,7 @@ productPricing:
   stub: false
 
 underwriter:
-  baseUrl: underwriter
+  baseUrl: http://localhost:5698
   stub: false
 
 paymentService:
