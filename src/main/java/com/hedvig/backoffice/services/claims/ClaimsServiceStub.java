@@ -281,12 +281,12 @@ public class ClaimsServiceStub implements ClaimsService {
   }
 
   @Override
-  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(UUID claimId) {
+  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(String claimId) {
 
     List claimUploads = new ArrayList<>();
 
     claimUploads.add( new ClaimFileDTO(
-      UUID.randomUUID(),
+      "123",
       "com-hedvig-claims-files",
       "claim65fcf30d-491f-4e5a-88d5-abfbfc83edf4test74.jpg",
       claimId,
@@ -300,7 +300,7 @@ public class ClaimsServiceStub implements ClaimsService {
     ));
 
     claimUploads.add( new ClaimFileDTO(
-      UUID.randomUUID(),
+      "123",
       "com-hedvig-claims-files",
       "claime0ede8d4-2c23-4329-beda-d14e96ff1279picture.html",
       claimId,
@@ -318,7 +318,8 @@ public class ClaimsServiceStub implements ClaimsService {
   }
 
   @Override
-  public ResponseEntity<Void> uploadClaimsFiles(UUID claimId, MultipartFile[] claimFiles) throws IOException {
+  public ResponseEntity<Void> uploadClaimsFiles(String claimId, MultipartFile[] claimFiles,
+                                                String memberId) throws IOException {
     ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
 
     for (MultipartFile claimFile : claimFiles) {
@@ -326,7 +327,7 @@ public class ClaimsServiceStub implements ClaimsService {
         claimFile.getBytes(), claimId, claimFile.getOriginalFilename());
 
       ClaimFileDTO claimFileDTO = new ClaimFileDTO(
-        UUID.randomUUID(),
+        "123",
         uploadResults.getBucket(),
         uploadResults.getKey(),
         claimId,
@@ -336,7 +337,7 @@ public class ClaimsServiceStub implements ClaimsService {
         UUID.randomUUID(),
         "",
         claimFile.getSize(),
-        "1234"
+        memberId
       );
       claimFileDtos.add(claimFileDTO);
     }
@@ -344,7 +345,7 @@ public class ClaimsServiceStub implements ClaimsService {
   }
 
   @Override
-  public void deleteClaimFile(UUID claimId, UUID claimFileId) {
+  public void markClaimFileAsDeleted(String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
 
   }
 

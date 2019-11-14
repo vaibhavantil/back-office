@@ -474,10 +474,13 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
   public Boolean deleteClaimFile(
-    UUID claimId,
-    UUID claimFileId
+    String claimId,
+    String claimFileId,
+    DataFetchingEnvironment env
   ) {
-    claimsService.deleteClaimFile(claimId, claimFileId);
+    String email = getUserIdentity(env);
+    MarkClaimFileAsDeletedDTO deletedBy = new MarkClaimFileAsDeletedDTO(email);
+    claimsService.markClaimFileAsDeleted(claimId, claimFileId, deletedBy);
     return true;
   }
 }

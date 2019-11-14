@@ -164,12 +164,13 @@ public class ClaimsServiceImpl implements ClaimsService {
   }
 
   @Override
-  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(UUID claimId) {
+  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(String claimId) {
     return client.allClaimsFiles(claimId);
   }
 
   @Override
-  public ResponseEntity<Void> uploadClaimsFiles(UUID claimId, MultipartFile[] claimFiles) throws IOException {
+  public ResponseEntity<Void> uploadClaimsFiles(String claimId, MultipartFile[] claimFiles,
+                                                String memberId) throws IOException {
     ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
     ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimFileDtos);
 
@@ -178,7 +179,7 @@ public class ClaimsServiceImpl implements ClaimsService {
            claimFile.getBytes(), claimId, claimFile.getOriginalFilename());
 
          ClaimFileDTO claimFileDTO = new ClaimFileDTO(
-           UUID.randomUUID(),
+           "123",
            uploadResults.getBucket(),
            uploadResults.getKey(),
            claimId,
@@ -188,7 +189,7 @@ public class ClaimsServiceImpl implements ClaimsService {
            UUID.randomUUID(),
            "",
            claimFile.getSize(),
-           "1234"
+           memberId
       );
          claimFileDtos.add(claimFileDTO);
     }
@@ -196,9 +197,16 @@ public class ClaimsServiceImpl implements ClaimsService {
   }
 
   @Override
-  public void deleteClaimFile(UUID claimId, UUID claimFileId) {
-    this.client.deleteClaimFile(claimId, claimFileId);
+  public void markClaimFileAsDeleted(String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
+    ClaimFileDTO claimFile = this.client.claimFileById(claimFileId).getBody();
+
+    if(claimFile == null)  {
+      throw new RuntimeException("no claim file can be found with id " + claimFileId + "for claim " + claimId);
+    }
+
+    this.client.markClaimFileAsDeleted(claimId, claimFileId, deletedBy);
   }
+
 
   private String signAudioUrl(String audioUrl) {
     if (audioUrl == null || audioUrl.equals("ManualClaim")) {

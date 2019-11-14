@@ -1,10 +1,9 @@
 package com.hedvig.backoffice.graphql.types
 
 import java.net.URL
-import java.util.*
 
 data class ClaimFileUpload(
-   val claimFileId: UUID,
+   val claimFileId: String,
    val fileUploadUrl: URL,
-   val claimId: UUID
+   val claimId: String
 )

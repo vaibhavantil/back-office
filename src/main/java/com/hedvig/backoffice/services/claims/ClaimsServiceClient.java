@@ -71,11 +71,16 @@ public interface ClaimsServiceClient {
   void markEmployeeClaim(@RequestBody EmployeeClaimRequestDTO req, @RequestHeader("Authorization") String token);
 
   @GetMapping("/_/claims/{claimId}/claimFiles")
-  ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(@PathVariable UUID claimId);
+  ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(@PathVariable String claimId);
+
+  @GetMapping("/_/claims/claimFile/{claimFileId}")
+  ResponseEntity<ClaimFileDTO> claimFileById(@PathVariable String claimFileId);
 
   @PostMapping("/_/claims/claimFiles")
   ResponseEntity<Void> uploadClaimsFiles(@RequestBody ClaimsFilesUploadDTO dto);
 
-  @DeleteMapping("/_/claims/{claimId}/deleteClaimFile/{claimFileId}")
-  ResponseEntity<Void> deleteClaimFile(@PathVariable UUID claimId, @PathVariable UUID claimFileId);
+  @PostMapping("/_/claims/{claimId}/markAsDeleted/{claimFileId}")
+  ResponseEntity<Void> markClaimFileAsDeleted(
+    @PathVariable String claimId, @PathVariable String claimFileId,
+    @RequestBody MarkClaimFileAsDeletedDTO deletedBy);
 }

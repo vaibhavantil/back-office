@@ -20,7 +20,7 @@ data class UploadClaimFiles(
   val s3Client: AmazonS3Client
 ) {
 
-  fun uploadClaimFilesToS3Bucket(contentType: String, data: ByteArray, claimId: UUID, fileName: String): UploadResult {
+  fun uploadClaimFilesToS3Bucket(contentType: String, data: ByteArray, claimId: String, fileName: String): UploadResult {
     val metadata = ObjectMetadata()
     metadata.contentType = contentType
     metadata.contentLength = data.size.toLong()

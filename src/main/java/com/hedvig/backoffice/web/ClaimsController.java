@@ -161,8 +161,10 @@ public class ClaimsController {
   }
 
   @PostMapping("/{claimId}/claimFiles")
-  public void uploadFiles(@PathVariable("claimId") UUID claimId,
-                          @RequestParam("files") MultipartFile[] files) throws IOException {
-    claimsService.uploadClaimsFiles(claimId, files);
+  public void uploadFiles(@PathVariable("claimId") String claimId,
+                          @RequestParam("files") MultipartFile[] files,
+                          @RequestParam("memberId") String memberId
+  ) throws IOException {
+    claimsService.uploadClaimsFiles(claimId, files, memberId);
   }
 }

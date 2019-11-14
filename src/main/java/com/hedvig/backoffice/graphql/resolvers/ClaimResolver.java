@@ -51,8 +51,9 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
     return memberLoader.load(claim.getMemberId());
   }
 
-  public List<ClaimFileUpload> claimFiles(Claim claim) {
-    val claimFiles = claimsService.allClaimsFiles(claim.getId());
+  public List<ClaimFileUpload> getClaimFiles(Claim claim) {
+    String claimId = claim.getId().toString();
+    val claimFiles = claimsService.allClaimsFiles(claimId);
 
     List<ClaimFileDTO> claimFileDTOS = claimFiles.getBody().getClaimsFiles();
 

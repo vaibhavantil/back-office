@@ -114,8 +114,13 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   }
 
   @Override
-  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(UUID claimId) {
+  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(String claimId) {
     log.error("request to claim-service failed");
+    return null;
+  }
+
+  @Override
+  public ResponseEntity<ClaimFileDTO> claimFileById(String claimFileId) {
     return null;
   }
 
@@ -126,7 +131,7 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   }
 
   @Override
-  public ResponseEntity<Void> deleteClaimFile(UUID claimId, UUID claimFileId) {
+  public ResponseEntity<Void> markClaimFileAsDeleted(String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
     return null;
   }
 }
