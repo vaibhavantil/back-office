@@ -6,4 +6,5 @@ import lombok.Value;
 @Value
 public class ChargeRequestDTO {
   MonetaryAmount amount;
+  String requestedBy;
 }

@@ -4,12 +4,14 @@ import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.graphql.types.SchedulerStatus;
+import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.val;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
 
 @Component
 public class SchedulerStatusResolver implements GraphQLResolver<SchedulerStatus> {
@@ -28,9 +30,9 @@ public class SchedulerStatusResolver implements GraphQLResolver<SchedulerStatus>
     // return memberLoader.load(schedulerStatus.getMemberId());
     val token = GraphQLConfiguration.getIdToken(env, personnelService);
     try {
-      return Member.fromDTO(memberService.findByMemberId(schedulerStatus.getMemberId(), token));
+      return Member.Companion.fromDTO(memberService.findByMemberId(schedulerStatus.getMemberId(), token));
     } catch (Exception e) {
-      return new Member(schedulerStatus.getMemberId(), "UNKNOWN", "UNKNOWN", "Unknown", "Unknown", "Unknown", "Unknown");
+      return new Member(schedulerStatus.getMemberId(), "UNKNOWN", "UNKNOWN", "Unknown", "Unknown", "Unknown", "Unknown",  Instant.now(), "Unknown", "Unknown");
     }
   }
 }

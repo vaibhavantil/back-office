@@ -15,7 +15,6 @@ type QueryType {
   me: String
 }
 
-
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
   addAccountEntryToMember(memberId: ID!, accountEntry: AccountEntryInput!): Member!
@@ -38,6 +37,7 @@ type MutationType {
   questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
+  backfillSubscriptions(memberId: ID!): Member!
 }
 
 type Suggestion {
@@ -130,7 +130,8 @@ type MonthlySubscription {
 }
 
 type Member {
-  memberId: ID
+  memberId: ID!
+  signedOn: Instant
   firstName: String
   lastName: String
   personalNumber: String
@@ -140,10 +141,13 @@ type Member {
   transactions: [Transaction]
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
+  fraudulentStatus: String
+  fraudulentStatusDescription: String
   sanctionStatus: SanctionStatus
   account: Account
   fileUploads: [FileUpload!]!
   person: Person
+  numberFailedCharges: NumberFailedCharges
 }
 
 type Transaction {
@@ -163,6 +167,11 @@ enum SanctionStatus {
   NoHit,
   PartialHit,
   FullHit
+}
+
+type NumberFailedCharges {
+    numberFailedCharges: Int!
+    lastFailedChargeAt: Instant
 }
 
 type Account {
@@ -206,6 +215,8 @@ type AccountEntry {
   source: String!
   title: String
   comment: String
+  failedAt: Instant
+  chargedAt: Instant
 }
 
 enum AccountEntryType {
@@ -257,10 +268,41 @@ enum ClaimTypes {
   FireDamageClaim,
   ApplianceClaim,
   ConfirmedFraudClaim,
-  TestClaim,
-  LiabilityClaim
+  LiabilityClaim,
+  LegalProtectionClaim,
+  WaterDamageBathroomClaim,
+  WaterDamageKitchenClaim,
+  BurglaryClaim,
+  FloodingClaim,
+  EarthquakeClaim,
+  InstallationsClaim,
+  SnowPressureClaim,
+  StormDamageClaim,
+  VerminAndPestsClaim,
+  TestClaim
 }
-union ClaimType = TheftClaim | AccidentalDamageClaim | AssaultClaim | WaterDamageClaim | TravelAccidentClaim | LuggageDelayClaim | NotCoveredClaim | FireDamageClaim | ConfirmedFraudClaim | TestClaim | LiabilityClaim | ApplianceClaim
+union ClaimType = TheftClaim
+  | AccidentalDamageClaim
+  | AssaultClaim
+  | WaterDamageClaim
+  | TravelAccidentClaim
+  | LuggageDelayClaim
+  | NotCoveredClaim
+  | FireDamageClaim
+  | ConfirmedFraudClaim
+  | LiabilityClaim
+  | ApplianceClaim
+  | LegalProtectionClaim
+  | WaterDamageBathroomClaim
+  | WaterDamageKitchenClaim
+  | BurglaryClaim
+  | FloodingClaim
+  | EarthquakeClaim
+  | InstallationsClaim
+  | SnowPressureClaim
+  | StormDamageClaim
+  | VerminAndPestsClaim
+  | TestClaim
 
 type TheftClaim {
   location: String
@@ -305,10 +347,6 @@ type ConfirmedFraudClaim {
   date: LocalDate
 }
 
-type TestClaim {
-  date: LocalDate
-}
-
 type LiabilityClaim {
   date: LocalDate
   location: String
@@ -328,6 +366,61 @@ type ApplianceClaim {
   date: LocalDate
   item: String
 }
+
+type LegalProtectionClaim {
+  date: LocalDate
+}
+
+type WaterDamageBathroomClaim {
+  date: LocalDate
+}
+
+type WaterDamageKitchenClaim {
+  date: LocalDate
+}
+
+type BurglaryClaim {
+  location: String
+  date: LocalDate
+  item: String
+  policeReport: String
+  receipt: String
+}
+
+type FloodingClaim {
+  date: LocalDate
+}
+
+type EarthquakeClaim {
+  date: LocalDate
+}
+
+type InstallationsClaim {
+  date: LocalDate
+  item: String
+  location: String
+}
+
+type SnowPressureClaim {
+  date: LocalDate
+}
+
+type StormDamageClaim {
+  date: LocalDate
+}
+
+type VerminAndPestsClaim {
+  date: LocalDate
+}
+
+type NotCoveredClaim {
+  date: LocalDate
+}
+
+type TestClaim {
+  date: LocalDate
+}
+
 
 type ClaimPayment {
   id: String
@@ -459,6 +552,7 @@ enum TicketChangeType {
 enum TicketStatus {
   WAITING,
   WORKING_ON,
+  ON_HOLD,
   RESOLVED,
 }
 

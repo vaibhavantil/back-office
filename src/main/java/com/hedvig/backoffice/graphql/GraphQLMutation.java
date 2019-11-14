@@ -7,6 +7,7 @@ import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.*;
+import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
@@ -92,9 +93,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     MonetaryAmount amount,
     DataFetchingEnvironment env
   ) throws AuthorizationException {
+    String email = GraphQLConfiguration.getEmail(env, personnelService);
     log.info("Personnel with email '{}' attempting to charge member '{}' the amount '{}'",
-      GraphQLConfiguration.getEmail(env, personnelService), id, amount.toString());
-    paymentService.chargeMember(id, amount);
+      email, id, amount.toString());
+    paymentService.chargeMember(id, amount, email);
     return memberLoader.load(id);
   }
 
@@ -114,6 +116,14 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     final DataFetchingEnvironment env
   ) throws AuthorizationException {
     accountService.addAccountEntry(memberId, accountEntryInput, GraphQLConfiguration.getEmail(env, personnelService));
+    return memberLoader.load(memberId);
+  }
+
+  public CompletableFuture<Member> backfillSubscriptions(
+    final String memberId,
+    final DataFetchingEnvironment env
+  ) throws AuthorizationException {
+    accountService.backfillSubscriptions(memberId, GraphQLConfiguration.getEmail(env, personnelService));
     return memberLoader.load(memberId);
   }
 

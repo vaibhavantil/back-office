@@ -50,7 +50,7 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     List<String> memberIds = memberService.search(null, "", settingsService.getInternalAccessToken()).stream()
-      .map(o -> o.getMemberId().toString()).collect(Collectors.toList());
+      .map(o -> o.getMemberId() + "").collect(Collectors.toList());
 
     claims = IntStream.range(0, 10).mapToObj(i -> {
       String id = UUID.randomUUID().toString();

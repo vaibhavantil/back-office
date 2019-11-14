@@ -45,8 +45,8 @@ public class PaymentServiceImpl implements PaymentService {
   }
 
   @Override
-  public void chargeMember(String memberId, MonetaryAmount amount) {
-    paymentServiceClient.chargeMember(memberId, new ChargeRequestDTO(amount));
+  public void chargeMember(String memberId, MonetaryAmount amount, String requestedBy) {
+    paymentServiceClient.chargeMember(memberId, new ChargeRequestDTO(amount, requestedBy));
   }
 
   @Override
@@ -70,8 +70,8 @@ public class PaymentServiceImpl implements PaymentService {
 
   public DirectDebitStatusDTO getDirectDebitStatusByMemberId(String memberId) {
     try {
-      ResponseEntity<?> status = paymentServiceClient.getDirectDebitStatusByMemberId(memberId);
-      return (DirectDebitStatusDTO) status.getBody();
+      ResponseEntity<DirectDebitStatusDTO> response = paymentServiceClient.getDirectDebitStatusByMemberId(memberId);
+      return response.getBody();
     } catch (FeignException | ExternalServiceBadRequestException ex) {
       return new DirectDebitStatusDTO(memberId, false);
     }

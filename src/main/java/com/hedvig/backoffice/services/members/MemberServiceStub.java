@@ -1,20 +1,7 @@
 package com.hedvig.backoffice.services.members;
 
-import com.hedvig.backoffice.graphql.types.WhitelistMember;
 import com.hedvig.backoffice.graphql.types.Whitelisted;
 import com.hedvig.backoffice.services.members.dto.*;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import org.apache.commons.lang3.RandomUtils;
@@ -23,7 +10,15 @@ import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
+
+import java.time.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.hedvig.backoffice.services.members.dto.Flag.RED;
 
@@ -31,7 +26,7 @@ public class MemberServiceStub implements MemberService {
 
   private static Logger logger = LoggerFactory.getLogger(MemberServiceStub.class);
   public static long[] testMemberIds = {123456L, 3267661L, 2820671L, 6865256L, 9417985L, 9403769L,
-      6871398L, 5418127L, 2134653L, 2503961L, 5867700L, 4254211, 9908657L, 1074023L};
+    6871398L, 5418127L, 2134653L, 2503961L, 5867700L, 4254211, 9908657L, 1074023L};
 
   private List<MemberDTO> users;
 
@@ -46,33 +41,47 @@ public class MemberServiceStub implements MemberService {
 
     users = IntStream.range(0, testMemberIds.length + 100).mapToObj(i -> {
       long id = i < testMemberIds.length ? testMemberIds[i] : RandomUtils.nextInt();
-      MemberDTO user = new MemberDTO(id);
-      user.setFirstName("Test user " + id);
-
-      user.setStatus(memberStatuses[RandomUtils.nextInt(0, memberStatuses.length)]);
-
-                  user.setFraudulentStatus(FraudulentStatus.values()[RandomUtils.nextInt(0, FraudulentStatus.values().length)].toString());
-
+      String firstName = "Test user " + id;
+      MemberStatus status = memberStatuses[RandomUtils.nextInt(0, memberStatuses.length)];
+      String fraudulentStatus = FraudulentStatus.values()[RandomUtils.nextInt(0, FraudulentStatus.values().length)].toString();
       long randomDay = ThreadLocalRandom.current().nextLong(minBirthDay, maxBirthDay);
       LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
-      user.setBirthDate(randomDate);
 
-      long randomSignedOnDate =
-          ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
+      long randomSignedOnDate = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
       LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
-      LocalTime randomSignedOnLocalTime =
-          LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
-      user.setCreatedOn(Instant
-          .from(ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime),
-              ZoneId.of("Europe/Stockholm"))));
+      LocalTime randomSignedOnLocalTime = LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
+      Instant createdOn = Instant
+        .from(ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime),
+          ZoneId.of("Europe/Stockholm")));
 
-      if (user.getStatus() == MemberStatus.SIGNED) {
-        user.setSignedOn(Instant.from(
-            ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime),
-                ZoneId.of("Europe/Stockholm"))));
+      Instant signedOn = null;
+      if (status == MemberStatus.SIGNED) {
+        signedOn = Instant.from(
+          ZonedDateTime.of(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime),
+            ZoneId.of("Europe/Stockholm")));
       }
 
-      return user;
+      return new MemberDTO(
+        id,
+        status,
+        null,
+        firstName,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        randomDate,
+        signedOn,
+        createdOn,
+        fraudulentStatus,
+        null,
+        null
+      );
     }).collect(Collectors.toList());
 
     logger.info("MEMBER SERVICE:");
@@ -86,21 +95,21 @@ public class MemberServiceStub implements MemberService {
     }
 
     List<MemberDTO> result = users.stream()
-        .filter(u -> (StringUtils.isNotBlank(query) && u.getFirstName().contains(query))
-            || (status != null && u.getStatus() == status))
-        .collect(Collectors.toList());
+      .filter(u -> (StringUtils.isNotBlank(query) && u.getFirstName().contains(query))
+        || (status != null && u.getStatus() == status))
+      .collect(Collectors.toList());
 
     return result;
   }
 
   @Override
   public MembersSearchResultDTO searchPaged(MemberStatus status, String query, Integer page,
-      Integer pageSize, MembersSortColumn sortBy, Sort.Direction sortDirection, String token) {
+                                            Integer pageSize, MembersSortColumn sortBy, Sort.Direction sortDirection, String token) {
     List<MemberDTO> members = search(status, query, token);
     if (sortBy != null) {
       members.sort(
-          (sortDirection == Sort.Direction.DESC ? MEMBER_COMPARATORS_DESC : MEMBER_COMPARATORS_ASC)
-              .get(sortBy));
+        (sortDirection == Sort.Direction.DESC ? MEMBER_COMPARATORS_DESC : MEMBER_COMPARATORS_ASC)
+          .get(sortBy));
     }
 
     if (page != null && pageSize != null) {
@@ -119,40 +128,40 @@ public class MemberServiceStub implements MemberService {
   }
 
   private static EnumMap<MembersSortColumn, Comparator<MemberDTO>> MEMBER_COMPARATORS_ASC =
-      new EnumMap<MembersSortColumn, Comparator<MemberDTO>>(MembersSortColumn.class) {
-        private static final long serialVersionUID = 1L;
+    new EnumMap<MembersSortColumn, Comparator<MemberDTO>>(MembersSortColumn.class) {
+      private static final long serialVersionUID = 1L;
 
-        {
-          put(MembersSortColumn.NAME,
-              Comparator.comparing((MemberDTO m) -> "" + m.getLastName() + m.getFirstName(),
-                  Comparator.nullsLast(String::compareTo)));
-          put(MembersSortColumn.SIGN_UP, Comparator.comparing((MemberDTO m) -> m.getSignedOn(),
-              Comparator.nullsLast(Instant::compareTo)));
-          put(MembersSortColumn.CREATED, Comparator.comparing((MemberDTO m) -> m.getCreatedOn(),
-              Comparator.nullsLast(Instant::compareTo)));
-        }
-      };
+      {
+        put(MembersSortColumn.NAME,
+          Comparator.comparing((MemberDTO m) -> "" + m.getLastName() + m.getFirstName(),
+            Comparator.nullsLast(String::compareTo)));
+        put(MembersSortColumn.SIGN_UP, Comparator.comparing((MemberDTO m) -> m.getSignedOn(),
+          Comparator.nullsLast(Instant::compareTo)));
+        put(MembersSortColumn.CREATED, Comparator.comparing((MemberDTO m) -> m.getCreatedOn(),
+          Comparator.nullsLast(Instant::compareTo)));
+      }
+    };
 
   private static EnumMap<MembersSortColumn, Comparator<MemberDTO>> MEMBER_COMPARATORS_DESC =
-      new EnumMap<MembersSortColumn, Comparator<MemberDTO>>(MembersSortColumn.class) {
-        private static final long serialVersionUID = 1L;
+    new EnumMap<MembersSortColumn, Comparator<MemberDTO>>(MembersSortColumn.class) {
+      private static final long serialVersionUID = 1L;
 
-        {
-          put(MembersSortColumn.NAME,
-              Comparator.comparing((MemberDTO m) -> "" + m.getLastName() + m.getFirstName(),
-                  Comparator.nullsFirst(String::compareTo)).reversed());
-          put(MembersSortColumn.SIGN_UP, Comparator.comparing((MemberDTO m) -> m.getSignedOn(),
-              Comparator.nullsFirst(Instant::compareTo)).reversed());
-          put(MembersSortColumn.CREATED, Comparator.comparing((MemberDTO m) -> m.getCreatedOn(),
-              Comparator.nullsFirst(Instant::compareTo)).reversed());
-        }
-      };
+      {
+        put(MembersSortColumn.NAME,
+          Comparator.comparing((MemberDTO m) -> "" + m.getLastName() + m.getFirstName(),
+            Comparator.nullsFirst(String::compareTo)).reversed());
+        put(MembersSortColumn.SIGN_UP, Comparator.comparing((MemberDTO m) -> m.getSignedOn(),
+          Comparator.nullsFirst(Instant::compareTo)).reversed());
+        put(MembersSortColumn.CREATED, Comparator.comparing((MemberDTO m) -> m.getCreatedOn(),
+          Comparator.nullsFirst(Instant::compareTo)).reversed());
+      }
+    };
 
 
   @Override
   public MemberDTO findByMemberId(String memberId, String token) {
-    return users.stream().filter(u -> u.getMemberId().toString().equals(memberId)).findAny()
-        .orElse(new MemberDTO(Long.parseLong(memberId)));
+    return users.stream().filter(u -> u.getMemberId() == Long.parseLong(memberId)).findAny()
+      .orElse(MemberDTO.Companion.from(memberId));
   }
 
   @Override
@@ -162,14 +171,14 @@ public class MemberServiceStub implements MemberService {
 
   @Override
   public void editMember(String memberId, MemberDTO memberDTO, String token) {
-    users = users.stream().map(o -> o.getMemberId().toString().equals(memberId) ? memberDTO : o)
-        .collect(Collectors.toList());
+    users = users.stream().map(o -> o.getMemberId() == Long.parseLong(memberId) ? memberDTO : o)
+      .collect(Collectors.toList());
   }
 
   @Override
   public List<MemberDTO> getMembersByIds(List<String> ids) {
-    return users.stream().filter(u -> ids.contains(u.getMemberId().toString()))
-        .collect(Collectors.toList());
+    return users.stream().filter(u -> ids.stream().map(Long::parseLong).collect(Collectors.toList()).contains(u.getMemberId()))
+      .collect(Collectors.toList());
   }
 
   @Override
@@ -183,13 +192,11 @@ public class MemberServiceStub implements MemberService {
   }
 
   @Override
-  public Optional<PersonDTO> getPerson(String memberId) {
+  public PersonDTO getPerson(String memberId) {
 
-    List<Flag> personFlags = new ArrayList<>();
-    personFlags.add(RED);
-    personFlags.add(RED);
+    PersonFlags personFlags = new PersonFlags(RED);
 
-    List <PaymentDefaultDTO> paymentDefaults = new ArrayList<>();
+    List<PaymentDefaultDTO> paymentDefaults = new ArrayList<>();
     paymentDefaults.add(new PaymentDefaultDTO(
       2017,
       12,
@@ -234,11 +241,11 @@ public class MemberServiceStub implements MemberService {
     PersonDTO personDTO = new PersonDTO(
       personFlags,
       debtDTO,
-      Optional.of(whitelisted),
+      whitelisted,
       personStatusDTO
     );
 
-    return Optional.of(personDTO);
+    return personDTO;
   }
 
   private enum FraudulentStatus {
