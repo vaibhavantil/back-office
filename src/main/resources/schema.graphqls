@@ -67,6 +67,7 @@ type ClaimFileUpload {
   claimFileId: ID
   fileUploadUrl: URL
   claimId: ID
+  markedAsDeleted: Boolean
 }
 
 type PaymentDefault {

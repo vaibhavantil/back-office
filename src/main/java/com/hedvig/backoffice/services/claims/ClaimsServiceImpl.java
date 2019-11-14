@@ -191,7 +191,10 @@ public class ClaimsServiceImpl implements ClaimsService {
            UUID.randomUUID(),
            "",
            claimFile.getSize(),
-           memberId
+           memberId,
+           false,
+           null,
+           null
       );
          claimFileDtos.add(claimFileDTO);
     }

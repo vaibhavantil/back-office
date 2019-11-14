@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.claims.dto
 
+import java.time.Instant
 import java.util.*
 
 data class ClaimFileDTO (
@@ -13,5 +14,8 @@ data class ClaimFileDTO (
   val imageId: UUID?,
   val metaInfo: String,
   val size: Long,
-  val userId: String
+  val userId: String,
+  val markedAsDeleted: Boolean = false,
+  val markedAsDeletedBy: String?,
+  val markedAsDeletedAt: Instant?
 )

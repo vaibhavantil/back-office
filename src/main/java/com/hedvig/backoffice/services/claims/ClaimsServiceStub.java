@@ -6,6 +6,7 @@ import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
+import java.time.Instant;
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
@@ -296,7 +297,10 @@ public class ClaimsServiceStub implements ClaimsService {
       UUID.randomUUID(),
       "123l",
       Long.parseLong("12345"),
-      "12345"
+      "12345",
+      false,
+      null,
+      null
     ));
 
     claimUploads.add( new ClaimFileDTO(
@@ -310,7 +314,10 @@ public class ClaimsServiceStub implements ClaimsService {
       UUID.randomUUID(),
       "123l",
       Long.parseLong("5643"),
-      "12345"
+      "12345",
+      true,
+      "alexandra@hedvig.com",
+      Instant.now()
     ));
 
     ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimUploads);
@@ -337,7 +344,10 @@ public class ClaimsServiceStub implements ClaimsService {
         UUID.randomUUID(),
         "",
         claimFile.getSize(),
-        memberId
+        memberId,
+        false,
+        null,
+        null
       );
       claimFileDtos.add(claimFileDTO);
     }
