@@ -2,7 +2,6 @@ package com.hedvig.backoffice.services.claims;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
-import com.hedvig.backoffice.graphql.types.ClaimFileUpload;
 import com.hedvig.backoffice.services.claims.dto.*;
 import feign.FeignException;
 import java.io.IOException;
@@ -31,8 +30,10 @@ public class ClaimsServiceImpl implements ClaimsService {
   private final UploadClaimFiles uploadClaimFiles;
 
   @Autowired
-  public ClaimsServiceImpl(ClaimsServiceClient client, AmazonS3 amazonS3, @Value("${claims.bucketName}") String bucketName,
-  UploadClaimFiles uploadClaimFiles) {
+  public ClaimsServiceImpl(
+    ClaimsServiceClient client, AmazonS3 amazonS3,
+    @Value("${claims.bucketName}") String bucketName,
+    UploadClaimFiles uploadClaimFiles) {
     this.client = client;
     this.amazonS3 = amazonS3;
     this.bucketName = bucketName;
@@ -169,8 +170,8 @@ public class ClaimsServiceImpl implements ClaimsService {
   }
 
   @Override
-  public ResponseEntity<Void> uploadClaimsFiles(String claimId, MultipartFile[] claimFiles,
-                                                String memberId) throws IOException {
+  public ResponseEntity<Void> uploadClaimsFiles(
+    String claimId, MultipartFile[] claimFiles, String memberId) throws IOException {
     ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
     ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimFileDtos);
 
@@ -197,7 +198,8 @@ public class ClaimsServiceImpl implements ClaimsService {
   }
 
   @Override
-  public void markClaimFileAsDeleted(String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
+  public void markClaimFileAsDeleted(
+    String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
     ClaimFileDTO claimFile = this.client.claimFileById(claimFileId).getBody();
 
     if(claimFile == null)  {

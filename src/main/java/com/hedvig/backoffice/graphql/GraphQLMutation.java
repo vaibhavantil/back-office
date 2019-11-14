@@ -473,7 +473,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
-  public Boolean deleteClaimFile(
+  public Boolean markClaimFileAsDeleted(
     String claimId,
     String claimFileId,
     DataFetchingEnvironment env
