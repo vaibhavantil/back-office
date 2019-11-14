@@ -28,7 +28,8 @@ data class UploadClaimFiles(
 
     val uploadKey = "claim${UUID.randomUUID()}$fileName"
 
-    val uploadRequest = PutObjectRequest(claimsBucket, uploadKey, ByteArrayInputStream(data), metadata)
+    val uploadRequest = PutObjectRequest(
+      claimsBucket, uploadKey, ByteArrayInputStream(data), metadata)
 
     val tags = listOf(Tag("claimId", claimId.toString()))
 

@@ -49,7 +49,8 @@ public interface ClaimsService {
 
   ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(String claimId);
 
-  ResponseEntity<Void> uploadClaimsFiles(String claimId, MultipartFile[] claimFiles, String memberId) throws IOException;
+  ResponseEntity<Void> uploadClaimsFiles(String claimId, MultipartFile[] claimFiles,
+                                         String memberId) throws IOException;
 
   void markClaimFileAsDeleted(String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy);
 }

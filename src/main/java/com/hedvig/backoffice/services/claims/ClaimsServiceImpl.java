@@ -176,7 +176,8 @@ public class ClaimsServiceImpl implements ClaimsService {
     ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimFileDtos);
 
        for (MultipartFile claimFile : claimFiles) {
-         val uploadResults = uploadClaimFiles.uploadClaimFilesToS3Bucket(claimFile.getContentType(),
+         val uploadResults =
+           uploadClaimFiles.uploadClaimFilesToS3Bucket(claimFile.getContentType(),
            claimFile.getBytes(), claimId, claimFile.getOriginalFilename());
 
          ClaimFileDTO claimFileDTO = new ClaimFileDTO(
@@ -203,7 +204,8 @@ public class ClaimsServiceImpl implements ClaimsService {
     ClaimFileDTO claimFile = this.client.claimFileById(claimFileId).getBody();
 
     if(claimFile == null)  {
-      throw new RuntimeException("no claim file can be found with id " + claimFileId + "for claim " + claimId);
+      throw new RuntimeException(
+        "no claim file can be found with id " + claimFileId + "for claim " + claimId);
     }
 
     this.client.markClaimFileAsDeleted(claimId, claimFileId, deletedBy);
