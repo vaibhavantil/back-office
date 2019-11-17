@@ -38,6 +38,7 @@ type MutationType {
   whitelistMember(memberId: ID!): Boolean
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
+  setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
 }
 
 type Suggestion {
@@ -68,6 +69,7 @@ type ClaimFileUpload {
   fileUploadUrl: URL
   claimId: ID
   markedAsDeleted: Boolean
+  category: String
 }
 
 type PaymentDefault {

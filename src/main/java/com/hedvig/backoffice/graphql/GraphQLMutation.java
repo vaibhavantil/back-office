@@ -493,5 +493,16 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     claimsService.markClaimFileAsDeleted(claimId, claimFileId, deletedBy);
     return true;
   }
+
+  public String setClaimFileCategory(
+    String claimId,
+    String claimFileId,
+    String category,
+    DataFetchingEnvironment env) {
+    ClaimFileCategoryDTO claimFileCategoryDTO = new ClaimFileCategoryDTO(category);
+    claimsService.setClaimFileCategory(claimId, claimFileId, claimFileCategoryDTO);
+    return category;
+  }
+
 }
 

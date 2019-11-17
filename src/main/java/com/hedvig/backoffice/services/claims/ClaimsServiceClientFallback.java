@@ -135,4 +135,9 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
     log.error("request to claim-service failed");
     return null;
   }
+
+  @Override
+  public ResponseEntity<Void> setClaimFileCategory(String claimId, String claimFileId, ClaimFileCategoryDTO dto) {
+    return null;
+  }
 }

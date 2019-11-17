@@ -300,7 +300,8 @@ public class ClaimsServiceStub implements ClaimsService {
       "12345",
       false,
       null,
-      null
+      null,
+      "receipt"
     ));
 
     claimUploads.add( new ClaimFileDTO(
@@ -315,9 +316,10 @@ public class ClaimsServiceStub implements ClaimsService {
       "123l",
       Long.parseLong("5643"),
       "12345",
-      true,
+      false,
       "alexandra@hedvig.com",
-      Instant.now()
+      Instant.now(),
+      null
     ));
 
     ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimUploads);
@@ -347,6 +349,7 @@ public class ClaimsServiceStub implements ClaimsService {
         memberId,
         false,
         null,
+        null,
         null
       );
       claimFileDtos.add(claimFileDTO);
@@ -356,6 +359,11 @@ public class ClaimsServiceStub implements ClaimsService {
 
   @Override
   public void markClaimFileAsDeleted(String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
+
+  }
+
+  @Override
+  public void setClaimFileCategory(String claimId, String claimFileId, ClaimFileCategoryDTO category) {
 
   }
 

@@ -194,6 +194,7 @@ public class ClaimsServiceImpl implements ClaimsService {
            memberId,
            false,
            null,
+           null,
            null
       );
          claimFileDtos.add(claimFileDTO);
@@ -204,16 +205,27 @@ public class ClaimsServiceImpl implements ClaimsService {
   @Override
   public void markClaimFileAsDeleted(
     String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
+    findClaimFileOrThrowException(claimFileId, claimId);
+
+    this.client.markClaimFileAsDeleted(claimId, claimFileId, deletedBy);
+  }
+
+  @Override
+  public void setClaimFileCategory(String claimId, String claimFileId, ClaimFileCategoryDTO category) {
+    findClaimFileOrThrowException(claimFileId, claimId);
+
+    this.client.setClaimFileCategory(claimId, claimFileId, category);
+  }
+
+  private ClaimFileDTO findClaimFileOrThrowException(String claimFileId, String claimId) {
     ClaimFileDTO claimFile = this.client.claimFileById(claimFileId).getBody();
 
     if(claimFile == null)  {
       throw new RuntimeException(
         "no claim file can be found with id " + claimFileId + "for claim " + claimId);
     }
-
-    this.client.markClaimFileAsDeleted(claimId, claimFileId, deletedBy);
+    return claimFile;
   }
-
 
   private String signAudioUrl(String audioUrl) {
     if (audioUrl == null || audioUrl.equals("ManualClaim")) {

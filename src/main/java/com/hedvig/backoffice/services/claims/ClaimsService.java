@@ -53,4 +53,6 @@ public interface ClaimsService {
                                          String memberId) throws IOException;
 
   void markClaimFileAsDeleted(String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy);
+
+  void setClaimFileCategory(String claimId, String claimFileId, ClaimFileCategoryDTO category);
 }

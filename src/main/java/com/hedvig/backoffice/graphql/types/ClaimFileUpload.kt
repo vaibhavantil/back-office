@@ -6,5 +6,6 @@ data class ClaimFileUpload(
    val claimFileId: String,
    val fileUploadUrl: URL,
    val claimId: String,
-   val markedAsDeleted: Boolean
+   val markedAsDeleted: Boolean,
+   val category: String?
 )

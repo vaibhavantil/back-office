@@ -2,8 +2,6 @@ package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.claims.dto.*;
-import java.util.UUID;
-import javax.ws.rs.core.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -83,4 +81,10 @@ public interface ClaimsServiceClient {
   ResponseEntity<Void> markClaimFileAsDeleted(
     @PathVariable String claimId, @PathVariable String claimFileId,
     @RequestBody MarkClaimFileAsDeletedDTO deletedBy);
+
+  @PostMapping("/_/claims/{claimId}setClaimFileCategory/{claimFileId}")
+  ResponseEntity<Void> setClaimFileCategory(
+    @PathVariable String claimId, @PathVariable String claimFileId,
+    @RequestBody ClaimFileCategoryDTO dto
+  );
 }
