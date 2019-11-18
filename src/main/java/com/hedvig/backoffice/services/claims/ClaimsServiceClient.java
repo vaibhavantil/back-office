@@ -82,7 +82,7 @@ public interface ClaimsServiceClient {
     @PathVariable String claimId, @PathVariable String claimFileId,
     @RequestBody MarkClaimFileAsDeletedDTO deletedBy);
 
-  @PostMapping("/_/claims/{claimId}setClaimFileCategory/{claimFileId}")
+  @PostMapping("/_/claims/{claimId}/setClaimFileCategory/{claimFileId}")
   ResponseEntity<Void> setClaimFileCategory(
     @PathVariable String claimId, @PathVariable String claimFileId,
     @RequestBody ClaimFileCategoryDTO dto
