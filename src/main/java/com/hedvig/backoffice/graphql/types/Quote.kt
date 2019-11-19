@@ -3,6 +3,7 @@ package com.hedvig.backoffice.graphql.types
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.hedvig.backoffice.graphql.UnionType
+import com.hedvig.backoffice.services.underwriter.dtos.ExtraBuildingType
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
 import java.math.BigDecimal
 import java.time.Instant
@@ -25,7 +26,7 @@ enum class QuoteState {
 }
 
 data class ExtraBuilding(
-  val type: String,
+  val type: ExtraBuildingType,
   val area: Int,
   val hasWaterConnected: Boolean,
   val displayName: String?

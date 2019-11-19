@@ -31,8 +31,25 @@ enum class QuoteInitiatedFrom {
   HOPE
 }
 
+enum class ExtraBuildingType {
+  GARAGE,
+  CARPORT,
+  SHED,
+  STOREHOUSE,
+  FRIGGEBOD,
+  ATTEFALL,
+  OUTHOUSE,
+  GUESTHOUSE,
+  GAZEBO,
+  GREENHOUSE,
+  SAUNA,
+  BARN,
+  BOATHOUSE,
+  OTHER
+}
+
 data class ExtraBuilding(
-  val type: String,
+  val type: ExtraBuildingType,
   val area: Int,
   val hasWaterConnected: Boolean,
   val displayName: String?

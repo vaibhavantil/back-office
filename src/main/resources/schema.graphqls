@@ -300,8 +300,7 @@ enum ApartmentSubType {
   SUBLET_RENTAL,
   SUBLET_BRF,
   STUDENT_BRF,
-  STUDENT_RENT,
-  HOUSE
+  STUDENT_RENT
 }
 
 type HouseQuoteData implements IQuoteData {
@@ -323,11 +322,27 @@ type HouseQuoteData implements IQuoteData {
 }
 
 type ExtraBuilding {
-  type: String!
+  type: ExtraBuildingType!
   area: Int!
   hasWaterConnected: Boolean!
 }
 
+enum ExtraBuildingType {
+  GARAGE,
+  CARPORT,
+  SHED,
+  STOREHOUSE,
+  FRIGGEBOD,
+  ATTEFALL,
+  OUTHOUSE,
+  GUESTHOUSE,
+  GAZEBO,
+  GREENHOUSE,
+  SAUNA,
+  BARN,
+  BOATHOUSE,
+  OTHER
+}
 
 input QuoteInput {
   productType: QuoteProductType

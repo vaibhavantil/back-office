@@ -1,7 +1,5 @@
 package com.hedvig.backoffice.services.underwriter.dtos
 
-import com.hedvig.backoffice.services.product_pricing.dto.ExtraBuildingDTO
-import com.hedvig.backoffice.services.product_pricing.dto.ExtraBuildingType
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType
 import java.time.LocalDate
 import java.util.UUID
@@ -30,7 +28,7 @@ data class IncompleteHouseQuoteDataDto(
   val ancillaryArea: Int?,
   val yearOfConstruction: Int?,
   val numberOfBathrooms: Int?,
-  val extraBuildings: List<ExtraBuildingDTO>?,
+  val extraBuildings: List<ExtraBuilding>?,
   val isSubleted: Boolean,
   val floor: Int = 0
 ) {
@@ -45,14 +43,7 @@ data class IncompleteHouseQuoteDataDto(
         ancillaryArea = dto.ancillaryArea,
         yearOfConstruction = dto.yearOfConstruction,
         numberOfBathrooms = dto.numberOfBathrooms,
-        extraBuildings = dto.extraBuildings?.map { extraBuilding ->
-          ExtraBuildingDTO(
-            id = UUID.randomUUID(),
-            area = extraBuilding.area,
-            hasWaterConnected = extraBuilding.hasWaterConnected,
-            type = ExtraBuildingType.valueOf(extraBuilding.type)
-          )
-        },
+        extraBuildings = dto.extraBuildings,
         floor = dto.floor,
         personalNumber = dto.ssn,
         isSubleted = dto.isSubleted ?: false
