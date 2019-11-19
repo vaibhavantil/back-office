@@ -16,7 +16,7 @@ type QueryType {
   tickets (resolved: Boolean): [Ticket!]!
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
-  inventory(claimId: ID!): [InventoryItem]
+  inventory(claimId: ID!): [InventoryItem]!
   filters(categoryId: String!): [FilterSuggestion!]!
   inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
 }
@@ -97,7 +97,7 @@ type InventoryItem {
 }
 
 type PricePoint {
-  _id: String!
+  id: String!
   itemId: String!
   date: String!
   lower: Float!

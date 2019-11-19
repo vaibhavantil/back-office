@@ -3,14 +3,11 @@ package com.hedvig.backoffice.services.itemPricing;
 import com.hedvig.backoffice.services.itemPricing.dto.CategoryDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.FilterSuggestionDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.PayloadDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ItemBodyDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.PricepointDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.FilterPayloadDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchQueryDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemPricepointDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.FilterDTO;
 import java.util.List;
-import java.util.ArrayList;
 
 public class ItemPricingServiceImpl implements ItemPricingService {
 
@@ -26,22 +23,22 @@ public class ItemPricingServiceImpl implements ItemPricingService {
   }
 
   @Override
-  public ItemSearchDTO getItems(PayloadDTO payload) {
+  public ItemSearchDTO getItems(ItemSearchQueryDTO payload) {
     return this.itemPricingServiceClient.getItems(payload);
   }
 
   @Override
-  public List<PricepointDTO> getPrices(String date, List<String> ids) {
+  public List<ItemPricepointDTO> getPrices(String date, List<String> ids) {
     return this.itemPricingServiceClient.getPrices(date, ids);
   }
 
   @Override
-  public List<InventoryItemDTO> getInventory(String claimId) {
+  public List<ClaimInventoryItemDTO> getInventory(String claimId) {
     return this.itemPricingServiceClient.getInventory(claimId);
   }
 
   @Override
-  public boolean addInventoryItem(InventoryItemDTO item) {
+  public boolean addInventoryItem(ClaimInventoryItemDTO item) {
     return this.itemPricingServiceClient.addInventoryItem(item);
   }
 

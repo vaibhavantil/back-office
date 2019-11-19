@@ -4,8 +4,8 @@ import lombok.Value;
 import java.math.BigDecimal;
 
 @Value
-public class PricepointDTO {
-  String _id;
+public class ItemPricepointDTO {
+  String id;
   String itemId;
   String date;
 

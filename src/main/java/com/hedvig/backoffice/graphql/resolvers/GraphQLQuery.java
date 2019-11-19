@@ -45,9 +45,16 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final PersonnelService personnelService;
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
 
-  public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
-                      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketService ticketService,
-                      PersonnelService personnelService, AutoAnswerSuggestionService autoAnswerSuggestionService, ItemPricingService itemPricingService) {
+  public GraphQLQuery(ProductPricingService productPricingService,
+                      MemberLoader memberLoader,
+                      ClaimLoader claimLoader,
+                      AccountService accountService,
+                      MemberService memberService,
+                      TicketService ticketService,
+                      PersonnelService personnelService,
+                      AutoAnswerSuggestionService autoAnswerSuggestionService,
+                      ItemPricingService itemPricingService)
+  {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
@@ -101,24 +108,39 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return itemPricingService.getCategories();
   }
 
-  public ItemSearchDTO items(PayloadDTO payload) {
+  public ItemSearchDTO items(ItemSearchQueryDTO payload) {
     return itemPricingService.getItems(payload);
   }
 
-  public List<PricepointDTO> prices(String date, List<String> ids) {
+  public List<ItemPricepointDTO> prices(String date, List<String> ids) {
     return itemPricingService.getPrices(date, ids);
   }
 
+  public List<ClaimInventoryItemDTO> inventory(String claimId) {
+    return itemPricingService.getInventory(claimId);
+  }
+
+  public List<FilterSuggestionDTO> filters(String categoryId) {
+
+    return itemPricingService.getAllFilters(categoryId);
+  }
+
+  public List<FilterDTO> inventoryItemFilters(String inventoryItemId) {
+    return itemPricingService.getInventoryItemFilters(inventoryItemId);
+  }
+
   public TicketDto ticket(UUID  id) {
+
     return this.ticketService.getTicketById(id);
   }
 
   public TicketHistoryDto getFullTicketHistory(UUID  id) {
+
     return this.ticketService.getTicketHistory(id);
   }
 
-
   public List<TicketDto> tickets(Boolean resolved) {
+
     return ticketService.getAllTickets(resolved);
   }
 
@@ -130,17 +152,4 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       return null;
     }
   }
-
-  public List<InventoryItemDTO> inventory(String claimId) {
-    return itemPricingService.getInventory(claimId);
-  }
-
-  public List<FilterSuggestionDTO> filters(String categoryId) {
-    return itemPricingService.getAllFilters(categoryId);
-  }
-
-  public List<FilterDTO> inventoryItemFilters(String inventoryItemId) {
-    return itemPricingService.getInventoryItemFilters(inventoryItemId);
-  }
-
 }

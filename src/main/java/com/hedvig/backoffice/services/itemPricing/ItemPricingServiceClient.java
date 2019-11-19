@@ -2,15 +2,13 @@ package com.hedvig.backoffice.services.itemPricing;
 
 import com.hedvig.backoffice.services.itemPricing.dto.CategoryDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.PayloadDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ItemBodyDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.PricepointDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.FilterPayloadDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchQueryDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemPricepointDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.FilterSuggestionDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.FilterDTO;
 import java.util.List;
-import java.util.ArrayList;
+
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,19 +26,19 @@ public interface ItemPricingServiceClient {
   List<CategoryDTO> getCategories();
 
   @GetMapping("/api/v1/inventory")
-  List<InventoryItemDTO> getInventory(@RequestParam String claimId);
+  List<ClaimInventoryItemDTO> getInventory(@RequestParam String claimId);
 
   @GetMapping("/api/v1/prices")
-  List<PricepointDTO> getPrices(
+  List<ItemPricepointDTO> getPrices(
     @RequestParam String date,
     @RequestParam List<String> ids
   );
 
   @PostMapping("/api/v1/items/search")
-  ItemSearchDTO getItems(@RequestBody PayloadDTO payload);
+  ItemSearchDTO getItems(@RequestBody ItemSearchQueryDTO payload);
 
   @PostMapping("/api/v1/inventory/add")
-  boolean addInventoryItem(@RequestBody InventoryItemDTO item);
+  boolean addInventoryItem(@RequestBody ClaimInventoryItemDTO item);
 
   @PostMapping("/api/v1/inventory/remove")
   boolean removeInventoryItem(@RequestParam String inventoryItemId);

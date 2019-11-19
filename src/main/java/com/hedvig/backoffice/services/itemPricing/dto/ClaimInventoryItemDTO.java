@@ -6,7 +6,7 @@ import com.hedvig.backoffice.services.itemPricing.dto.FilterDTO;
 import java.util.List;
 
 @Value
-public class InventoryItemDTO {
+public class ClaimInventoryItemDTO {
   String inventoryItemId;
   String claimId;
   String itemName;

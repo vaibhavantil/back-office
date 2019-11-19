@@ -1,15 +1,12 @@
 package com.hedvig.backoffice.services.itemPricing;
 
-import com.google.common.collect.Lists;
-import com.hedvig.backoffice.services.itemPricing.ItemPricingServiceClient;
 import com.hedvig.backoffice.services.itemPricing.dto.CategoryDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.FilterSuggestionDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.PayloadDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchQueryDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.ItemDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.PricepointDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.FilterPayloadDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemPricepointDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.FilterDTO;
 import java.util.List;
 import java.util.ArrayList;
@@ -29,7 +26,7 @@ public class ItemPricingServiceStub implements ItemPricingService {
   }
 
   @Override
-  public ItemSearchDTO getItems(PayloadDTO payload) {
+  public ItemSearchDTO getItems(ItemSearchQueryDTO payload) {
 
     ArrayList<ItemDTO> items = new ArrayList<ItemDTO>();
 
@@ -39,27 +36,27 @@ public class ItemPricingServiceStub implements ItemPricingService {
   }
 
   @Override
-  public List<PricepointDTO> getPrices(String date, List<String> ids) {
+  public List<ItemPricepointDTO> getPrices(String date, List<String> ids) {
 
-    ArrayList<PricepointDTO> prices = new ArrayList<PricepointDTO>();
+    ArrayList<ItemPricepointDTO> prices = new ArrayList<ItemPricepointDTO>();
 
-    prices.add(new PricepointDTO("123:123", "123", "2019-06-07", new BigDecimal(6000), new BigDecimal(6010), new BigDecimal(6020)));
+    prices.add(new ItemPricepointDTO("123:123", "123", "2019-06-07", new BigDecimal(6000), new BigDecimal(6010), new BigDecimal(6020)));
 
     return prices;
   }
 
   @Override
-  public List<InventoryItemDTO> getInventory(String claimId) {
+  public List<ClaimInventoryItemDTO> getInventory(String claimId) {
 
-    ArrayList<InventoryItemDTO> inventory = new ArrayList<InventoryItemDTO>();
+    ArrayList<ClaimInventoryItemDTO> inventory = new ArrayList<ClaimInventoryItemDTO>();
 
-    inventory.add(new InventoryItemDTO("4fe5c0f3-6790-4f49-bb1b-fd7397601232", "4fe5c0f3-6790-4f49-bb1b-fd7397609442", "Samsung Something", "Mobiltelefoner", "1", new BigDecimal(5000), "Custom", null, null, null, null));
+    inventory.add(new ClaimInventoryItemDTO("4fe5c0f3-6790-4f49-bb1b-fd7397601232", "4fe5c0f3-6790-4f49-bb1b-fd7397609442", "Samsung Something", "Mobiltelefoner", "1", new BigDecimal(5000), "Custom", null, null, null, null));
 
     return inventory;
   }
 
   @Override
-  public boolean addInventoryItem(InventoryItemDTO item) {
+  public boolean addInventoryItem(ClaimInventoryItemDTO item) {
     return true;
   }
 

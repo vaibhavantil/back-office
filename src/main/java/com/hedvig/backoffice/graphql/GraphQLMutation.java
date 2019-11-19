@@ -18,7 +18,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
-import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
@@ -487,17 +487,15 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     memberService.whitelistMember(memberId, email);
     return true;
   }
-  public boolean addInventoryItem(InventoryItemDTO item) {
+  public boolean addInventoryItem(ClaimInventoryItemDTO item) {
     return itemPricingService.addInventoryItem(item);
   }
   public boolean removeInventoryItem(String inventoryItemId) {
-    boolean first_check = itemPricingService.removeInventoryItem(inventoryItemId);
+    boolean itemWasRemoved = itemPricingService.removeInventoryItem(inventoryItemId);
 
-    if (first_check == true) {
-      boolean second_check = itemPricingService.removeInventoryFilters(inventoryItemId);
-      if (second_check == true) {
-        return itemPricingService.removeInventoryItem(inventoryItemId);
-      }
+    if (itemWasRemoved) {
+      itemPricingService.removeInventoryFilters(inventoryItemId);
+      return true;
     }
     return false;
   }
