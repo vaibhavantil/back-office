@@ -1,11 +1,5 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
-import java.time.YearMonth;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
@@ -19,15 +13,22 @@ import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
+import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
+import com.hedvig.backoffice.services.itemPricing.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.tickets.TicketService;
-import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
-
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
+import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
+
+import java.time.YearMonth;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static graphql.servlet.GraphQLServlet.log;
 
@@ -39,19 +40,27 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final ClaimLoader claimLoader;
   private final AccountService accountService;
   private final MemberService memberService;
+  private final ItemPricingService itemPricingService;
   private final TicketService ticketService;
   private final PersonnelService personnelService;
-
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
 
-  public GraphQLQuery(ProductPricingService productPricingService, MemberLoader memberLoader,
-                      ClaimLoader claimLoader, AccountService accountService, MemberService memberService, TicketService ticketService,
-                      PersonnelService personnelService, AutoAnswerSuggestionService autoAnswerSuggestionService) {
+  public GraphQLQuery(ProductPricingService productPricingService,
+                      MemberLoader memberLoader,
+                      ClaimLoader claimLoader,
+                      AccountService accountService,
+                      MemberService memberService,
+                      TicketService ticketService,
+                      PersonnelService personnelService,
+                      AutoAnswerSuggestionService autoAnswerSuggestionService,
+                      ItemPricingService itemPricingService)
+  {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.accountService = accountService;
     this.memberService = memberService;
+    this.itemPricingService = itemPricingService;
     this.ticketService = ticketService;
     this.personnelService = personnelService;
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
@@ -95,16 +104,43 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       .collect(Collectors.toList());
   }
 
+  public List<CategoryDTO> categories() {
+    return itemPricingService.getCategories();
+  }
+
+  public ItemSearchDTO items(ItemSearchQueryDTO payload) {
+    return itemPricingService.getItems(payload);
+  }
+
+  public List<ItemPricepointDTO> prices(String date, List<String> ids) {
+    return itemPricingService.getPrices(date, ids);
+  }
+
+  public List<ClaimInventoryItemDTO> inventory(String claimId) {
+    return itemPricingService.getInventory(claimId);
+  }
+
+  public List<FilterSuggestionDTO> filters(String categoryId) {
+
+    return itemPricingService.getAllFilters(categoryId);
+  }
+
+  public List<FilterDTO> inventoryItemFilters(String inventoryItemId) {
+    return itemPricingService.getInventoryItemFilters(inventoryItemId);
+  }
+
   public TicketDto ticket(UUID  id) {
+
     return this.ticketService.getTicketById(id);
   }
 
   public TicketHistoryDto getFullTicketHistory(UUID  id) {
+
     return this.ticketService.getTicketHistory(id);
   }
 
-
   public List<TicketDto> tickets(Boolean resolved) {
+
     return ticketService.getAllTickets(resolved);
   }
 
