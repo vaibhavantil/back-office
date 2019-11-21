@@ -507,6 +507,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     ClaimFileCategoryDTO claimFileCategoryDTO = new ClaimFileCategoryDTO(category);
     claimsService.setClaimFileCategory(claimId, claimFileId, claimFileCategoryDTO);
     return category;
+  }
 
   public boolean addInventoryItem(ClaimInventoryItemDTO item) {
     return itemPricingService.addInventoryItem(item);
