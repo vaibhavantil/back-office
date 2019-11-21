@@ -184,6 +184,7 @@ public class ClaimsServiceImpl implements ClaimsService {
            uploadResults.getKey(),
            claimId,
            claimFile.getContentType(),
+           Instant.now(),
            claimFile.getOriginalFilename(),
            false,
            null,

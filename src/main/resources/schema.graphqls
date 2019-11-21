@@ -156,6 +156,7 @@ type FileUpload {
 type ClaimFileUpload {
   claimFileId: ID
   fileUploadUrl: URL
+  uploadedAt: Instant
   claimId: ID
   markedAsDeleted: Boolean
   category: String

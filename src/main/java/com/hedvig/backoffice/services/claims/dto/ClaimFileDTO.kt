@@ -9,6 +9,7 @@ data class ClaimFileDTO (
   val key: String,
   val claimId: String,
   val contentType: String,
+  val uploadedAt: Instant,
   val fileName: String,
   val markedAsDeleted: Boolean,
   val markedAsDeletedBy: String?,

@@ -6,6 +6,7 @@ import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
+import java.time.Instant;
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
@@ -295,6 +296,7 @@ public class ClaimsServiceStub implements ClaimsService {
         uploadResults.getKey(),
         claimId,
         claimFile.getContentType(),
+        Instant.now(),
         claimFile.getOriginalFilename(),
         false,
         null,

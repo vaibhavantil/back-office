@@ -50,6 +50,7 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
       ClaimFileUpload claimUpload = new ClaimFileUpload(
         claimFile.getClaimFileId(),
         messagesFrontendPostprocessor.processFileUrl(claimFile.getKey(), claimFile.getBucket()),
+        claimFile.getUploadedAt(),
         claimFile.getClaimId(),
         claimFile.getMarkedAsDeleted(),
         claimFile.getCategory()
