@@ -5,7 +5,7 @@ import com.hedvig.backoffice.graphql.dataloaders.AccountLoader
 import com.hedvig.backoffice.graphql.types.*
 import com.hedvig.backoffice.graphql.types.account.Account
 import com.hedvig.backoffice.graphql.types.account.NumberFailedCharges
-import com.hedvig.backoffice.services.MessagesFrontendPostprocessor
+import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.account.AccountService
 import com.hedvig.backoffice.services.meerkat.Meerkat
 import com.hedvig.backoffice.services.meerkat.dto.SanctionStatus
@@ -14,7 +14,6 @@ import com.hedvig.backoffice.services.messages.BotService
 import com.hedvig.backoffice.services.payments.PaymentService
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService
 import org.springframework.stereotype.Component
-import java.lang.NullPointerException
 import java.time.YearMonth
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -26,7 +25,7 @@ class MemberResolver(
   private val meerkat: Meerkat,
   private val accountLoader: AccountLoader,
   private val botService: BotService,
-  private val messagesFrontendPostprocessor: MessagesFrontendPostprocessor,
+  private val uploadedFilePostprocessor: UploadedFilePostprocessor,
   private val memberService: MemberService,
   private val accountService: AccountService
 ) : GraphQLResolver<Member> {
@@ -66,7 +65,7 @@ class MemberResolver(
 
     for (fileUploadDTO in fileUploadDTOS) {
       val fileUpload = FileUpload(
-        fileUploadUrl = messagesFrontendPostprocessor.processFileUrl(fileUploadDTO.fileUploadKey),
+        fileUploadUrl = uploadedFilePostprocessor.processFileUrl(fileUploadDTO.fileUploadKey),
         timestamp = fileUploadDTO.timestamp,
         mimeType = fileUploadDTO.mimeType,
         memberId = fileUploadDTO.memberId

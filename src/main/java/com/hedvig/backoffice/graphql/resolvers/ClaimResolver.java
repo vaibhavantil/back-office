@@ -8,7 +8,7 @@ import com.hedvig.backoffice.graphql.types.claims.*;
 import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.ClaimFileUpload;
 import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.services.MessagesFrontendPostprocessor;
+import com.hedvig.backoffice.services.UploadedFilePostprocessor;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.ArrayList;
@@ -21,14 +21,14 @@ import java.util.concurrent.CompletableFuture;
 public class ClaimResolver implements GraphQLResolver<Claim> {
 
   private final MemberLoader memberLoader;
-  private final MessagesFrontendPostprocessor messagesFrontendPostprocessor;
+  private final UploadedFilePostprocessor uploadedFilePostprocessor;
   private final ClaimsService claimsService;
 
   public ClaimResolver(MemberLoader memberLoader,
-                       MessagesFrontendPostprocessor messagesFrontendPostprocessor,
+                       UploadedFilePostprocessor uploadedFilePostprocessor,
                        ClaimsService claimsService) {
     this.memberLoader = memberLoader;
-    this.messagesFrontendPostprocessor = messagesFrontendPostprocessor;
+    this.uploadedFilePostprocessor = uploadedFilePostprocessor;
     this.claimsService = claimsService;
   }
 
@@ -49,7 +49,7 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
     claimFiles.forEach(claimFile -> {
       ClaimFileUpload claimUpload = new ClaimFileUpload(
         claimFile.getClaimFileId(),
-        messagesFrontendPostprocessor.processFileUrl(claimFile.getKey(), claimFile.getBucket()),
+        uploadedFilePostprocessor.processFileUrl(claimFile.getKey(), claimFile.getBucket()),
         claimFile.getUploadedAt(),
         claimFile.getClaimId(),
         claimFile.getMarkedAsDeleted(),

@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.ObjectTagging
 import com.amazonaws.services.s3.model.PutObjectRequest
 import com.amazonaws.services.s3.model.Tag
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 import java.util.*
@@ -16,7 +17,7 @@ data class UploadResult (
 
 @Service
 data class UploadClaimFiles(
-  val claimsBucket: String = "com-hedvig-claims-files",
+  @Value("\${claims.bucketName}") val claimsBucket: String,
   val s3Client: AmazonS3Client
 ) {
 
