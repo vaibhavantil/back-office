@@ -21,7 +21,11 @@ data class UploadClaimFiles(
 ) {
 
   fun uploadClaimFilesToS3Bucket(
-    contentType: String, data: ByteArray, claimId: String, fileName: String, memberId: String): UploadResult {
+    contentType: String,
+    data: ByteArray,
+    claimId: String,
+    fileName: String,
+    memberId: String): UploadResult {
     val metadata = ObjectMetadata()
     metadata.contentType = contentType
     metadata.contentLength = data.size.toLong()

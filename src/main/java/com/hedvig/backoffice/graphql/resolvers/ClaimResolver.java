@@ -57,7 +57,6 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
       );
         claimFileUploads.add(claimUpload);
     });
-
     return claimFileUploads;
   }
 

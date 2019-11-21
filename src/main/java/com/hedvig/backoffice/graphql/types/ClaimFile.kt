@@ -33,7 +33,6 @@ data class ClaimFile (
         dto.category
       )
     }
-
   }
 }
 

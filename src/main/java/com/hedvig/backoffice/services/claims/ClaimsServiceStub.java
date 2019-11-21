@@ -309,13 +309,13 @@ public class ClaimsServiceStub implements ClaimsService {
   }
 
   @Override
-  public void markClaimFileAsDeleted(String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
-
+  public void markClaimFileAsDeleted(
+    String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
   }
 
   @Override
-  public void setClaimFileCategory(String claimId, UUID claimFileId, ClaimFileCategoryDTO category) {
-
+  public void setClaimFileCategory(
+    String claimId, UUID claimFileId, ClaimFileCategoryDTO category) {
   }
 
   private void addEvent(Claim claim, String message) {

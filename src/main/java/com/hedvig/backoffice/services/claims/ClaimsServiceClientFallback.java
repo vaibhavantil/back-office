@@ -120,13 +120,15 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   }
 
   @Override
-  public ResponseEntity<Void> markClaimFileAsDeleted(String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
+  public ResponseEntity<Void> markClaimFileAsDeleted(
+    String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
     log.error("request to claim-service failed");
     return null;
   }
 
   @Override
-  public ResponseEntity<Void> setClaimFileCategory(String claimId, UUID claimFileId, ClaimFileCategoryDTO dto) {
+  public ResponseEntity<Void> setClaimFileCategory(
+    String claimId, UUID claimFileId, ClaimFileCategoryDTO dto) {
     return null;
   }
 
