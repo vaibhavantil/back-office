@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort
 
 interface MemberService {
 
-    fun search(status: MemberStatus, query: String, token: String): List<MemberDTO>
+    fun search(status: MemberStatus?, query: String, token: String): List<MemberDTO>
 
     fun searchPaged(
       status: MemberStatus?,
