@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ClaimsService {
@@ -47,12 +45,10 @@ public interface ClaimsService {
 
   void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token);
 
-  ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(String claimId);
-
   ResponseEntity<Void> uploadClaimsFiles(String claimId, MultipartFile[] claimFiles,
                                          String memberId) throws IOException;
 
-  void markClaimFileAsDeleted(String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy);
+  void markClaimFileAsDeleted(String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy);
 
-  void setClaimFileCategory(String claimId, String claimFileId, ClaimFileCategoryDTO category);
+  void setClaimFileCategory(String claimId, UUID claimFileId, ClaimFileCategoryDTO category);
 }

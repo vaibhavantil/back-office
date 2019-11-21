@@ -6,7 +6,6 @@ import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
-import java.time.Instant;
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
@@ -282,71 +281,21 @@ public class ClaimsServiceStub implements ClaimsService {
   }
 
   @Override
-  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(String claimId) {
-
-    List claimUploads = new ArrayList<>();
-
-    claimUploads.add( new ClaimFileDTO(
-      "123",
-      "com-hedvig-claims-files",
-      "claim65fcf30d-491f-4e5a-88d5-abfbfc83edf4test74.jpg",
-      claimId,
-      "",
-      new byte[0],
-      "testFile123",
-      UUID.randomUUID(),
-      "123l",
-      Long.parseLong("12345"),
-      "12345",
-      false,
-      null,
-      null,
-      "receipt"
-    ));
-
-    claimUploads.add( new ClaimFileDTO(
-      "123",
-      "com-hedvig-claims-files",
-      "claime0ede8d4-2c23-4329-beda-d14e96ff1279picture.html",
-      claimId,
-      "",
-      new byte[0],
-      "testFile321",
-      UUID.randomUUID(),
-      "123l",
-      Long.parseLong("5643"),
-      "12345",
-      false,
-      "alexandra@hedvig.com",
-      Instant.now(),
-      null
-    ));
-
-    ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimUploads);
-    return ResponseEntity.ok(claimsFilesUploadDTO);
-  }
-
-  @Override
   public ResponseEntity<Void> uploadClaimsFiles(String claimId, MultipartFile[] claimFiles,
                                                 String memberId) throws IOException {
     ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
 
     for (MultipartFile claimFile : claimFiles) {
       val uploadResults = uploadClaimFiles.uploadClaimFilesToS3Bucket(claimFile.getContentType(),
-        claimFile.getBytes(), claimId, claimFile.getOriginalFilename());
+        claimFile.getBytes(), claimId, claimFile.getOriginalFilename(), memberId);
 
       ClaimFileDTO claimFileDTO = new ClaimFileDTO(
-        "123",
+        UUID.randomUUID(),
         uploadResults.getBucket(),
         uploadResults.getKey(),
         claimId,
         claimFile.getContentType(),
-        claimFile.getBytes(),
         claimFile.getOriginalFilename(),
-        UUID.randomUUID(),
-        "",
-        claimFile.getSize(),
-        memberId,
         false,
         null,
         null,
@@ -358,12 +307,12 @@ public class ClaimsServiceStub implements ClaimsService {
   }
 
   @Override
-  public void markClaimFileAsDeleted(String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
+  public void markClaimFileAsDeleted(String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
 
   }
 
   @Override
-  public void setClaimFileCategory(String claimId, String claimFileId, ClaimFileCategoryDTO category) {
+  public void setClaimFileCategory(String claimId, UUID claimFileId, ClaimFileCategoryDTO category) {
 
   }
 

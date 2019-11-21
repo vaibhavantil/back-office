@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.claims.dto;
 
 import com.hedvig.backoffice.services.claims.ClaimState;
 
+import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,4 +30,5 @@ public class Claim extends ClaimBackOffice {
   private List<ClaimData> data;
 
   private boolean coveringEmployee;
+  public List<ClaimFileDTO> claimFiles = new ArrayList<>();
 }

@@ -3,17 +3,16 @@ package com.hedvig.backoffice.graphql.resolvers;
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.hedvig.backoffice.graphql.Util;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
+import com.hedvig.backoffice.graphql.types.ClaimFile;
 import com.hedvig.backoffice.graphql.types.claims.*;
 import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.ClaimFileUpload;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.services.MessagesFrontendPostprocessor;
 import com.hedvig.backoffice.services.claims.ClaimsService;
-import com.hedvig.backoffice.services.claims.dto.ClaimFileDTO;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
@@ -38,24 +37,26 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
   }
 
   public List<ClaimFileUpload> getClaimFiles(Claim claim) {
-    String claimId = claim.getId().toString();
-    val claimFiles = claimsService.allClaimsFiles(claimId);
-
-    List<ClaimFileDTO> claimFileDTOS = claimFiles.getBody().getClaimsFiles();
 
     List<ClaimFileUpload> claimFileUploads = new ArrayList<>();
 
-    if(claimFileDTOS.isEmpty()) return claimFileUploads;
+    List<ClaimFile> claimFiles = claim.claimFiles;
 
-    claimFileDTOS.forEach(claimFile -> {
+    if (claimFiles.isEmpty()) {
+      return claimFileUploads;
+    }
+
+    claimFiles.forEach(claimFile -> {
       ClaimFileUpload claimUpload = new ClaimFileUpload(
         claimFile.getClaimFileId(),
         messagesFrontendPostprocessor.processFileUrl(claimFile.getKey(), claimFile.getBucket()),
-        claimFile.getClaimId(), claimFile.getMarkedAsDeleted(), claimFile.getCategory()
+        claimFile.getClaimId(),
+        claimFile.getMarkedAsDeleted(),
+        claimFile.getCategory()
       );
-      claimFileUploads.add(claimUpload);
-      }
-    );
+        claimFileUploads.add(claimUpload);
+    });
+
     return claimFileUploads;
   }
 

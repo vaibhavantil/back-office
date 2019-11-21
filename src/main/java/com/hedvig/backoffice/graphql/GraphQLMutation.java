@@ -485,7 +485,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public Boolean markClaimFileAsDeleted(
     String claimId,
-    String claimFileId,
+    UUID claimFileId,
     DataFetchingEnvironment env
   ) {
     String email = getUserIdentity(env);
@@ -496,7 +496,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public String setClaimFileCategory(
     String claimId,
-    String claimFileId,
+    UUID claimFileId,
     String category,
     DataFetchingEnvironment env) {
     ClaimFileCategoryDTO claimFileCategoryDTO = new ClaimFileCategoryDTO(category);

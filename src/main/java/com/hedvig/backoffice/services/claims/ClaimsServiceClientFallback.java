@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.services.claims.dto.*;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -113,31 +114,25 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   }
 
   @Override
-  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(String claimId) {
-    log.error("request to claim-service failed");
-    return null;
-  }
-
-  @Override
-  public ResponseEntity<ClaimFileDTO> claimFileById(String claimFileId) {
-    log.error("request to claim-service failed");
-    return null;
-  }
-
-  @Override
   public ResponseEntity<Void> uploadClaimsFiles(ClaimsFilesUploadDTO dto) {
     log.error("request to claim-service failed");
     return null;
   }
 
   @Override
-  public ResponseEntity<Void> markClaimFileAsDeleted(String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
+  public ResponseEntity<Void> markClaimFileAsDeleted(String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
     log.error("request to claim-service failed");
     return null;
   }
 
   @Override
-  public ResponseEntity<Void> setClaimFileCategory(String claimId, String claimFileId, ClaimFileCategoryDTO dto) {
+  public ResponseEntity<Void> setClaimFileCategory(String claimId, UUID claimFileId, ClaimFileCategoryDTO dto) {
+    return null;
+  }
+
+  @Override
+  public ResponseEntity<Claim> getClaimById(String claimId) {
+    log.error("request to claim-service failed");
     return null;
   }
 }

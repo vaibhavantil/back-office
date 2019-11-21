@@ -31,9 +31,11 @@ public class ClaimsServiceImpl implements ClaimsService {
 
   @Autowired
   public ClaimsServiceImpl(
-    ClaimsServiceClient client, AmazonS3 amazonS3,
+    ClaimsServiceClient client,
+    AmazonS3 amazonS3,
     @Value("${claims.bucketName}") String bucketName,
-    UploadClaimFiles uploadClaimFiles) {
+    UploadClaimFiles uploadClaimFiles
+  ) {
     this.client = client;
     this.amazonS3 = amazonS3;
     this.bucketName = bucketName;
@@ -165,33 +167,24 @@ public class ClaimsServiceImpl implements ClaimsService {
   }
 
   @Override
-  public ResponseEntity<ClaimsFilesUploadDTO> allClaimsFiles(String claimId) {
-    return client.allClaimsFiles(claimId);
-  }
-
-  @Override
   public ResponseEntity<Void> uploadClaimsFiles(
     String claimId, MultipartFile[] claimFiles, String memberId) throws IOException {
-    ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
-    ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimFileDtos);
+
+      ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
+      ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimFileDtos);
 
        for (MultipartFile claimFile : claimFiles) {
          val uploadResults =
            uploadClaimFiles.uploadClaimFilesToS3Bucket(claimFile.getContentType(),
-           claimFile.getBytes(), claimId, claimFile.getOriginalFilename());
+           claimFile.getBytes(), claimId, claimFile.getOriginalFilename(), memberId);
 
          ClaimFileDTO claimFileDTO = new ClaimFileDTO(
-           "123",
+           UUID.randomUUID(),
            uploadResults.getBucket(),
            uploadResults.getKey(),
            claimId,
            claimFile.getContentType(),
-           claimFile.getBytes(),
            claimFile.getOriginalFilename(),
-           UUID.randomUUID(),
-           "",
-           claimFile.getSize(),
-           memberId,
            false,
            null,
            null,
@@ -204,27 +197,35 @@ public class ClaimsServiceImpl implements ClaimsService {
 
   @Override
   public void markClaimFileAsDeleted(
-    String claimId, String claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
+    String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
     findClaimFileOrThrowException(claimFileId, claimId);
 
     this.client.markClaimFileAsDeleted(claimId, claimFileId, deletedBy);
   }
 
   @Override
-  public void setClaimFileCategory(String claimId, String claimFileId, ClaimFileCategoryDTO category) {
+  public void setClaimFileCategory(String claimId, UUID claimFileId, ClaimFileCategoryDTO category) {
     findClaimFileOrThrowException(claimFileId, claimId);
 
     this.client.setClaimFileCategory(claimId, claimFileId, category);
   }
 
-  private ClaimFileDTO findClaimFileOrThrowException(String claimFileId, String claimId) {
-    ClaimFileDTO claimFile = this.client.claimFileById(claimFileId).getBody();
+  private ClaimFileDTO findClaimFileOrThrowException(UUID claimFileId, String claimId) {
+    Claim claim = this.client.getClaimById(claimId).getBody();
 
-    if(claimFile == null)  {
+    if(claim == null)  {
+      throw new RuntimeException(
+        "no claim can be found for claim id" + claimId);
+    }
+
+    val optionalClaimFileDTO = claim.claimFiles.stream()
+      .filter(claimFile -> claimFile.getClaimFileId().equals(claimFileId)).findAny();
+
+    if (!optionalClaimFileDTO.isPresent()) {
       throw new RuntimeException(
         "no claim file can be found with id " + claimFileId + "for claim " + claimId);
     }
-    return claimFile;
+    return optionalClaimFileDTO.get();
   }
 
   private String signAudioUrl(String audioUrl) {
