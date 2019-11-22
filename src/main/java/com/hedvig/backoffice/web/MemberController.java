@@ -3,13 +3,25 @@ package com.hedvig.backoffice.web;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
+import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
-
+import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
+import com.hedvig.backoffice.web.dto.InsuranceSearchResultWebDTO;
+import com.hedvig.backoffice.web.dto.InsuranceStatusWebDTO;
+import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
+import com.hedvig.backoffice.web.dto.MemberSearchResultWebDTO;
+import com.hedvig.backoffice.web.dto.MemberStatus;
+import com.hedvig.backoffice.web.dto.MemberWebDTO;
+import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
+import com.hedvig.backoffice.web.dto.ProductSortColumns;
+import com.hedvig.backoffice.web.dto.ProductState;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.ZoneId;
@@ -17,20 +29,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-
-import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
-import com.hedvig.backoffice.web.dto.InsuranceSearchResultWebDTO;
-import com.hedvig.backoffice.web.dto.InsuranceStatusWebDTO;
-import com.hedvig.backoffice.web.dto.MemberSearchResultWebDTO;
-import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
-import com.hedvig.backoffice.web.dto.MemberStatus;
-import com.hedvig.backoffice.web.dto.MemberWebDTO;
-import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
-import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
-import com.hedvig.backoffice.web.dto.ProductSortColumns;
-import com.hedvig.backoffice.web.dto.ProductState;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -59,9 +57,9 @@ public class MemberController {
 
   @Autowired
   public MemberController(
-      MemberService memberService,
-      ProductPricingService productPricingService,
-      PersonnelService personnelService) {
+    MemberService memberService,
+    ProductPricingService productPricingService,
+    PersonnelService personnelService) {
     this.memberService = memberService;
     this.productPricingService = productPricingService;
     this.personnelService = personnelService;
@@ -78,28 +76,28 @@ public class MemberController {
 
   @GetMapping("/{memberId}")
   public MemberWebDTO findOne(
-      @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+    @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
     return Optional.ofNullable(
-            memberService.findByMemberId(
-                memberId, personnelService.getIdToken(principal.getName())))
+      memberService.findByMemberId(
+        memberId, personnelService.getIdToken(principal.getName())))
       .map(MemberWebDTO::new)
       .orElseThrow(() -> new ExternalServiceException("member-service not available"));
   }
 
   @PostMapping("/{memberId}/edit")
   public ResponseEntity<?> editMember(
-      @PathVariable String memberId,
-      @RequestBody MemberWebDTO dto,
-      @AuthenticationPrincipal Principal principal) {
+    @PathVariable String memberId,
+    @RequestBody MemberWebDTO dto,
+    @AuthenticationPrincipal Principal principal) {
     memberService.editMember(memberId, dto.convertToMemberDTO(), personnelService.getIdToken(principal.getName()));
     return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/search")
   public List<MemberWebDTO> search(
-      @RequestParam(name = "status", required = false) MemberStatus status,
-      @RequestParam(name = "query", defaultValue = "", required = false) String query,
-      @AuthenticationPrincipal Principal principal) {
+    @RequestParam(name = "status", required = false) MemberStatus status,
+    @RequestParam(name = "query", defaultValue = "", required = false) String query,
+    @AuthenticationPrincipal Principal principal) {
     return memberService.search(status, query, personnelService.getIdToken(principal.getName())).stream()
       .map(MemberWebDTO::new)
       .collect(Collectors.toList());
@@ -121,14 +119,14 @@ public class MemberController {
   }
 
   @RequestMapping(
-      path = "/mandate/{memberId}",
-      method = RequestMethod.GET,
-      produces = MediaType.APPLICATION_PDF_VALUE)
+    path = "/mandate/{memberId}",
+    method = RequestMethod.GET,
+    produces = MediaType.APPLICATION_PDF_VALUE)
   public ResponseEntity<byte[]> insuranceMandate(
-      @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+    @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
     val mandate =
-        productPricingService.insuranceContract(
-            memberId, personnelService.getIdToken(principal.getName()));
+      productPricingService.insuranceContract(
+        memberId, personnelService.getIdToken(principal.getName()));
     val headers = new HttpHeaders();
     val filename = "insurance-mandate-" + memberId + ".pdf";
     headers.setContentDispositionFormData(filename, filename);
@@ -138,7 +136,7 @@ public class MemberController {
 
   @GetMapping("/insurance/{memberId}")
   public InsuranceStatusWebDTO insurance(
-      @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+    @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
     InsuranceStatusDTO insurance = productPricingService.insurance(
       memberId, personnelService.getIdToken(principal.getName()));
     return new InsuranceStatusWebDTO(insurance);
@@ -146,18 +144,18 @@ public class MemberController {
 
   @PostMapping("/insurance/{memberId}/activate")
   public ResponseEntity<?> activate(
-      @PathVariable String memberId,
-      @RequestBody InsuranceActivateDTO dto,
-      @AuthenticationPrincipal Principal principal) {
+    @PathVariable String memberId,
+    @RequestBody InsuranceActivateDTO dto,
+    @AuthenticationPrincipal Principal principal) {
     productPricingService.activate(memberId, dto, personnelService.getIdToken(principal.getName()));
     return ResponseEntity.noContent().build();
   }
 
   @PostMapping("/insurance/{hid}/cancel")
   public ResponseEntity<?> cancel(
-      @PathVariable String hid,
-      @RequestBody InsuranceCancellationDTO dto,
-      @AuthenticationPrincipal Principal principal) {
+    @PathVariable String hid,
+    @RequestBody InsuranceCancellationDTO dto,
+    @AuthenticationPrincipal Principal principal) {
     InsuranceCancellationDateDTO sendDto = new InsuranceCancellationDateDTO(
       dto.getMemberId(), dto.getInsuranceId(),
       dto.getCancellationDate().atStartOfDay(ZoneId.of("Europe/Stockholm")).toInstant());
@@ -167,9 +165,9 @@ public class MemberController {
 
   @GetMapping("/insurance/search")
   public List<InsuranceStatusWebDTO> searchInsurance(
-      @RequestParam(name = "state", required = false) ProductState state,
-      @RequestParam(name = "query", defaultValue = "", required = false) String query,
-      @AuthenticationPrincipal Principal principal) {
+    @RequestParam(name = "state", required = false) ProductState state,
+    @RequestParam(name = "query", defaultValue = "", required = false) String query,
+    @AuthenticationPrincipal Principal principal) {
     return productPricingService.search(state, query, personnelService.getIdToken(principal.getName()))
       .stream()
       .map(InsuranceStatusWebDTO::new)
@@ -194,7 +192,7 @@ public class MemberController {
 
   @GetMapping("/insurance/{memberId}/insurances")
   public List<InsuranceStatusWebDTO> getInsurancesByMember(
-      @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+    @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
     return productPricingService.getInsurancesByMember(memberId, personnelService.getIdToken(principal.getName()))
       .stream()
       .map(InsuranceStatusWebDTO::new)
@@ -203,25 +201,25 @@ public class MemberController {
 
   @PostMapping("/insurance/{memberId}/sendCancellationEmail")
   public ResponseEntity<?> sendCancellationEmail(
-      @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
+    @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
     productPricingService.sendCancellationEmail(
-        memberId, personnelService.getIdToken(principal.getName()));
+      memberId, personnelService.getIdToken(principal.getName()));
     return ResponseEntity.noContent().build();
   }
 
   @PostMapping("/insurance/{memberId}/certificate")
   public ResponseEntity<?> insuranceCertificate(
-      @PathVariable String memberId,
-      @RequestParam MultipartFile file,
-      @AuthenticationPrincipal Principal principal)
-      throws IOException {
+    @PathVariable String memberId,
+    @RequestParam MultipartFile file,
+    @AuthenticationPrincipal Principal principal)
+    throws IOException {
     byte[] data = file.getBytes();
     productPricingService.uploadCertificate(
-        memberId,
-        file.getOriginalFilename(),
-        file.getContentType(),
-        data,
-        personnelService.getIdToken(principal.getName()));
+      memberId,
+      file.getOriginalFilename(),
+      file.getContentType(),
+      data,
+      personnelService.getIdToken(principal.getName()));
     return ResponseEntity.noContent().build();
   }
 
@@ -241,18 +239,18 @@ public class MemberController {
 
   @PostMapping("/insurance/{memberId}/createmodifiedProduct")
   public ResponseEntity<InsuranceStatusWebDTO> createmodifiedProduct(
-      @PathVariable("memberId") String memberId,
-      @RequestBody @Valid InsuranceModificationDTO changeRequest,
-      @AuthenticationPrincipal Principal principal) {
+    @PathVariable("memberId") String memberId,
+    @RequestBody @Valid InsuranceModificationDTO changeRequest,
+    @AuthenticationPrincipal Principal principal) {
     InsuranceStatusDTO insurance = productPricingService.createmodifiedProduct(memberId, changeRequest, principal.getName());
     return ResponseEntity.ok(new InsuranceStatusWebDTO(insurance));
   }
 
   @PostMapping("/insurance/{memberId}/modifyProduct")
   public ResponseEntity<?> modifyProduct(
-      @PathVariable("memberId") String memberId,
-      @RequestBody ModifyInsuranceRequestDTO request,
-      @AuthenticationPrincipal Principal principal) {
+    @PathVariable("memberId") String memberId,
+    @RequestBody ModifyInsuranceRequestDTO request,
+    @AuthenticationPrincipal Principal principal) {
     productPricingService.modifyProduct(memberId, request, principal.getName());
     return ResponseEntity.noContent().build();
   }

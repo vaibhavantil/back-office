@@ -83,6 +83,10 @@ productPricing:
   baseUrl: http://localhost:4085
   stub: false
 
+underwriter:
+  baseUrl: http://localhost:5698
+  stub: false
+
 paymentService:
   baseUrl: http://localhost:8086
   stub: false

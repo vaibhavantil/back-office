@@ -4,10 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
-import com.hedvig.backoffice.services.product_pricing.dto.*;
-import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
+import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
@@ -38,9 +43,8 @@ import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 
-
-import static java.util.Comparator.nullsLast;
 import static java.util.Comparator.nullsFirst;
+import static java.util.Comparator.nullsLast;
 
 @Slf4j
 public class ProductPricingServiceStub implements ProductPricingService {
@@ -276,7 +280,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
           null,
           null,
           null
-          );
+        );
 
       insurances.add(updated);
 
