@@ -7,6 +7,7 @@ import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import java.time.Instant;
+import com.hedvig.backoffice.web.dto.MemberStatus;
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
@@ -53,7 +54,7 @@ public class ClaimsServiceStub implements ClaimsService {
       throw new UncheckedIOException(e);
     }
 
-    List<String> memberIds = memberService.search(null, "", settingsService.getInternalAccessToken()).stream()
+    List<String> memberIds = memberService.search(MemberStatus.SIGNED, "", settingsService.getInternalAccessToken()).stream()
       .map(o -> o.getMemberId() + "").collect(Collectors.toList());
 
     claims = IntStream.range(0, 10).mapToObj(i -> {
