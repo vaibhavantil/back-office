@@ -78,6 +78,7 @@ data class QuoteDto(
   val startDate: LocalDate? = null,
   val validity: Long,
   val memberId: String? = null,
+  val breachedUnderwritingGuidelines: List<String>?,
   val isComplete: Boolean,
   val signedProductId: UUID?,
   val originatingProductId: UUID?

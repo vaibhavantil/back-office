@@ -48,7 +48,7 @@ class UnderwriterServiceImpl(
     logger.info("Created quote ${createdQuote.id} for member $memberId, trying to complete it")
 
     try {
-      underwriterClient.completeQuote(createdQuote.id)
+      underwriterClient.completeQuote(createdQuote.id, null)
     } catch (e: FeignException) {
       logger.error("Failed to complete quote ${createdQuote.id}", e)
       // noop
@@ -57,21 +57,11 @@ class UnderwriterServiceImpl(
     return createdQuote
   }
 
-  override fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto): QuoteDto {
+  override fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto, underwritingGuidelinesBypassedBy: String?): QuoteDto {
     logger.info("Updating quote $quoteId")
-    val updatedQuote = underwriterClient.updateQuote(quoteId, quoteDto)
+    val updatedQuote = underwriterClient.updateQuote(quoteId, quoteDto, underwritingGuidelinesBypassedBy)
     logger.info("Successfully updated quote $quoteId")
-    if (!updatedQuote.isComplete) {
-      logger.info("Quote updated but was incomplete, trying to complete it")
-      try {
-        underwriterClient.completeQuote(quoteId)
-      } catch (e: FeignException) {
-        logger.error("Failed to complete updated quote", e)
-        // Noop
-      }
 
-      return updatedQuote
-    }
     return underwriterClient.getQuote(quoteId)
   }
 

@@ -9,7 +9,7 @@ import java.util.UUID
 
 interface UnderwriterService {
   fun createAndCompleteQuote(memberId: String, quoteDto: CreateQuoteFromProductDto): QuoteResponseDto
-  fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto): QuoteDto
+  fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto, underwritingGuidelinesBypassedBy: String?): QuoteDto
   fun activateQuote(quoteId: UUID, activationDate: LocalDate?, terminationDate: LocalDate?): QuoteDto
   fun getQuotes(memberId: String): List<QuoteDto>
   fun getQuote(id: UUID): QuoteDto
