@@ -26,7 +26,6 @@ public class Claim {
   List<ClaimEvent> events;
   List<ClaimData> _claimData;
   boolean coveringEmployee;
-  public List<ClaimFile> claimFiles;
 
   public static Claim fromDTO(com.hedvig.backoffice.services.claims.dto.Claim dto) {
     return new Claim(UUID.fromString(dto.getId()), dto.getAudioURL(),
@@ -46,10 +45,7 @@ public class Claim {
       dto.getEvents().stream().map(eventDto -> ClaimEvent.fromDTO(eventDto))
         .collect(Collectors.toList()),
       dto.getData(),
-      dto.isCoveringEmployee(),
-      dto.getClaimFiles().stream().map(ClaimFile.Companion::fromDTO)
-        .collect(Collectors.toList()
-      ));
+      dto.isCoveringEmployee());
   }
 
 }
