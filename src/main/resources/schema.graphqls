@@ -50,7 +50,7 @@ type MutationType {
   activateQuote(id: ID!, activationDate: LocalDate!, terminationDate: LocalDate): Quote!
   # Creates a quote from a product and returns the quote id
   createQuoteFromProduct(memberId: ID!, quoteData: QuoteFromProductInput!): Quote!
-  updateQuote(quoteId: ID!, quoteData: QuoteInput!): Quote!
+  updateQuote(quoteId: ID!, quoteData: QuoteInput!, bypassUnderwritingGuidelines: Boolean): Quote!
 }
 
 type Suggestion {
@@ -271,6 +271,7 @@ type Quote {
   startDate: String
   validity: Int
   memberId: ID
+  breachedUnderwritingGuidelines: [String!]
   isComplete: Boolean
   data: QuoteData
   signedProductId: ID

@@ -409,8 +409,17 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return Quote.from(underwriterService.getQuote(createdQuoteId));
   }
 
-  public Quote updateQuote(final UUID quoteId, final QuoteInput quoteInput) {
-    return Quote.from(underwriterService.updateQuote(quoteId, QuoteInputDto.from(quoteInput)));
+  public Quote updateQuote(
+    final UUID quoteId,
+    final QuoteInput quoteInput,
+    final boolean bypassUnderwritingGuidelines,
+    final DataFetchingEnvironment env
+  ) {
+    return Quote.from(underwriterService.updateQuote(
+      quoteId,
+      QuoteInputDto.from(quoteInput),
+      bypassUnderwritingGuidelines ? getUserIdentity(env) : null
+    ));
   }
 
   UUID createTicket(

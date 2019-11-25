@@ -45,6 +45,7 @@ data class Quote(
   val startDate: LocalDate? = null,
   val validity: Long,
   val memberId: String? = null,
+  val breachedUnderwritingGuidelines: List<String>?,
   val isComplete: Boolean,
   val signedProductId: UUID?,
   val originatingProductId: UUID?
@@ -104,6 +105,7 @@ data class Quote(
         createdAt = quote.createdAt,
         validity = quote.validity,
         isComplete = quote.isComplete,
+        breachedUnderwritingGuidelines = quote.breachedUnderwritingGuidelines,
         originatingProductId = quote.originatingProductId,
         signedProductId = quote.signedProductId
       )
