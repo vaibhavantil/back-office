@@ -11,6 +11,7 @@ import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
 import feign.FeignException
+import io.sentry.Sentry
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory.getLogger
 import java.time.LocalDate
@@ -61,6 +62,17 @@ class UnderwriterServiceImpl(
     logger.info("Updating quote $quoteId")
     val updatedQuote = underwriterClient.updateQuote(quoteId, quoteDto, underwritingGuidelinesBypassedBy)
     logger.info("Successfully updated quote $quoteId")
+
+    if (!updatedQuote.isComplete) {
+      logger.info("Quote updated but was incomplete, trying to complete it")
+      try {
+        underwriterClient.completeQuote(quoteId, underwritingGuidelinesBypassedBy)
+      } catch (e: FeignException) {
+        logger.error("Failed to complete updated quote", e)
+        Sentry.capture(e)
+        // Noop
+      }
+    }
 
     return underwriterClient.getQuote(quoteId)
   }
