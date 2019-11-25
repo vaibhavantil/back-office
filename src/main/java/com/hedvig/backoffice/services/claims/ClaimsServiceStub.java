@@ -6,7 +6,6 @@ import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
-import java.time.Instant;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
@@ -25,8 +24,6 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
@@ -36,14 +33,8 @@ public class ClaimsServiceStub implements ClaimsService {
 
   private List<Claim> claims;
   private List<ClaimType> types;
-  private UploadClaimFiles uploadClaimFiles;
 
-  public ClaimsServiceStub(
-    MemberService memberService,
-    SystemSettingsService settingsService,
-    UploadClaimFiles uploadClaimFiles
-  ) {
-    this.uploadClaimFiles = uploadClaimFiles;
+  public ClaimsServiceStub(MemberService memberService, SystemSettingsService settingsService) {
     long minSignedOnDay = LocalDate.of(2011, 1, 3).toEpochDay();
     long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
     try {
@@ -284,43 +275,6 @@ public class ClaimsServiceStub implements ClaimsService {
   public void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token) {
     Claim c = find(dto.getClaimId(), token);
     c.setCoveringEmployee(dto.isCoveringEmployee());
-  }
-
-  @Override
-  public ResponseEntity<Void> uploadClaimsFiles(
-    String claimId,
-    MultipartFile[] claimFiles,
-    String memberId
-  ) throws IOException {
-    ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
-
-    for (MultipartFile claimFile : claimFiles) {
-      val uploadResults = uploadClaimFiles.uploadClaimFilesToS3Bucket(claimFile.getContentType(),
-        claimFile.getBytes(), claimId, claimFile.getOriginalFilename(), memberId);
-
-      ClaimFileDTO claimFileDTO = new ClaimFileDTO(
-        UUID.randomUUID(),
-        uploadResults.getBucket(),
-        uploadResults.getKey(),
-        claimId,
-        claimFile.getContentType(),
-        Instant.now(),
-        claimFile.getOriginalFilename(),
-        null
-      );
-      claimFileDtos.add(claimFileDTO);
-    }
-    return ResponseEntity.noContent().build();
-  }
-
-  @Override
-  public void markClaimFileAsDeleted(
-    String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
-  }
-
-  @Override
-  public void setClaimFileCategory(
-    String claimId, UUID claimFileId, ClaimFileCategoryDTO category) {
   }
 
   private void addEvent(Claim claim, String message) {

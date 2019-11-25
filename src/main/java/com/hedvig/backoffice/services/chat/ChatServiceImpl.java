@@ -7,7 +7,7 @@ import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.Subscription;
 import com.hedvig.backoffice.repository.ChatContextRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
-import com.hedvig.backoffice.services.UploadedFilePostprocessor;
+import com.hedvig.backoffice.services.MessagesFrontendPostprocessor;
 import com.hedvig.backoffice.services.chat.data.Message;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.members.MemberService;
@@ -44,7 +44,7 @@ public class ChatServiceImpl implements ChatService {
 
   private final NotificationService notificationService;
 
-  private final UploadedFilePostprocessor messagePostProcessor;
+  private final MessagesFrontendPostprocessor messagePostProcessor;
 
   public ChatServiceImpl(
     SimpMessagingTemplate simpMessagingTemplate,
@@ -55,7 +55,7 @@ public class ChatServiceImpl implements ChatService {
     ExpoNotificationService expoNotificationService,
     SubscriptionService subscriptionService,
     NotificationService notificationService,
-    UploadedFilePostprocessor messagePostProcessor) {
+    MessagesFrontendPostprocessor messagePostProcessor) {
 
     this.template = simpMessagingTemplate;
     this.botService = botService;

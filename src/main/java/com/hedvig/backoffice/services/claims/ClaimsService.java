@@ -1,14 +1,11 @@
 package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.services.claims.dto.*;
-import java.io.IOException;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface ClaimsService {
 
@@ -44,11 +41,4 @@ public interface ClaimsService {
   UUID createClaim(CreateBackofficeClaimDTO claimData, String token);
 
   void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token);
-
-  ResponseEntity<Void> uploadClaimsFiles(String claimId, MultipartFile[] claimFiles,
-                                         String memberId) throws IOException;
-
-  void markClaimFileAsDeleted(String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy);
-
-  void setClaimFileCategory(String claimId, UUID claimFileId, ClaimFileCategoryDTO category);
 }
