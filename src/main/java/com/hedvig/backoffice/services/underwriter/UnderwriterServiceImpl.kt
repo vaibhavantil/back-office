@@ -24,7 +24,7 @@ class UnderwriterServiceImpl(
 ) : UnderwriterService {
   override fun createAndCompleteQuote(memberId: String, quoteDto: CreateQuoteFromProductDto): QuoteResponseDto {
     val member = memberService.findByMemberId(memberId, "")
-    logger.info("Creating quote for member $memberService")
+    logger.info("Creating quote for member $memberId")
     val createdQuote = underwriterClient.createQuote(
       QuoteRequestDto(
         firstName = member.firstName!!,
