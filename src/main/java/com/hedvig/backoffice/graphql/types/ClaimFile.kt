@@ -12,9 +12,6 @@ data class ClaimFile (
   val contentType: String,
   val UploadedAt: Instant,
   val fileName: String,
-  val markedAsDeleted: Boolean,
-  val markedAsDeletedBy: String?,
-  val markedAsDeletedAt: Instant?,
   val category: String?
 ) {
   companion object{
@@ -27,9 +24,6 @@ data class ClaimFile (
         dto.contentType,
         dto.uploadedAt,
         dto.fileName,
-        dto.markedAsDeleted,
-        dto.markedAsDeletedBy,
-        dto.markedAsDeletedAt,
         dto.category
       )
     }

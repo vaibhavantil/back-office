@@ -158,8 +158,8 @@ type ClaimFileUpload {
   fileUploadUrl: URL
   uploadedAt: Instant
   claimId: ID
-  markedAsDeleted: Boolean
   category: String
+  contentType: String
 }
 
 type PaymentDefault {

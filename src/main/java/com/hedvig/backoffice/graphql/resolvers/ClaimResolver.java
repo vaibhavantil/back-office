@@ -13,6 +13,8 @@ import com.hedvig.backoffice.services.claims.ClaimsService;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
@@ -46,17 +48,20 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
       return claimFileUploads;
     }
 
-    claimFiles.forEach(claimFile -> {
+    List<ClaimFileUpload> claimFileUploadDtos = claimFiles.stream().map(claimFile -> {
       ClaimFileUpload claimUpload = new ClaimFileUpload(
         claimFile.getClaimFileId(),
         uploadedFilePostprocessor.processFileUrl(claimFile.getKey(), claimFile.getBucket()),
         claimFile.getUploadedAt(),
         claimFile.getClaimId(),
-        claimFile.getMarkedAsDeleted(),
-        claimFile.getCategory()
+        claimFile.getCategory(),
+        claimFile.getContentType()
       );
-        claimFileUploads.add(claimUpload);
-    });
+      return claimUpload;
+    }).collect(Collectors.toList());
+
+    claimFileUploads.addAll(claimFileUploadDtos);
+
     return claimFileUploads;
   }
 

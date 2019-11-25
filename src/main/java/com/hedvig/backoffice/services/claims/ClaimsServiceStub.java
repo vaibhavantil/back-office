@@ -37,7 +37,11 @@ public class ClaimsServiceStub implements ClaimsService {
   private List<ClaimType> types;
   private UploadClaimFiles uploadClaimFiles;
 
-  public ClaimsServiceStub(MemberService memberService, SystemSettingsService settingsService, UploadClaimFiles uploadClaimFiles) {
+  public ClaimsServiceStub(
+    MemberService memberService,
+    SystemSettingsService settingsService,
+    UploadClaimFiles uploadClaimFiles
+  ) {
     this.uploadClaimFiles = uploadClaimFiles;
     long minSignedOnDay = LocalDate.of(2011, 1, 3).toEpochDay();
     long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
@@ -282,8 +286,11 @@ public class ClaimsServiceStub implements ClaimsService {
   }
 
   @Override
-  public ResponseEntity<Void> uploadClaimsFiles(String claimId, MultipartFile[] claimFiles,
-                                                String memberId) throws IOException {
+  public ResponseEntity<Void> uploadClaimsFiles(
+    String claimId,
+    MultipartFile[] claimFiles,
+    String memberId
+  ) throws IOException {
     ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
 
     for (MultipartFile claimFile : claimFiles) {
@@ -298,9 +305,6 @@ public class ClaimsServiceStub implements ClaimsService {
         claimFile.getContentType(),
         Instant.now(),
         claimFile.getOriginalFilename(),
-        false,
-        null,
-        null,
         null
       );
       claimFileDtos.add(claimFileDTO);

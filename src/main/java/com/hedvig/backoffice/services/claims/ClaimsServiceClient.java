@@ -75,7 +75,7 @@ public interface ClaimsServiceClient {
   @PostMapping("/_/claims/claimFiles")
   ResponseEntity<Void> uploadClaimsFiles(@RequestBody ClaimsFilesUploadDTO dto);
 
-  @PostMapping("/_/claims/{claimId}/claimFile/{claimFileId}/markAsDeleted")
+  @PostMapping("/_/claims/{claimId}/claimFile/{claimFileId}/delete")
   ResponseEntity<Void> markClaimFileAsDeleted(
     @PathVariable String claimId, @PathVariable UUID claimFileId,
     @RequestBody MarkClaimFileAsDeletedDTO deletedBy);

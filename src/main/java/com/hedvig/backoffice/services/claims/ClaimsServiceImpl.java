@@ -6,6 +6,7 @@ import com.hedvig.backoffice.services.claims.dto.*;
 import feign.FeignException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -170,30 +171,33 @@ public class ClaimsServiceImpl implements ClaimsService {
   public ResponseEntity<Void> uploadClaimsFiles(
     String claimId, MultipartFile[] claimFiles, String memberId) throws IOException {
 
-      ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
-      ClaimsFilesUploadDTO claimsFilesUploadDTO = new ClaimsFilesUploadDTO(claimFileDtos);
+    val claimFileDtos = Stream.of(claimFiles)
+      .map(claimFile -> {
+        try {
+          val uploadResults =
+            uploadClaimFiles.uploadClaimFilesToS3Bucket(claimFile.getContentType(),
+              claimFile.getBytes(), claimId, claimFile.getOriginalFilename(), memberId);
 
-       for (MultipartFile claimFile : claimFiles) {
-         val uploadResults =
-           uploadClaimFiles.uploadClaimFilesToS3Bucket(claimFile.getContentType(),
-           claimFile.getBytes(), claimId, claimFile.getOriginalFilename(), memberId);
+          ClaimFileDTO claimFileDTO = new ClaimFileDTO(
+            UUID.randomUUID(),
+            uploadResults.getBucket(),
+            uploadResults.getKey(),
+            claimId,
+            claimFile.getContentType(),
+            Instant.now(),
+            claimFile.getOriginalFilename(),
+            null
+          );
+          return claimFileDTO;
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      })
+      .collect(Collectors.toList());
 
-         ClaimFileDTO claimFileDTO = new ClaimFileDTO(
-           UUID.randomUUID(),
-           uploadResults.getBucket(),
-           uploadResults.getKey(),
-           claimId,
-           claimFile.getContentType(),
-           Instant.now(),
-           claimFile.getOriginalFilename(),
-           false,
-           null,
-           null,
-           null
-      );
-         claimFileDtos.add(claimFileDTO);
-    }
-    return client.uploadClaimsFiles(claimsFilesUploadDTO);
+    ClaimsFilesUploadDTO claimFilesUploadDto = new ClaimsFilesUploadDTO(claimFileDtos);
+    this.client.uploadClaimsFiles(claimFilesUploadDto);
+    return ResponseEntity.noContent().build();
   }
 
   @Override
@@ -214,7 +218,7 @@ public class ClaimsServiceImpl implements ClaimsService {
   private ClaimFileDTO findClaimFileOrThrowException(UUID claimFileId, String claimId) {
     Claim claim = this.client.getClaimById(claimId).getBody();
 
-    if(claim == null)  {
+    if (claim == null) {
       throw new RuntimeException(
         "no claim can be found for claim id" + claimId);
     }
