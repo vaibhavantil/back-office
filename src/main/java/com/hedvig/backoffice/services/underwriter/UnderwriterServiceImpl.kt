@@ -10,8 +10,13 @@ import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
+import feign.FeignException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory.getLogger
 import java.time.LocalDate
 import java.util.UUID
+
+private val logger: Logger = getLogger(UnderwriterServiceImpl::class.java)
 
 class UnderwriterServiceImpl(
   private val underwriterClient: UnderwriterClient,
@@ -19,6 +24,7 @@ class UnderwriterServiceImpl(
 ) : UnderwriterService {
   override fun createAndCompleteQuote(memberId: String, quoteDto: CreateQuoteFromProductDto): QuoteResponseDto {
     val member = memberService.findByMemberId(memberId, "")
+    logger.info("Creating quote for member $memberService")
     val createdQuote = underwriterClient.createQuote(
       QuoteRequestDto(
         firstName = member.firstName!!,
@@ -39,19 +45,46 @@ class UnderwriterServiceImpl(
       )
     )
 
-    underwriterClient.completeQuote(createdQuote.id)
+    logger.info("Created quote ${createdQuote.id} for member $memberId, trying to complete it")
+
+    try {
+      underwriterClient.completeQuote(createdQuote.id)
+    } catch (e: FeignException) {
+      logger.error("Failed to complete quote ${createdQuote.id}", e)
+      // noop
+    }
+
     return createdQuote
   }
 
-  override fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto): QuoteDto =
-    underwriterClient.updateQuote(quoteId, quoteDto)
+  override fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto): QuoteDto {
+    logger.info("Updating quote $quoteId")
+    val updatedQuote = underwriterClient.updateQuote(quoteId, quoteDto)
+    logger.info("Successfully updated quote $quoteId")
+    if (!updatedQuote.isComplete) {
+      logger.info("Quote updated but was incomplete, trying to complete it")
+      try {
+        underwriterClient.completeQuote(quoteId)
+      } catch (e: FeignException) {
+        logger.error("Failed to complete updated quote", e)
+        // Noop
+      }
 
-  override fun activateQuote(quoteId: UUID, activationDate: LocalDate?, terminationDate: LocalDate?): QuoteDto =
-    underwriterClient.activateQuote(quoteId, ActivateQuoteRequestDto(activationDate, terminationDate))
+      return updatedQuote
+    }
+    return underwriterClient.getQuote(quoteId)
+  }
+
+  override fun activateQuote(quoteId: UUID, activationDate: LocalDate?, terminationDate: LocalDate?): QuoteDto {
+    logger.info("Activating quote $quoteId")
+    val activatedQuote = underwriterClient.activateQuote(quoteId, ActivateQuoteRequestDto(activationDate, terminationDate))
+    logger.info("Successfully activated quote $quoteId")
+    return activatedQuote
+  }
 
   override fun getQuotes(memberId: String): List<QuoteDto> =
     underwriterClient.getQuotes(memberId)
 
-  override fun getQuote(quoteId: UUID): QuoteDto =
-    underwriterClient.getQuote(quoteId)
+  override fun getQuote(id: UUID): QuoteDto =
+    underwriterClient.getQuote(id)
 }
