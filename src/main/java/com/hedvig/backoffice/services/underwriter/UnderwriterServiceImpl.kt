@@ -62,6 +62,16 @@ class UnderwriterServiceImpl(
     val updatedQuote = underwriterClient.updateQuote(quoteId, quoteDto, underwritingGuidelinesBypassedBy)
     logger.info("Successfully updated quote $quoteId")
 
+    if (!updatedQuote.isComplete) {
+      logger.info("Quote updated but was incomplete, trying to complete it")
+      try {
+        underwriterClient.completeQuote(quoteId, underwritingGuidelinesBypassedBy)
+      } catch (e: FeignException) {
+        logger.error("Failed to complete updated quote", e)
+        // Noop
+      }
+    }
+
     return underwriterClient.getQuote(quoteId)
   }
 
