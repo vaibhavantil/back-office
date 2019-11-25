@@ -15,12 +15,13 @@ import java.util.Date;
 
 
 @Service
-public class MessagesFrontendPostprocessor {
+public class UploadedFilePostprocessor {
   final AmazonS3 amazonS3;
   final String chatS3Bucket;
 
-  public MessagesFrontendPostprocessor(AmazonS3 amazonS3,
-      @Value("${hedvig.chat.s3Bucket}") String chatS3Bucket
+  public UploadedFilePostprocessor(
+    AmazonS3 amazonS3,
+    @Value("${hedvig.chat.s3Bucket}") String chatS3Bucket
   ) {
     this.amazonS3 = amazonS3;
     this.chatS3Bucket = chatS3Bucket;
@@ -47,6 +48,11 @@ public class MessagesFrontendPostprocessor {
 
   public URL processFileUrl(String key) {
     return amazonS3.generatePresignedUrl(chatS3Bucket, key,
+      new Date(Instant.now().plus(2, ChronoUnit.HOURS).toEpochMilli()), HttpMethod.GET);
+  }
+
+  public URL processFileUrl(String key, String s3Bucket) {
+    return amazonS3.generatePresignedUrl(s3Bucket, key,
       new Date(Instant.now().plus(2, ChronoUnit.HOURS).toEpochMilli()), HttpMethod.GET);
   }
 }
