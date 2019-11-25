@@ -17,7 +17,7 @@ data class UploadResult (
 
 @Service
 data class UploadClaimFiles(
-  @Value("\${claims.bucketName}") val claimsBucket: String,
+  @Value("\${claims.claimFileUploadBucketName}") val claimsBucket: String,
   val s3Client: AmazonS3Client
 ) {
 
