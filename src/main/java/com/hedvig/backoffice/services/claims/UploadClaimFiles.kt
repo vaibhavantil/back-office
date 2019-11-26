@@ -31,7 +31,7 @@ data class UploadClaimFiles(
     metadata.contentType = contentType
     metadata.contentLength = data.size.toLong()
 
-    val uploadKey = "claim${UUID.randomUUID()}$fileName"
+    val uploadKey = "claim-$claimId/${UUID.randomUUID()}-$fileName"
 
     val uploadRequest = PutObjectRequest(
       claimsBucket, uploadKey, ByteArrayInputStream(data), metadata)

@@ -8,6 +8,7 @@ import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import java.time.Instant;
 import com.hedvig.backoffice.web.dto.MemberStatus;
+import java.util.stream.Stream;
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
@@ -292,24 +293,6 @@ public class ClaimsServiceStub implements ClaimsService {
     MultipartFile[] claimFiles,
     String memberId
   ) throws IOException {
-    ArrayList claimFileDtos = new ArrayList<ClaimFileDTO>();
-
-    for (MultipartFile claimFile : claimFiles) {
-      val uploadResults = uploadClaimFiles.uploadClaimFilesToS3Bucket(claimFile.getContentType(),
-        claimFile.getBytes(), claimId, claimFile.getOriginalFilename(), memberId);
-
-      ClaimFileDTO claimFileDTO = new ClaimFileDTO(
-        UUID.randomUUID(),
-        uploadResults.getBucket(),
-        uploadResults.getKey(),
-        claimId,
-        claimFile.getContentType(),
-        Instant.now(),
-        claimFile.getOriginalFilename(),
-        null
-      );
-      claimFileDtos.add(claimFileDTO);
-    }
     return ResponseEntity.noContent().build();
   }
 
