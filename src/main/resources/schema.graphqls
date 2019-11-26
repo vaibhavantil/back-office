@@ -565,11 +565,11 @@ enum ClaimTypes {
   TestClaim
 }
 union ClaimType = TheftClaim
-  | AccidentalDamageClaim
-  | AssaultClaim
-  | WaterDamageClaim
-  | TravelAccidentClaim
-  | LuggageDelayClaim
+  | AccidentalDamageClaim
+  | AssaultClaim
+  | WaterDamageClaim
+  | TravelAccidentClaim
+  | LuggageDelayClaim
   | NotCoveredClaim
   | FireDamageClaim
   | ConfirmedFraudClaim
