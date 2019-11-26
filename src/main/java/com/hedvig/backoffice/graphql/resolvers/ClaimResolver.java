@@ -3,10 +3,18 @@ package com.hedvig.backoffice.graphql.resolvers;
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.hedvig.backoffice.graphql.Util;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
+import com.hedvig.backoffice.graphql.types.ClaimFile;
 import com.hedvig.backoffice.graphql.types.claims.*;
 import com.hedvig.backoffice.graphql.types.Claim;
+import com.hedvig.backoffice.graphql.types.ClaimFileUpload;
 import com.hedvig.backoffice.graphql.types.Member;
+import com.hedvig.backoffice.services.UploadedFilePostprocessor;
+import com.hedvig.backoffice.services.claims.ClaimsService;
 import graphql.schema.DataFetchingEnvironment;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
@@ -15,13 +23,46 @@ import java.util.concurrent.CompletableFuture;
 public class ClaimResolver implements GraphQLResolver<Claim> {
 
   private final MemberLoader memberLoader;
+  private final UploadedFilePostprocessor uploadedFilePostprocessor;
+  private final ClaimsService claimsService;
 
-  public ClaimResolver(MemberLoader memberLoader) {
+  public ClaimResolver(MemberLoader memberLoader,
+                       UploadedFilePostprocessor uploadedFilePostprocessor,
+                       ClaimsService claimsService) {
     this.memberLoader = memberLoader;
+    this.uploadedFilePostprocessor = uploadedFilePostprocessor;
+    this.claimsService = claimsService;
   }
 
   public CompletableFuture<Member> getMember(Claim claim) {
     return memberLoader.load(claim.getMemberId());
+  }
+
+  public List<ClaimFileUpload> getClaimFiles(Claim claim) {
+
+    List<ClaimFileUpload> claimFileUploads = new ArrayList<>();
+
+    List<ClaimFile> claimFiles = claim.claimFiles;
+
+    if (claimFiles.isEmpty()) {
+      return claimFileUploads;
+    }
+
+    List<ClaimFileUpload> claimFileUploadDtos = claimFiles.stream().map(claimFile -> {
+      ClaimFileUpload claimUpload = new ClaimFileUpload(
+        claimFile.getClaimFileId(),
+        uploadedFilePostprocessor.processFileUrl(claimFile.getKey(), claimFile.getBucket()),
+        claimFile.getUploadedAt(),
+        claimFile.getClaimId(),
+        claimFile.getCategory(),
+        claimFile.getContentType()
+      );
+      return claimUpload;
+    }).collect(Collectors.toList());
+
+    claimFileUploads.addAll(claimFileUploadDtos);
+
+    return claimFileUploads;
   }
 
   public Object getType(Claim claim, DataFetchingEnvironment env) {

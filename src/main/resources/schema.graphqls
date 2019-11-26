@@ -42,7 +42,9 @@ type MutationType {
   autoLabelQuestion(question: String!, label: String!, memberId: String, messageIds: [String!]): AutoLabel
   questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
+  markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
+  setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
   addInventoryItem(item: InventoryItemInput!): Boolean
   removeInventoryItem(inventoryItemId: ID!): Boolean
   activateQuote(id: ID!, activationDate: LocalDate!, terminationDate: LocalDate): Quote!
@@ -153,6 +155,15 @@ type FileUpload {
   timestamp: Instant
   mimeType: String
   memberId: ID
+}
+
+type ClaimFileUpload {
+  claimFileId: ID
+  fileUploadUrl: URL
+  uploadedAt: Instant
+  claimId: ID
+  category: String
+  contentType: String
 }
 
 type PaymentDefault {
@@ -521,6 +532,7 @@ type Claim {
   payments: [ClaimPayment]
   events: [ClaimEvent]
   coveringEmployee: Boolean!
+  claimFiles: [ClaimFileUpload!]!
 }
 
 type ClaimNote {
