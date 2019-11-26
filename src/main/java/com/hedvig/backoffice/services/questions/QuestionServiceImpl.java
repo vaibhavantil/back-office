@@ -6,7 +6,7 @@ import com.hedvig.backoffice.domain.QuestionGroup;
 import com.hedvig.backoffice.domain.Subscription;
 import com.hedvig.backoffice.repository.QuestionGroupRepository;
 import com.hedvig.backoffice.repository.QuestionRepository;
-import com.hedvig.backoffice.services.MessagesFrontendPostprocessor;
+import com.hedvig.backoffice.services.UploadedFilePostprocessor;
 import com.hedvig.backoffice.services.chat.SubscriptionService;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.messages.BotService;
@@ -37,7 +37,7 @@ public class QuestionServiceImpl implements QuestionService {
   private final PersonnelService personnelService;
   private final NotificationService notificationService;
   private final TicketService ticketService;
-  private final MessagesFrontendPostprocessor messagesPostprocessor;
+  private final UploadedFilePostprocessor messagesPostprocessor;
 
   @Autowired
   public QuestionServiceImpl(
@@ -50,7 +50,7 @@ public class QuestionServiceImpl implements QuestionService {
     PersonnelService personnelService,
     NotificationService notificationService,
     TicketService ticketService,
-    MessagesFrontendPostprocessor messagesPostprocessor) {
+    UploadedFilePostprocessor messagesPostprocessor) {
 
     this.questionRepository = questionRepository;
     this.questionGroupRepository = questionGroupRepository;
