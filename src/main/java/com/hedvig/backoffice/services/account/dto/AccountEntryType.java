@@ -7,5 +7,6 @@ public enum AccountEntryType {
   PAYOUT,
   CHARGE,
   REFERRAL_DISCOUNT,
-  FREE_MONTH_DISCOUNT
+  FREE_MONTH_DISCOUNT,
+  LOSS
 }
