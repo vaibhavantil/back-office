@@ -4,6 +4,9 @@ import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.hedvig.backoffice.services.claims.dto.*;
 import feign.FeignException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.stream.Stream;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,18 +20,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 public class ClaimsServiceImpl implements ClaimsService {
 
   private final ClaimsServiceClient client;
   private final AmazonS3 amazonS3;
   private final String bucketName;
+  private final UploadClaimFiles uploadClaimFiles;
 
   @Autowired
-  public ClaimsServiceImpl(ClaimsServiceClient client, AmazonS3 amazonS3, @Value("${claims.bucketName}") String bucketName) {
+  public ClaimsServiceImpl(
+    ClaimsServiceClient client,
+    AmazonS3 amazonS3,
+    @Value("${claims.bucketName}") String bucketName,
+    UploadClaimFiles uploadClaimFiles
+  ) {
     this.client = client;
     this.amazonS3 = amazonS3;
     this.bucketName = bucketName;
+    this.uploadClaimFiles = uploadClaimFiles;
   }
 
   @Override
@@ -153,6 +165,72 @@ public class ClaimsServiceImpl implements ClaimsService {
   @Override
   public void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token) {
     client.markEmployeeClaim(dto, token);
+  }
+
+  @Override
+  public ResponseEntity<Void> uploadClaimsFiles(
+    String claimId, MultipartFile[] claimFiles, String memberId) throws IOException {
+
+    val claimFileDtos = Stream.of(claimFiles)
+      .map(claimFile -> {
+        try {
+          val uploadResults =
+            uploadClaimFiles.uploadClaimFilesToS3Bucket(claimFile.getContentType(),
+              claimFile.getBytes(), claimId, claimFile.getOriginalFilename(), memberId);
+
+          ClaimFileDTO claimFileDTO = new ClaimFileDTO(
+            UUID.randomUUID(),
+            uploadResults.getBucket(),
+            uploadResults.getKey(),
+            claimId,
+            claimFile.getContentType(),
+            Instant.now(),
+            claimFile.getOriginalFilename(),
+            null
+          );
+          return claimFileDTO;
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      })
+      .collect(Collectors.toList());
+
+    ClaimsFilesUploadDTO claimFilesUploadDto = new ClaimsFilesUploadDTO(claimFileDtos);
+    this.client.uploadClaimsFiles(claimFilesUploadDto);
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  public void markClaimFileAsDeleted(
+    String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
+    findClaimFileOrThrowException(claimFileId, claimId);
+
+    this.client.markClaimFileAsDeleted(claimId, claimFileId, deletedBy);
+  }
+
+  @Override
+  public void setClaimFileCategory(String claimId, UUID claimFileId, ClaimFileCategoryDTO category) {
+    findClaimFileOrThrowException(claimFileId, claimId);
+
+    this.client.setClaimFileCategory(claimId, claimFileId, category);
+  }
+
+  private ClaimFileDTO findClaimFileOrThrowException(UUID claimFileId, String claimId) {
+    Claim claim = this.client.getClaimById(claimId).getBody();
+
+    if (claim == null) {
+      throw new RuntimeException(
+        "no claim can be found for claim id" + claimId);
+    }
+
+    val optionalClaimFileDTO = claim.claimFiles.stream()
+      .filter(claimFile -> claimFile.getClaimFileId().equals(claimFileId)).findAny();
+
+    if (!optionalClaimFileDTO.isPresent()) {
+      throw new RuntimeException(
+        "no claim file can be found with id " + claimFileId + "for claim " + claimId);
+    }
+    return optionalClaimFileDTO.get();
   }
 
   private String signAudioUrl(String audioUrl) {

@@ -6,6 +6,9 @@ import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
+import java.time.Instant;
+import com.hedvig.backoffice.web.dto.MemberStatus;
+import java.util.stream.Stream;
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
@@ -23,6 +26,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
@@ -32,8 +37,14 @@ public class ClaimsServiceStub implements ClaimsService {
 
   private List<Claim> claims;
   private List<ClaimType> types;
+  private UploadClaimFiles uploadClaimFiles;
 
-  public ClaimsServiceStub(MemberService memberService, SystemSettingsService settingsService) {
+  public ClaimsServiceStub(
+    MemberService memberService,
+    SystemSettingsService settingsService,
+    UploadClaimFiles uploadClaimFiles
+  ) {
+    this.uploadClaimFiles = uploadClaimFiles;
     long minSignedOnDay = LocalDate.of(2011, 1, 3).toEpochDay();
     long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
     try {
@@ -44,7 +55,7 @@ public class ClaimsServiceStub implements ClaimsService {
       throw new UncheckedIOException(e);
     }
 
-    List<String> memberIds = memberService.search(null, "", settingsService.getInternalAccessToken()).stream()
+    List<String> memberIds = memberService.search(MemberStatus.SIGNED, "", settingsService.getInternalAccessToken()).stream()
       .map(o -> o.getMemberId() + "").collect(Collectors.toList());
 
     claims = IntStream.range(0, 10).mapToObj(i -> {
@@ -274,6 +285,25 @@ public class ClaimsServiceStub implements ClaimsService {
   public void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token) {
     Claim c = find(dto.getClaimId(), token);
     c.setCoveringEmployee(dto.isCoveringEmployee());
+  }
+
+  @Override
+  public ResponseEntity<Void> uploadClaimsFiles(
+    String claimId,
+    MultipartFile[] claimFiles,
+    String memberId
+  ) throws IOException {
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  public void markClaimFileAsDeleted(
+    String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy) {
+  }
+
+  @Override
+  public void setClaimFileCategory(
+    String claimId, UUID claimFileId, ClaimFileCategoryDTO category) {
   }
 
   private void addEvent(Claim claim, String message) {

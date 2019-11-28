@@ -2,6 +2,7 @@ package com.hedvig.backoffice.web;
 
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.claims.UploadClaimFiles;
 import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
@@ -14,6 +15,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimType;
 import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
 import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 import com.hedvig.backoffice.web.dto.CreateClaimDTO;
+import javax.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.val;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
@@ -44,11 +48,14 @@ public class ClaimsController {
 
   private final ClaimsService claimsService;
   private final PersonnelService personnelService;
+  private final UploadClaimFiles uploadClaimFiles;
 
   @Autowired
-  public ClaimsController(ClaimsService claimsService, PersonnelService personnelService) {
+  public ClaimsController(ClaimsService claimsService, PersonnelService personnelService,
+                          UploadClaimFiles uploadClaimFiles) {
     this.claimsService = claimsService;
     this.personnelService = personnelService;
+    this.uploadClaimFiles = uploadClaimFiles;
   }
 
   @GetMapping
@@ -151,5 +158,13 @@ public class ClaimsController {
   @GetMapping("/stat")
   public Map<String, Long> statistics(@AuthenticationPrincipal Principal principal) {
     return claimsService.statistics(personnelService.getIdToken(principal.getName()));
+  }
+
+  @PostMapping("/{claimId}/claimFiles")
+  public void uploadFiles(@PathVariable("claimId") String claimId,
+                          @RequestParam("files") MultipartFile[] files,
+                          @RequestParam("memberId") String memberId
+  ) throws IOException {
+    claimsService.uploadClaimsFiles(claimId, files, memberId);
   }
 }

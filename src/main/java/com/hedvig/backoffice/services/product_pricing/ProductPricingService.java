@@ -2,21 +2,20 @@ package com.hedvig.backoffice.services.product_pricing;
 
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
-import org.springframework.data.domain.Sort;
-
 import java.io.IOException;
 import java.time.YearMonth;
 import java.util.List;
+import org.springframework.data.domain.Sort;
 
 public interface ProductPricingService {
 

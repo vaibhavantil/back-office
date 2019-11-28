@@ -26,14 +26,19 @@ import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
+import com.hedvig.backoffice.services.underwriter.UnderwriterService;
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
+import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
 import graphql.language.SourceLocation;
 import graphql.schema.DataFetchingEnvironment;
+import java.time.LocalDate;
 import jersey.repackaged.com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import javax.money.MonetaryAmount;
@@ -65,6 +70,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final QuestionService questionsService;
   private final MemberService memberService;
   private final ItemPricingService itemPricingService;
+  private final UnderwriterService underwriterService;
 
   public GraphQLMutation(
     PaymentService paymentService,
@@ -77,7 +83,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     AutoAnswerSuggestionService autoAnswerSuggestionService,
     QuestionService questionsService,
     MemberService memberService,
-    ItemPricingService itemPricingService
+    ItemPricingService itemPricingService,
+    UnderwriterService underwriterService
   ) {
 
     this.paymentService = paymentService;
@@ -91,6 +98,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.questionsService = questionsService;
     this.memberService = memberService;
     this.itemPricingService = itemPricingService;
+    this.underwriterService = underwriterService;
   }
 
   public CompletableFuture<Member> chargeMember(
@@ -392,6 +400,28 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
+  public Quote activateQuote(final UUID id, final LocalDate activationDate, @Nullable final LocalDate terminationDate) {
+    return Quote.from(underwriterService.activateQuote(id, activationDate, terminationDate));
+  }
+
+  public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData) {
+    final UUID createdQuoteId = underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData)).getId();
+    return Quote.from(underwriterService.getQuote(createdQuoteId));
+  }
+
+  public Quote updateQuote(
+    final UUID quoteId,
+    final QuoteInput quoteInput,
+    final boolean bypassUnderwritingGuidelines,
+    final DataFetchingEnvironment env
+  ) {
+    return Quote.from(underwriterService.updateQuote(
+      quoteId,
+      QuoteInputDto.from(quoteInput),
+      bypassUnderwritingGuidelines ? getUserIdentity(env) : null
+    ));
+  }
+
   UUID createTicket(
     TicketInput ticket,
     DataFetchingEnvironment env
@@ -487,6 +517,28 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     memberService.whitelistMember(memberId, email);
     return true;
   }
+
+  public Boolean markClaimFileAsDeleted(
+    String claimId,
+    UUID claimFileId,
+    DataFetchingEnvironment env
+  ) {
+    String email = getUserIdentity(env);
+    MarkClaimFileAsDeletedDTO deletedBy = new MarkClaimFileAsDeletedDTO(email);
+    claimsService.markClaimFileAsDeleted(claimId, claimFileId, deletedBy);
+    return true;
+  }
+
+  public String setClaimFileCategory(
+    String claimId,
+    UUID claimFileId,
+    String category,
+    DataFetchingEnvironment env) {
+    ClaimFileCategoryDTO claimFileCategoryDTO = new ClaimFileCategoryDTO(category);
+    claimsService.setClaimFileCategory(claimId, claimFileId, claimFileCategoryDTO);
+    return category;
+  }
+
   public boolean addInventoryItem(ClaimInventoryItemDTO item) {
     return itemPricingService.addInventoryItem(item);
   }
