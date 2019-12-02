@@ -4,9 +4,9 @@ import java.time.LocalDate
 
 data class MemberWebDTOExtended(
   val member: MemberWebDTO,
-  var firstActiveFrom: LocalDate? = null,
-  var lastActiveTo: LocalDate? = null,
-  var productStatus: String? = null,
+  var firstActiveFrom: LocalDate?,
+  var lastActiveTo: LocalDate?,
+  var productStatus: String?,
   var householdSize: Int?,
   var livingSpace: Int?
 )
