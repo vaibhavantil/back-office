@@ -3,11 +3,13 @@ package com.hedvig.backoffice.services.product_pricing;
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
+import com.hedvig.backoffice.services.members.dto.MemberDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
@@ -15,9 +17,12 @@ import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
+
 import java.io.IOException;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -152,9 +157,16 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   }
 
   @Override
-  public List<MonthlyBordereauDTO> getMonthlyBordereauByProductType(YearMonth month,
-    ProductType productType) {
+  public List<MonthlyBordereauDTO> getMonthlyBordereauByProductType(
+    YearMonth month,
+    ProductType productType
+  ) {
     return client
       .getMonthlyBordereauByProductType(month.getYear(), month.getMonthValue(), productType);
+  }
+
+  @Override
+  public List<MemberSearchResultDTOExtended> extendMemberSearchResult(final List<Long> memberIds) {
+    return client.extendMemberSearchResult(memberIds);
   }
 }

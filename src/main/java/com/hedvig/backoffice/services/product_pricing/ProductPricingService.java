@@ -5,6 +5,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationD
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
@@ -12,10 +13,11 @@ import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
+import org.springframework.data.domain.Sort;
+
 import java.io.IOException;
 import java.time.YearMonth;
 import java.util.List;
-import org.springframework.data.domain.Sort;
 
 public interface ProductPricingService {
 
@@ -59,4 +61,6 @@ public interface ProductPricingService {
 
   List<MonthlyBordereauDTO> getMonthlyBordereauByProductType(YearMonth month,
     ProductType productType);
+
+  List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds);
 }

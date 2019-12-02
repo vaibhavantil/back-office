@@ -3,6 +3,7 @@ package com.hedvig.backoffice.web;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
+import com.hedvig.backoffice.services.members.dto.MemberDTO;
 import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
@@ -12,23 +13,28 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationD
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.InsuranceSearchResultWebDTO;
 import com.hedvig.backoffice.web.dto.InsuranceStatusWebDTO;
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
+import com.hedvig.backoffice.web.dto.MemberPagedSearchResultWebDTO;
 import com.hedvig.backoffice.web.dto.MemberSearchResultWebDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import com.hedvig.backoffice.web.dto.MemberWebDTO;
+import com.hedvig.backoffice.web.dto.MemberWebDTOExtended;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
+
 import java.io.IOException;
 import java.security.Principal;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 import javax.validation.Valid;
+
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -46,6 +52,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping(path = {"/api/user", "/api/member"})
@@ -71,7 +79,7 @@ public class MemberController {
       memberService.search(null, "", personnelService.getIdToken(principal.getName()))
         .stream()
         .map(MemberWebDTO::new)
-        .collect(Collectors.toList());
+        .collect(toList());
   }
 
   @GetMapping("/{memberId}")
@@ -93,19 +101,10 @@ public class MemberController {
     return ResponseEntity.noContent().build();
   }
 
-  @GetMapping("/search")
-  public List<MemberWebDTO> search(
-    @RequestParam(name = "status", required = false) MemberStatus status,
-    @RequestParam(name = "query", defaultValue = "", required = false) String query,
-    @AuthenticationPrincipal Principal principal) {
-    return memberService.search(status, query, personnelService.getIdToken(principal.getName())).stream()
-      .map(MemberWebDTO::new)
-      .collect(Collectors.toList());
-  }
-
   @GetMapping("/searchPaged")
-  public MemberSearchResultWebDTO searchPaged(
-    @RequestParam(name = "status", required = false) MemberStatus status,
+  @Deprecated
+  public MemberPagedSearchResultWebDTO searchPaged(
+    @RequestParam(name = "status", required = false) MemberStatus _memberStatus,
     @RequestParam(name = "query", required = false) String query,
     @RequestParam(name = "page", required = false) Integer page,
     @RequestParam(name = "pageSize", required = false) Integer pageSize,
@@ -114,8 +113,39 @@ public class MemberController {
     @AuthenticationPrincipal Principal principal
   ) {
     String token = personnelService.getIdToken(principal.getName());
-    MembersSearchResultDTO searchRes = memberService.searchPaged(status, query, page, pageSize, sortBy, sortDirection, token);
-    return new MemberSearchResultWebDTO(searchRes);
+    MembersSearchResultDTO searchRes = memberService.searchPaged(true, query, page, pageSize, sortBy, sortDirection, token);
+    return new MemberPagedSearchResultWebDTO(searchRes);
+  }
+
+  @GetMapping("/search")
+  public MemberSearchResultWebDTO search(
+    @RequestParam(name = "includeAll", required = false) @Nullable Boolean includeAll,
+    @RequestParam(name = "query", required = false) String query,
+    @RequestParam(name = "page", required = false) Integer page,
+    @RequestParam(name = "pageSize", required = false) Integer pageSize,
+    @RequestParam(name = "sortBy", required = false) MembersSortColumn sortBy,
+    @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
+    @AuthenticationPrincipal Principal principal
+  ) {
+    final String token = personnelService.getIdToken(principal.getName());
+    final MembersSearchResultDTO searchRes = memberService.searchPaged(includeAll, query, page, pageSize, sortBy, sortDirection, token);
+    List<Long> memberIds = searchRes.getMembers().stream().map(MemberDTO::getMemberId).collect(toList());
+    final List<MemberSearchResultDTOExtended> extendedResult = productPricingService.extendMemberSearchResult(memberIds);
+
+    final List<MemberWebDTOExtended> extendedMembers = extendedResult.stream()
+      .map(extendedResultItem -> {
+        final MemberDTO memberDTO = searchRes.getMembers().stream().filter(member -> member.getMemberId() == extendedResultItem.getMemberId()).findFirst().get();
+        return new MemberWebDTOExtended(
+          new MemberWebDTO(memberDTO),
+          extendedResultItem.getFirstActiveFrom(),
+          extendedResultItem.getLastActiveTo(),
+          extendedResultItem.getCurrentInsuranceStatus(),
+          extendedResultItem.getHouseholdSize(),
+          extendedResultItem.getLivingSpace()
+        );
+      })
+      .collect(toList());
+    return new MemberSearchResultWebDTO(extendedMembers, searchRes.getPage(), searchRes.getTotalPages());
   }
 
   @RequestMapping(
@@ -171,7 +201,7 @@ public class MemberController {
     return productPricingService.search(state, query, personnelService.getIdToken(principal.getName()))
       .stream()
       .map(InsuranceStatusWebDTO::new)
-      .collect(Collectors.toList());
+      .collect(toList());
 
   }
 
@@ -196,7 +226,7 @@ public class MemberController {
     return productPricingService.getInsurancesByMember(memberId, personnelService.getIdToken(principal.getName()))
       .stream()
       .map(InsuranceStatusWebDTO::new)
-      .collect(Collectors.toList());
+      .collect(toList());
   }
 
   @PostMapping("/insurance/{memberId}/sendCancellationEmail")

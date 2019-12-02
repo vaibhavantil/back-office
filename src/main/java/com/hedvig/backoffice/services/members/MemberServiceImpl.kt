@@ -1,12 +1,15 @@
 package com.hedvig.backoffice.services.members
 
-import com.hedvig.backoffice.services.members.dto.*
+import com.hedvig.backoffice.services.members.dto.ChargeMembersDTO
+import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO
+import com.hedvig.backoffice.services.members.dto.MemberDTO
+import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO
+import com.hedvig.backoffice.services.members.dto.MembersSortColumn
+import com.hedvig.backoffice.services.members.dto.PersonDTO
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO
-import com.hedvig.backoffice.web.dto.MemberStatus
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
-import java.lang.NullPointerException
 
 class MemberServiceImpl(private val client: MemberServiceClient) : MemberService {
 
@@ -15,20 +18,20 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
     logger.info("class: " + MemberServiceImpl::class.java.name)
   }
 
-  override fun search(status: MemberStatus?, query: String, token: String): List<MemberDTO> {
-    return client.search(status, query, token)
+  override fun search(includeAll: Boolean?, query: String, token: String): List<MemberDTO> {
+    return client.search(includeAll, query, token)
   }
 
   override fun searchPaged(
-    status: MemberStatus?,
-    query: String,
+    includeAll: Boolean?,
+    query: String?,
     page: Int?,
     pageSize: Int?,
     sortBy: MembersSortColumn,
     sortDirection: Sort.Direction,
     token: String
   ): MembersSearchResultDTO {
-    return client.searchPaged(status, query, page, pageSize, sortBy, sortDirection, token)
+    return client.searchPaged(includeAll, query, page, pageSize, sortBy, sortDirection, token)
   }
 
   override fun findByMemberId(memberId: String, token: String): MemberDTO {

@@ -9,6 +9,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationD
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
@@ -17,6 +18,7 @@ import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
 import com.hedvig.backoffice.web.dto.SafetyIncreaserType;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -36,6 +38,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.money.Monetary;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -322,9 +325,9 @@ public class ProductPricingServiceStub implements ProductPricingService {
   public List<MonthlySubscriptionDTO> getMonthlyPayments(YearMonth month) {
     return Lists.newArrayList(
       new MonthlySubscriptionDTO("123456", Money.of(100, Monetary.getCurrency("SEK"))),
-      new MonthlySubscriptionDTO("2820671", Money.of(RandomUtils.nextInt(99,999), Monetary.getCurrency("SEK"))),
-      new MonthlySubscriptionDTO("6865256", Money.of(RandomUtils.nextInt(99,999), Monetary.getCurrency("SEK"))),
-      new MonthlySubscriptionDTO("9417985", Money.of(RandomUtils.nextInt(99,999), Monetary.getCurrency("SEK"))),
+      new MonthlySubscriptionDTO("2820671", Money.of(RandomUtils.nextInt(99, 999), Monetary.getCurrency("SEK"))),
+      new MonthlySubscriptionDTO("6865256", Money.of(RandomUtils.nextInt(99, 999), Monetary.getCurrency("SEK"))),
+      new MonthlySubscriptionDTO("9417985", Money.of(RandomUtils.nextInt(99, 999), Monetary.getCurrency("SEK"))),
       new MonthlySubscriptionDTO("3267661", Money.of(200, Monetary.getCurrency("SEK"))));
   }
 
@@ -336,7 +339,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
 
   @Override
   public List<MonthlyBordereauDTO> getMonthlyBordereauByProductType(YearMonth month,
-    ProductType productType) {
+                                                                    ProductType productType) {
     return Lists.newArrayList(
       new MonthlyBordereauDTO("12345", Money.of(100, Monetary.getCurrency("SEK")),
         Money.of(50, Monetary.getCurrency("SEK")), productType.toString()),
@@ -344,5 +347,19 @@ public class ProductPricingServiceStub implements ProductPricingService {
         Money.of(500, Monetary.getCurrency("SEK")), productType.toString()),
       new MonthlyBordereauDTO("56789", Money.of(0, Monetary.getCurrency("SEK")),
         Money.of(5, Monetary.getCurrency("SEK")), productType.toString()));
+  }
+
+  @Override
+  public List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds) {
+    return memberIds.stream()
+      .map(memberId -> new MemberSearchResultDTOExtended(
+        memberId,
+        null,
+        null,
+        null,
+        null,
+        null
+      ))
+      .collect(Collectors.toList());
   }
 }

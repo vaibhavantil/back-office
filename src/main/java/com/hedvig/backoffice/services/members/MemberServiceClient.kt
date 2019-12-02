@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.*
 @FeignClient(name = "member-service", url = "\${memberservice.baseUrl}", configuration = [FeignConfig::class])
 interface MemberServiceClient {
 
-  @GetMapping("/i/member/search?status={status}&query={query}")
+  @GetMapping("/i/member/search")
   fun search(
-    @PathVariable("status") status: MemberStatus?,
-    @PathVariable("query") query: String,
+    @RequestParam("includeAll") includeAll: Boolean?,
+    @RequestParam("query") query: String,
     @RequestHeader("Authorization") token: String
   ): List<MemberDTO>
 
   @GetMapping("/i/member/searchPaged")
   fun searchPaged(
-    @RequestParam("status") status: MemberStatus?,
-    @RequestParam("query") query: String,
+    @RequestParam("includeAll") includeAll: Boolean?,
+    @RequestParam("query") query: String?,
     @RequestParam("page") page: Int?,
     @RequestParam("pageSize") pageSize: Int?,
     @RequestParam("sortBy") sortBy: MembersSortColumn,
