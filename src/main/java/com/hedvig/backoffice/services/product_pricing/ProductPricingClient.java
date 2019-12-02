@@ -6,6 +6,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationD
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
@@ -106,4 +107,7 @@ public interface ProductPricingClient {
     @PathVariable("year") int year,
     @PathVariable("month") int month,
     @PathVariable("productType") ProductType productType);
+
+  @PostMapping("/_/insurance/extendMemberSearch")
+  List<MemberSearchResultDTOExtended> extendMemberSearchResult(@RequestBody List<Long> collect);
 }

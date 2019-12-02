@@ -1,7 +1,15 @@
 package com.hedvig.backoffice.services.members;
 
 import com.hedvig.backoffice.graphql.types.Whitelisted;
-import com.hedvig.backoffice.services.members.dto.*;
+import com.hedvig.backoffice.services.members.dto.DebtDTO;
+import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
+import com.hedvig.backoffice.services.members.dto.MemberDTO;
+import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
+import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
+import com.hedvig.backoffice.services.members.dto.PaymentDefaultDTO;
+import com.hedvig.backoffice.services.members.dto.PersonDTO;
+import com.hedvig.backoffice.services.members.dto.PersonFlags;
+import com.hedvig.backoffice.services.members.dto.PersonStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import org.apache.commons.lang3.RandomUtils;
@@ -11,7 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -89,23 +102,29 @@ public class MemberServiceStub implements MemberService {
   }
 
   @Override
-  public List<MemberDTO> search(MemberStatus status, String query, String token) {
-    if (status == null && StringUtils.isBlank(query)) {
+  public List<MemberDTO> search(Boolean includeAll, String query, String token) {
+    if (includeAll == null && StringUtils.isBlank(query)) {
       return users;
     }
 
     List<MemberDTO> result = users.stream()
-      .filter(u -> (StringUtils.isNotBlank(query) && u.getFirstName().contains(query))
-        || (status != null && u.getStatus() == status))
+      .filter(u -> StringUtils.isNotBlank(query) && u.getFirstName().contains(query))
       .collect(Collectors.toList());
 
     return result;
   }
 
   @Override
-  public MembersSearchResultDTO searchPaged(MemberStatus status, String query, Integer page,
-                                            Integer pageSize, MembersSortColumn sortBy, Sort.Direction sortDirection, String token) {
-    List<MemberDTO> members = search(status, query, token);
+  public MembersSearchResultDTO searchPaged(
+    Boolean includeAll,
+    String query,
+    Integer page,
+    Integer pageSize,
+    MembersSortColumn sortBy,
+    Sort.Direction sortDirection,
+    String token
+  ) {
+    List<MemberDTO> members = search(includeAll, query, token);
     if (sortBy != null) {
       members.sort(
         (sortDirection == Sort.Direction.DESC ? MEMBER_COMPARATORS_DESC : MEMBER_COMPARATORS_ASC)

@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-public class MemberSearchResultWebDTO {
+public class MemberPagedSearchResultWebDTO {
   List<MemberWebDTO> members;
   Integer page;
   Integer totalPages;
 
-  public MemberSearchResultWebDTO(MembersSearchResultDTO searchRes) {
+  public MemberPagedSearchResultWebDTO(MembersSearchResultDTO searchRes) {
     this.page = searchRes.getPage();
     this.totalPages = searchRes.getTotalPages();
     this.members = searchRes.getMembers().stream()
