@@ -22,6 +22,7 @@ import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import graphql.schema.DataFetchingEnvironment;
+import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.time.YearMonth;
@@ -146,7 +147,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
   public String me(DataFetchingEnvironment env) {
     try {
-      return GraphQLConfiguration.getEmail(env, personnelService);
+      val email = GraphQLConfiguration.getEmail(env, personnelService);
+      return email;
     } catch (Exception e) {
       log.info("Exception occured when trying to access user email: " + e);
       return null;

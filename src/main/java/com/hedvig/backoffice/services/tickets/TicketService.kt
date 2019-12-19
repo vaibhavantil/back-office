@@ -27,8 +27,4 @@ interface TicketService {
     fun changeReminder(ticketId: UUID, newReminder: RemindNotification, modifiedBy: String)
 
     fun changePriority(ticketId: UUID, newPriority: Float, modifiedBy: String)
-
-    fun createTicketFromQuestions(questionGroup: QuestionGroup)
-
-    fun setQuestionGroupAsDone(groupId: String)
 }

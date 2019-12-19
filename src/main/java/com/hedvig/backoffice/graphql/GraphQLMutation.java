@@ -9,6 +9,7 @@ import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.services.SlackService.SlackService;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
@@ -38,6 +39,7 @@ import java.time.LocalDate;
 import jersey.repackaged.com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -71,6 +73,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final MemberService memberService;
   private final ItemPricingService itemPricingService;
   private final UnderwriterService underwriterService;
+  private final SlackService slackService;
 
   public GraphQLMutation(
     PaymentService paymentService,
@@ -84,7 +87,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     QuestionService questionsService,
     MemberService memberService,
     ItemPricingService itemPricingService,
-    UnderwriterService underwriterService
+    UnderwriterService underwriterService,
+    SlackService slackService
   ) {
 
     this.paymentService = paymentService;
@@ -99,6 +103,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.memberService = memberService;
     this.itemPricingService = itemPricingService;
     this.underwriterService = underwriterService;
+    this.slackService = slackService;
   }
 
   public CompletableFuture<Member> chargeMember(
@@ -467,6 +472,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     DataFetchingEnvironment env
   ) {
     String modifiedBy = getUserIdentity(env);
+    this.slackService.addTicketReminder(ticketId, newReminder).getBody();
     this.ticketService.changeReminder(ticketId, newReminder, modifiedBy);
     return ticketId;
   }

@@ -31,7 +31,8 @@ data class CreateTicketDto(
         remindNotificationDate = ticketInput.remindNotificationDate,
         remindNotificationTime = ticketInput.remindNotificationTime,
         remindMessage = ticketInput.remindMessage,
-        description = ticketInput.description
+        description = ticketInput.description,
+        referenceId = ticketInput.claimId
       )
     }
   }

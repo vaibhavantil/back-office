@@ -120,37 +120,4 @@ class TicketServiceStub : TicketService {
     override fun changePriority(ticketId: UUID, newPriority: Float, modifiedBy: String) {
         tickets[ticketId] = tickets[ticketId]!!.copy(priority = newPriority)
     }
-
-    override fun createTicketFromQuestions(questionGroup: QuestionGroup) {
-        val lastMessage = questionGroup.questions.last().message
-        val messageTicketMaybe = getTicketOfMessageGroup(questionGroup.id.toString())
-        val ticketId = when (messageTicketMaybe) {
-          null -> UUID.randomUUID()
-          else -> messageTicketMaybe.id
-        }
-        if (messageTicketMaybe != null) {
-          val currentDescription = tickets[ticketId]!!.description
-          tickets[ticketId] = tickets[ticketId]!!.copy(description = "${currentDescription}\n$lastMessage")
-        }
-        val newTicket = TicketDto(
-            id = ticketId,
-            createdAt = Instant.now(),
-            memberId = questionGroup.subscription.memberId,
-            referenceId = questionGroup.id.toString(),
-            createdBy = "back-office",
-            priority = 0.5f,
-            type = TicketType.MESSAGE,
-            description = lastMessage,
-            status = TicketStatus.WAITING
-        )
-        tickets[ticketId] = newTicket
-    }
-
-    override fun setQuestionGroupAsDone(groupId: String) {
-      val ticket = getTicketOfMessageGroup(groupId)
-        ?: return
-      tickets[ticket.id] = ticket.copy(status = TicketStatus.RESOLVED)
-    }
-
-    private fun getTicketOfMessageGroup(groupId: String): TicketDto? = tickets.values.find { ticket -> ticket.referenceId == groupId }
 }

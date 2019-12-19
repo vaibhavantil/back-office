@@ -30,12 +30,6 @@ interface TicketServiceClient {
     @PostMapping("/_/tickets/create")
     fun createTicket(@RequestBody ticket: CreateTicketDto): UUID
 
-    @PostMapping("/_/tickets/message")
-    fun createMessageTicket(@RequestBody ticket: CreateMessageTicketDto)
-
-    @PostMapping("/_/tickets/message/{groupId}")
-    fun resolveMessageTicket(@PathVariable groupId: String)
-
     @PostMapping("/_/tickets/description/{id}")
     fun changeDescription(
         @PathVariable id: UUID,
