@@ -29,7 +29,7 @@ public class MessagesController {
       @RequestBody BackOfficeResponseDTO message,
       @AuthenticationPrincipal String principalId) {
     chatService.append(
-        memberId, message.getMsg(), false, principalId, personnelService.getIdToken(principalId));
+        memberId, message.getMsg(), message.forceSendMessage, principalId, personnelService.getIdToken(principalId));
   }
 
   @MessageMapping("/history/{memberId}")
