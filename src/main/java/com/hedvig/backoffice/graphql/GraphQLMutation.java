@@ -9,7 +9,6 @@ import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.security.AuthorizationException;
-import com.hedvig.backoffice.services.SlackService.SlackService;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
@@ -73,7 +72,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final MemberService memberService;
   private final ItemPricingService itemPricingService;
   private final UnderwriterService underwriterService;
-  private final SlackService slackService;
 
   public GraphQLMutation(
     PaymentService paymentService,
@@ -87,8 +85,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     QuestionService questionsService,
     MemberService memberService,
     ItemPricingService itemPricingService,
-    UnderwriterService underwriterService,
-    SlackService slackService
+    UnderwriterService underwriterService
   ) {
 
     this.paymentService = paymentService;
@@ -103,7 +100,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.memberService = memberService;
     this.itemPricingService = itemPricingService;
     this.underwriterService = underwriterService;
-    this.slackService = slackService;
   }
 
   public CompletableFuture<Member> chargeMember(
@@ -472,7 +468,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     DataFetchingEnvironment env
   ) {
     String modifiedBy = getUserIdentity(env);
-    this.slackService.addTicketReminder(ticketId, newReminder).getBody();
     this.ticketService.changeReminder(ticketId, newReminder, modifiedBy);
     return ticketId;
   }
