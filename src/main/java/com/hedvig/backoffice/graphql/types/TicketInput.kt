@@ -16,6 +16,6 @@ data class TicketInput(
     val remindNotificationTime: LocalTime? = null,
     val remindMessage: String? = null,
     val description: String? = null,
-    val claimId: String?
+    val referenceId: String?
 )
 
