@@ -1,6 +1,8 @@
 package com.hedvig.backoffice.graphql.scalars;
 
+import graphql.language.StringValue;
 import graphql.schema.*;
+import java.time.LocalDate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
@@ -23,20 +25,20 @@ public class LocalTimeScalar extends GraphQLScalarType {
         }
 
         @Override
-        public LocalTime parseValue(Object o) throws CoercingParseValueException {
+        public LocalTime parseValue(Object input) throws CoercingParseValueException {
           try {
-            return LocalTime.from(fmt.parse((String) o));
+            return LocalTime.parse((String) input);
           } catch (Exception e) {
             throw new CoercingParseValueException("Could not parse value as a Local Time", e);
           }
         }
 
         @Override
-        public LocalTime parseLiteral(Object o) throws CoercingParseLiteralException {
+        public LocalTime parseLiteral(Object input) throws CoercingParseLiteralException {
 
           try {
 
-            return LocalTime.from(fmt.parse((String) o));
+            return LocalTime.parse(((StringValue) input).getValue());
           } catch (Exception e) {
             throw new CoercingParseLiteralException("Could parse literal as Local Time", e);
           }

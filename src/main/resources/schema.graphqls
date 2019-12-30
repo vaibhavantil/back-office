@@ -779,6 +779,8 @@ input TicketInput {
   remindMessage: String
   description: String
   status : TicketStatus
+  referenceId: String
+  memberId: String
 }
 
 type Ticket {
@@ -822,6 +824,7 @@ input RemindNotification {
   date: LocalDate
   time: LocalTime
   message: String
+  sendReminderTo: String
 }
 
 enum TicketChangeType {

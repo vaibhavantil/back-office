@@ -116,8 +116,6 @@ public class QuestionServiceImpl implements QuestionService {
     questionGroupRepository.save(group);
     updatesService.changeOn(-1, UpdateType.QUESTIONS);
 
-    ticketService.setQuestionGroupAsDone(group.getId().toString());
-
     return QuestionGroupDTO.fromDomain(group);
   }
 
@@ -130,8 +128,6 @@ public class QuestionServiceImpl implements QuestionService {
     group.setAnswer("");
     group.setPersonnel(personnel);
     questionGroupRepository.save(group);
-
-    ticketService.setQuestionGroupAsDone(group.getId().toString());
 
     updatesService.changeOn(-1, UpdateType.QUESTIONS);
     return QuestionGroupDTO.fromDomain(group);
@@ -159,9 +155,6 @@ public class QuestionServiceImpl implements QuestionService {
                       message.getTimestamp())));
       group.correctDate(message.getTimestamp());
       questionGroupRepository.save(group);
-
-      //TICKET SERVICE INTEGRATION
-      ticketService.createTicketFromQuestions(group);
     }
 
     long count = Optional.ofNullable(questionGroupRepository.notAnsweredCount()).orElse(0L);
