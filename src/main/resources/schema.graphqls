@@ -780,6 +780,7 @@ input TicketInput {
   description: String
   status : TicketStatus
   referenceId: String
+  memberId: String
 }
 
 type Ticket {
