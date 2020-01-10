@@ -467,8 +467,9 @@ type Account {
 
 type AccountChargeEstimation {
     subscription: MonetaryAmount!
-    discount: MonetaryAmount!
+    totalDiscountAmount: MonetaryAmount!
     charge: MonetaryAmount!
+    discountCodes: [String!]!
 }
 
 type SchedulerState {
