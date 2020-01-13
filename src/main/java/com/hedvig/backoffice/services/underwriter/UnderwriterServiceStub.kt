@@ -44,7 +44,11 @@ internal val QUOTE_DTO_MOCK = QuoteDto(
 )
 
 class UnderwriterServiceStub : UnderwriterService {
-  override fun createAndCompleteQuote(memberId: String, quoteDto: CreateQuoteFromProductDto): QuoteResponseDto =
+  override fun createAndCompleteQuote(
+        memberId: String,
+        quoteDto: CreateQuoteFromProductDto,
+        underwritingGuidelinesBypassedBy: String?
+    ): QuoteResponseDto =
     QuoteResponseDto(UUID.randomUUID())
 
   override fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto, underwritingGuidelinesBypassedBy: String?): QuoteDto = QUOTE_DTO_MOCK

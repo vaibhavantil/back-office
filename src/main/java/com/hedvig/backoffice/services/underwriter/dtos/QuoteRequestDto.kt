@@ -15,7 +15,9 @@ data class QuoteRequestDto(
   val incompleteHouseQuoteData: IncompleteHouseQuoteDataDto?,
   val incompleteApartmentQuoteData: IncompleteApartmentQuoteDataDto?,
   val memberId: String? = null,
-  val originatingProductId: UUID? = null
+  val originatingProductId: UUID? = null,
+  val complete: Boolean = true,
+  val underwritingGuidelinesBypassedBy: String?
 )
 
 data class IncompleteHouseQuoteDataDto(
