@@ -41,7 +41,7 @@ class UnderwriterServiceImpl(
         incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData?.let((IncompleteApartmentQuoteDataDto)::from),
         incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData?.let((IncompleteHouseQuoteDataDto)::from),
         quotingPartner = null,
-        complete = true,
+        shouldComplete = true,
         underwritingGuidelinesBypassedBy = null
     )
 
@@ -57,10 +57,10 @@ class UnderwriterServiceImpl(
       underwriterClient.createQuote(
         quoteRequestDto
       )
-      } catch (e: FeignException) {
+    } catch (e: FeignException) {
       logger.error("Failed to complete quote", e)
       null
-      }
+    }
   }
 
   override fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto, underwritingGuidelinesBypassedBy: String?): QuoteDto {
