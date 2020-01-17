@@ -11,7 +11,6 @@ import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
 import feign.FeignException
-import io.sentry.Sentry
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory.getLogger
 import java.time.LocalDate
@@ -23,11 +22,10 @@ class UnderwriterServiceImpl(
   private val underwriterClient: UnderwriterClient,
   private val memberService: MemberService
 ) : UnderwriterService {
-  override fun createAndCompleteQuote(memberId: String, quoteDto: CreateQuoteFromProductDto): QuoteResponseDto {
+  override fun createAndCompleteQuote(memberId: String, quoteDto: CreateQuoteFromProductDto, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
     val member = memberService.findByMemberId(memberId, "")
     logger.info("Creating quote for member $memberId")
-    val createdQuote = underwriterClient.createQuote(
-      QuoteRequestDto(
+    val quoteRequestDto = QuoteRequestDto(
         firstName = member.firstName!!,
         lastName = member.lastName!!,
         ssn = member.ssn,
@@ -42,20 +40,27 @@ class UnderwriterServiceImpl(
         },
         incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData?.let((IncompleteApartmentQuoteDataDto)::from),
         incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData?.let((IncompleteHouseQuoteDataDto)::from),
-        quotingPartner = null
-      )
+        quotingPartner = null,
+        shouldComplete = true,
+        underwritingGuidelinesBypassedBy = null
     )
 
-    logger.info("Created quote ${createdQuote.id} for member $memberId, trying to complete it")
-
-    try {
-      underwriterClient.completeQuote(createdQuote.id, null)
-    } catch (e: FeignException) {
-      logger.error("Failed to complete quote ${createdQuote.id}", e)
-      // noop
-    }
+    val createdQuote = underwriterCreateQuote(quoteRequestDto)
+      ?: underwriterCreateQuote(quoteRequestDto.copy(underwritingGuidelinesBypassedBy = underwritingGuidelinesBypassedBy))
+      ?: throw RuntimeException("Could not create quote from product ${quoteDto.originatingProductId}")
 
     return createdQuote
+  }
+
+  private fun underwriterCreateQuote(quoteRequestDto: QuoteRequestDto): QuoteResponseDto? {
+    return try {
+      underwriterClient.createQuote(
+        quoteRequestDto
+      )
+    } catch (e: FeignException) {
+      logger.error("Failed to complete quote", e)
+      null
+    }
   }
 
   override fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto, underwritingGuidelinesBypassedBy: String?): QuoteDto {
@@ -69,7 +74,6 @@ class UnderwriterServiceImpl(
         underwriterClient.completeQuote(quoteId, underwritingGuidelinesBypassedBy)
       } catch (e: FeignException) {
         logger.error("Failed to complete updated quote", e)
-        Sentry.capture(e)
         // Noop
       }
     }
