@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.account;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.services.account.dto.*;
 import org.javamoney.moneta.Money;
@@ -62,8 +63,8 @@ public class AccountServiceStub implements AccountService {
     chargeEstimation = new AccountChargeEstimationDTO(
         Money.of(subscription, "SEK"),
         Money.of(discount, "SEK"),
-          Money.of(currentMonthsBalance.add(subscription).subtract(discount), "SEK"),
-        ImmutableList.of("referral code")
+        Money.of(currentMonthsBalance.add(subscription).subtract(discount), "SEK"),
+        List.of("referral code")
       );
   }
 
