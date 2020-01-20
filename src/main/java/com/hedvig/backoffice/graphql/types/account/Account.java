@@ -13,7 +13,6 @@ public class Account {
   String id;
   MonetaryAmount currentBalance;
   MonetaryAmount totalBalance;
-  AccountChargeEstimation chargeEstimation;
   List<AccountEntry> entries;
 
   public static Account from(AccountDTO account) {
@@ -21,7 +20,6 @@ public class Account {
       account.getMemberId(),
       account.getCurrentBalance(),
       account.getTotalBalance(),
-      AccountChargeEstimation.from(account.getChargeEstimation()),
       account.getEntries().stream()
       .map(AccountEntry::from)
       .collect(toList())

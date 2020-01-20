@@ -6,6 +6,5 @@ data class AccountDTO(
     val memberId: String,
     val currentBalance: MonetaryAmount,
     val totalBalance: MonetaryAmount,
-    val entries: List<AccountEntryDTO>,
-    val chargeEstimation: AccountChargeEstimationDTO
+    val entries: List<AccountEntryDTO>
 )

@@ -1,13 +1,9 @@
 package com.hedvig.backoffice.services.account;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.services.account.dto.*;
 import org.javamoney.moneta.Money;
 
-import javax.annotation.concurrent.Immutable;
-import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -22,11 +18,6 @@ import static java.util.stream.Collectors.toList;
 public class AccountServiceStub implements AccountService {
 
   private List<AccountEntryDTO> entries = new ArrayList<>();
-  private BigDecimal subscription =  BigDecimal.valueOf(99);
-  private BigDecimal discount =  BigDecimal.valueOf(10);
-  private AccountChargeEstimationDTO chargeEstimation;
-  private BigDecimal currentMonthsBalance = calculateCurrentMonthsBalance();
-  private BigDecimal totalBalance = calculateTotalBalance();
 
   public AccountServiceStub() {
     entries.add(
@@ -59,23 +50,18 @@ public class AccountServiceStub implements AccountService {
         Optional.empty()
       )
     );
-
-    chargeEstimation = new AccountChargeEstimationDTO(
-        Money.of(subscription, "SEK"),
-        Money.of(discount, "SEK"),
-        Money.of(currentMonthsBalance.add(subscription).subtract(discount), "SEK"),
-        List.of("referral code")
-      );
   }
 
   @Override
   public AccountDTO getAccount(String memberId) {
-      return new AccountDTO(
+    final BigDecimal currentMonthsBalance = calculateCurrentMonthsBalance();
+    final BigDecimal totalBalance = calculateTotalBalance();
+
+    return new AccountDTO(
       memberId,
       Money.of(currentMonthsBalance, "SEK"),
       Money.of(totalBalance, "SEK"),
-      entries,
-      chargeEstimation
+      entries
     );
   }
 
@@ -86,8 +72,7 @@ public class AccountServiceStub implements AccountService {
         memberId,
         Money.of(calculateCurrentMonthsBalance(), "SEK"),
         Money.of(calculateTotalBalance(), "SEK"),
-        entries,
-        chargeEstimation
+        entries
       ))
       .collect(toList());
   }
