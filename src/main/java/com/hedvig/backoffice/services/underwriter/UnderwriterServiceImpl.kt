@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.underwriter
 
+import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException
 import com.hedvig.backoffice.services.members.MemberService
 import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
@@ -57,7 +58,7 @@ class UnderwriterServiceImpl(
       underwriterClient.createQuote(
         quoteRequestDto
       )
-    } catch (e: FeignException) {
+    } catch (e: ExternalServiceBadRequestException) {
       logger.error("Failed to complete quote", e)
       null
     }
