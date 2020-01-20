@@ -9,14 +9,14 @@ import java.util.List;
 @Value
 public class AccountChargeEstimation {
     MonetaryAmount subscription;
-    MonetaryAmount totalDiscountAmount;
+    MonetaryAmount discount;
     MonetaryAmount charge;
     List<String> discountCodes;
 
   public static AccountChargeEstimation from(AccountChargeEstimationDTO accountChargeEstimationDTO) {
     return new AccountChargeEstimation(
       accountChargeEstimationDTO.getSubscription(),
-        accountChargeEstimationDTO.getTotalDiscountAmount(),
+        accountChargeEstimationDTO.getDiscount(),
         accountChargeEstimationDTO.getCharge(),
         accountChargeEstimationDTO.getDiscountCodes()
     );
