@@ -12,7 +12,7 @@ import java.util.UUID;
 @Value
 public class AccountChargeEstimationDTO {
     MonetaryAmount subscription;
-    MonetaryAmount totalDiscountAmount;
+    MonetaryAmount discount;
     MonetaryAmount charge;
     List<String> discountCodes;
 }
