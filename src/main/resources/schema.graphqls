@@ -461,7 +461,15 @@ type Account {
   id: ID!
   currentBalance: MonetaryAmount!
   totalBalance: MonetaryAmount!
+  chargeEstimation: AccountChargeEstimation!
   entries: [AccountEntry!]!
+}
+
+type AccountChargeEstimation {
+    subscription: MonetaryAmount!
+    discount: MonetaryAmount!
+    charge: MonetaryAmount!
+    discountCodes: [String!]!
 }
 
 type SchedulerState {
