@@ -5,6 +5,7 @@ import com.hedvig.backoffice.util.Gender;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.annotation.Nullable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ public class MemberWebDTO {
   Long memberId;
   MemberStatus status;
   String ssn;
+  @Nullable
   Gender gender;
   String firstName;
   String lastName;
