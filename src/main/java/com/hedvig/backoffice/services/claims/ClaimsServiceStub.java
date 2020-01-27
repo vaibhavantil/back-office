@@ -3,18 +3,35 @@ package com.hedvig.backoffice.services.claims;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
-import com.hedvig.backoffice.services.claims.dto.*;
+import com.hedvig.backoffice.services.claims.dto.Claim;
+import com.hedvig.backoffice.services.claims.dto.ClaimData;
+import com.hedvig.backoffice.services.claims.dto.ClaimEvent;
+import com.hedvig.backoffice.services.claims.dto.ClaimFileCategoryDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimNote;
+import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentResponse;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentStatus;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
+import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
+import com.hedvig.backoffice.services.claims.dto.ClaimSource;
+import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimType;
+import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.EmployeeClaimRequestDTO;
+import com.hedvig.backoffice.services.claims.dto.MarkClaimFileAsDeletedDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
-import java.time.Instant;
-import com.hedvig.backoffice.web.dto.MemberStatus;
-import java.util.stream.Stream;
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -22,12 +39,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
@@ -61,7 +82,7 @@ public class ClaimsServiceStub implements ClaimsService {
     claims = IntStream.range(0, 10).mapToObj(i -> {
       String id = UUID.randomUUID().toString();
       String memberId = memberIds.size() > i ? memberIds.get(i)
-        : memberIds.size() > 0 ? memberIds.get(0) : UUID.randomUUID().toString();
+        : memberIds.size() > 0 ? memberIds.get(0) : "123456";
 
       val note = new ClaimNote();
       note.setText("Testnote 123");
