@@ -231,6 +231,7 @@ type Member {
   firstName: String
   lastName: String
   personalNumber: String
+  gender: Gender
   address: String
   postalNumber: String
   city: String
@@ -245,6 +246,12 @@ type Member {
   person: Person
   numberFailedCharges: NumberFailedCharges
   quotes: [Quote!]!
+}
+
+enum Gender {
+  MALE,
+  FEMALE,
+  OTHER
 }
 
 interface IQuoteData {
@@ -453,8 +460,8 @@ enum SanctionStatus {
 }
 
 type NumberFailedCharges {
-    numberFailedCharges: Int!
-    lastFailedChargeAt: Instant
+  numberFailedCharges: Int!
+  lastFailedChargeAt: Instant
 }
 
 type Account {
@@ -466,10 +473,10 @@ type Account {
 }
 
 type AccountChargeEstimation {
-    subscription: MonetaryAmount!
-    discount: MonetaryAmount!
-    charge: MonetaryAmount!
-    discountCodes: [String!]!
+  subscription: MonetaryAmount!
+  discount: MonetaryAmount!
+  charge: MonetaryAmount!
+  discountCodes: [String!]!
 }
 
 type SchedulerState {

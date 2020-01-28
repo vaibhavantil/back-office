@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.graphql.types
 
 import com.hedvig.backoffice.services.members.dto.MemberDTO
+import com.hedvig.backoffice.util.Gender
 import java.time.Instant
 
 data class Member(
@@ -8,6 +9,7 @@ data class Member(
   val firstName: String?,
   val lastName: String?,
   val personalNumber: String?,
+  val gender: Gender?,
   val address: String?,
   val postalNumber: String?,
   val city: String?,
@@ -21,6 +23,7 @@ data class Member(
       dto.firstName,
       dto.lastName,
       dto.ssn,
+      dto.gender,
       dto.street,
       dto.zipCode,
       dto.city,

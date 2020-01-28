@@ -7,6 +7,7 @@ import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.util.Gender;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.val;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,7 @@ public class SchedulerStatusResolver implements GraphQLResolver<SchedulerStatus>
     try {
       return Member.Companion.fromDTO(memberService.findByMemberId(schedulerStatus.getMemberId(), token));
     } catch (Exception e) {
-      return new Member(schedulerStatus.getMemberId(), "UNKNOWN", "UNKNOWN", "Unknown", "Unknown", "Unknown", "Unknown",  Instant.now(), "Unknown", "Unknown");
+      return new Member(schedulerStatus.getMemberId(), "UNKNOWN", "UNKNOWN", "Unknown", Gender.OTHER, "Unknown", "Unknown", "Unknown",  Instant.now(), "Unknown", "Unknown");
     }
   }
 }

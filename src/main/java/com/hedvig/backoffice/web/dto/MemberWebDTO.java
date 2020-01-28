@@ -1,9 +1,11 @@
 package com.hedvig.backoffice.web.dto;
 
 import com.hedvig.backoffice.services.members.dto.MemberDTO;
+import com.hedvig.backoffice.util.Gender;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.annotation.Nullable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +20,8 @@ public class MemberWebDTO {
   Long memberId;
   MemberStatus status;
   String ssn;
+  @Nullable
+  Gender gender;
   String firstName;
   String lastName;
   String street;
@@ -39,6 +43,7 @@ public class MemberWebDTO {
     this.memberId = m.getMemberId();
     this.status = m.getStatus();
     this.ssn = m.getSsn();
+    this.gender = m.getGender();
     this.firstName = m.getFirstName();
     this.lastName = m.getLastName();
     this.street = m.getStreet();
@@ -62,6 +67,7 @@ public class MemberWebDTO {
       this.memberId,
       this.status,
       this.ssn,
+      this.gender,
       this.firstName,
       this.lastName,
       this.street,

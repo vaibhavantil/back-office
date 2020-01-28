@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.members.dto
 
+import com.hedvig.backoffice.util.Gender
 import java.time.Instant
 import java.time.LocalDate
 
@@ -10,6 +11,7 @@ data class MemberDTO(
     val memberId: Long,
     val status: MemberStatus? = null,
     val ssn: String? = null,
+    val gender: Gender? = null,
     val firstName: String? = null,
     val lastName: String? = null,
     val street: String? = null,
