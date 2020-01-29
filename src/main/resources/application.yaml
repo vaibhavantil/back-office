@@ -98,7 +98,7 @@ meerkat:
 accountService:
   baseUrl: http://localhost:8090
   stub: false
-  
+
 itemPricingService:
   baseUrl: http://localhost:5050
   stub: false
@@ -107,21 +107,22 @@ tickets:
   baseUrl: http://localhost:8088
   stub: false
 
-oauth:
-  enabled: true
-  hds: hedvig.com
-  google:
+gatekeeper:
+  baseUrl: http://localhost:8040
+  stub: false
+
+security:
+  basic:
+    enabled: false
+  oauth2:
     client:
-      clientId:
-      clientSecret:
-      accessTokenUri: https://accounts.google.com/o/oauth2/token
-      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth?access_type=offline&prompt=consent
-      tokenName: oauth_token
-      authenticationScheme: query
-      clientAuthenticationScheme: form
+      clientId: GatekeeperApplication
+      clientSecret: secret
+      accessTokenUri: http://localhost:8040/oauth2/token
+      userAuthorizationUri: http://localhost:8040/oauth2/authorize
       scope: profile, email
     resource:
-      userInfoUri: https://www.googleapis.com/userinfo/v2/me
+      userInfoUri: http://localhost:8081/oauth2/tokeninfo
 
 graphql:
   servlet:
@@ -140,6 +141,8 @@ spring:
   jackson:
     serialization:
       write_dates_as_timestamps: false
+  thymeleaf:
+    cache: false
 
 cloud:
   aws:
