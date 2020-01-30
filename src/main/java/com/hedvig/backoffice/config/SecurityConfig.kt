@@ -1,43 +1,36 @@
 package com.hedvig.backoffice.config
 
+import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException
 import com.hedvig.backoffice.config.feign.ExternalServiceUnauthorizedException
-import com.hedvig.backoffice.security.OAuth2SuccessHandler
-import com.hedvig.backoffice.services.personnel.PersonnelService
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso
 import org.springframework.cloud.openfeign.FeignClient
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.messaging.handler.annotation.Header
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.filter.GenericFilterBean
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.filter.OncePerRequestFilter
 import javax.servlet.FilterChain
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity()
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-@EnableOAuth2Client
-@EnableOAuth2Sso
 class SecurityConfig @Autowired constructor(
-    private val personnelService: PersonnelService,
     private val gatekeeperClient: GatekeeperClient
 ) : WebSecurityConfigurerAdapter() {
-
-
-
-
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.cors()
@@ -69,57 +62,77 @@ class SecurityConfig @Autowired constructor(
             .antMatchers("/graphiql")
             .authenticated();
     }
-
-    @Bean
-    fun successHandler(): OAuth2SuccessHandler {
-        return OAuth2SuccessHandler(personnelService, "/login/process")
-    }
-
 }
 
 class GatekeeperFilter(
     private val gatekeeperClient: GatekeeperClient
-) : GenericFilterBean() {
+) : OncePerRequestFilter() {
+    override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
+        SecurityContextHolder.getContext().authentication = null
+        if (request.session?.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY) != null) {
+          request.session?.removeAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY)
+        }
 
-    override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
+        val accessToken =
+          request.cookies?.find { cookie ->
+            cookie.name == "_hvg_at"
+          }?.value
 
-        val accessToken = if (request is HttpServletRequest) {
-            request.cookies.find { cookie ->
-                cookie.name == "_hvg_at"
-            }?.value
-        } else null
-
-        accessToken?.let {
-            val tokenInfo = try {
-                gatekeeperClient.tokenInfo("Bearer $accessToken")
-            } catch (feign: ExternalServiceUnauthorizedException){
-                return
-            }
-            SecurityContextHolder.getContext().authentication = GatekeeperAuthentication(tokenInfo)
+        accessToken?.apply {
+          try {
+            logger.info("fetch token info")
+            val tokenInfo = gatekeeperClient.tokenInfo("Bearer $accessToken")
+            SecurityContextHolder.getContext().authentication =
+              GatekeeperAuthentication(tokenInfo, accessToken)
+          } catch (e: ExternalServiceUnauthorizedException) {
+            // we're not authenticated
+          } catch (e: ExternalServiceBadRequestException) {
+            // we're not authenticated
+          }
         }
 
         chain.doFilter(request, response);
     }
+
+  companion object {
+    val logger = LoggerFactory.getLogger(GatekeeperFilter::class.java)
+  }
 }
 
 @FeignClient(name = "gatekeeper", url = "\${gatekeeper.baseUrl}")
 interface GatekeeperClient {
     @GetMapping("/oauth2/tokeninfo")
-    fun tokenInfo(@Header(value = "authorization") authorization: String): TokenInfo
+    fun tokenInfo(@RequestHeader("Authorization") authorization: String): TokenInfo
 }
 
 data class TokenInfo(
-    val username: String,
-    val scopes: Set<String>
+    val subject: String,
+    val scopes: Set<String>,
+    val role: Role
 )
 
-class GatekeeperAuthentication(private val tokenInfo: TokenInfo) : AbstractAuthenticationToken(tokenInfo.scopes.map { scope -> SimpleGrantedAuthority(scope) }) {
+enum class Role {
+  NOBODY,
+  IEX,
+  IEX_EXTENDED,
+  DEV,
+  ROOT
+}
 
+
+class GatekeeperAuthentication(
+  private val tokenInfo: TokenInfo,
+  private val accessToken: String
+) : AbstractAuthenticationToken(
+  tokenInfo.scopes.map { scope -> SimpleGrantedAuthority(scope) }
+) {
     override fun getPrincipal(): Any {
-        return tokenInfo.username
+      return User(tokenInfo.subject, "", authorities)
     }
 
     override fun getCredentials(): Any {
-        return tokenInfo.username
+        return accessToken
     }
+
+  override fun isAuthenticated(): Boolean = true
 }

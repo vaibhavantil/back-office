@@ -108,21 +108,8 @@ tickets:
   stub: false
 
 gatekeeper:
-  baseUrl: http://localhost:8040
+  baseUrl: https://id.dev.hedvigit.com
   stub: false
-
-security:
-  basic:
-    enabled: false
-  oauth2:
-    client:
-      clientId: GatekeeperApplication
-      clientSecret: secret
-      accessTokenUri: http://localhost:8040/oauth2/token
-      userAuthorizationUri: http://localhost:8040/oauth2/authorize
-      scope: profile, email
-    resource:
-      userInfoUri: http://localhost:8081/oauth2/tokeninfo
 
 graphql:
   servlet:
