@@ -19,5 +19,6 @@ public interface PersonnelService {
 
   String getIdToken(String id);
 
+  @Deprecated
   String getIdToken(Personnel personnel);
 }
