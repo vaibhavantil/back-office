@@ -111,8 +111,8 @@ public class QuestionServiceImpl implements QuestionService {
     group.setAnswer(message);
     group.setPersonnel(personnel);
 
-    botService.answerQuestion(memberId, message, personnelService.getIdToken(personnel));
-    sendNotification(memberId, personnelService.getIdToken(personnel));
+    botService.answerQuestion(memberId, message, "deprecated");
+    sendNotification(memberId, "deprecated");
     questionGroupRepository.save(group);
     updatesService.changeOn(-1, UpdateType.QUESTIONS);
 

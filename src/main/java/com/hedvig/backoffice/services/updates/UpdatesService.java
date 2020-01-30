@@ -10,7 +10,7 @@ public interface UpdatesService {
 
   void updates(String personnelId);
 
-  void subscribe(String personnelId, String sessionId) throws AuthorizationException;
+  void subscribe(String personnelEmail, String sessionId) throws AuthorizationException;
 
   void unsubscribe(String personnelId, String sessionId);
 }
