@@ -10,12 +10,8 @@ public class PersonnelDTO {
 
   private String email;
 
-  private String name;
-
-  private String picture;
-
   public static PersonnelDTO fromDomain(Personnel personnel) {
     return new PersonnelDTO(
-        personnel.getId(), personnel.getEmail(), personnel.getName(), personnel.getPicture());
+        personnel.getId(), personnel.getEmail());
   }
 }

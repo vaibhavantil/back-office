@@ -94,9 +94,9 @@ public class UpdatesServiceImpl implements UpdatesService {
 
   @Override
   @Transactional
-  public void subscribe(String personnelId, String sessionId) throws AuthorizationException {
+  public void subscribe(String personnelEmail, String sessionId) throws AuthorizationException {
     Personnel personnel =
-        personnelRepository.findById(personnelId).orElseThrow(AuthorizationException::new);
+        personnelRepository.findByEmail(personnelEmail).orElseThrow(AuthorizationException::new);
 
     UpdateContext uc = new UpdateContext(personnel, sessionId);
     updateContextRepository.save(uc);

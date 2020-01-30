@@ -128,7 +128,7 @@ public class ChatServiceImpl implements ChatService {
   public void subscribe(String memberId, String subId, String sessionId, String principalId) {
     Personnel personnel;
     try {
-      personnel = personnelService.getPersonnel(principalId);
+      personnel = personnelService.getPersonnelByEmail(principalId);
     } catch (AuthorizationException e) {
       send(memberId, principalId, Message.error(400, "Not authorized"));
       log.warn("member not authorized memberId = " + memberId);
@@ -137,7 +137,7 @@ public class ChatServiceImpl implements ChatService {
 
     MemberDTO member;
     try {
-      member = memberService.findByMemberId(memberId, personnelService.getIdToken(personnel));
+      member = memberService.findByMemberId(memberId, "deprecated");
     } catch (ExternalServiceBadRequestException e) {
       send(
           memberId,

@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
@@ -21,6 +22,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.filter.OncePerRequestFilter
+import java.util.UUID
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -106,9 +108,10 @@ interface GatekeeperClient {
 }
 
 data class TokenInfo(
-    val subject: String,
-    val scopes: Set<String>,
-    val role: Role
+  val id: UUID,
+  val subject: String,
+  val scopes: Set<String>,
+  val role: Role
 )
 
 enum class Role {
@@ -127,7 +130,7 @@ class GatekeeperAuthentication(
   tokenInfo.scopes.map { scope -> SimpleGrantedAuthority(scope) }
 ) {
     override fun getPrincipal(): Any {
-      return User(tokenInfo.subject, "", authorities)
+      return GatekeeperUser(tokenInfo.id, tokenInfo.subject, authorities)
     }
 
     override fun getCredentials(): Any {
@@ -136,3 +139,9 @@ class GatekeeperAuthentication(
 
   override fun isAuthenticated(): Boolean = true
 }
+
+class GatekeeperUser(
+  val id: UUID,
+  username: String,
+  authorities: Collection<GrantedAuthority>
+): User(username, "", authorities)

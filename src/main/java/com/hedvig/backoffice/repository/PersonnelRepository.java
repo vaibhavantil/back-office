@@ -14,6 +14,5 @@ public interface PersonnelRepository extends CrudRepository<Personnel, Long> {
   @Query("select p from Personnel p  where p.id = :id")
   Optional<Personnel> findById(@Param("id") String id);
 
-  @Query("select p from Personnel p")
-  Stream<Personnel> all();
+  Optional<Personnel> findByEmail(@Param("email") String email);
 }
