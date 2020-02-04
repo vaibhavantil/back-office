@@ -83,7 +83,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     }
   }
 
-  @Scheduled(fixedDelayString = "1000")
+  @Scheduled(fixedDelayString = "${intervals.chat}")
   @Override
   public void update() {
     List<BackOfficeMessage> fetched =

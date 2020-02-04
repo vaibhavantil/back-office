@@ -6,7 +6,6 @@ import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.repository.PersonnelRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.security.GatekeeperUser;
-import com.hedvig.backoffice.web.dto.PersonnelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,7 @@ public class PersonnelServiceImpl implements PersonnelService {
   @Override
   public Personnel me(String email) throws AuthorizationException {
     return personnelRepository.findByEmail(email)
-        .orElseThrow(AuthorizationException::new);
+      .orElseThrow(AuthorizationException::new);
   }
 
   @Override

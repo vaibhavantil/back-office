@@ -137,7 +137,7 @@ public class ChatServiceImpl implements ChatService {
 
     MemberDTO member;
     try {
-      member = memberService.findByMemberId(memberId, "deprecated");
+      member = memberService.findByMemberId(memberId, personnelService.getIdToken(personnel.getEmail()));
     } catch (ExternalServiceBadRequestException e) {
       send(
           memberId,

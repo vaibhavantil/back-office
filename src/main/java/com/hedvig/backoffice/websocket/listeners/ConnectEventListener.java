@@ -1,7 +1,7 @@
 package com.hedvig.backoffice.websocket.listeners;
 
-import com.hedvig.backoffice.config.GatekeeperAuthentication;
 import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.security.GatekeeperAuthentication;
 import com.hedvig.backoffice.services.updates.UpdatesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
