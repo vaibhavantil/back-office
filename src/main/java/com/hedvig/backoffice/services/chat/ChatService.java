@@ -8,13 +8,13 @@ public interface ChatService {
 
   void append(String memberId, String message, boolean forceSendMessage, String personnelEmail, String token);
 
-  void messages(String memberId, String personnelId, String token);
+  void messages(String memberId, String personnelEmail, String token);
 
-  void messages(String memberId, int count, String personnelId, String token);
+  void messages(String memberId, int count, String personnelEmail, String token);
 
   void close(String sessionId);
 
-  void subscribe(String memberId, String subId, String sessionId, String principalId);
+  void subscribe(String memberId, String subId, String sessionId, String principalEmail);
 
   void unsubscribe(String subId, String sessionId);
 

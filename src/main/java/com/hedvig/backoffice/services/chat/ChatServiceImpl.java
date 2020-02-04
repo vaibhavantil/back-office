@@ -88,31 +88,31 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  public void messages(String memberId, String personnelId, String token) {
+  public void messages(String memberId, String personnelEmail, String token) {
     try {
       List<BotMessageDTO> messages = botService.messages(memberId, token);
       messages.forEach(messagePostProcessor::processMessage);
-      send(memberId, personnelId, Message.chat(messages));
+      send(memberId, personnelEmail, Message.chat(messages));
     } catch (ExternalServiceBadRequestException e) {
-      send(memberId, personnelId, Message.error(400, e.getMessage()));
+      send(memberId, personnelEmail, Message.error(400, e.getMessage()));
       log.error("chat not updated memberId = " + memberId, e);
     } catch (ExternalServiceException e) {
-      send(memberId, personnelId, Message.error(500, e.getMessage()));
+      send(memberId, personnelEmail, Message.error(500, e.getMessage()));
       log.error("can't fetch member memberId = " + memberId, e);
     }
   }
 
   @Override
-  public void messages(String memberId, int count, String personnelId, String token) {
+  public void messages(String memberId, int count, String personnelEmail, String token) {
     try {
       List<BotMessageDTO> messages = botService.messages(memberId, count, token);
       messages.forEach(messagePostProcessor::processMessage);
-      send(memberId, personnelId, Message.chat(messages));
+      send(memberId, personnelEmail, Message.chat(messages));
     } catch (ExternalServiceBadRequestException e) {
-      send(memberId, personnelId, Message.error(400, e.getMessage()));
+      send(memberId, personnelEmail, Message.error(400, e.getMessage()));
       log.error("chat not updated memberId = " + memberId, e);
     } catch (ExternalServiceException e) {
-      send(memberId, personnelId, Message.error(500, e.getMessage()));
+      send(memberId, personnelEmail, Message.error(500, e.getMessage()));
       log.error("can't fetch member memberId = " + memberId, e);
     }
   }
@@ -125,12 +125,12 @@ public class ChatServiceImpl implements ChatService {
 
   @Override
   @Transactional
-  public void subscribe(String memberId, String subId, String sessionId, String principalId) {
+  public void subscribe(String memberId, String subId, String sessionId, String principalEmail) {
     Personnel personnel;
     try {
-      personnel = personnelService.getPersonnelByEmail(principalId);
+      personnel = personnelService.getPersonnelByEmail(principalEmail);
     } catch (AuthorizationException e) {
-      send(memberId, principalId, Message.error(400, "Not authorized"));
+      send(memberId, principalEmail, Message.error(400, "Not authorized"));
       log.warn("member not authorized memberId = " + memberId);
       return;
     }
