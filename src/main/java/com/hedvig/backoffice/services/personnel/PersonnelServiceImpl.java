@@ -1,10 +1,11 @@
 package com.hedvig.backoffice.services.personnel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hedvig.backoffice.config.GatekeeperUser;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.repository.PersonnelRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.security.GatekeeperUser;
 import com.hedvig.backoffice.web.dto.PersonnelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -42,11 +43,9 @@ public class PersonnelServiceImpl implements PersonnelService {
   }
 
   @Override
-  public PersonnelDTO me(String email) throws AuthorizationException {
-    return PersonnelDTO.fromDomain(
-      personnelRepository.findByEmail(email)
-        .orElseThrow(AuthorizationException::new)
-    );
+  public Personnel me(String email) throws AuthorizationException {
+    return personnelRepository.findByEmail(email)
+        .orElseThrow(AuthorizationException::new);
   }
 
   @Override
@@ -57,6 +56,8 @@ public class PersonnelServiceImpl implements PersonnelService {
   @Transactional
   @Override
   public String getIdToken(String id) {
-    return "deprecated";
+    return JWT.create()
+      .withClaim("email", id)
+      .sign(Algorithm.none());
   }
 }

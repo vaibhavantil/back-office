@@ -6,7 +6,7 @@ public interface ChatService {
 
   void send(String memberId, String personnelId, Message message);
 
-  void append(String memberId, String message, boolean forceSendMessage, String personnelId, String token);
+  void append(String memberId, String message, boolean forceSendMessage, String personnelEmail, String token);
 
   void messages(String memberId, String personnelId, String token);
 

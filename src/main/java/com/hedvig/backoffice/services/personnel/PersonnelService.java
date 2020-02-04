@@ -13,7 +13,7 @@ public interface PersonnelService {
   @Transactional
   Personnel storeAuthentication(Principal auth);
 
-  PersonnelDTO me(String email) throws AuthorizationException;
+  Personnel me(String email) throws AuthorizationException;
 
   Personnel getPersonnelByEmail(String email) throws AuthorizationException;
 

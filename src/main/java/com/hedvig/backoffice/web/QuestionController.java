@@ -3,6 +3,7 @@ package com.hedvig.backoffice.web;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.repository.PersonnelRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.security.GatekeeperUser;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
@@ -60,21 +61,21 @@ public class QuestionController {
   public QuestionGroupWebDTO answer(
       @PathVariable String memberId,
       @Valid @RequestBody BackOfficeResponseDTO message,
-      @AuthenticationPrincipal String principal)
+      @AuthenticationPrincipal GatekeeperUser principal)
       throws AuthorizationException, QuestionNotFoundException {
 
     Personnel personnel =
-        personnelRepository.findById(principal).orElseThrow(AuthorizationException::new);
+        personnelRepository.findByEmail(principal.getUsername()).orElseThrow(AuthorizationException::new);
     QuestionGroupDTO answer = questionService.answer(memberId, message.getMsg(), personnel);
     return new QuestionGroupWebDTO(answer);
   }
 
   @PostMapping("/done/{memberId}")
   public QuestionGroupDTO done(
-      @PathVariable String memberId, @AuthenticationPrincipal String principal)
+      @PathVariable String memberId, @AuthenticationPrincipal GatekeeperUser principal)
       throws QuestionNotFoundException, AuthorizationException {
     Personnel personnel =
-        personnelRepository.findById(principal).orElseThrow(AuthorizationException::new);
+        personnelRepository.findByEmail(principal.getUsername()).orElseThrow(AuthorizationException::new);
     return questionService.done(memberId, personnel);
   }
 }
