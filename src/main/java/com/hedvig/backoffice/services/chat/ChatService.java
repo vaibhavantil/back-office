@@ -4,7 +4,7 @@ import com.hedvig.backoffice.services.chat.data.Message;
 
 public interface ChatService {
 
-  void send(String memberId, String personnelId, Message message);
+  void send(String memberId, String personnelEmail, Message message);
 
   void append(String memberId, String message, boolean forceSendMessage, String personnelEmail, String token);
 
