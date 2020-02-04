@@ -42,7 +42,6 @@ class UnderwriterServiceImpl(
         incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData?.let((IncompleteApartmentQuoteDataDto)::from),
         incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData?.let((IncompleteHouseQuoteDataDto)::from),
         quotingPartner = null,
-        shouldComplete = true,
         underwritingGuidelinesBypassedBy = null
     )
 
