@@ -174,12 +174,12 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
     List<Personnel> personnels =
         chatContextRepository.findPersonnelsWithActiveChatsByMemberId(memberId);
     Message m = Message.chat(messages);
-    personnels.forEach(p -> chatService.send(memberId, p.getId(), m));
+    personnels.forEach(p -> chatService.send(memberId, p.getEmail(), m));
   }
 
   private void sendErrorToAll() {
     List<ChatContext> chats = chatContextRepository.findActiveChats();
     Message m = Message.error(500, "bot-service unavailable");
-    chats.forEach(c -> chatService.send(c.getMemberId(), c.getPersonnel().getId(), m));
+    chats.forEach(c -> chatService.send(c.getMemberId(), c.getPersonnel().getEmail(), m));
   }
 }

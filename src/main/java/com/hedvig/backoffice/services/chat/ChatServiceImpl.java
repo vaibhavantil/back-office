@@ -69,8 +69,8 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  public void send(String memberId, String personnelId, Message message) {
-    template.convertAndSendToUser(personnelId, getTopicPrefix() + memberId, message.toJson());
+  public void send(String memberId, String personnelEmail, Message message) {
+    template.convertAndSendToUser(personnelEmail, getTopicPrefix() + memberId, message.toJson());
   }
 
   @Override
@@ -141,14 +141,14 @@ public class ChatServiceImpl implements ChatService {
     } catch (ExternalServiceBadRequestException e) {
       send(
           memberId,
-          personnel.getId(),
+          personnel.getEmail(),
           Message.error(400, "member with memberId " + memberId + " not found"));
       log.warn("member with memberId " + memberId + " not found", e);
       return;
     }
 
     if (member == null) {
-      send(memberId, personnel.getId(), Message.error(500, "member service unavailable"));
+      send(memberId, personnel.getEmail(), Message.error(500, "member service unavailable"));
       log.error("can't fetch member memberId = " + memberId);
       return;
     }

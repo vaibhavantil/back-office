@@ -8,9 +8,9 @@ public interface UpdatesService {
 
   void set(long count, UpdateType type);
 
-  void updates(String personnelId);
+  void updates(String personnelEmail);
 
   void subscribe(String personnelEmail, String sessionId) throws AuthorizationException;
 
-  void unsubscribe(String personnelId, String sessionId);
+  void unsubscribe(String personnelEmail, String sessionId);
 }
