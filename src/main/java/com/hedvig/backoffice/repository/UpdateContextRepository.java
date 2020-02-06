@@ -18,7 +18,7 @@ public interface UpdateContextRepository extends JpaRepository<UpdateContext, Lo
   Optional<UpdateContext> findBySessionId(@Param("id") String id);
 
   @Query(
-      "select uc from UpdateContext uc where uc.personnel.id = :personnelId and uc.sessionId = :sessionId")
-  Optional<UpdateContext> findByPersonnelIdAndSessionId(
-      @Param("personnelId") String personnelId, @Param("sessionId") String sessionId);
+      "select uc from UpdateContext uc where uc.personnel.email = :personnelEmail and uc.sessionId = :sessionId")
+  Optional<UpdateContext> findByPersonnelEmailAndSessionId(
+      @Param("personnelEmail") String personnelEmail, @Param("sessionId") String sessionId);
 }

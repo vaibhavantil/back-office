@@ -69,8 +69,8 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  public void send(String memberId, String personnelId, Message message) {
-    template.convertAndSendToUser(personnelId, getTopicPrefix() + memberId, message.toJson());
+  public void send(String memberId, String personnelEmail, Message message) {
+    template.convertAndSendToUser(personnelEmail, getTopicPrefix() + memberId, message.toJson());
   }
 
   @Override
@@ -88,31 +88,31 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  public void messages(String memberId, String personnelId, String token) {
+  public void messages(String memberId, String personnelEmail, String token) {
     try {
       List<BotMessageDTO> messages = botService.messages(memberId, token);
       messages.forEach(messagePostProcessor::processMessage);
-      send(memberId, personnelId, Message.chat(messages));
+      send(memberId, personnelEmail, Message.chat(messages));
     } catch (ExternalServiceBadRequestException e) {
-      send(memberId, personnelId, Message.error(400, e.getMessage()));
+      send(memberId, personnelEmail, Message.error(400, e.getMessage()));
       log.error("chat not updated memberId = " + memberId, e);
     } catch (ExternalServiceException e) {
-      send(memberId, personnelId, Message.error(500, e.getMessage()));
+      send(memberId, personnelEmail, Message.error(500, e.getMessage()));
       log.error("can't fetch member memberId = " + memberId, e);
     }
   }
 
   @Override
-  public void messages(String memberId, int count, String personnelId, String token) {
+  public void messages(String memberId, int count, String personnelEmail, String token) {
     try {
       List<BotMessageDTO> messages = botService.messages(memberId, count, token);
       messages.forEach(messagePostProcessor::processMessage);
-      send(memberId, personnelId, Message.chat(messages));
+      send(memberId, personnelEmail, Message.chat(messages));
     } catch (ExternalServiceBadRequestException e) {
-      send(memberId, personnelId, Message.error(400, e.getMessage()));
+      send(memberId, personnelEmail, Message.error(400, e.getMessage()));
       log.error("chat not updated memberId = " + memberId, e);
     } catch (ExternalServiceException e) {
-      send(memberId, personnelId, Message.error(500, e.getMessage()));
+      send(memberId, personnelEmail, Message.error(500, e.getMessage()));
       log.error("can't fetch member memberId = " + memberId, e);
     }
   }
@@ -125,30 +125,30 @@ public class ChatServiceImpl implements ChatService {
 
   @Override
   @Transactional
-  public void subscribe(String memberId, String subId, String sessionId, String principalId) {
+  public void subscribe(String memberId, String subId, String sessionId, String principalEmail) {
     Personnel personnel;
     try {
-      personnel = personnelService.getPersonnel(principalId);
+      personnel = personnelService.getPersonnelByEmail(principalEmail);
     } catch (AuthorizationException e) {
-      send(memberId, principalId, Message.error(400, "Not authorized"));
+      send(memberId, principalEmail, Message.error(400, "Not authorized"));
       log.warn("member not authorized memberId = " + memberId);
       return;
     }
 
     MemberDTO member;
     try {
-      member = memberService.findByMemberId(memberId, personnelService.getIdToken(personnel));
+      member = memberService.findByMemberId(memberId, personnelService.getIdToken(personnel.getEmail()));
     } catch (ExternalServiceBadRequestException e) {
       send(
           memberId,
-          personnel.getId(),
+          personnel.getEmail(),
           Message.error(400, "member with memberId " + memberId + " not found"));
       log.warn("member with memberId " + memberId + " not found", e);
       return;
     }
 
     if (member == null) {
-      send(memberId, personnel.getId(), Message.error(500, "member service unavailable"));
+      send(memberId, personnel.getEmail(), Message.error(500, "member service unavailable"));
       log.error("can't fetch member memberId = " + memberId);
       return;
     }

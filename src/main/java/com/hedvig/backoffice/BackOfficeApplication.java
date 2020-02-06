@@ -70,18 +70,6 @@ public class BackOfficeApplication {
     return filterRegBean;
   }
 
-  @Bean
-  @ConfigurationProperties("oauth.google.client")
-  public AuthorizationCodeResourceDetails clientDetails() {
-    return new AuthorizationCodeResourceDetails();
-  }
-
-  @Bean
-  @ConfigurationProperties("oauth.google.resource")
-  public ResourceServerProperties clientResource() {
-    return new ResourceServerProperties();
-  }
-
   @Configuration
   @Profile("development")
   @ComponentScan(lazyInit = true)

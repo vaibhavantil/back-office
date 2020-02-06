@@ -35,7 +35,7 @@ public class PayoutController {
     @RequestBody PayoutMemberRequest payoutMemberRequest,
     @AuthenticationPrincipal Principal principal
     ) throws AuthorizationException {
-    val personnel = personnelService.getPersonnel(principal.getName());
+    val personnel = personnelService.getPersonnelByEmail(principal.getName());
     return paymentService.payoutMember(memberId, personnel.getEmail(), payoutMemberRequest);
   }
 }

@@ -17,16 +17,6 @@ public class Personnel {
 
   private String email;
 
-  private String name;
-
-  private String picture;
-
-  @Lob
-  @Type(type = "org.hibernate.type.TextType")
-  private String idToken;
-
-  private String refreshToken;
-
   public Personnel(String id) {
     this.id = id;
   }

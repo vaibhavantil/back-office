@@ -499,7 +499,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     Principal principal = context.getUserPrincipal();
 
     try {
-      Personnel personnel = personnelService.getPersonnel(principal.getName());
+      Personnel personnel = personnelService.getPersonnelByEmail(principal.getName());
       questionsService.done(memberId, personnel);
     } catch (Exception e) {
       String errorMessage = "Error when trying to update message as done!";

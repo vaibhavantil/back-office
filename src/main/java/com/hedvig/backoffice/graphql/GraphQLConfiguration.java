@@ -43,7 +43,7 @@ public class GraphQLConfiguration {
   public static String getEmail(DataFetchingEnvironment env, PersonnelService personnelService)
       throws AuthorizationException {
     GraphQLRequestContext context = env.getContext();
-    val personnel = personnelService.getPersonnel(context.getUserPrincipal().getName());
+    val personnel = personnelService.getPersonnelByEmail(context.getUserPrincipal().getName());
     return personnel.getEmail();
   }
 

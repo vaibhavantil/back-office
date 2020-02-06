@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.websocket.listeners;
 
 import com.hedvig.backoffice.security.AuthorizationException;
+import com.hedvig.backoffice.security.GatekeeperAuthentication;
 import com.hedvig.backoffice.services.updates.UpdatesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class ConnectEventListener implements ApplicationListener<SessionConnectE
   @Override
   public void onApplicationEvent(SessionConnectEvent event) {
     StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
-    if (headers.getUser() != null) {
+    if (headers.getUser() != null && headers.getUser() instanceof GatekeeperAuthentication) {
       try {
         updatesService.subscribe(headers.getUser().getName(), headers.getSessionId());
       } catch (AuthorizationException e) {

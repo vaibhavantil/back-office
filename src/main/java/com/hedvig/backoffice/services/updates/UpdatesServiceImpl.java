@@ -87,16 +87,16 @@ public class UpdatesServiceImpl implements UpdatesService {
 
   @Override
   @Transactional
-  public void updates(String personnelId) {
-    List<Updates> updates = updatesRepository.findByPersonnelId(personnelId);
-    send(personnelId, updates);
+  public void updates(String personnelEmail) {
+    List<Updates> updates = updatesRepository.findByPersonnelEmail(personnelEmail);
+    send(personnelEmail, updates);
   }
 
   @Override
   @Transactional
-  public void subscribe(String personnelId, String sessionId) throws AuthorizationException {
+  public void subscribe(String personnelEmail, String sessionId) throws AuthorizationException {
     Personnel personnel =
-        personnelRepository.findById(personnelId).orElseThrow(AuthorizationException::new);
+        personnelRepository.findByEmail(personnelEmail).orElseThrow(AuthorizationException::new);
 
     UpdateContext uc = new UpdateContext(personnel, sessionId);
     updateContextRepository.save(uc);
@@ -134,9 +134,9 @@ public class UpdatesServiceImpl implements UpdatesService {
 
   @Override
   @Transactional
-  public void unsubscribe(String personnelId, String sessionId) {
+  public void unsubscribe(String personnelEmail, String sessionId) {
     Optional<UpdateContext> optional =
-        updateContextRepository.findByPersonnelIdAndSessionId(personnelId, sessionId);
+        updateContextRepository.findByPersonnelEmailAndSessionId(personnelEmail, sessionId);
 
     if (optional.isPresent()) {
       UpdateContext uc = optional.get();
@@ -146,13 +146,13 @@ public class UpdatesServiceImpl implements UpdatesService {
   }
 
   private void send(Personnel personnel, List<Updates> updates) {
-    send(personnel.getId(), updates);
+    send(personnel.getEmail(), updates);
   }
 
-  private void send(String personnelId, List<Updates> updates) {
+  private void send(String personnelEmail, List<Updates> updates) {
     List<UpdatesDTO> dto =
         updates.stream().map(UpdatesDTO::fromDomain).collect(Collectors.toList());
 
-    template.convertAndSendToUser(personnelId, "/updates", dto);
+    template.convertAndSendToUser(personnelEmail, "/updates", dto);
   }
 }

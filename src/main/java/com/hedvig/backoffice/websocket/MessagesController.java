@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.websocket;
 
+import com.hedvig.backoffice.security.GatekeeperUser;
 import com.hedvig.backoffice.services.chat.ChatService;
 import com.hedvig.backoffice.services.messages.dto.BackOfficeResponseDTO;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
@@ -27,22 +28,22 @@ public class MessagesController {
   public void send(
       @DestinationVariable String memberId,
       @RequestBody BackOfficeResponseDTO message,
-      @AuthenticationPrincipal String principalId) {
+      @AuthenticationPrincipal GatekeeperUser principal) {
     chatService.append(
-        memberId, message.getMsg(), message.forceSendMessage, principalId, personnelService.getIdToken(principalId));
+        memberId, message.getMsg(), message.forceSendMessage, principal.getUsername(), personnelService.getIdToken(principal.getUsername()));
   }
 
   @MessageMapping("/history/{memberId}")
   public void messages(
-      @DestinationVariable String memberId, @AuthenticationPrincipal String principalId) {
-    chatService.messages(memberId, principalId, personnelService.getIdToken(principalId));
+      @DestinationVariable String memberId, @AuthenticationPrincipal GatekeeperUser principal) {
+    chatService.messages(memberId, principal.getUsername(), personnelService.getIdToken(principal.getUsername()));
   }
 
   @MessageMapping("/history/{memberId}/{count}")
   public void messages(
       @DestinationVariable String memberId,
       @DestinationVariable int count,
-      @AuthenticationPrincipal String principalId) {
-    chatService.messages(memberId, count, principalId, personnelService.getIdToken(principalId));
+      @AuthenticationPrincipal GatekeeperUser principal) {
+    chatService.messages(memberId, count, principal.getUsername(), personnelService.getIdToken(principal.getUsername()));
   }
 }
