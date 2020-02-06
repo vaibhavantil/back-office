@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = {"/api/test"})
+@RequestMapping(path = {"/test"})
 public class TestController {
   private final ProductPricingService productPricingService;
 
   @Autowired
-  public TestController(final ProductPricingService productPricingService) {
+  public TestController(ProductPricingService productPricingService) {
     this.productPricingService = productPricingService;
   }
 
