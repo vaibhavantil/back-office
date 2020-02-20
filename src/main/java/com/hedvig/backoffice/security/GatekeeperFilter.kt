@@ -24,7 +24,11 @@ class GatekeeperFilter(
           SecurityContextHolder.getContext().authentication = null
         } else {
           val tokenInfo = gatekeeper.tokenInfo("Bearer $accessToken")
-          SecurityContextHolder.getContext().authentication = GatekeeperAuthentication(tokenInfo, accessToken)
+          if (tokenInfo.scopes.contains("hope:read")) {
+            SecurityContextHolder.getContext().authentication = GatekeeperAuthentication(tokenInfo, accessToken)
+          } else {
+            logger.warn("User ${tokenInfo.subject} tried to access hope but is lacking the \"hope:read\" scope")
+          }
         }
       } catch (e: ExternalServiceUnauthorizedException) {
         // we're not authenticated
