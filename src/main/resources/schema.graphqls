@@ -19,6 +19,7 @@ type QueryType {
   inventory(claimId: ID!): [InventoryItem]!
   filters(categoryId: String!): [FilterSuggestion!]!
   inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
+  switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
 }
 
 type MutationType {
@@ -51,6 +52,7 @@ type MutationType {
   # Creates a quote from a product and returns the quote id
   createQuoteFromProduct(memberId: ID!, quoteData: QuoteFromProductInput!): Quote!
   updateQuote(quoteId: ID!, quoteData: QuoteInput!, bypassUnderwritingGuidelines: Boolean): Quote!
+  markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean
 }
 
 type Suggestion {
@@ -651,10 +653,6 @@ type LiabilityClaim {
   location: String
 }
 
-type NotCoveredClaim {
-  date: LocalDate
-}
-
 type FireDamageClaim {
   location: String
   date: LocalDate
@@ -757,6 +755,15 @@ input ClaimNoteInput {
 type ClaimEvent {
   text: String
   date: Instant
+}
+
+type SwitchableSwitcherEmail {
+  id: ID!
+  member: Member!
+  switcherCompany: String!
+  queuedAt: Instant!
+  sentAt: Instant
+  remindedAt: Instant
 }
 
 enum ClaimState {
@@ -865,12 +872,11 @@ enum TicketType {
   OTHER
 }
 
+
 # A String-representation of `java.time.YearMonth`. ex: `"2018-06"`
 scalar YearMonth
 # An object-representation of `javax.money.MonetaryAmount`. ex: `{"amount": 100,  "currency": "SEK"}`
 scalar MonetaryAmount
-# An epoch-representation of `java.time.Instant`. ex: `1531914777`
-scalar Instant
 # A String-representation of `java.time.ZonedDateTime`, ex: `"2018-09-21T14:17:46.536405+02:00[Europe/Stockholm]"`
 scalar ZonedDateTime
 # A String-representation of `java.time.LocalDate`, ex:  `"2018-09-26"`
