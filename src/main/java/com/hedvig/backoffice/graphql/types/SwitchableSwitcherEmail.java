@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.graphql.types;
 
-import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherCompany;
 import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
 
 import javax.annotation.Nullable;
@@ -10,7 +9,7 @@ import java.util.UUID;
 public class SwitchableSwitcherEmail {
   private UUID id;
   private String memberId;
-  private SwitchableSwitcherCompany switcherCompany;
+  private String switcherCompany;
   private Instant queuedAt;
   @Nullable
   private Instant sentAt;
@@ -23,7 +22,7 @@ public class SwitchableSwitcherEmail {
   public SwitchableSwitcherEmail(
     final UUID id,
     final String memberId,
-    final SwitchableSwitcherCompany switcherCompany,
+    final String switcherCompany,
     final Instant queuedAt,
     final @Nullable Instant sentAt,
     final @Nullable Instant remindedAt
@@ -44,7 +43,7 @@ public class SwitchableSwitcherEmail {
     return memberId;
   }
 
-  public SwitchableSwitcherCompany getSwitcherCompany() {
+  public String getSwitcherCompany() {
     return switcherCompany;
   }
 

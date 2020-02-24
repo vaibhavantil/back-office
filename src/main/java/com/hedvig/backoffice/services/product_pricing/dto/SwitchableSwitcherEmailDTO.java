@@ -7,7 +7,7 @@ import java.util.UUID;
 public class SwitchableSwitcherEmailDTO {
   private UUID id;
   private String memberId;
-  private SwitchableSwitcherCompany switcherCompany;
+  private String switcherCompany;
   private Instant queuedAt;
   @Nullable
   private Instant sentAt;
@@ -20,7 +20,7 @@ public class SwitchableSwitcherEmailDTO {
   public SwitchableSwitcherEmailDTO(
     final UUID id,
     final String memberId,
-    final SwitchableSwitcherCompany switcherCompany,
+    final String switcherCompany,
     final Instant queuedAt,
     final @Nullable Instant sentAt,
     final @Nullable Instant remindedAt
@@ -41,7 +41,7 @@ public class SwitchableSwitcherEmailDTO {
     return memberId;
   }
 
-  public SwitchableSwitcherCompany getSwitcherCompany() {
+  public String getSwitcherCompany() {
     return switcherCompany;
   }
 

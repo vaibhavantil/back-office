@@ -13,7 +13,6 @@ import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOE
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
-import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherCompany;
 import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
