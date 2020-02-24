@@ -22,6 +22,7 @@ import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
@@ -71,6 +72,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final MemberService memberService;
   private final ItemPricingService itemPricingService;
   private final UnderwriterService underwriterService;
+  private final ProductPricingService productPricingService;
 
   public GraphQLMutation(
     PaymentService paymentService,
@@ -84,8 +86,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     QuestionService questionsService,
     MemberService memberService,
     ItemPricingService itemPricingService,
-    UnderwriterService underwriterService
-  ) {
+    UnderwriterService underwriterService,
+    ProductPricingService productPricingService) {
 
     this.paymentService = paymentService;
     this.personnelService = personnelService;
@@ -99,6 +101,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.memberService = memberService;
     this.itemPricingService = itemPricingService;
     this.underwriterService = underwriterService;
+    this.productPricingService = productPricingService;
   }
 
   public CompletableFuture<Member> chargeMember(
@@ -552,5 +555,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return false;
   }
 
+  public Boolean markSwitchableSwitcherEmailAsReminded(final UUID emailId) {
+    productPricingService.markSwitchableSwitcherEmailAsReminded(emailId);
+
+    return true;
+  }
 }
 

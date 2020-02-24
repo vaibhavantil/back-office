@@ -7,6 +7,7 @@ import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.MonthlySubscription;
+import com.hedvig.backoffice.graphql.types.SwitchableSwitcherEmail;
 import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
@@ -151,5 +152,11 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       log.info("Exception occured when trying to access user email: " + e);
       return null;
     }
+  }
+
+  public List<SwitchableSwitcherEmail> switchableSwitcherEmails(DataFetchingEnvironment env) {
+    return productPricingService.getSwitchableSwitcherEmails().stream()
+      .map(SwitchableSwitcherEmail::from)
+      .collect(Collectors.toList());
   }
 }

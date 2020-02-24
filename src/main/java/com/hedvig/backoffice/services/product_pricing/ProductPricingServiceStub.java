@@ -13,6 +13,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOE
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
+import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
@@ -29,6 +30,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
@@ -350,6 +352,16 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
+  public List<SwitchableSwitcherEmailDTO> getSwitchableSwitcherEmails() {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public void markSwitchableSwitcherEmailAsReminded(UUID emailId) {
+    // noop
+  }
+
+  @Override
   public List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds) {
     return memberIds.stream()
       .map(memberId -> new MemberSearchResultDTOExtended(
@@ -361,5 +373,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
         null
       ))
       .collect(Collectors.toList());
+
+
   }
 }
