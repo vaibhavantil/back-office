@@ -9,6 +9,8 @@ data class QuoteInputDto(
   val productType: ProductType?,
   val incompleteHouseQuoteData: QuoteInputDataDto.HouseQuoteInputDto?,
   val incompleteApartmentQuoteData: QuoteInputDataDto.ApartmentQuoteInputDto?,
+  val norwegianHomeContentQuoteData: QuoteInputDataDto.NorwegianHomeContentQuoteInputDto?,
+  val norwegianTravelQuoteData: QuoteInputDataDto.NorwegianTravelQuoteInputDto?,
   val originatingProductId: UUID?,
   val currentInsurer: String? = null
 ) {
@@ -44,6 +46,23 @@ data class QuoteInputDto(
               householdSize = quoteInput.apartmentData.householdSize,
               subType = quoteInput.apartmentData.subType
             )
+          },
+        norwegianHomeContentQuoteData = quoteInput.norwegianHomeContentData
+          ?.let {
+            QuoteInputDataDto.NorwegianHomeContentQuoteInputDto(
+              street = quoteInput.norwegianHomeContentData.street,
+              zipCode = quoteInput.norwegianHomeContentData.zipCode,
+              city = quoteInput.norwegianHomeContentData.city,
+              livingSpace = quoteInput.norwegianHomeContentData.livingSpace,
+              coInsured = quoteInput.norwegianHomeContentData.householdSize?.minus(1),
+              type = quoteInput.norwegianHomeContentData.type
+            )
+          },
+        norwegianTravelQuoteData = quoteInput.norwegianTravelData
+          ?.let {
+            QuoteInputDataDto.NorwegianTravelQuoteInputDto(
+              coInsured = quoteInput.norwegianTravelData.householdSize?.minus(1)
+            )
           }
       )
   }
@@ -51,8 +70,10 @@ data class QuoteInputDto(
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes(
-  JsonSubTypes.Type(value = QuoteData.ApartmentQuoteData::class, name = "apartment"),
-  JsonSubTypes.Type(value = QuoteData.HouseQuoteData::class, name = "house")
+  JsonSubTypes.Type(value = QuoteInputDataDto.ApartmentQuoteInputDto::class, name = "apartment"),
+  JsonSubTypes.Type(value = QuoteInputDataDto.HouseQuoteInputDto::class, name = "house"),
+  JsonSubTypes.Type(value = QuoteInputDataDto.NorwegianHomeContentQuoteInputDto::class, name = "norwegianHomeContent"),
+  JsonSubTypes.Type(value = QuoteInputDataDto.NorwegianTravelQuoteInputDto::class, name = "norwegianTravel")
 )
 sealed class QuoteInputDataDto {
   data class ApartmentQuoteInputDto(
@@ -62,7 +83,7 @@ sealed class QuoteInputDataDto {
     val householdSize: Int? = null,
     val livingSpace: Int? = null,
 
-    val subType: com.hedvig.backoffice.services.product_pricing.dto.ProductType? = null
+    val subType: SwedishApartmentType? = null
   ) : QuoteInputDataDto()
 
   data class HouseQuoteInputDto(
@@ -76,6 +97,20 @@ sealed class QuoteInputDataDto {
     val numberOfBathrooms: Int? = null,
     val extraBuildings: List<ExtraBuilding>? = null,
     val isSubleted: Boolean? = null
+  ) : QuoteInputDataDto()
+
+  data class NorwegianHomeContentQuoteInputDto(
+    val street: String? = null,
+    val city: String? = null,
+    val zipCode: String? = null,
+    val coInsured: Int? = null,
+    val livingSpace: Int? = null,
+
+    val type: NorwegianHomeContentType? = null
+  ) : QuoteInputDataDto()
+
+  data class NorwegianTravelQuoteInputDto(
+    val coInsured: Int? = null
   ) : QuoteInputDataDto()
 }
 

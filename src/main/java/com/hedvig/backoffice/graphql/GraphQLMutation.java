@@ -407,6 +407,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return Quote.from(underwriterService.activateQuote(id, activationDate, terminationDate));
   }
 
+  public Quote addAgreementFromQuote(final UUID id, @Nullable final UUID contractId, @Nullable final LocalDate activeFrom,  @Nullable final LocalDate activeTo, @Nullable final LocalDate previousAgreementActiveTo) {
+    return Quote.from(underwriterService.addAgreementFromQuote(id, contractId, activeFrom, activeTo, previousAgreementActiveTo));
+  }
+
   public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData, final DataFetchingEnvironment env) {
     final UUID createdQuoteId = underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData), getUserIdentity(env)).getId();
     return Quote.from(underwriterService.getQuote(createdQuoteId));
