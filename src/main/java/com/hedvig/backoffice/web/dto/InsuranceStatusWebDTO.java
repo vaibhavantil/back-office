@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.web.dto;
 
-import com.hedvig.backoffice.services.product_pricing.dto.ExtraBuildingDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding;
 import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,7 +45,7 @@ public class InsuranceStatusWebDTO {
   Integer ancillaryArea;
   Integer yearOfConstruction;
   Integer numberOfBathrooms;
-  List<ExtraBuildingDTO> extraBuildings;
+  List<ExtraBuilding> extraBuildings;
   Boolean isSubleted;
 
   public InsuranceStatusWebDTO(InsuranceStatusDTO ins) {

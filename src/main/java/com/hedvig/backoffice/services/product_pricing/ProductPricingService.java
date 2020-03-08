@@ -10,6 +10,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
 import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
@@ -17,6 +18,7 @@ import com.hedvig.backoffice.web.dto.ProductState;
 import org.springframework.data.domain.Sort;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
@@ -68,4 +70,16 @@ public interface ProductPricingService {
 
   List<SwitchableSwitcherEmailDTO> getSwitchableSwitcherEmails();
   void markSwitchableSwitcherEmailAsReminded(UUID emailId);
+
+  List<Contract> getContractsByMemberId(String memberId);
+
+  void terminateContract(TerminateContractRequest request, String token);
+
+  Contract getContractById(UUID contractId);
+
+  void activatePendingAgreement(ActivatePendingAgreementRequest request, String token);
+
+  void changeTerminationDate(ChangeTerminationDateRequest request, String token);
+
+  void revertTermination(UUID contractId, String token);
 }

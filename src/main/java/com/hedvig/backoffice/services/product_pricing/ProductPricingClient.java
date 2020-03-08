@@ -1,34 +1,21 @@
 package com.hedvig.backoffice.services.product_pricing;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
-import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.*;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ActivatePendingAgreementRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeTerminationDateRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.TerminateContractRequest;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @FeignClient(
@@ -122,4 +109,34 @@ public interface ProductPricingClient {
 
   @PutMapping("/_/switchableSwitchers/emails/{emailId}/remind")
   void markSwitchableSwitcherEmailAsReminded(@PathVariable("emailId") UUID emailId);
+
+  @GetMapping("/_/contracts/member/{memberId}")
+  List<Contract> getContractsOfMember(@PathVariable("memberId") String memberId);
+
+  @PostMapping("/_/contracts/terminate")
+  void terminateContract(
+    @RequestBody TerminateContractRequest terminateContractRequest,
+    @RequestHeader("Authorization") String token
+  );
+
+  @GetMapping("/_/contracts/{contractId}")
+  Contract getContractById(@PathVariable  UUID contractId);
+
+  @PostMapping("/_/agreements/activate/pending")
+  void activatePendingAgreement(
+    @RequestBody ActivatePendingAgreementRequest request,
+    @RequestHeader("Authorization") String token
+  );
+
+  @PostMapping("/_/contracts/change/termination/date")
+  void changeTerminationDate(
+    @RequestBody ChangeTerminationDateRequest request,
+    @RequestHeader String token
+  );
+
+  @PostMapping("/_/contracts/revert/termination/{contractId}")
+  void revertTermination(
+    @PathVariable UUID contractId,
+    @RequestHeader String token
+  );
 }

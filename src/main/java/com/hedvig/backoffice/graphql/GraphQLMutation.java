@@ -23,6 +23,7 @@ import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
@@ -557,8 +558,32 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public Boolean markSwitchableSwitcherEmailAsReminded(final UUID emailId) {
     productPricingService.markSwitchableSwitcherEmailAsReminded(emailId);
-
     return true;
+  }
+
+  public Contract terminateContract(final TerminateContractRequest request, DataFetchingEnvironment env) {
+    productPricingService.terminateContract(request, getToken(env));
+    return productPricingService.getContractById(request.getContractId());
+  }
+
+  public Contract activatePendingAgreement(final ActivatePendingAgreementRequest request, DataFetchingEnvironment env) {
+    productPricingService.activatePendingAgreement(request, getToken(env));
+    return productPricingService.getContractById(request.getContractId());
+  }
+
+  public Contract changeTerminationDate(final ChangeTerminationDateRequest request, DataFetchingEnvironment env) {
+    productPricingService.changeTerminationDate(request, getToken(env));
+    return productPricingService.getContractById(request.getContractId());
+  }
+
+  public Contract revertTermination(final UUID contractId, DataFetchingEnvironment env) {
+    productPricingService.revertTermination(contractId, getToken(env));
+    return productPricingService.getContractById(contractId);
+  }
+
+  private String getToken(DataFetchingEnvironment env) {
+    GraphQLRequestContext context = env.getContext();
+    return personnelService.getIdToken(context.getUserPrincipal().getName());
   }
 }
 

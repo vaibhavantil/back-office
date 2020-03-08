@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.hedvig.backoffice.graphql.types.ApartmentQuoteDataInput
 import com.hedvig.backoffice.graphql.types.HouseQuoteDataInput
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -30,40 +31,6 @@ enum class QuoteInitiatedFrom {
     IOS,
     ANDROID,
     HOPE
-}
-
-enum class ExtraBuildingType {
-    GARAGE,
-    CARPORT,
-    SHED,
-    STOREHOUSE,
-    FRIGGEBOD,
-    ATTEFALL,
-    OUTHOUSE,
-    GUESTHOUSE,
-    GAZEBO,
-    GREENHOUSE,
-    SAUNA,
-    BARN,
-    BOATHOUSE,
-    OTHER
-}
-
-data class ExtraBuilding(
-    val type: ExtraBuildingType,
-    val area: Int,
-    val hasWaterConnected: Boolean,
-    val displayName: String?
-) {
-    companion object {
-        fun from(extraBuilding: com.hedvig.backoffice.graphql.types.ExtraBuilding): ExtraBuilding =
-            ExtraBuilding(
-                type = extraBuilding.type,
-                area = extraBuilding.area,
-                hasWaterConnected = extraBuilding.hasWaterConnected,
-                displayName = extraBuilding.displayName
-            )
-    }
 }
 
 data class QuoteDto(
@@ -123,22 +90,22 @@ sealed class QuoteData {
     }
 
     data class HouseQuoteData(
-        val id: UUID?,
-        val ssn: String?,
-        val firstName: String?,
-        val lastName: String?,
+      val id: UUID?,
+      val ssn: String?,
+      val firstName: String?,
+      val lastName: String?,
 
-        val street: String?,
-        val city: String?,
-        val zipCode: String?,
-        val householdSize: Int?,
-        val livingSpace: Int?,
-        val ancillaryArea: Int? = null,
-        val yearOfConstruction: Int? = null,
-        val numberOfBathrooms: Int? = null,
-        val extraBuildings: List<ExtraBuilding>? = null,
-        val isSubleted: Boolean? = null,
-        val floor: Int = 0
+      val street: String?,
+      val city: String?,
+      val zipCode: String?,
+      val householdSize: Int?,
+      val livingSpace: Int?,
+      val ancillaryArea: Int? = null,
+      val yearOfConstruction: Int? = null,
+      val numberOfBathrooms: Int? = null,
+      val extraBuildings: List<ExtraBuilding>? = null,
+      val isSubleted: Boolean? = null,
+      val floor: Int = 0
     ) : QuoteData() {
         companion object {
             fun from(houseQuoteDataInput: HouseQuoteDataInput): HouseQuoteData =
