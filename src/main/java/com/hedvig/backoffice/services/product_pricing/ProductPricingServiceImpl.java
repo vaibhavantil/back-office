@@ -13,6 +13,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
 import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
@@ -178,5 +179,35 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   @Override
   public void markSwitchableSwitcherEmailAsReminded(final UUID emailId) {
     client.markSwitchableSwitcherEmailAsReminded(emailId);
+  }
+
+  @Override
+  public List<Contract> getContractsByMemberId(String memberId) {
+    return client.getContractByMemberId(memberId);
+  }
+
+  @Override
+  public void activatePendingAgreement(UUID contractId, ActivatePendingAgreementRequest request, String token) {
+    client.activatePendingAgreement(contractId, request, token);
+  }
+
+  @Override
+  public void terminateContract(UUID contractId, TerminateContractRequest request, String token) {
+    client.terminateContract(contractId, request, token);
+  }
+
+  @Override
+  public void changeTerminationDate(UUID contractId, ChangeTerminationDateRequest request, String token) {
+    client.changeTerminationDate(contractId, request, token);
+  }
+
+  @Override
+  public Contract getContractById(UUID contractId) {
+    return client.getContractById(contractId);
+  }
+
+  @Override
+  public void revertTermination(UUID contractId, String token) {
+    client.revertTermination(contractId, token);
   }
 }
