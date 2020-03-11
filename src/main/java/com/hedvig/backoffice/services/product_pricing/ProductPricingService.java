@@ -71,15 +71,15 @@ public interface ProductPricingService {
   List<SwitchableSwitcherEmailDTO> getSwitchableSwitcherEmails();
   void markSwitchableSwitcherEmailAsReminded(UUID emailId);
 
-  List<Contract> getContractsByMemberId(String memberId);
-
-  void terminateContract(TerminateContractRequest request, String token);
-
   Contract getContractById(UUID contractId);
 
-  void activatePendingAgreement(ActivatePendingAgreementRequest request, String token);
+  List<Contract> getContractsByMemberId(String memberId);
 
-  void changeTerminationDate(ChangeTerminationDateRequest request, String token);
+  void activatePendingAgreement(UUID contractId, ActivatePendingAgreementRequest request, String token);
+
+  void terminateContract(UUID contractId, TerminateContractRequest request, String token);
+
+  void changeTerminationDate(UUID contractId, ChangeTerminationDateRequest request, String token);
 
   void revertTermination(UUID contractId, String token);
 }

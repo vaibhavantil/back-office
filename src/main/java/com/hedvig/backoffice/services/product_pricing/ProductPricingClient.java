@@ -110,33 +110,36 @@ public interface ProductPricingClient {
   @PutMapping("/_/switchableSwitchers/emails/{emailId}/remind")
   void markSwitchableSwitcherEmailAsReminded(@PathVariable("emailId") UUID emailId);
 
-  @GetMapping("/_/contracts/member/{memberId}")
-  List<Contract> getContractsOfMember(@PathVariable("memberId") String memberId);
-
-  @PostMapping("/_/contracts/terminate")
-  void terminateContract(
-    @RequestBody TerminateContractRequest terminateContractRequest,
-    @RequestHeader("Authorization") String token
-  );
+  @GetMapping("/_/contracts/members/{memberId}")
+  List<Contract> getContractByMemberId(@PathVariable("memberId") String memberId);
 
   @GetMapping("/_/contracts/{contractId}")
   Contract getContractById(@PathVariable  UUID contractId);
 
-  @PostMapping("/_/agreements/activate/pending")
+  @PostMapping("/_/contracts/{contractId}/activate/pending")
   void activatePendingAgreement(
+    @PathVariable UUID contractId,
     @RequestBody ActivatePendingAgreementRequest request,
     @RequestHeader("Authorization") String token
   );
 
-  @PostMapping("/_/contracts/change/termination/date")
-  void changeTerminationDate(
-    @RequestBody ChangeTerminationDateRequest request,
-    @RequestHeader String token
+  @PostMapping("/_/contracts/{contractId}/terminate")
+  void terminateContract(
+    @PathVariable UUID contractId,
+    @RequestBody TerminateContractRequest terminateContractRequest,
+    @RequestHeader("Authorization") String token
   );
 
-  @PostMapping("/_/contracts/revert/termination/{contractId}")
+  @PostMapping("/_/contracts/{contractId}/termination/change/date")
+  void changeTerminationDate(
+    @PathVariable UUID contractId,
+    @RequestBody ChangeTerminationDateRequest request,
+    @RequestHeader("Authorization") String token
+  );
+
+  @PostMapping("/_/contracts/{contractId}/termination/revert")
   void revertTermination(
     @PathVariable UUID contractId,
-    @RequestHeader String token
+    @RequestHeader("Authorization") String token
   );
 }

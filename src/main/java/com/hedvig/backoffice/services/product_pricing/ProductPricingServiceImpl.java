@@ -20,7 +20,6 @@ import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
@@ -184,27 +183,27 @@ public class ProductPricingServiceImpl implements ProductPricingService {
 
   @Override
   public List<Contract> getContractsByMemberId(String memberId) {
-    return client.getContractsOfMember(memberId);
+    return client.getContractByMemberId(memberId);
   }
 
   @Override
-  public void terminateContract(TerminateContractRequest request, String token) {
-    client.terminateContract(request, token);
+  public void activatePendingAgreement(UUID contractId, ActivatePendingAgreementRequest request, String token) {
+    client.activatePendingAgreement(contractId, request, token);
+  }
+
+  @Override
+  public void terminateContract(UUID contractId, TerminateContractRequest request, String token) {
+    client.terminateContract(contractId, request, token);
+  }
+
+  @Override
+  public void changeTerminationDate(UUID contractId, ChangeTerminationDateRequest request, String token) {
+    client.changeTerminationDate(contractId, request, token);
   }
 
   @Override
   public Contract getContractById(UUID contractId) {
     return client.getContractById(contractId);
-  }
-
-  @Override
-  public void activatePendingAgreement(ActivatePendingAgreementRequest request, String token) {
-    client.activatePendingAgreement(request, token);
-  }
-
-  @Override
-  public void changeTerminationDate(ChangeTerminationDateRequest request, String token) {
-    client.changeTerminationDate(request, token);
   }
 
   @Override

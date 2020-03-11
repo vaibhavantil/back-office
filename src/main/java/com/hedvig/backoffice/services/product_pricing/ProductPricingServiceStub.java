@@ -368,23 +368,23 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
-  public void terminateContract(TerminateContractRequest request, String token) {
+  public void activatePendingAgreement(UUID contractId, ActivatePendingAgreementRequest request, String token) {
+    // noop
+  }
+
+  @Override
+  public void terminateContract(UUID contractId, TerminateContractRequest request, String token) {
+    // noop
+  }
+
+  @Override
+  public void changeTerminationDate(UUID contractId, ChangeTerminationDateRequest request, String token) {
     // noop
   }
 
   @Override
   public Contract getContractById(UUID contractId) {
     return null;
-  }
-
-  @Override
-  public void activatePendingAgreement(ActivatePendingAgreementRequest request, String token) {
-    // noop
-  }
-
-  @Override
-  public void changeTerminationDate(ChangeTerminationDateRequest request, String token) {
-    // noop
   }
 
   @Override
@@ -404,7 +404,5 @@ public class ProductPricingServiceStub implements ProductPricingService {
         null
       ))
       .collect(Collectors.toList());
-
-
   }
 }

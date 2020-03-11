@@ -4,7 +4,6 @@ import java.time.LocalDate
 import java.util.UUID
 
 class ActivatePendingAgreementRequest(
-  val contractId: UUID,
-  val agreementId: UUID,
+  val pendingAgreementId: UUID,
   val fromDate: LocalDate
 )

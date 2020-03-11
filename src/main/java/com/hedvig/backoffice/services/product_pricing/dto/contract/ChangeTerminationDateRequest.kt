@@ -4,7 +4,6 @@ import java.time.LocalDate
 import java.util.UUID
 
 class ChangeTerminationDateRequest(
-  val contractId: UUID,
   val newTerminationDate: LocalDate,
   val dangerouslyAllowHistoryChange: Boolean = false
 )

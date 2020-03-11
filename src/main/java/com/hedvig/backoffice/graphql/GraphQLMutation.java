@@ -564,20 +564,19 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     productPricingService.markSwitchableSwitcherEmailAsReminded(emailId);
     return true;
   }
-
-  public Contract terminateContract(final TerminateContractRequest request, DataFetchingEnvironment env) {
-    productPricingService.terminateContract(request, getToken(env));
-    return productPricingService.getContractById(request.getContractId());
+  public Contract activatePendingAgreement(final UUID contractId, final ActivatePendingAgreementRequest request, DataFetchingEnvironment env) {
+    productPricingService.activatePendingAgreement(contractId, request, getToken(env));
+    return productPricingService.getContractById(contractId);
   }
 
-  public Contract activatePendingAgreement(final ActivatePendingAgreementRequest request, DataFetchingEnvironment env) {
-    productPricingService.activatePendingAgreement(request, getToken(env));
-    return productPricingService.getContractById(request.getContractId());
+  public Contract terminateContract(final UUID contractId, final TerminateContractRequest request, DataFetchingEnvironment env) {
+    productPricingService.terminateContract(contractId, request, getToken(env));
+    return productPricingService.getContractById(contractId);
   }
 
-  public Contract changeTerminationDate(final ChangeTerminationDateRequest request, DataFetchingEnvironment env) {
-    productPricingService.changeTerminationDate(request, getToken(env));
-    return productPricingService.getContractById(request.getContractId());
+  public Contract changeTerminationDate(final UUID contractId, final ChangeTerminationDateRequest request, DataFetchingEnvironment env) {
+    productPricingService.changeTerminationDate(contractId, request, getToken(env));
+    return productPricingService.getContractById(contractId);
   }
 
   public Contract revertTermination(final UUID contractId, DataFetchingEnvironment env) {
