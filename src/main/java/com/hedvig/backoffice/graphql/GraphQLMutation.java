@@ -23,20 +23,22 @@ import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ActivatePendingAgreementRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeTerminationDateRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.TerminateContractRequest;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
 import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto;
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
 import graphql.language.SourceLocation;
 import graphql.schema.DataFetchingEnvironment;
-import java.time.LocalDate;
 import jersey.repackaged.com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -46,6 +48,7 @@ import org.springframework.stereotype.Component;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
@@ -546,6 +549,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   public boolean addInventoryItem(ClaimInventoryItemDTO item) {
     return itemPricingService.addInventoryItem(item);
   }
+
   public boolean removeInventoryItem(String inventoryItemId) {
     boolean itemWasRemoved = itemPricingService.removeInventoryItem(inventoryItemId);
 
