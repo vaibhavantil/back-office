@@ -1,12 +1,8 @@
 package com.hedvig.backoffice.services.itemPricing;
 
 import com.hedvig.backoffice.services.itemPricing.dto.CategoryDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchQueryDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ItemPricepointDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.FilterSuggestionDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.FilterDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.SearchItemDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
 import java.util.List;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
@@ -22,34 +18,20 @@ import org.springframework.web.bind.annotation.RequestBody;
   configuration = FeignConfig.class)
 
 public interface ItemPricingServiceClient {
-  @GetMapping("/api/v1/categories")
-  List<CategoryDTO> getCategories();
+  @GetMapping("/api/v1/items/categories")
+  List<String> getCategories();
+
+  @GetMapping("/api/v1/items/suggestions")
+  List<SearchItemDTO> getSuggestions(@RequestParam String query);
 
   @GetMapping("/api/v1/inventory")
-  List<ClaimInventoryItemDTO> getInventory(@RequestParam String claimId);
-
-  @GetMapping("/api/v1/prices")
-  List<ItemPricepointDTO> getPrices(
-    @RequestParam String date,
-    @RequestParam List<String> ids
-  );
-
-  @PostMapping("/api/v1/items/search")
-  ItemSearchDTO getItems(@RequestBody ItemSearchQueryDTO payload);
+  List<InventoryItemDTO> getInventory(@RequestParam String claimId);
 
   @PostMapping("/api/v1/inventory/add")
-  boolean addInventoryItem(@RequestBody ClaimInventoryItemDTO item);
+  boolean addInventoryItem(@RequestBody InventoryItemDTO item);
 
   @PostMapping("/api/v1/inventory/remove")
   boolean removeInventoryItem(@RequestParam String inventoryItemId);
 
-  @PostMapping("/api/v1/inventory/filters/remove")
-  boolean removeInventoryFilters(@RequestParam String inventoryItemId);
-
-  @GetMapping("/api/v1/filters")
-  List<FilterSuggestionDTO> getAllFilters(@RequestParam String categoryId);
-
-  @GetMapping("/api/v1/inventory/filters")
-  List<FilterDTO> getInventoryItemFilters(@RequestParam String inventoryItemId);
 
 }

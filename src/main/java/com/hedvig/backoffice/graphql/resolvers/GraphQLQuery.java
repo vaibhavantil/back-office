@@ -105,29 +105,16 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       .collect(Collectors.toList());
   }
 
-  public List<CategoryDTO> categories() {
+  public List<String> categories() {
     return itemPricingService.getCategories();
   }
 
-  public ItemSearchDTO items(ItemSearchQueryDTO payload) {
-    return itemPricingService.getItems(payload);
+  public List<SearchItemDTO> itemSuggestions(String query) {
+    return itemPricingService.getSuggestions(query);
   }
 
-  public List<ItemPricepointDTO> prices(String date, List<String> ids) {
-    return itemPricingService.getPrices(date, ids);
-  }
-
-  public List<ClaimInventoryItemDTO> inventory(String claimId) {
+  public List<InventoryItemDTO> inventory(String claimId) {
     return itemPricingService.getInventory(claimId);
-  }
-
-  public List<FilterSuggestionDTO> filters(String categoryId) {
-
-    return itemPricingService.getAllFilters(categoryId);
-  }
-
-  public List<FilterDTO> inventoryItemFilters(String inventoryItemId) {
-    return itemPricingService.getInventoryItemFilters(inventoryItemId);
   }
 
   public TicketDto ticket(UUID  id) {

@@ -18,7 +18,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
-import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
@@ -542,17 +542,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return category;
   }
 
-  public boolean addInventoryItem(ClaimInventoryItemDTO item) {
+  public boolean addInventoryItem(InventoryItemDTO item) {
     return itemPricingService.addInventoryItem(item);
   }
   public boolean removeInventoryItem(String inventoryItemId) {
-    boolean itemWasRemoved = itemPricingService.removeInventoryItem(inventoryItemId);
-
-    if (itemWasRemoved) {
-      itemPricingService.removeInventoryFilters(inventoryItemId);
-      return true;
-    }
-    return false;
+    return itemPricingService.removeInventoryItem(inventoryItemId);
   }
 
   public Boolean markSwitchableSwitcherEmailAsReminded(final UUID emailId) {

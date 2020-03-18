@@ -1,13 +1,8 @@
 package com.hedvig.backoffice.services.itemPricing;
 
 import com.hedvig.backoffice.services.itemPricing.dto.CategoryDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.FilterSuggestionDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchQueryDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ItemDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ItemPricepointDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.FilterDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.SearchItemDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
 import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
@@ -15,77 +10,44 @@ import java.math.BigDecimal;
 public class ItemPricingServiceStub implements ItemPricingService {
 
   @Override
-  public List<CategoryDTO> getCategories() {
+  public List<String> getCategories() {
 
-    ArrayList<CategoryDTO> categories = new ArrayList<CategoryDTO>();
+    ArrayList<String> categories = new ArrayList<>();
 
-    categories.add(new CategoryDTO("1", "Mobiltelefoner"));
-    categories.add(new CategoryDTO("2", "TV"));
+    categories.add("Mobiltelefoner");
+    categories.add("TV");
 
     return categories;
   }
 
   @Override
-  public ItemSearchDTO getItems(ItemSearchQueryDTO payload) {
+  public List<SearchItemDTO> getSuggestions(String query) {
 
-    ArrayList<ItemDTO> items = new ArrayList<ItemDTO>();
+    ArrayList<SearchItemDTO> items = new ArrayList<>();
 
-    items.add(new ItemDTO("1", "123", "Samsung Galaxy S8"));
+    items.add(new SearchItemDTO("123456", "Samsung Galaxy S8", "https://google.se/"));
 
-    return new ItemSearchDTO(items, new ArrayList<FilterSuggestionDTO>());
+    return items;
   }
 
   @Override
-  public List<ItemPricepointDTO> getPrices(String date, List<String> ids) {
+  public List<InventoryItemDTO> getInventory(String claimId) {
 
-    ArrayList<ItemPricepointDTO> prices = new ArrayList<ItemPricepointDTO>();
+    ArrayList<InventoryItemDTO> inventory = new ArrayList<>();
 
-    prices.add(new ItemPricepointDTO("123:123", "123", "2019-06-07", new BigDecimal(6000), new BigDecimal(6010), new BigDecimal(6020)));
-
-    return prices;
-  }
-
-  @Override
-  public List<ClaimInventoryItemDTO> getInventory(String claimId) {
-
-    ArrayList<ClaimInventoryItemDTO> inventory = new ArrayList<ClaimInventoryItemDTO>();
-
-    inventory.add(new ClaimInventoryItemDTO("4fe5c0f3-6790-4f49-bb1b-fd7397601232", "4fe5c0f3-6790-4f49-bb1b-fd7397609442", "Samsung Something", "Mobiltelefoner", "1", new BigDecimal(5000), "Custom", null, null, null, null));
+    inventory.add(new InventoryItemDTO("4fe5c0f3-6790-4f49-bb1b-fd7397601232", "4fe5c0f3-6790-4f49-bb1b-fd7397609442", "Samsung Something", "Mobiltelefoner", new BigDecimal(5000)));
 
     return inventory;
   }
 
   @Override
-  public boolean addInventoryItem(ClaimInventoryItemDTO item) {
+  public boolean addInventoryItem(InventoryItemDTO item) {
     return true;
   }
 
   @Override
   public boolean removeInventoryItem(String inventoryItemId) {
     return true;
-  }
-
-  @Override
-  public boolean removeInventoryFilters(String inventoryItemId) {
-    return true;
-  }
-
-  @Override
-  public List<FilterSuggestionDTO> getAllFilters(String categoryId) {
-    ArrayList<FilterSuggestionDTO> filters = new ArrayList<FilterSuggestionDTO>();
-
-    filters.add(new FilterSuggestionDTO("Some Filter", new ArrayList<String>(), new ArrayList<String>()));
-
-    return filters;
-  }
-
-  @Override
-  public List<FilterDTO> getInventoryItemFilters(String inventoryItemId) {
-    ArrayList<FilterDTO> filters = new ArrayList<FilterDTO>();
-
-    filters.add(new FilterDTO("FilterName", "FilterValue"));
-
-    return null;
   }
 
 }
