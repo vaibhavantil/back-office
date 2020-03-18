@@ -27,6 +27,7 @@ enum class QuoteState {
 enum class QuoteInitiatedFrom {
     RAPIO,
     WEBONBOARDING,
+    WEB,
     APP,
     IOS,
     ANDROID,

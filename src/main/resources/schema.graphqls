@@ -186,6 +186,7 @@ type Address {
 enum SignSource {
   RAPIO
   WEBONBOARDING
+  WEB
   APP
   IOS
   ANDROID
