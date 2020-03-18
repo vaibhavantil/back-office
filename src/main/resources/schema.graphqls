@@ -71,11 +71,32 @@ type MutationType {
     quoteData: QuoteInput!
     bypassUnderwritingGuidelines: Boolean
   ): Quote!
-  markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean
+  markSwitchableSwitcherEmailAsReminded(id: ID!): Boolean!
   terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
   activatePendingAgreement(contractId: ID!, request: ActivatePendingAgreementInput): Contract!
   changeTerminationDate(contractId: ID!, request: ChangeTerminationDateInput): Contract!
   revertTermination(contractId: ID!): Contract!
+  createNorwegianGripenPriceEngine(request: CreateNorwegianGripenInput): Boolean!
+  addNorwegianPostalCodes(postalCodesString: String): Boolean!
+}
+
+input CreateNorwegianGripenInput {
+  baseFactorString: String
+  factors: [NorwegianGripenFactorInput!]!
+}
+
+input NorwegianGripenFactorInput {
+  factorType: NorwegianGripenFactorType!
+  factorString: String!
+}
+
+enum NorwegianGripenFactorType {
+  AGE
+  CENTRALITY_GROUP
+  ECONOMY_OF_MUNICIPALITY
+  NUMBER_OF_PEOPLE
+  APARTMENT_SIZE
+  RENTED_OR_OWNED
 }
 
 type Contract {

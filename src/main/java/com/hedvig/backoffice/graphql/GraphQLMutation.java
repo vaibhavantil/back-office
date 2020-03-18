@@ -22,6 +22,8 @@ import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
+import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ActivatePendingAgreementRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeTerminationDateRequest;
@@ -77,6 +79,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ItemPricingService itemPricingService;
   private final UnderwriterService underwriterService;
   private final ProductPricingService productPricingService;
+  private final PriceEngineService priceEngineService;
 
   public GraphQLMutation(
     PaymentService paymentService,
@@ -91,7 +94,9 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     MemberService memberService,
     ItemPricingService itemPricingService,
     UnderwriterService underwriterService,
-    ProductPricingService productPricingService) {
+    ProductPricingService productPricingService,
+    PriceEngineService priceEngineService
+  ) {
 
     this.paymentService = paymentService;
     this.personnelService = personnelService;
@@ -106,6 +111,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.itemPricingService = itemPricingService;
     this.underwriterService = underwriterService;
     this.productPricingService = productPricingService;
+    this.priceEngineService = priceEngineService;
   }
 
   public CompletableFuture<Member> chargeMember(
@@ -564,6 +570,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     productPricingService.markSwitchableSwitcherEmailAsReminded(emailId);
     return true;
   }
+
   public Contract activatePendingAgreement(final UUID contractId, final ActivatePendingAgreementRequest request, DataFetchingEnvironment env) {
     productPricingService.activatePendingAgreement(contractId, request, getToken(env));
     return productPricingService.getContractById(contractId);
@@ -582,6 +589,16 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   public Contract revertTermination(final UUID contractId, DataFetchingEnvironment env) {
     productPricingService.revertTermination(contractId, getToken(env));
     return productPricingService.getContractById(contractId);
+  }
+
+  public Boolean createNorwegianGripenPriceEngine(final CreateNorwegianGripenRequest request, DataFetchingEnvironment env) {
+    priceEngineService.createNorwegianGripenPriceEngine(request, getToken(env));
+    return true;
+  }
+
+  public Boolean addNorwegianPostalCodes(final String postalCodesString, DataFetchingEnvironment env) {
+    priceEngineService.addNorwegianPostalCoodes(postalCodesString);
+    return true;
   }
 
   private String getToken(DataFetchingEnvironment env) {
