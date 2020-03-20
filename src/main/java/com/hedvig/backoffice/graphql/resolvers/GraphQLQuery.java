@@ -113,6 +113,10 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return itemPricingService.getSuggestions(query);
   }
 
+  public SearchItemDTO itemDetails(List<String> ids) {
+    return itemPricingService.getItemDetails(ids);
+  }
+
   public List<InventoryItemDTO> inventory(String claimId) {
     return itemPricingService.getInventory(claimId);
   }

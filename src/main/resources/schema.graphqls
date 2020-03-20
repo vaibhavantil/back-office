@@ -16,6 +16,7 @@ type QueryType {
   inventory(claimId: ID!): [InventoryItem]!
   categories: [String!]
   itemSuggestions(query: String!): [SearchItem]!
+  itemDetails(ids: [String!]): SearchItem!
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
 }
 
@@ -85,9 +86,11 @@ type InventoryItem {
 }
 
 type SearchItem {
-  pricerunnerId: ID!
-  name: String!
-  url: String!
+  name: String
+  category: String
+  url: String
+  pricerunnerId: [String]
+  price: Float
 }
 
 type FileUpload {

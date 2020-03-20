@@ -24,6 +24,9 @@ public interface ItemPricingServiceClient {
   @GetMapping("/api/v1/items/suggestions")
   List<SearchItemDTO> getSuggestions(@RequestParam String query);
 
+  @GetMapping("/api/v1/items/details")
+  SearchItemDTO getItemDetails(@RequestParam List<String> ids);
+
   @GetMapping("/api/v1/inventory")
   List<InventoryItemDTO> getInventory(@RequestParam String claimId);
 

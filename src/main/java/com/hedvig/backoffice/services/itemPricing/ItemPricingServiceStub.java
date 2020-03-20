@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.services.itemPricing;
 
-import com.hedvig.backoffice.services.itemPricing.dto.CategoryDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.SearchItemDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
 import java.util.List;
@@ -25,9 +24,18 @@ public class ItemPricingServiceStub implements ItemPricingService {
 
     ArrayList<SearchItemDTO> items = new ArrayList<>();
 
-    items.add(new SearchItemDTO("123456", "Samsung Galaxy S8", "https://google.se/"));
+    ArrayList<String> ids = new ArrayList<>();
+
+    ids.add("3816379");
+
+    items.add(new SearchItemDTO("Apple iPhone 8 64GB", "Mobiltelefoner", "https://www.pricerunner.se/pl/1-3816379/Mobiltelefoner/Apple-iPhone-8-64GB-priser", ids, new BigDecimal(6000)));
 
     return items;
+  }
+
+  @Override
+  public SearchItemDTO getItemDetails(List<String> ids) {
+    return new SearchItemDTO("Apple iPhone 8 64GB", "Mobiltelefoner", "https://www.pricerunner.se/pl/1-3816379/Mobiltelefoner/Apple-iPhone-8-64GB-priser", ids, new BigDecimal(6000));
   }
 
   @Override

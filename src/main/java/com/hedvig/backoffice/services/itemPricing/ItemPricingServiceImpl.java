@@ -22,6 +22,12 @@ public class ItemPricingServiceImpl implements ItemPricingService {
   public List<SearchItemDTO> getSuggestions(String query) {
     return this.itemPricingServiceClient.getSuggestions(query);
   }
+
+  @Override
+  public SearchItemDTO getItemDetails(List<String> ids) {
+    return this.itemPricingServiceClient.getItemDetails(ids);
+  }
+
   @Override
   public List<InventoryItemDTO> getInventory(String claimId) {
     return this.itemPricingServiceClient.getInventory(claimId);
