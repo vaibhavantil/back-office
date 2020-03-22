@@ -43,7 +43,7 @@ public class ItemPricingServiceStub implements ItemPricingService {
 
     ArrayList<InventoryItemDTO> inventory = new ArrayList<>();
 
-    inventory.add(new InventoryItemDTO("4fe5c0f3-6790-4f49-bb1b-fd7397601232", "4fe5c0f3-6790-4f49-bb1b-fd7397609442", "Samsung Something", "Mobiltelefoner", new BigDecimal(5000)));
+    inventory.add(new InventoryItemDTO("4fe5c0f3-6790-4f49-bb1b-fd7397601232", "4fe5c0f3-6790-4f49-bb1b-fd7397609442", "Samsung Something", "Mobiltelefoner", new BigDecimal(5000), null));
 
     return inventory;
   }

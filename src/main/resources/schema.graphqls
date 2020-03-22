@@ -75,6 +75,7 @@ input InventoryItemInput {
   itemName: String!
   categoryName: String!
   value: Float!
+  purchaseDate: LocalDate
 }
 
 type InventoryItem {
@@ -83,6 +84,7 @@ type InventoryItem {
   itemName: String!
   categoryName: String!
   value: Float!
+  purchaseDate: LocalDate
 }
 
 type SearchItem {
