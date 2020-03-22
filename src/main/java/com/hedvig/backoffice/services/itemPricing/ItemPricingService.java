@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.services.itemPricing;
 
 import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
-import com.hedvig.backoffice.services.itemPricing.dto.CategoryDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.SearchItemDTO;
 import java.util.List;
 
