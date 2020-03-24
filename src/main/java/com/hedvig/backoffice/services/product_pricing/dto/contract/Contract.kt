@@ -22,6 +22,7 @@ data class Contract(
   val hasQueuedRenewal: Boolean,
   val renewal: Renewal?,
   val preferredCurrency: CurrencyUnit,
+  val market: Market,
   val signSource: QuoteInitiatedFrom?,
   val contractTypeName: String,
   val createdAt: Instant
