@@ -14,6 +14,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
 import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
 import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
@@ -362,6 +363,36 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
+  public List<Contract> getContractsByMemberId(String memberId) {
+    return null;
+  }
+
+  @Override
+  public void activatePendingAgreement(UUID contractId, ActivatePendingAgreementRequest request, String token) {
+    // noop
+  }
+
+  @Override
+  public void terminateContract(UUID contractId, TerminateContractRequest request, String token) {
+    // noop
+  }
+
+  @Override
+  public void changeTerminationDate(UUID contractId, ChangeTerminationDateRequest request, String token) {
+    // noop
+  }
+
+  @Override
+  public Contract getContractById(UUID contractId) {
+    return null;
+  }
+
+  @Override
+  public void revertTermination(UUID contractId, String token) {
+    // noop
+  }
+
+  @Override
   public List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds) {
     return memberIds.stream()
       .map(memberId -> new MemberSearchResultDTOExtended(
@@ -373,7 +404,5 @@ public class ProductPricingServiceStub implements ProductPricingService {
         null
       ))
       .collect(Collectors.toList());
-
-
   }
 }

@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.graphql.types
 
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
 import java.util.UUID
 
 data class QuoteFromProductInput(

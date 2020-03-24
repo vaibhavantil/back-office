@@ -1,8 +1,8 @@
 package com.hedvig.backoffice.graphql.types
 
-import com.hedvig.backoffice.graphql.UnionType
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
 import java.math.BigDecimal
-import java.util.UUID
+import java.util.*
 
 data class QuoteInput(
   val price: BigDecimal? = null,

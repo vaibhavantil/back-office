@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.graphql;
 
+import com.hedvig.backoffice.BackOfficeApplication;
 import graphql.execution.instrumentation.Instrumentation;
 import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentation;
 import graphql.schema.DataFetchingEnvironment;
@@ -56,7 +57,7 @@ public class GraphQLConfiguration {
     scanner.addIncludeFilter(new AnnotationTypeFilter(UnionType.class));
 
     for (val beanDefinition : scanner
-        .findCandidateComponents(this.getClass().getPackage().getName())) {
+        .findCandidateComponents(BackOfficeApplication.class.getPackage().getName())) {
       schemaParserDictionary.add(Class.forName(beanDefinition.getBeanClassName()));
     }
 

@@ -19,6 +19,7 @@ import com.hedvig.backoffice.services.itemPricing.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
@@ -149,5 +150,9 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.getSwitchableSwitcherEmails().stream()
       .map(SwitchableSwitcherEmail::from)
       .collect(Collectors.toList());
+  }
+
+  public List<Contract> getContracts(String memberId) {
+    return productPricingService.getContractsByMemberId(memberId);
   }
 }
