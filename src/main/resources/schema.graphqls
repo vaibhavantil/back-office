@@ -94,6 +94,7 @@ type Contract {
   hasQueuedRenewal: Boolean!
   renewal: Renewal
   preferredCurrency: String!
+  market: Market!
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
@@ -438,6 +439,11 @@ type Member {
   numberFailedCharges: NumberFailedCharges
   quotes: [Quote!]!
   contracts: [Contract!]!
+}
+
+enum Market {
+  SWEDEN
+  NORWAY
 }
 
 enum Gender {
