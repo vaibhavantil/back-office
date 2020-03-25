@@ -99,5 +99,5 @@ class MemberResolver(
 
   fun getContracts(member: Member): List<Contract> = productPricingService.getContractsByMemberId(member.memberId)
 
-  fun getContractMarket(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
+  fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
 }

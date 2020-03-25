@@ -439,10 +439,10 @@ type Member {
   numberFailedCharges: NumberFailedCharges
   quotes: [Quote!]!
   contracts: [Contract!]!
-  contractMarket: ContractMarket
+  contractMarketInfo: ContractMarketInfo
 }
 
-type ContractMarket {
+type ContractMarketInfo {
   market: Market!
   preferredCurrency: String!
 }
