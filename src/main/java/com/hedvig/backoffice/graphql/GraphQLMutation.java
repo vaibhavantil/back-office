@@ -610,7 +610,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   public UUID changeFromDate(final UUID agreementId, final ChangeFromDateInput request, DataFetchingEnvironment env) {
     productPricingService.changeFromDate(
       agreementId,
-      new ChangeToDateOnAgreementRequest(request.getNewToDate()),
+      new ChangeFromDateOnAgreementRequest(request.getNewToDate()),
       getToken(env)
     );
     return agreementId;

@@ -141,14 +141,14 @@ public interface ProductPricingClient {
     @RequestHeader("Authorization") String token
   );
 
-  @PostMapping("/{agreementId}/change/from")
+  @PostMapping("/_/agreements/{agreementId}/change/from")
   void changeFromDate(
     @PathVariable UUID agreementId,
     @RequestBody ChangeFromDateOnAgreementRequest request,
     @RequestHeader("Authorization") String token
   );
 
-  @PostMapping("/{agreementId}/change/to")
+  @PostMapping("/_/agreements/{agreementId}/change/to")
   void changeToDate(
     @PathVariable UUID agreementId,
     @RequestBody ChangeToDateOnAgreementRequest request,
