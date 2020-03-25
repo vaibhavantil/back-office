@@ -14,6 +14,7 @@ import com.hedvig.backoffice.services.messages.BotService
 import com.hedvig.backoffice.services.payments.PaymentService
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService
 import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ContractMarketInfo
 import com.hedvig.backoffice.services.underwriter.UnderwriterService
 import org.springframework.stereotype.Component
 import java.time.YearMonth
@@ -97,4 +98,6 @@ class MemberResolver(
     .map((Quote)::from)
 
   fun getContracts(member: Member): List<Contract> = productPricingService.getContractsByMemberId(member.memberId)
+
+  fun getContractMarket(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
 }

@@ -82,4 +82,6 @@ public interface ProductPricingService {
   void changeTerminationDate(UUID contractId, ChangeTerminationDateRequest request, String token);
 
   void revertTermination(UUID contractId, String token);
+
+  ContractMarketInfo getContractMarketInfoByMemberId(String memberId);
 }
