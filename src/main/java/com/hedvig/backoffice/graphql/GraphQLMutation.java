@@ -25,10 +25,7 @@ import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.ActivatePendingAgreementRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeTerminationDateRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.TerminateContractRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
@@ -599,6 +596,24 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   public Boolean addNorwegianPostalCodes(final String postalCodesString, DataFetchingEnvironment env) {
     priceEngineService.addNorwegianPostalCoodes(postalCodesString);
     return true;
+  }
+
+  public UUID changeToDate(final UUID agreementId, final ChangeToDateDateInput request, DataFetchingEnvironment env) {
+    productPricingService.changeToDate(
+      agreementId,
+      new ChangeToDateOnAgreementRequest(request.getNewToDate()),
+      getToken(env)
+    );
+    return agreementId;
+  }
+
+  public UUID changeFromDate(final UUID agreementId, final ChangeFromDateInput request, DataFetchingEnvironment env) {
+    productPricingService.changeFromDate(
+      agreementId,
+      new ChangeToDateOnAgreementRequest(request.getNewToDate()),
+      getToken(env)
+    );
+    return agreementId;
   }
 
   private String getToken(DataFetchingEnvironment env) {

@@ -16,6 +16,11 @@ import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -82,4 +87,9 @@ public interface ProductPricingService {
   void changeTerminationDate(UUID contractId, ChangeTerminationDateRequest request, String token);
 
   void revertTermination(UUID contractId, String token);
+
+  void changeFromDate(UUID agreementId, ChangeFromDateOnAgreementRequest request, String token);
+
+  void changeToDate(UUID agreementId, ChangeToDateOnAgreementRequest request, String token);
+
 }
