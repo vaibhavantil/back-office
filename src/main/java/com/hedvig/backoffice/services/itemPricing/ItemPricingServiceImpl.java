@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.itemPricing;
 
+import com.hedvig.backoffice.services.itemPricing.dto.ItemCategoryDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.SearchItemDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
 import java.util.List;
@@ -13,7 +14,7 @@ public class ItemPricingServiceImpl implements ItemPricingService {
   }
 
   @Override
-  public List<String> getCategories() {
+  public List<ItemCategoryDTO> getCategories() {
     return this.itemPricingServiceClient.getCategories();
   }
 

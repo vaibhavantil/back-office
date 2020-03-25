@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.itemPricing;
 
+import com.hedvig.backoffice.services.itemPricing.dto.ItemCategoryDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.SearchItemDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
 import java.util.List;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface ItemPricingServiceClient {
   @GetMapping("/api/v1/items/categories")
-  List<String> getCategories();
+  List<ItemCategoryDTO> getCategories();
 
   @GetMapping("/api/v1/items/suggestions")
   List<SearchItemDTO> getSuggestions(@RequestParam String query);

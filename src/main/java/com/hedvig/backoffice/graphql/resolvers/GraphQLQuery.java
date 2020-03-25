@@ -105,7 +105,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       .collect(Collectors.toList());
   }
 
-  public List<String> categories() {
+  public List<ItemCategoryDTO> categories() {
     return itemPricingService.getCategories();
   }
 

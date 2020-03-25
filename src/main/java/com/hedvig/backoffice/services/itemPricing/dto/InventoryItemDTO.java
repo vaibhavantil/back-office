@@ -10,6 +10,7 @@ public class InventoryItemDTO {
   String claimId;
   String itemName;
   String categoryName;
-  BigDecimal value;
+  BigDecimal purchaseValue;
   LocalDate purchaseDate;
+
 }

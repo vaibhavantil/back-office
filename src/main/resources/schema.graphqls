@@ -14,7 +14,7 @@ type QueryType {
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
   inventory(claimId: ID!): [InventoryItem]!
-  categories: [String!]
+  categories: [ItemCategory!]
   itemSuggestions(query: String!): [SearchItem]!
   itemDetails(ids: [String!]): SearchItem!
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
@@ -74,7 +74,7 @@ input InventoryItemInput {
   claimId: String!
   itemName: String!
   categoryName: String!
-  value: Float!
+  purchaseValue: Float!
   purchaseDate: LocalDate
 }
 
@@ -83,7 +83,7 @@ type InventoryItem {
   claimId: String!
   itemName: String!
   categoryName: String!
-  value: Float!
+  purchaseValue: Float!
   purchaseDate: LocalDate
 }
 
@@ -93,6 +93,11 @@ type SearchItem {
   url: String
   pricerunnerId: [String]
   price: Float
+}
+
+type ItemCategory {
+  primary: String!
+  secondaries: [String]!
 }
 
 type FileUpload {

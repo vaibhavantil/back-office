@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.itemPricing;
 
 import com.hedvig.backoffice.services.itemPricing.dto.SearchItemDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.InventoryItemDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemCategoryDTO;
 import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
@@ -9,12 +10,12 @@ import java.math.BigDecimal;
 public class ItemPricingServiceStub implements ItemPricingService {
 
   @Override
-  public List<String> getCategories() {
+  public List<ItemCategoryDTO> getCategories() {
 
-    ArrayList<String> categories = new ArrayList<>();
+    ArrayList<ItemCategoryDTO> categories = new ArrayList<>();
 
-    categories.add("Mobiltelefoner");
-    categories.add("TV");
+    categories.add(new ItemCategoryDTO("Miscellaneous", new ArrayList<String>()));
+    categories.add(new ItemCategoryDTO("Something else", new ArrayList<String>()));
 
     return categories;
   }
