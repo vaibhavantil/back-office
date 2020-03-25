@@ -439,6 +439,12 @@ type Member {
   numberFailedCharges: NumberFailedCharges
   quotes: [Quote!]!
   contracts: [Contract!]!
+  contractMarketInfo: ContractMarketInfo
+}
+
+type ContractMarketInfo {
+  market: Market!
+  preferredCurrency: String!
 }
 
 enum Market {
