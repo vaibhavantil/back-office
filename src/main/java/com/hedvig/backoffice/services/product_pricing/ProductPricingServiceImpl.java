@@ -213,12 +213,20 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   }
 
   @Override
-  public void changeFromDate(UUID agreementId, ChangeFromDateOnAgreementRequest request, String token) {
+  public void changeFromDate(
+    UUID agreementId,
+    ChangeFromDateOnAgreementRequest request,
+    String token
+  ) {
     client.changeFromDate(agreementId, request, token);
   }
 
   @Override
-  public void changeToDate(UUID agreementId, ChangeToDateOnAgreementRequest request, String token) {
+  public void changeToDate(
+    UUID agreementId,
+    ChangeToDateOnAgreementRequest request,
+    String token
+  ) {
     client.changeToDate(agreementId, request, token);
   }
 }

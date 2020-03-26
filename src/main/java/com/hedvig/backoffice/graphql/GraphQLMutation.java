@@ -598,19 +598,19 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
-  public UUID changeToDate(final UUID agreementId, final ChangeToDateDateInput request, DataFetchingEnvironment env) {
+  public UUID changeToDate(final UUID agreementId, final ChangeToDateOnAgreementRequest request, DataFetchingEnvironment env) {
     productPricingService.changeToDate(
       agreementId,
-      new ChangeToDateOnAgreementRequest(request.getNewToDate()),
+      request,
       getToken(env)
     );
     return agreementId;
   }
 
-  public UUID changeFromDate(final UUID agreementId, final ChangeFromDateInput request, DataFetchingEnvironment env) {
+  public UUID changeFromDate(final UUID agreementId, final ChangeFromDateOnAgreementRequest request, DataFetchingEnvironment env) {
     productPricingService.changeFromDate(
       agreementId,
-      new ChangeFromDateOnAgreementRequest(request.getNewFromDate()),
+      request,
       getToken(env)
     );
     return agreementId;
