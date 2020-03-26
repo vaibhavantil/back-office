@@ -213,11 +213,29 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   }
 
   @Override
+  public void changeFromDate(
+    UUID agreementId,
+    ChangeFromDateOnAgreementRequest request,
+    String token
+  ) {
+    client.changeFromDate(agreementId, request, token);
+  }
+
+  @Override
+  public void changeToDate(
+    UUID agreementId,
+    ChangeToDateOnAgreementRequest request,
+    String token
+  ) {
+    client.changeToDate(agreementId, request, token);
+  }
+
+  @Override
   public ContractMarketInfo getContractMarketInfoByMemberId(String memberId) {
-     ResponseEntity<ContractMarketInfo> response = client.getContractMarketInfoForMember(memberId);
-     if (response.getStatusCode() != HttpStatus.OK) {
-       return null;
-     }
-     return response.getBody();
+    ResponseEntity<ContractMarketInfo> response = client.getContractMarketInfoForMember(memberId);
+    if (response.getStatusCode() != HttpStatus.OK) {
+      return null;
+    }
+    return response.getBody();
   }
 }

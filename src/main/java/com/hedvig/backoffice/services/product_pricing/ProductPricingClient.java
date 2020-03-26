@@ -141,6 +141,20 @@ public interface ProductPricingClient {
     @RequestHeader("Authorization") String token
   );
 
+  @PostMapping("/_/agreements/{agreementId}/change/from")
+  void changeFromDate(
+    @PathVariable UUID agreementId,
+    @RequestBody ChangeFromDateOnAgreementRequest request,
+    @RequestHeader("Authorization") String token
+  );
+
+  @PostMapping("/_/agreements/{agreementId}/change/to")
+  void changeToDate(
+    @PathVariable UUID agreementId,
+    @RequestBody ChangeToDateOnAgreementRequest request,
+    @RequestHeader("Authorization") String token
+  );
+
   @GetMapping("/_/contracts/members/{memberId}/contract/market/info")
   ResponseEntity<ContractMarketInfo> getContractMarketInfoForMember(
     @PathVariable String memberId
