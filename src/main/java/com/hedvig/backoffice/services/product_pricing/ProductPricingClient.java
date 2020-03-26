@@ -154,4 +154,9 @@ public interface ProductPricingClient {
     @RequestBody ChangeToDateOnAgreementRequest request,
     @RequestHeader("Authorization") String token
   );
+
+  @GetMapping("/_/contracts/members/{memberId}/contract/market/info")
+  ResponseEntity<ContractMarketInfo> getContractMarketInfoForMember(
+    @PathVariable String memberId
+  );
 }

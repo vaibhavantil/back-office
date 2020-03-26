@@ -92,4 +92,5 @@ public interface ProductPricingService {
 
   void changeToDate(UUID agreementId, ChangeToDateOnAgreementRequest request, String token);
 
+  ContractMarketInfo getContractMarketInfoByMemberId(String memberId);
 }

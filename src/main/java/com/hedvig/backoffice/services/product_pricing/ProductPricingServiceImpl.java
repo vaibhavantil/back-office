@@ -229,4 +229,13 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   ) {
     client.changeToDate(agreementId, request, token);
   }
+
+  @Override
+  public ContractMarketInfo getContractMarketInfoByMemberId(String memberId) {
+    ResponseEntity<ContractMarketInfo> response = client.getContractMarketInfoForMember(memberId);
+    if (response.getStatusCode() != HttpStatus.OK) {
+      return null;
+    }
+    return response.getBody();
+  }
 }
