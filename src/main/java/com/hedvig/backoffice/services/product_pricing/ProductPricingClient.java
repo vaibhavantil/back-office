@@ -2,16 +2,14 @@ package com.hedvig.backoffice.services.product_pricing;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.services.product_pricing.dto.*;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.ActivatePendingAgreementRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeTerminationDateRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.TerminateContractRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -141,5 +139,24 @@ public interface ProductPricingClient {
   void revertTermination(
     @PathVariable UUID contractId,
     @RequestHeader("Authorization") String token
+  );
+
+  @PostMapping("/_/agreements/{agreementId}/change/from")
+  void changeFromDate(
+    @PathVariable UUID agreementId,
+    @RequestBody ChangeFromDateOnAgreementRequest request,
+    @RequestHeader("Authorization") String token
+  );
+
+  @PostMapping("/_/agreements/{agreementId}/change/to")
+  void changeToDate(
+    @PathVariable UUID agreementId,
+    @RequestBody ChangeToDateOnAgreementRequest request,
+    @RequestHeader("Authorization") String token
+  );
+
+  @GetMapping("/_/contracts/members/{memberId}/contract/market/info")
+  ResponseEntity<ContractMarketInfo> getContractMarketInfoForMember(
+    @PathVariable String memberId
   );
 }

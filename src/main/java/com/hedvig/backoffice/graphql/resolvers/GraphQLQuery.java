@@ -19,7 +19,6 @@ import com.hedvig.backoffice.services.itemPricing.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
@@ -47,16 +46,17 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final PersonnelService personnelService;
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
 
-  public GraphQLQuery(ProductPricingService productPricingService,
-                      MemberLoader memberLoader,
-                      ClaimLoader claimLoader,
-                      AccountService accountService,
-                      MemberService memberService,
-                      TicketService ticketService,
-                      PersonnelService personnelService,
-                      AutoAnswerSuggestionService autoAnswerSuggestionService,
-                      ItemPricingService itemPricingService)
-  {
+  public GraphQLQuery(
+    ProductPricingService productPricingService,
+    MemberLoader memberLoader,
+    ClaimLoader claimLoader,
+    AccountService accountService,
+    MemberService memberService,
+    TicketService ticketService,
+    PersonnelService personnelService,
+    AutoAnswerSuggestionService autoAnswerSuggestionService,
+    ItemPricingService itemPricingService
+  ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
@@ -122,12 +122,12 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return itemPricingService.getInventory(claimId);
   }
 
-  public TicketDto ticket(UUID  id) {
 
+  public TicketDto ticket(UUID id) {
     return this.ticketService.getTicketById(id);
   }
 
-  public TicketHistoryDto getFullTicketHistory(UUID  id) {
+  public TicketHistoryDto getFullTicketHistory(UUID id) {
 
     return this.ticketService.getTicketHistory(id);
   }
@@ -150,9 +150,5 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.getSwitchableSwitcherEmails().stream()
       .map(SwitchableSwitcherEmail::from)
       .collect(Collectors.toList());
-  }
-
-  public List<Contract> getContracts(String memberId) {
-    return productPricingService.getContractsByMemberId(memberId);
   }
 }

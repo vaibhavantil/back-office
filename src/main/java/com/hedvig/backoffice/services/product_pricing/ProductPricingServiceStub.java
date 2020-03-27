@@ -4,50 +4,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
-import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
-import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
-import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
-import com.hedvig.backoffice.web.dto.ProductSortColumns;
-import com.hedvig.backoffice.web.dto.ProductState;
-import com.hedvig.backoffice.web.dto.SafetyIncreaserType;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import javax.money.Monetary;
-
+import com.hedvig.backoffice.web.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+
+import javax.money.Monetary;
+import java.math.BigDecimal;
+import java.time.*;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.Comparator.nullsFirst;
 import static java.util.Comparator.nullsLast;
@@ -390,6 +364,19 @@ public class ProductPricingServiceStub implements ProductPricingService {
   @Override
   public void revertTermination(UUID contractId, String token) {
     // noop
+  }
+
+  @Override
+  public void changeFromDate(UUID agreementId, ChangeFromDateOnAgreementRequest request, String token) {
+  }
+
+  @Override
+  public void changeToDate(UUID agreementId, ChangeToDateOnAgreementRequest request, String token) {
+  }
+
+  @Override
+  public ContractMarketInfo getContractMarketInfoByMemberId(String memberId) {
+    return null;
   }
 
   @Override

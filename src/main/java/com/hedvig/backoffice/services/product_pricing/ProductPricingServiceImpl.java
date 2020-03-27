@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @Slf4j
 public class ProductPricingServiceImpl implements ProductPricingService {
@@ -209,5 +210,32 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   @Override
   public void revertTermination(UUID contractId, String token) {
     client.revertTermination(contractId, token);
+  }
+
+  @Override
+  public void changeFromDate(
+    UUID agreementId,
+    ChangeFromDateOnAgreementRequest request,
+    String token
+  ) {
+    client.changeFromDate(agreementId, request, token);
+  }
+
+  @Override
+  public void changeToDate(
+    UUID agreementId,
+    ChangeToDateOnAgreementRequest request,
+    String token
+  ) {
+    client.changeToDate(agreementId, request, token);
+  }
+
+  @Override
+  public ContractMarketInfo getContractMarketInfoByMemberId(String memberId) {
+    ResponseEntity<ContractMarketInfo> response = client.getContractMarketInfoForMember(memberId);
+    if (response.getStatusCode() != HttpStatus.OK) {
+      return null;
+    }
+    return response.getBody();
   }
 }
