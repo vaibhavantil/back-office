@@ -451,6 +451,7 @@ type Member {
   fileUploads: [FileUpload!]!
   person: Person
   numberFailedCharges: NumberFailedCharges
+  totalNumberOfClaims: Int!
   quotes: [Quote!]!
   contracts: [Contract!]!
   contractMarketInfo: ContractMarketInfo
