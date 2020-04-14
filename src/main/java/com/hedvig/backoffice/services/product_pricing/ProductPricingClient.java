@@ -159,4 +159,10 @@ public interface ProductPricingClient {
   ResponseEntity<ContractMarketInfo> getContractMarketInfoForMember(
     @PathVariable String memberId
   );
+
+  @PostMapping("/_/certificates/regenerate/{agreementId}")
+  void regenerateCertificate(
+    @PathVariable UUID agreementId,
+    @RequestHeader("Authorization") String token
+  );
 }

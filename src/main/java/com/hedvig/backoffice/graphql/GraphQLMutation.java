@@ -616,6 +616,14 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return agreementId;
   }
 
+  public UUID regenerateCertificate(final UUID agreementId, DataFetchingEnvironment env) {
+    productPricingService.regenerateCertificate(
+      agreementId,
+      getToken(env)
+    );
+    return agreementId;
+  }
+
   private String getToken(DataFetchingEnvironment env) {
     GraphQLRequestContext context = env.getContext();
     return personnelService.getIdToken(context.getUserPrincipal().getName());

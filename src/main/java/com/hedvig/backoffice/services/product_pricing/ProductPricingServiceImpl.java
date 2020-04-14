@@ -3,39 +3,24 @@ package com.hedvig.backoffice.services.product_pricing;
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
-import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
-
-import java.io.IOException;
-import java.time.YearMonth;
-import java.util.List;
-import java.util.UUID;
-
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.io.IOException;
+import java.time.YearMonth;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 public class ProductPricingServiceImpl implements ProductPricingService {
@@ -237,5 +222,13 @@ public class ProductPricingServiceImpl implements ProductPricingService {
       return null;
     }
     return response.getBody();
+  }
+
+  @Override
+  public void regenerateCertificate(
+    UUID agreementId,
+    String token
+  ) {
+    this.client.regenerateCertificate(agreementId, token);
   }
 }
