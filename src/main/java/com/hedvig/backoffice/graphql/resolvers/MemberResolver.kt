@@ -100,4 +100,8 @@ class MemberResolver(
   fun getContracts(member: Member): List<Contract> = productPricingService.getContractsByMemberId(member.memberId)
 
   fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
+
+  fun getHolderFirstName(member: Member): String? = member.firstName
+
+  fun getHolderLastName(member: Member): String? = member.lastName
 }

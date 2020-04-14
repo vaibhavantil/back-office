@@ -293,6 +293,17 @@
       <version>5.2.0</version>
     </dependency>
     <dependency>
+      <groupId>com.hedvig.graphql.commons</groupId>
+      <artifactId>graphql-commons</artifactId>
+      <version>1.0.3</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>okhttp</artifactId>
+          <groupId>com.squareup.okhttp3</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>org.javamoney</groupId>
       <artifactId>moneta</artifactId>
       <version>1.1</version>
