@@ -368,15 +368,22 @@ public class ProductPricingServiceStub implements ProductPricingService {
 
   @Override
   public void changeFromDate(UUID agreementId, ChangeFromDateOnAgreementRequest request, String token) {
+    // noop
   }
 
   @Override
   public void changeToDate(UUID agreementId, ChangeToDateOnAgreementRequest request, String token) {
+    // noop
   }
 
   @Override
   public ContractMarketInfo getContractMarketInfoByMemberId(String memberId) {
     return null;
+  }
+
+  @Override
+  public void regenerateCertificate(UUID agreementId, String token) {
+    // noop
   }
 
   @Override
