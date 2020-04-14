@@ -35,14 +35,6 @@
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
     </repository>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>bintray-hedvig-hedvig-java</id>
-      <name>bintray</name>
-      <url>https://dl.bintray.com/hedvig/hedvig-java</url>
-    </repository>
   </repositories>
 
   <dependencyManagement>
@@ -308,6 +300,22 @@
         <exclusion>
           <artifactId>okhttp</artifactId>
           <groupId>com.squareup.okhttp3</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>graphql-spring-boot-starter-test</artifactId>
+          <groupId>com.graphql-java-kickstart</groupId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.graphql-java-kickstart</groupId>
+          <artifactId>graphql-spring-boot-starter</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.graphql-java-kickstart</groupId>
+          <artifactId>graphiql-spring-boot-starter</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.graphql-java-kickstart</groupId>
+          <artifactId>graphql-spring-boot-starter-test</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
