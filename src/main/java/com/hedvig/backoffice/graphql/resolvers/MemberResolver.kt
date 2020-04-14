@@ -97,7 +97,11 @@ class MemberResolver(
   fun getQuotes(member: Member): List<Quote> = underwriterService.getQuotes(member.memberId)
     .map((Quote)::from)
 
-  fun getContracts(member: Member): List<Contract> = productPricingService.getContractsByMemberId(member.memberId)
+  fun getContracts(member: Member): List<Contract> {
+    val contracts = productPricingService.getContractsByMemberId(member.memberId)
+    contracts.forEach { contract -> contract.holderMember = member }
+    return contracts
+  }
 
   fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
 }

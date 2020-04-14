@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.product_pricing.dto.contract
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.hedvig.backoffice.graphql.UnionType
+import com.hedvig.graphql.commons.type.MonetaryAmountV2
 import java.time.LocalDate
 import java.util.*
 import javax.money.MonetaryAmount
@@ -31,6 +32,7 @@ sealed class Agreement {
     override val basePremium: MonetaryAmount,
     override val certificateUrl: String?,
     override val status: AgreementStatus,
+    val lineOfBusiness: SwedishApartmentLineOfBusiness,
     val address: Address,
     val numberCoInsured: Int,
     val squareMeters: Long
@@ -62,6 +64,7 @@ sealed class Agreement {
     override val basePremium: MonetaryAmount,
     override val certificateUrl: String?,
     override val status: AgreementStatus,
+    val lineOfBusiness: NorwegianHomeContentLineOfBusiness,
     val address: Address,
     val numberCoInsured: Int,
     val squareMeters: Long
@@ -75,6 +78,10 @@ sealed class Agreement {
     override val basePremium: MonetaryAmount,
     override val certificateUrl: String?,
     override val status: AgreementStatus,
+    val lineOfBusiness: NorwegianTravelLineOfBusiness,
     val numberCoInsured: Int
   ) : Agreement()
+
+  val premium: MonetaryAmountV2
+    get() = MonetaryAmountV2.of(basePremium)
 }
