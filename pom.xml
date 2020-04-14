@@ -309,6 +309,22 @@
           <artifactId>okhttp</artifactId>
           <groupId>com.squareup.okhttp3</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>graphql-spring-boot-starter-test</artifactId>
+          <groupId>com.graphql-java-kickstart</groupId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.graphql-java-kickstart</groupId>
+          <artifactId>graphql-spring-boot-starter</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.graphql-java-kickstart</groupId>
+          <artifactId>graphiql-spring-boot-starter</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.graphql-java-kickstart</groupId>
+          <artifactId>graphql-spring-boot-starter-test</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
