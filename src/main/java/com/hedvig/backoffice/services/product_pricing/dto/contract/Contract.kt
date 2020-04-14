@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.product_pricing.dto.contract
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.hedvig.backoffice.graphql.types.Member
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInitiatedFrom
 import java.time.Instant
 import java.time.LocalDate
@@ -26,4 +27,12 @@ data class Contract(
   val signSource: QuoteInitiatedFrom?,
   val contractTypeName: String,
   val createdAt: Instant
-)
+) {
+  lateinit var holderMember: Member
+
+  val holderFirstName: String?
+    get() = holderMember.firstName
+
+  val holderLastName: String?
+    get() = holderMember.lastName
+}
