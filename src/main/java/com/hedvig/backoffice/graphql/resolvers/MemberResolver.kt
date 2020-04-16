@@ -36,7 +36,7 @@ class MemberResolver(
 
   fun getTransactions(member: Member): List<Transaction> {
     return paymentService.getTransactionsByMemberId(member.memberId)
-      .map(Transaction::fromDTO)
+      .map((Transaction)::fromDTO)
   }
 
   fun getMonthlySubscription(member: Member, period: YearMonth): MonthlySubscription {
