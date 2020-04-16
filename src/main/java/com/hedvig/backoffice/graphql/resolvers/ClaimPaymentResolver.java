@@ -19,7 +19,6 @@ public class ClaimPaymentResolver implements GraphQLResolver<ClaimPayment> {
     if (claimPayment.getTransactionId().isPresent() == false) {
       return null;
     }
-    return Transaction
-        .fromDTO(paymentService.getTransactionById(claimPayment.getTransactionId().get()));
+    return Transaction.Companion.fromDTO(paymentService.getTransactionById(claimPayment.getTransactionId().get()));
   }
 }
