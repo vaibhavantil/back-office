@@ -11,13 +11,12 @@ data class Transaction(
   var type: String,
   var status: String
 ) {
-
   companion object {
     fun fromTransactionDTO(id: UUID, dto: TransactionDTO) = Transaction(
-      id,
-      dto.amount,
-      dto.timestamp,
-      dto.transactionType,
-      dto.transactionStatus)
+      id = id,
+      amount = dto.amount,
+      timestamp = dto.timestamp,
+      type = dto.transactionType,
+      status = dto.transactionStatus)
   }
 }
