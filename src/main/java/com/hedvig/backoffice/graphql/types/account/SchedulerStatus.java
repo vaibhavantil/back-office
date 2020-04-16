@@ -3,7 +3,6 @@ package com.hedvig.backoffice.graphql.types.account;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import lombok.Value;
 
-
 import javax.money.MonetaryAmount;
 import java.time.Instant;
 import java.util.Optional;

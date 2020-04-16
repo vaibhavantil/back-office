@@ -1,20 +1,15 @@
 package com.hedvig.backoffice.services.account;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.services.account.dto.*;
 import org.javamoney.moneta.Money;
 
-import javax.annotation.concurrent.Immutable;
-import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
@@ -22,8 +17,8 @@ import static java.util.stream.Collectors.toList;
 public class AccountServiceStub implements AccountService {
 
   private List<AccountEntryDTO> entries = new ArrayList<>();
-  private BigDecimal subscription =  BigDecimal.valueOf(99);
-  private BigDecimal discount =  BigDecimal.valueOf(10);
+  private BigDecimal subscription = BigDecimal.valueOf(99);
+  private BigDecimal discount = BigDecimal.valueOf(10);
   private AccountChargeEstimationDTO chargeEstimation;
   private BigDecimal currentMonthsBalance = calculateCurrentMonthsBalance();
   private BigDecimal totalBalance = calculateTotalBalance();
@@ -37,11 +32,11 @@ public class AccountServiceStub implements AccountService {
         AccountEntryType.CAMPAIGN,
         "Member",
         "123123",
-        Optional.of("Title"),
-        Optional.of("Valborg campaign 2019"),
+        "Title",
+        "Valborg campaign 2019",
         "system",
-        Optional.empty(),
-        Optional.empty()
+        null,
+        null
       )
     );
     entries.add(
@@ -52,25 +47,25 @@ public class AccountServiceStub implements AccountService {
         AccountEntryType.SUBSCRIPTION,
         "Product",
         UUID.randomUUID().toString(),
-        Optional.of("Monthly insurance fee"),
-        Optional.empty(),
+        "Monthly insurance fee",
+        null,
         "system",
-        Optional.empty(),
-        Optional.empty()
+        null,
+        null
       )
     );
 
     chargeEstimation = new AccountChargeEstimationDTO(
-        Money.of(subscription, "SEK"),
-        Money.of(discount, "SEK"),
-        Money.of(currentMonthsBalance.add(subscription).subtract(discount), "SEK"),
-        List.of("referral code")
-      );
+      Money.of(subscription, "SEK"),
+      Money.of(discount, "SEK"),
+      Money.of(currentMonthsBalance.add(subscription).subtract(discount), "SEK"),
+      List.of("referral code")
+    );
   }
 
   @Override
   public AccountDTO getAccount(String memberId) {
-      return new AccountDTO(
+    return new AccountDTO(
       memberId,
       Money.of(currentMonthsBalance, "SEK"),
       Money.of(totalBalance, "SEK"),
@@ -104,8 +99,8 @@ public class AccountServiceStub implements AccountService {
       accountEntryInput.getTitle(),
       accountEntryInput.getComment(),
       addedBy,
-      Optional.empty(),
-      Optional.empty()
+      null,
+      null
     );
     entries.add(newAccountEntry);
   }
@@ -119,13 +114,13 @@ public class AccountServiceStub implements AccountService {
   public List<SchedulerStateDto> subscriptionSchedulesAwaitingApproval(ChargeStatus chargeStatus) {
     List<SchedulerStateDto> subscriptionsPendingApproval = new ArrayList<>();
     subscriptionsPendingApproval.add(new SchedulerStateDto(
-      UUID.randomUUID(),
-      "338786454",
-      ChargeStatus.APPROVED_FOR_CHARGE,
-      "admin1",
-      Instant.now(),
-      null,
-      null
+        UUID.randomUUID(),
+        "338786454",
+        ChargeStatus.APPROVED_FOR_CHARGE,
+        "admin1",
+        Instant.now(),
+        null,
+        null
       )
     );
 
@@ -149,7 +144,7 @@ public class AccountServiceStub implements AccountService {
 
   @Override
   public NumberFailedChargesDto getNumberFailedCharges(String memberId) {
-    int numberFailedCharges = (int)(10 * Math.random());
+    int numberFailedCharges = (int) (10 * Math.random());
     return new NumberFailedChargesDto(
       memberId,
       numberFailedCharges,

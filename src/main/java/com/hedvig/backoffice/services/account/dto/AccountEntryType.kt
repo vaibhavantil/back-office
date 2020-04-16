@@ -1,6 +1,6 @@
-package com.hedvig.backoffice.services.account.dto;
+package com.hedvig.backoffice.services.account.dto
 
-public enum AccountEntryType {
+enum class AccountEntryType {
   CORRECTION,
   SUBSCRIPTION,
   CAMPAIGN,
