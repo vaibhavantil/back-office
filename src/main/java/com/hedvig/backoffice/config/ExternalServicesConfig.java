@@ -18,6 +18,9 @@ import com.hedvig.backoffice.services.expo.ExpoNotificationServiceStub;
 import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteService;
 import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteServiceImpl;
 import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteServiceStub;
+import com.hedvig.backoffice.services.itemizer.ItemizerService;
+import com.hedvig.backoffice.services.itemizer.ItemizerServiceStub;
+import com.hedvig.backoffice.services.itemizer.ItemizerServiceImpl;
 import com.hedvig.backoffice.services.meerkat.Meerkat;
 import com.hedvig.backoffice.services.meerkat.MeerkatImpl;
 import com.hedvig.backoffice.services.meerkat.MeerkatStub;
@@ -182,5 +185,13 @@ public class ExternalServicesConfig {
     return stub
       ? factory.createBean(PriceEngineServiceStub.class)
       : factory.createBean(PriceEngineServiceImpl.class);
+  }
+
+  @Bean
+  public ItemizerService itemizerService(@Value("${itemizer.stub:false}") boolean stub) {
+    val factory = context.getAutowireCapableBeanFactory();
+    return stub
+      ? factory.createBean(ItemizerServiceStub.class)
+      : factory.createBean(ItemizerServiceImpl.class);
   }
 }

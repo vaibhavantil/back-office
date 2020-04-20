@@ -9,11 +9,14 @@ import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.MonthlySubscription;
 import com.hedvig.backoffice.graphql.types.SwitchableSwitcherEmail;
 import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
+import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory;
+import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
+import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
@@ -42,6 +45,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final TicketService ticketService;
   private final PersonnelService personnelService;
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
+  private final ItemizerService itemizerService;
 
   public GraphQLQuery(
     ProductPricingService productPricingService,
@@ -51,7 +55,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     MemberService memberService,
     TicketService ticketService,
     PersonnelService personnelService,
-    AutoAnswerSuggestionService autoAnswerSuggestionService
+    AutoAnswerSuggestionService autoAnswerSuggestionService,
+    ItemizerService itemizerService
   ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
@@ -61,6 +66,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.ticketService = ticketService;
     this.personnelService = personnelService;
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
+    this.itemizerService = itemizerService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -129,5 +135,9 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.getSwitchableSwitcherEmails().stream()
       .map(SwitchableSwitcherEmail::from)
       .collect(Collectors.toList());
+  }
+
+  public List<ItemCategory> itemCategories(ItemCategoryKind kind, String parentId) {
+    return itemizerService.getCategories(kind, parentId);
   }
 }

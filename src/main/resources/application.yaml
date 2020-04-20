@@ -111,6 +111,10 @@ gatekeeper:
   baseUrl: https://id.dev.hedvigit.com
   stub: false
 
+itemizer:
+  baseUrl: http://localhost:5700
+  stub: false
+
 graphql:
   servlet:
     mapping: /api/graphql
