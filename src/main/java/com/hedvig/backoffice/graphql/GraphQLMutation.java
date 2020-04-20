@@ -17,8 +17,6 @@ import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
-import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
-import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
@@ -73,7 +71,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
   private final QuestionService questionsService;
   private final MemberService memberService;
-  private final ItemPricingService itemPricingService;
   private final UnderwriterService underwriterService;
   private final ProductPricingService productPricingService;
   private final PriceEngineService priceEngineService;
@@ -89,7 +86,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     AutoAnswerSuggestionService autoAnswerSuggestionService,
     QuestionService questionsService,
     MemberService memberService,
-    ItemPricingService itemPricingService,
     UnderwriterService underwriterService,
     ProductPricingService productPricingService,
     PriceEngineService priceEngineService
@@ -105,7 +101,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
     this.questionsService = questionsService;
     this.memberService = memberService;
-    this.itemPricingService = itemPricingService;
     this.underwriterService = underwriterService;
     this.productPricingService = productPricingService;
     this.priceEngineService = priceEngineService;
@@ -547,20 +542,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     ClaimFileCategoryDTO claimFileCategoryDTO = new ClaimFileCategoryDTO(category);
     claimsService.setClaimFileCategory(claimId, claimFileId, claimFileCategoryDTO);
     return category;
-  }
-
-  public boolean addInventoryItem(ClaimInventoryItemDTO item) {
-    return itemPricingService.addInventoryItem(item);
-  }
-
-  public boolean removeInventoryItem(String inventoryItemId) {
-    boolean itemWasRemoved = itemPricingService.removeInventoryItem(inventoryItemId);
-
-    if (itemWasRemoved) {
-      itemPricingService.removeInventoryFilters(inventoryItemId);
-      return true;
-    }
-    return false;
   }
 
   public Boolean markSwitchableSwitcherEmailAsReminded(final UUID emailId) {
