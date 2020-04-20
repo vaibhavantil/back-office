@@ -17,6 +17,8 @@ import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
+import com.hedvig.backoffice.services.itemizer.ItemizerService;
+import com.hedvig.backoffice.services.itemizer.dto.request.AddItemCompanyRequest;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
@@ -74,6 +76,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final UnderwriterService underwriterService;
   private final ProductPricingService productPricingService;
   private final PriceEngineService priceEngineService;
+  private final ItemizerService itemizerService;
 
   public GraphQLMutation(
     PaymentService paymentService,
@@ -88,7 +91,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     MemberService memberService,
     UnderwriterService underwriterService,
     ProductPricingService productPricingService,
-    PriceEngineService priceEngineService
+    PriceEngineService priceEngineService,
+    ItemizerService itemizerService
   ) {
 
     this.paymentService = paymentService;
@@ -104,6 +108,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.underwriterService = underwriterService;
     this.productPricingService = productPricingService;
     this.priceEngineService = priceEngineService;
+    this.itemizerService = itemizerService;
   }
 
   public CompletableFuture<Member> chargeMember(
@@ -603,6 +608,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       getToken(env)
     );
     return agreementId;
+  }
+
+  public Boolean addItemCompany(final AddItemCompanyRequest request, DataFetchingEnvironment env) {
+    itemizerService.addItemCompany(request, getToken(env));
+    return true;
   }
 
   private String getToken(DataFetchingEnvironment env) {

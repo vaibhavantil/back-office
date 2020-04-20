@@ -14,6 +14,7 @@ type QueryType {
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
+  itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
 }
 
 type MutationType {
@@ -73,6 +74,30 @@ type MutationType {
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
+  addItemCompany(request: AddItemCompanyInput): Boolean!
+  addItemType(request: AddItemTypeInput): Boolean!
+  addItemBrand(request: AddItemBrandInput): Boolean!
+  addItemModel(request: AddItemModelInput): Boolean!
+}
+
+input AddItemCompanyInput {
+  name: String!
+}
+
+input AddItemTypeInput {
+  name: String!
+  itemFamilyId: ID!
+}
+
+input AddItemBrandInput {
+  name: String!
+  itemTypeId: ID!
+  itemCompanyId: ID!
+}
+
+input AddItemModelInput {
+  name: String!
+  itemBrandId: ID!
 }
 
 type Contract {
@@ -275,6 +300,51 @@ input ChangeToDateInput {
 
 input ChangeFromDateInput {
   newFromDate: LocalDate!
+}
+
+union ItemCategory = ItemFamily | ItemType | ItemBrand | ItemModel
+
+interface ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+}
+
+type ItemFamily implements ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+}
+
+type ItemType implements ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+}
+
+type ItemBrand implements ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+  companyName: String!
+}
+
+type ItemModel implements ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+}
+
+enum ItemCategoryKind {
+  FAMILY
+  TYPE
+  BRAND
+  MODEL
 }
 
 type Suggestion {
