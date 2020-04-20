@@ -17,6 +17,6 @@ class ItemizerServiceImpl(
   }
 
   override fun addItemCompany(request: AddItemCompanyRequest, token: String) {
-    itemizerClient.addItemCompany(request)
+    itemizerClient.addItemCompany(request, token)
   }
 }
