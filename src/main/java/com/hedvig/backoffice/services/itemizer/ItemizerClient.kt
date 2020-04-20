@@ -7,10 +7,7 @@ import com.hedvig.backoffice.services.itemizer.dto.ItemModel
 import com.hedvig.backoffice.services.itemizer.dto.ItemType
 import com.hedvig.backoffice.services.itemizer.dto.request.AddItemCompanyRequest
 import org.springframework.cloud.openfeign.FeignClient
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @FeignClient(
@@ -39,6 +36,7 @@ interface ItemizerClient {
 
   @PostMapping("/company/add")
   fun addItemCompany(
-    @RequestBody request: AddItemCompanyRequest
+    @RequestBody request: AddItemCompanyRequest,
+    @RequestHeader("Authorization") token: String
   )
 }
