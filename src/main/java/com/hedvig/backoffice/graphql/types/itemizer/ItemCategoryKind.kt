@@ -5,4 +5,5 @@ enum class ItemCategoryKind {
   TYPE,
   BRAND,
   MODEL,
+  COMPANY,
 }
