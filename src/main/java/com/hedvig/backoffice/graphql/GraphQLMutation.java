@@ -18,7 +18,7 @@ import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
-import com.hedvig.backoffice.services.itemizer.dto.request.AddItemCompanyRequest;
+import com.hedvig.backoffice.services.itemizer.dto.request.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
@@ -610,9 +610,24 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return agreementId;
   }
 
-  public Boolean addItemCompany(final AddItemCompanyRequest request, DataFetchingEnvironment env) {
-    itemizerService.addItemCompany(request, getToken(env));
-    return true;
+  public UUID upsertItemCompany(final UpsertItemCompanyRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemCompany(request, getUserIdentity(env));
+  }
+
+  public UUID upsertItemType(final UpsertItemTypeRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemType(request, getUserIdentity(env));
+  }
+
+  public UUID upsertItemBrand(final UpsertItemBrandRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemBrand(request, getUserIdentity(env));
+  }
+
+  public UUID upsertItemModel(final UpsertItemModelRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemModel(request, getUserIdentity(env));
+  }
+
+  public UUID upsertClaimItem(final UpsertClaimItemRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertClaimItem(request, getUserIdentity(env));
   }
 
   private String getToken(DataFetchingEnvironment env) {

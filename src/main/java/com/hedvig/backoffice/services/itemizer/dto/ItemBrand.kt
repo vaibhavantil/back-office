@@ -11,6 +11,6 @@ data class ItemBrand(
     override val displayName: String,
     override val searchTerms: String,
     val companyName: String
-): ItemCategory<UUID> {
+): ItemCategory {
   override val nextKind: ItemCategoryKind = ItemCategoryKind.MODEL
 }

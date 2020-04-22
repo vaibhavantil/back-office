@@ -10,6 +10,6 @@ data class ItemModel(
   override val id: UUID,
   override val displayName: String,
   override val searchTerms: String
-) : ItemCategory<UUID> {
+) : ItemCategory {
   override val nextKind: ItemCategoryKind? = null
 }

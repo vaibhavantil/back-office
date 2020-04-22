@@ -15,6 +15,20 @@ type QueryType {
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
+  claimItems(claimId: ID!): [ClaimItem!]!
+}
+
+type ClaimItem {
+  id: ID!
+  itemFamily: ItemFamily!
+  itemType: ItemType!
+  itemBrand: ItemBrand
+  itemModel: ItemModel
+  itemCompany: ItemCompany
+  dateOfPurchase: LocalDate
+  purchasePriceAmount: MonetaryAmountV2
+  dateOfLoss: LocalDate!
+  note: String
 }
 
 type MutationType {
@@ -74,28 +88,46 @@ type MutationType {
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
-  addItemCompany(request: AddItemCompanyInput): Boolean!
-  addItemType(request: AddItemTypeInput): Boolean!
-  addItemBrand(request: AddItemBrandInput): Boolean!
-  addItemModel(request: AddItemModelInput): Boolean!
+  upsertItemCompany(request: UpsertItemCompanyInput): ID!
+  upsertItemType(request: UpserttemTypeInput): ID!
+  upsertItemBrand(request: UpserttemBrandInput): ID!
+  upsertItemModel(request: UpsertItemModelInput): ID!
+  upsertClaimItem(request: UpsertClaimItemInput): ID!
 }
 
-input AddItemCompanyInput {
+input UpsertClaimItemInput {
+  id: ID
+  claimId: ID!
+  itemFamilyId: ID!
+  itemTypeId: ID!
+  itemBrandId: ID
+  itemModelId: ID
+  dateOfPurchase: LocalDate
+  purchasePrice: MonetaryAmount
+  dateOfLoss: LocalDate!
+  note: String
+}
+
+input UpsertItemCompanyInput {
+  id: ID
   name: String!
 }
 
-input AddItemTypeInput {
+input UpserttemTypeInput {
+  id: ID
   name: String!
   itemFamilyId: ID!
 }
 
-input AddItemBrandInput {
+input UpserttemBrandInput {
+  id: ID
   name: String!
   itemTypeId: ID!
   itemCompanyId: ID!
 }
 
-input AddItemModelInput {
+input UpsertItemModelInput {
+  id: ID
   name: String!
   itemBrandId: ID!
 }
@@ -302,7 +334,7 @@ input ChangeFromDateInput {
   newFromDate: LocalDate!
 }
 
-union ItemCategory = ItemFamily | ItemType | ItemBrand | ItemModel
+union ItemCategory = ItemFamily | ItemType | ItemBrand | ItemModel | ItemCompany
 
 interface ItemCategoryCore {
   id: ID!
@@ -340,11 +372,19 @@ type ItemModel implements ItemCategoryCore {
   searchTerms: String!
 }
 
+type ItemCompany implements ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+}
+
 enum ItemCategoryKind {
   FAMILY
   TYPE
   BRAND
   MODEL
+  COMPANY
 }
 
 type Suggestion {
