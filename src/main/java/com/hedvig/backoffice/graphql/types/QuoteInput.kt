@@ -2,6 +2,7 @@ package com.hedvig.backoffice.graphql.types
 
 import com.hedvig.backoffice.services.underwriter.dtos.NorwegianHomeContentType
 import com.hedvig.backoffice.services.underwriter.dtos.SwedishApartmentType
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
 import java.math.BigDecimal
 import java.util.*
 

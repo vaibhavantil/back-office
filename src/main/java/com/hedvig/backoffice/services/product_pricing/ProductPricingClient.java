@@ -1,34 +1,19 @@
 package com.hedvig.backoffice.services.product_pricing;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
-import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.*;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
-
-import java.util.List;
-import java.util.UUID;
-
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 
 @FeignClient(
@@ -122,4 +107,62 @@ public interface ProductPricingClient {
 
   @PutMapping("/_/switchableSwitchers/emails/{emailId}/remind")
   void markSwitchableSwitcherEmailAsReminded(@PathVariable("emailId") UUID emailId);
+
+  @GetMapping("/_/contracts/members/{memberId}")
+  List<Contract> getContractByMemberId(@PathVariable("memberId") String memberId);
+
+  @GetMapping("/_/contracts/{contractId}")
+  Contract getContractById(@PathVariable  UUID contractId);
+
+  @PostMapping("/_/contracts/{contractId}/activate/pending")
+  void activatePendingAgreement(
+    @PathVariable UUID contractId,
+    @RequestBody ActivatePendingAgreementRequest request,
+    @RequestHeader("Authorization") String token
+  );
+
+  @PostMapping("/_/contracts/{contractId}/terminate")
+  void terminateContract(
+    @PathVariable UUID contractId,
+    @RequestBody TerminateContractRequest terminateContractRequest,
+    @RequestHeader("Authorization") String token
+  );
+
+  @PostMapping("/_/contracts/{contractId}/termination/change/date")
+  void changeTerminationDate(
+    @PathVariable UUID contractId,
+    @RequestBody ChangeTerminationDateRequest request,
+    @RequestHeader("Authorization") String token
+  );
+
+  @PostMapping("/_/contracts/{contractId}/termination/revert")
+  void revertTermination(
+    @PathVariable UUID contractId,
+    @RequestHeader("Authorization") String token
+  );
+
+  @PostMapping("/_/agreements/{agreementId}/change/from")
+  void changeFromDate(
+    @PathVariable UUID agreementId,
+    @RequestBody ChangeFromDateOnAgreementRequest request,
+    @RequestHeader("Authorization") String token
+  );
+
+  @PostMapping("/_/agreements/{agreementId}/change/to")
+  void changeToDate(
+    @PathVariable UUID agreementId,
+    @RequestBody ChangeToDateOnAgreementRequest request,
+    @RequestHeader("Authorization") String token
+  );
+
+  @GetMapping("/_/contracts/members/{memberId}/contract/market/info")
+  ResponseEntity<ContractMarketInfo> getContractMarketInfoForMember(
+    @PathVariable String memberId
+  );
+
+  @PostMapping("/_/certificates/regenerate/{agreementId}")
+  void regenerateCertificate(
+    @PathVariable UUID agreementId,
+    @RequestHeader("Authorization") String token
+  );
 }

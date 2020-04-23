@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding;
 import com.hedvig.backoffice.web.dto.ProductState;
 import com.hedvig.backoffice.web.dto.SafetyIncreaserType;
 import com.hedvig.backoffice.web.dto.TraceInfoDTO;
@@ -71,7 +72,7 @@ public class InsuranceStatusDTO {
 
   private Integer numberOfBathrooms;
 
-  private List<ExtraBuildingDTO> extraBuildings;
+  private List<ExtraBuilding> extraBuildings;
 
   private  Boolean isSubleted;
 }

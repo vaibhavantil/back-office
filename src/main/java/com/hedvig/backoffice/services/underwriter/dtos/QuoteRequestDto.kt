@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.underwriter.dtos
 
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
 import java.time.LocalDate
 import java.util.*
 

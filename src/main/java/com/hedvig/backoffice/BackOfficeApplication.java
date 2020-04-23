@@ -7,8 +7,6 @@ import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
@@ -19,9 +17,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.hedvig")
 @EnableFeignClients
 @EnableCircuitBreaker
 @EnableScheduling

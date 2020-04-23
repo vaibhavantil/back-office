@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.underwriter.dtos
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.hedvig.backoffice.graphql.types.QuoteInput
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
 import java.util.UUID
 
 data class QuoteInputDto(
@@ -29,7 +30,7 @@ data class QuoteInputDto(
               city = quoteInput.houseData.city,
               livingSpace = quoteInput.houseData.livingSpace,
               householdSize = quoteInput.houseData.householdSize,
-              extraBuildings = quoteInput.houseData.extraBuildings?.map((ExtraBuilding)::from),
+              extraBuildings = quoteInput.houseData.extraBuildings,
               ancillaryArea = quoteInput.houseData.ancillaryArea,
               numberOfBathrooms = quoteInput.houseData.numberOfBathrooms,
               yearOfConstruction = quoteInput.houseData.yearOfConstruction,

@@ -3,37 +3,24 @@ package com.hedvig.backoffice.services.product_pricing;
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
-import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.*;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
-
-import lombok.extern.slf4j.Slf4j;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 
 @Slf4j
 public class ProductPricingServiceImpl implements ProductPricingService {
@@ -178,5 +165,70 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   @Override
   public void markSwitchableSwitcherEmailAsReminded(final UUID emailId) {
     client.markSwitchableSwitcherEmailAsReminded(emailId);
+  }
+
+  @Override
+  public List<Contract> getContractsByMemberId(String memberId) {
+    return client.getContractByMemberId(memberId);
+  }
+
+  @Override
+  public void activatePendingAgreement(UUID contractId, ActivatePendingAgreementRequest request, String token) {
+    client.activatePendingAgreement(contractId, request, token);
+  }
+
+  @Override
+  public void terminateContract(UUID contractId, TerminateContractRequest request, String token) {
+    client.terminateContract(contractId, request, token);
+  }
+
+  @Override
+  public void changeTerminationDate(UUID contractId, ChangeTerminationDateRequest request, String token) {
+    client.changeTerminationDate(contractId, request, token);
+  }
+
+  @Override
+  public Contract getContractById(UUID contractId) {
+    return client.getContractById(contractId);
+  }
+
+  @Override
+  public void revertTermination(UUID contractId, String token) {
+    client.revertTermination(contractId, token);
+  }
+
+  @Override
+  public void changeFromDate(
+    UUID agreementId,
+    ChangeFromDateOnAgreementRequest request,
+    String token
+  ) {
+    client.changeFromDate(agreementId, request, token);
+  }
+
+  @Override
+  public void changeToDate(
+    UUID agreementId,
+    ChangeToDateOnAgreementRequest request,
+    String token
+  ) {
+    client.changeToDate(agreementId, request, token);
+  }
+
+  @Override
+  public ContractMarketInfo getContractMarketInfoByMemberId(String memberId) {
+    ResponseEntity<ContractMarketInfo> response = client.getContractMarketInfoForMember(memberId);
+    if (response.getStatusCode() != HttpStatus.OK) {
+      return null;
+    }
+    return response.getBody();
+  }
+
+  @Override
+  public void regenerateCertificate(
+    UUID agreementId,
+    String token
+  ) {
+    this.client.regenerateCertificate(agreementId, token);
   }
 }

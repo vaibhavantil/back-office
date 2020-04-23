@@ -33,6 +33,9 @@ import com.hedvig.backoffice.services.payments.PaymentServiceStub;
 import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
 import com.hedvig.backoffice.services.itemPricing.ItemPricingServiceImpl;
 import com.hedvig.backoffice.services.itemPricing.ItemPricingServiceStub;
+import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
+import com.hedvig.backoffice.services.priceEngine.PriceEngineServiceImpl;
+import com.hedvig.backoffice.services.priceEngine.PriceEngineServiceStub;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceImpl;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceStub;
@@ -184,5 +187,13 @@ public class ExternalServicesConfig {
     return stub
       ? factory.createBean(AutoAnswerSuggestionServiceStub.class)
       : factory.createBean(AutoAnswerSuggestionServiceImpl.class);
+  }
+
+  @Bean
+  public PriceEngineService priceEngineService(@Value("${priceEngine.stub:false}") boolean stub) {
+    val factory = context.getAutowireCapableBeanFactory();
+    return stub
+      ? factory.createBean(PriceEngineServiceStub.class)
+      : factory.createBean(PriceEngineServiceImpl.class);
   }
 }

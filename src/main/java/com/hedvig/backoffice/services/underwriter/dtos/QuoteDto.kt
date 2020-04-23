@@ -6,6 +6,7 @@ import com.hedvig.backoffice.graphql.types.NorwegianHomeContentQuoteDataInput
 import com.hedvig.backoffice.graphql.types.NorwegianTravelQuoteDataInput
 import com.hedvig.backoffice.graphql.types.ApartmentQuoteDataInput
 import com.hedvig.backoffice.graphql.types.HouseQuoteDataInput
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -30,6 +31,7 @@ enum class QuoteState {
 enum class QuoteInitiatedFrom {
   RAPIO,
   WEBONBOARDING,
+  WEB,
   APP,
   IOS,
   ANDROID,
@@ -65,23 +67,6 @@ enum class NorwegianHomeContentType {
   OWN,
   STUDENT_RENT,
   STUDENT_OWN
-}
-
-data class ExtraBuilding(
-  val type: ExtraBuildingType,
-  val area: Int,
-  val hasWaterConnected: Boolean,
-  val displayName: String?
-) {
-  companion object {
-    fun from(extraBuilding: com.hedvig.backoffice.graphql.types.ExtraBuilding): ExtraBuilding =
-      ExtraBuilding(
-        type = extraBuilding.type,
-        area = extraBuilding.area,
-        hasWaterConnected = extraBuilding.hasWaterConnected,
-        displayName = extraBuilding.displayName
-      )
-  }
 }
 
 data class QuoteDto(
@@ -244,7 +229,6 @@ sealed class QuoteData {
           ssn = norwegianTravelQuoteDataInput.ssn,
           firstName = norwegianTravelQuoteDataInput.firstName,
           lastName = norwegianTravelQuoteDataInput.lastName,
-
           coInsured = norwegianTravelQuoteDataInput.householdSize?.minus(1)
         )
     }

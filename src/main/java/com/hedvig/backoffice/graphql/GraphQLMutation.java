@@ -22,20 +22,22 @@ import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
+import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
 import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto;
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
 import graphql.language.SourceLocation;
 import graphql.schema.DataFetchingEnvironment;
-import java.time.LocalDate;
 import jersey.repackaged.com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -45,6 +47,7 @@ import org.springframework.stereotype.Component;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
@@ -73,6 +76,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ItemPricingService itemPricingService;
   private final UnderwriterService underwriterService;
   private final ProductPricingService productPricingService;
+  private final PriceEngineService priceEngineService;
 
   public GraphQLMutation(
     PaymentService paymentService,
@@ -87,7 +91,9 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     MemberService memberService,
     ItemPricingService itemPricingService,
     UnderwriterService underwriterService,
-    ProductPricingService productPricingService) {
+    ProductPricingService productPricingService,
+    PriceEngineService priceEngineService
+  ) {
 
     this.paymentService = paymentService;
     this.personnelService = personnelService;
@@ -102,6 +108,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.itemPricingService = itemPricingService;
     this.underwriterService = underwriterService;
     this.productPricingService = productPricingService;
+    this.priceEngineService = priceEngineService;
   }
 
   public CompletableFuture<Member> chargeMember(
@@ -416,6 +423,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return Quote.from(underwriterService.getQuote(createdQuoteId));
   }
 
+  public Quote createQuoteFromProductByAgreementId(final String memberId, final UUID agreementId, final DataFetchingEnvironment env) {
+    final UUID createQuoteId = underwriterService.createAndCompleteQuoteFromAgreementId(memberId, agreementId, getUserIdentity(env)).getId();
+    return Quote.from(underwriterService.getQuote(createQuoteId));
+  }
+
   public Quote updateQuote(
     final UUID quoteId,
     final QuoteInput quoteInput,
@@ -549,6 +561,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   public boolean addInventoryItem(ClaimInventoryItemDTO item) {
     return itemPricingService.addInventoryItem(item);
   }
+
   public boolean removeInventoryItem(String inventoryItemId) {
     boolean itemWasRemoved = itemPricingService.removeInventoryItem(inventoryItemId);
 
@@ -561,8 +574,68 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public Boolean markSwitchableSwitcherEmailAsReminded(final UUID emailId) {
     productPricingService.markSwitchableSwitcherEmailAsReminded(emailId);
-
     return true;
+  }
+
+  public Contract activatePendingAgreement(final UUID contractId, final ActivatePendingAgreementRequest request, DataFetchingEnvironment env) {
+    productPricingService.activatePendingAgreement(contractId, request, getToken(env));
+    return productPricingService.getContractById(contractId);
+  }
+
+  public Contract terminateContract(final UUID contractId, final TerminateContractRequest request, DataFetchingEnvironment env) {
+    productPricingService.terminateContract(contractId, request, getToken(env));
+    return productPricingService.getContractById(contractId);
+  }
+
+  public Contract changeTerminationDate(final UUID contractId, final ChangeTerminationDateRequest request, DataFetchingEnvironment env) {
+    productPricingService.changeTerminationDate(contractId, request, getToken(env));
+    return productPricingService.getContractById(contractId);
+  }
+
+  public Contract revertTermination(final UUID contractId, DataFetchingEnvironment env) {
+    productPricingService.revertTermination(contractId, getToken(env));
+    return productPricingService.getContractById(contractId);
+  }
+
+  public Boolean createNorwegianGripenPriceEngine(final CreateNorwegianGripenRequest request, DataFetchingEnvironment env) {
+    priceEngineService.createNorwegianGripenPriceEngine(request, getToken(env));
+    return true;
+  }
+
+  public Boolean addNorwegianPostalCodes(final String postalCodesString, DataFetchingEnvironment env) {
+    priceEngineService.addNorwegianPostalCoodes(postalCodesString);
+    return true;
+  }
+
+  public UUID changeToDate(final UUID agreementId, final ChangeToDateOnAgreementRequest request, DataFetchingEnvironment env) {
+    productPricingService.changeToDate(
+      agreementId,
+      request,
+      getToken(env)
+    );
+    return agreementId;
+  }
+
+  public UUID changeFromDate(final UUID agreementId, final ChangeFromDateOnAgreementRequest request, DataFetchingEnvironment env) {
+    productPricingService.changeFromDate(
+      agreementId,
+      request,
+      getToken(env)
+    );
+    return agreementId;
+  }
+
+  public UUID regenerateCertificate(final UUID agreementId, DataFetchingEnvironment env) {
+    productPricingService.regenerateCertificate(
+      agreementId,
+      getToken(env)
+    );
+    return agreementId;
+  }
+
+  private String getToken(DataFetchingEnvironment env) {
+    GraphQLRequestContext context = env.getContext();
+    return personnelService.getIdToken(context.getUserPrincipal().getName());
   }
 }
 

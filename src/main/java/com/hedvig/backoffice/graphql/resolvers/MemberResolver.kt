@@ -13,6 +13,8 @@ import com.hedvig.backoffice.services.members.MemberService
 import com.hedvig.backoffice.services.messages.BotService
 import com.hedvig.backoffice.services.payments.PaymentService
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService
+import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ContractMarketInfo
 import com.hedvig.backoffice.services.underwriter.UnderwriterService
 import org.springframework.stereotype.Component
 import java.time.YearMonth
@@ -94,4 +96,12 @@ class MemberResolver(
 
   fun getQuotes(member: Member): List<Quote> = underwriterService.getQuotes(member.memberId)
     .map((Quote)::from)
+
+  fun getContracts(member: Member): List<Contract> {
+    val contracts = productPricingService.getContractsByMemberId(member.memberId)
+    contracts.forEach { contract -> contract.holderMember = member }
+    return contracts
+  }
+
+  fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
 }
