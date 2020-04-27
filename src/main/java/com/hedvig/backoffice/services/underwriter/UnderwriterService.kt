@@ -11,5 +11,5 @@ interface UnderwriterService {
   fun addAgreementFromQuote(quoteId: UUID, contractId: UUID?, activeFrom: LocalDate?, activeTo: LocalDate?, previousAgreementActiveTo: LocalDate?): QuoteDto
   fun getQuotes(memberId: String): List<QuoteDto>
   fun getQuote(id: UUID): QuoteDto
-  fun createQuoteFromAgreement(quoteRequest: QuoteRequestFromAgreementDto): QuoteResponseDto
+  fun createQuoteFromAgreement(quoteRequest: QuoteFromAgreementRequestDto): QuoteResponseDto
 }

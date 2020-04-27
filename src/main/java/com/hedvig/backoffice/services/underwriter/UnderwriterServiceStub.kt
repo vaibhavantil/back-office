@@ -69,6 +69,6 @@ class UnderwriterServiceStub : UnderwriterService {
   override fun getQuote(id: UUID): QuoteDto = QUOTE_DTO_MOCK
 
   override fun createQuoteFromAgreement(
-    quoteRequest: QuoteRequestFromAgreementDto
+    quoteRequest: QuoteFromAgreementRequestDto
   ): QuoteResponseDto = QuoteResponseDto(UUID.randomUUID())
 }

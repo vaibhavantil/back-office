@@ -33,7 +33,7 @@ import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto;
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestFromAgreementDto;
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -430,7 +430,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     final DataFetchingEnvironment env
   ) {
     final UUID createQuoteId = underwriterService.createQuoteFromAgreement(
-      new QuoteRequestFromAgreementDto(
+      new QuoteFromAgreementRequestDto(
         agreementId,
         memberId,
         getUserIdentity(env)

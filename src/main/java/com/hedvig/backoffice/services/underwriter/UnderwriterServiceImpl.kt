@@ -58,12 +58,12 @@ class UnderwriterServiceImpl(
   }
 
   private fun underwriterCreateQuoteFromAgreement(
-    quoteRequest: QuoteRequestFromAgreementDto
+    quoteRequest: QuoteFromAgreementRequestDto
   ): QuoteResponseDto? {
     return try {
       underwriterClient.createQuoteFromAgreement(quoteRequest)
     } catch (e: ExternalServiceBadRequestException) {
-      logger.error("Failed to complete quote", e)
+      logger.error("Failed to create quote", e)
       null
     }
   }
@@ -113,7 +113,7 @@ class UnderwriterServiceImpl(
     underwriterClient.getQuote(id)
 
   override fun createQuoteFromAgreement(
-    quoteRequest: QuoteRequestFromAgreementDto
+    quoteRequest: QuoteFromAgreementRequestDto
   ): QuoteResponseDto {
     val createdQuote = underwriterCreateQuoteFromAgreement(quoteRequest.copy(underwritingGuidelinesBypassedBy = null))
       ?: underwriterCreateQuoteFromAgreement(quoteRequest)
