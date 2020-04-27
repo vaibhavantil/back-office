@@ -73,9 +73,9 @@ type MutationType {
     memberId: ID!
     quoteData: QuoteFromProductInput!
   ): Quote!
-  createQuoteFromProductByAgreementId(
-    memberId: ID!
+  createQuoteFromBackOffice(
     agreementId: ID!
+    memberId: ID!
   ): Quote!
   updateQuote(
     quoteId: ID!

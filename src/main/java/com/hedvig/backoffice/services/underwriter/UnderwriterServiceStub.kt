@@ -44,13 +44,31 @@ class UnderwriterServiceStub : UnderwriterService {
     ): QuoteResponseDto =
     QuoteResponseDto(UUID.randomUUID())
 
-  override fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto, underwritingGuidelinesBypassedBy: String?): QuoteDto = QUOTE_DTO_MOCK
+  override fun updateQuote(
+    quoteId: UUID,
+    quoteDto: QuoteInputDto,
+    underwritingGuidelinesBypassedBy: String?
+  ): QuoteDto = QUOTE_DTO_MOCK
 
-  override fun activateQuote(quoteId: UUID, activationDate: LocalDate?, terminationDate: LocalDate?): QuoteDto = QUOTE_DTO_MOCK
+  override fun activateQuote(
+    quoteId: UUID,
+    activationDate: LocalDate?,
+    terminationDate: LocalDate?
+  ): QuoteDto = QUOTE_DTO_MOCK
 
-  override fun addAgreementFromQuote(quoteId: UUID, contractId: UUID?, activeFrom: LocalDate?, activeTo: LocalDate?, previousAgreementActiveTo: LocalDate?): QuoteDto = QUOTE_DTO_MOCK
+  override fun addAgreementFromQuote(
+    quoteId: UUID,
+    contractId: UUID?,
+    activeFrom: LocalDate?,
+    activeTo: LocalDate?,
+    previousAgreementActiveTo: LocalDate?
+  ): QuoteDto = QUOTE_DTO_MOCK
 
   override fun getQuotes(memberId: String): List<QuoteDto> = listOf(QUOTE_DTO_MOCK)
 
   override fun getQuote(id: UUID): QuoteDto = QUOTE_DTO_MOCK
+
+  override fun createQuoteFromBackOffice(
+    quoteRequest: QuoteRequestFromBackOfficeDto
+  ): QuoteResponseDto = QuoteResponseDto(UUID.randomUUID())
 }
