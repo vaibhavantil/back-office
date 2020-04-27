@@ -7,6 +7,10 @@ import com.hedvig.backoffice.services.underwriter.dtos.NorwegianHomeContentType
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
 import com.hedvig.backoffice.services.underwriter.dtos.SwedishApartmentType
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteData.ApartmentData
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteData.HouseData
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteData.NorwegianHomeContentData
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteData.NorwegianTravelData
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -57,7 +61,7 @@ data class Quote(
         startDate = quote.startDate,
         price = quote.price,
         data = when (quote.data) {
-            is com.hedvig.backoffice.services.underwriter.dtos.QuoteData.ApartmentData -> QuoteData.ApartmentQuoteData(
+            is ApartmentData -> QuoteData.ApartmentQuoteData(
                 id = quote.data.id!!,
                 ssn = quote.data.ssn,
                 firstName = quote.data.firstName,
@@ -69,7 +73,7 @@ data class Quote(
                 householdSize = quote.data.householdSize,
                 subType = quote.data.subType
             )
-          is com.hedvig.backoffice.services.underwriter.dtos.QuoteData.HouseData -> QuoteData.HouseQuoteData(
+          is HouseData -> QuoteData.HouseQuoteData(
                 id = quote.data.id!!,
                 ssn = quote.data.ssn,
                 firstName = quote.data.firstName,
@@ -92,7 +96,7 @@ data class Quote(
                 yearOfConstruction = quote.data.yearOfConstruction,
                 isSubleted = quote.data.isSubleted
           )
-          is com.hedvig.backoffice.services.underwriter.dtos.QuoteData.NorwegianHomeContentData -> QuoteData.NorwegianHomeContentQuoteData(
+          is NorwegianHomeContentData -> QuoteData.NorwegianHomeContentQuoteData(
             id = quote.data.id!!,
             ssn = quote.data.ssn,
             firstName = quote.data.firstName,
@@ -110,14 +114,13 @@ data class Quote(
               else -> null
             }
           )
-          is com.hedvig.backoffice.services.underwriter.dtos.QuoteData.NorwegianTravelData -> QuoteData.NorwegianTravelQuoteData(
+          is NorwegianTravelData -> QuoteData.NorwegianTravelQuoteData(
             id = quote.data.id!!,
             ssn = quote.data.ssn,
             firstName = quote.data.firstName,
             lastName = quote.data.lastName,
             householdSize = quote.data.coInsured?.plus(1)
           )
-          else -> throw RuntimeException("Expecting a valid quote data type but got ${quote.javaClass}")
         },
         state = QuoteState.valueOf(quote.state.toString()),
         productType = ProductType.valueOf(quote.productType.toString()),
