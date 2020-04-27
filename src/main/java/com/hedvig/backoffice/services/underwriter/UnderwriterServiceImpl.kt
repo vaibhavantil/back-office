@@ -57,11 +57,11 @@ class UnderwriterServiceImpl(
     }
   }
 
-  private fun underwriterCreateQuoteFromBackOffice(
-    quoteRequest: QuoteRequestFromBackOfficeDto
+  private fun underwriterCreateQuoteFromAgreement(
+    quoteRequest: QuoteRequestFromAgreementDto
   ): QuoteResponseDto? {
     return try {
-      underwriterClient.createQuoteFromBackOffice(quoteRequest)
+      underwriterClient.createQuoteFromAgreement(quoteRequest)
     } catch (e: ExternalServiceBadRequestException) {
       logger.error("Failed to complete quote", e)
       null
@@ -112,11 +112,11 @@ class UnderwriterServiceImpl(
   override fun getQuote(id: UUID): QuoteDto =
     underwriterClient.getQuote(id)
 
-  override fun createQuoteFromBackOffice(
-    quoteRequest: QuoteRequestFromBackOfficeDto
+  override fun createQuoteFromAgreement(
+    quoteRequest: QuoteRequestFromAgreementDto
   ): QuoteResponseDto {
-    val createdQuote = underwriterCreateQuoteFromBackOffice(quoteRequest.copy(underwritingGuidelinesBypassedBy = null))
-      ?: underwriterCreateQuoteFromBackOffice(quoteRequest)
+    val createdQuote = underwriterCreateQuoteFromAgreement(quoteRequest.copy(underwritingGuidelinesBypassedBy = null))
+      ?: underwriterCreateQuoteFromAgreement(quoteRequest)
       ?: throw RuntimeException("Could not create quote from agreement ${quoteRequest.agreementId}")
 
     return createdQuote

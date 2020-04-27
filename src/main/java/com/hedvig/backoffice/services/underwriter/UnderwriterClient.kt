@@ -3,7 +3,6 @@ package com.hedvig.backoffice.services.underwriter
 import com.hedvig.backoffice.config.feign.FeignConfig
 import com.hedvig.backoffice.services.underwriter.dtos.*
 import org.springframework.cloud.openfeign.FeignClient
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import java.util.UUID
-import javax.servlet.http.HttpServletRequest
 
 @FeignClient(
   name = "underwriter",
@@ -47,8 +45,8 @@ interface UnderwriterClient {
   @GetMapping("/_/v1/quotes/{quoteId}")
   fun getQuote(@PathVariable("quoteId") quoteId: UUID): QuoteDto
 
-  @PostMapping("/_/v1/quotes/createQuoteFromBackOffice")
-  fun createQuoteFromBackOffice(
-    @RequestBody quoteRequest: QuoteRequestFromBackOfficeDto
+  @PostMapping("/_/v1/quotes/createQuoteFromAgreement")
+  fun createQuoteFromAgreement(
+    @RequestBody quoteRequest: QuoteRequestFromAgreementDto
   ): QuoteResponseDto
 }
