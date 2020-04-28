@@ -8,6 +8,7 @@ import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
 import java.net.URL;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -41,7 +42,7 @@ public class UploadedFilePostprocessor {
     }
 
     URL url = amazonS3.generatePresignedUrl(chatS3Bucket, key,
-        new Date(Instant.now().plus(30, ChronoUnit.MINUTES).toEpochMilli()), HttpMethod.GET);
+      new Date(Instant.now().plus(30, ChronoUnit.MINUTES).toEpochMilli()), HttpMethod.GET);
 
     body.set("url", TextNode.valueOf("" + url));
   }

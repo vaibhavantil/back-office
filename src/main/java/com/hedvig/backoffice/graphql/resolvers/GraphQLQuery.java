@@ -9,6 +9,7 @@ import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.MonthlySubscription;
 import com.hedvig.backoffice.graphql.types.SwitchableSwitcherEmail;
 import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
+import com.hedvig.backoffice.graphql.types.questions.QuestionGroupType;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
@@ -19,6 +20,7 @@ import com.hedvig.backoffice.services.itemPricing.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
@@ -45,6 +47,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final TicketService ticketService;
   private final PersonnelService personnelService;
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
+  private final QuestionService questionService;
 
   public GraphQLQuery(
     ProductPricingService productPricingService,
@@ -55,7 +58,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     TicketService ticketService,
     PersonnelService personnelService,
     AutoAnswerSuggestionService autoAnswerSuggestionService,
-    ItemPricingService itemPricingService
+    ItemPricingService itemPricingService,
+    QuestionService questionService
   ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
@@ -66,6 +70,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.ticketService = ticketService;
     this.personnelService = personnelService;
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
+    this.questionService = questionService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -159,5 +164,9 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.getSwitchableSwitcherEmails().stream()
       .map(SwitchableSwitcherEmail::from)
       .collect(Collectors.toList());
+  }
+
+  public List<QuestionGroupType> questionGroups() {
+    return questionService.notAnswered().stream().map(QuestionGroupType.Companion::from).collect(Collectors.toList());
   }
 }

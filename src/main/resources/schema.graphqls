@@ -20,6 +20,19 @@ type QueryType {
   filters(categoryId: String!): [FilterSuggestion!]!
   inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
+  questionGroups: [QuestionGroup!]!
+}
+
+type QuestionGroup {
+  id: ID!
+  memberId: ID!
+  questions: [Question!]!
+}
+
+type Question {
+  id: ID!
+  timestamp: Instant!
+  messageJsonString: String!
 }
 
 type MutationType {
