@@ -63,10 +63,10 @@ enum class SwedishApartmentType {
 }
 
 enum class NorwegianHomeContentType {
-  RENT,
   OWN,
-  STUDENT_RENT,
-  STUDENT_OWN
+  RENT,
+  YOUTH_OWN,
+  YOUTH_RENT
 }
 
 data class QuoteDto(
@@ -201,12 +201,12 @@ sealed class QuoteData {
           livingSpace = norwegianHomeContentQuoteDataInput.livingSpace,
           coInsured = norwegianHomeContentQuoteDataInput.householdSize?.minus(1),
           type = when (norwegianHomeContentQuoteDataInput.type) {
-            NorwegianHomeContentType.RENT, NorwegianHomeContentType.STUDENT_RENT -> NorwegianHomeContentType.RENT
-            NorwegianHomeContentType.OWN, NorwegianHomeContentType.STUDENT_OWN -> NorwegianHomeContentType.OWN
+            NorwegianHomeContentType.RENT, NorwegianHomeContentType.YOUTH_RENT -> NorwegianHomeContentType.RENT
+            NorwegianHomeContentType.OWN, NorwegianHomeContentType.YOUTH_OWN -> NorwegianHomeContentType.OWN
             null -> null
           },
           isStudent = when (norwegianHomeContentQuoteDataInput.type) {
-            NorwegianHomeContentType.STUDENT_RENT, NorwegianHomeContentType.STUDENT_OWN -> true
+            NorwegianHomeContentType.YOUTH_RENT, NorwegianHomeContentType.YOUTH_OWN -> true
             NorwegianHomeContentType.RENT, NorwegianHomeContentType.OWN-> false
             null -> null
           }

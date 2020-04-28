@@ -107,10 +107,10 @@ data class Quote(
             livingSpace = quote.data.livingSpace,
             householdSize = quote.data.coInsured?.plus(1),
             type = when (quote.data.type) {
-              NorwegianHomeContentType.RENT -> if (quote.data.isStudent != null && quote.data.isStudent) NorwegianHomeContentType.STUDENT_RENT else NorwegianHomeContentType.RENT
-              NorwegianHomeContentType.OWN -> if (quote.data.isStudent != null && quote.data.isStudent) NorwegianHomeContentType.STUDENT_OWN else NorwegianHomeContentType.OWN
-              NorwegianHomeContentType.STUDENT_RENT -> NorwegianHomeContentType.STUDENT_RENT
-              NorwegianHomeContentType.STUDENT_OWN -> NorwegianHomeContentType.STUDENT_OWN
+              NorwegianHomeContentType.RENT -> if (quote.data.isStudent != null && quote.data.isStudent) NorwegianHomeContentType.YOUTH_RENT else NorwegianHomeContentType.RENT
+              NorwegianHomeContentType.OWN -> if (quote.data.isStudent != null && quote.data.isStudent) NorwegianHomeContentType.YOUTH_OWN else NorwegianHomeContentType.OWN
+              NorwegianHomeContentType.YOUTH_RENT -> NorwegianHomeContentType.YOUTH_RENT
+              NorwegianHomeContentType.YOUTH_OWN -> NorwegianHomeContentType.YOUTH_OWN
               else -> null
             }
           )
