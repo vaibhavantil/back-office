@@ -2,18 +2,19 @@ package com.hedvig.backoffice.graphql.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
+import com.hedvig.backoffice.graphql.GraphQLRequestContext;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
-import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.graphql.types.MonthlySubscription;
-import com.hedvig.backoffice.graphql.types.SwitchableSwitcherEmail;
+import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
+import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
+import com.hedvig.backoffice.services.chat.ChatServiceV2;
+import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
 import com.hedvig.backoffice.services.itemPricing.dto.*;
 import com.hedvig.backoffice.services.members.MemberService;
@@ -45,6 +46,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final TicketService ticketService;
   private final PersonnelService personnelService;
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
+  private final ChatServiceV2 chatServiceV2;
 
   public GraphQLQuery(
     ProductPricingService productPricingService,
@@ -55,7 +57,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     TicketService ticketService,
     PersonnelService personnelService,
     AutoAnswerSuggestionService autoAnswerSuggestionService,
-    ItemPricingService itemPricingService
+    ItemPricingService itemPricingService,
+    ChatServiceV2 chatServiceV2
   ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
@@ -66,6 +69,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.ticketService = ticketService;
     this.personnelService = personnelService;
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
+    this.chatServiceV2 = chatServiceV2;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -158,6 +162,20 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   public List<SwitchableSwitcherEmail> switchableSwitcherEmails(DataFetchingEnvironment env) {
     return productPricingService.getSwitchableSwitcherEmails().stream()
       .map(SwitchableSwitcherEmail::from)
+      .collect(Collectors.toList());
+  }
+
+  public List<ChatMessage> messageHistory(String memberId, DataFetchingEnvironment env) {
+    GraphQLRequestContext context = env.getContext();
+    String token = personnelService.getIdToken(context.getUserPrincipal().getName());
+    String email;
+    try {
+      email = GraphQLConfiguration.getEmail(env, personnelService);
+    } catch (AuthorizationException e) {
+      throw new RuntimeException("Failed to get email from GraphQLConfiguration", e);
+    }
+    return chatServiceV2.fetchMessages(memberId, email, token).stream()
+      .map(ChatMessage::new)
       .collect(Collectors.toList());
   }
 }

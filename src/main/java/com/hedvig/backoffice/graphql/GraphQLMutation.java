@@ -13,6 +13,7 @@ import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.AutoLabelDTO;
+import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
@@ -77,6 +78,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final UnderwriterService underwriterService;
   private final ProductPricingService productPricingService;
   private final PriceEngineService priceEngineService;
+  private final ChatServiceV2 chatServiceV2;
 
   public GraphQLMutation(
     PaymentService paymentService,
@@ -92,7 +94,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     ItemPricingService itemPricingService,
     UnderwriterService underwriterService,
     ProductPricingService productPricingService,
-    PriceEngineService priceEngineService
+    PriceEngineService priceEngineService,
+    ChatServiceV2 chatServiceV2
   ) {
 
     this.paymentService = paymentService;
@@ -109,6 +112,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.underwriterService = underwriterService;
     this.productPricingService = productPricingService;
     this.priceEngineService = priceEngineService;
+    this.chatServiceV2 = chatServiceV2;
   }
 
   public CompletableFuture<Member> chargeMember(
@@ -622,6 +626,24 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       getToken(env)
     );
     return agreementId;
+  }
+
+  public SendMessageResponse sendMessage(SendMessageInput input, DataFetchingEnvironment env) {
+    String email;
+    try {
+      email = GraphQLConfiguration.getEmail(env, personnelService);
+    } catch (AuthorizationException e) {
+      throw new RuntimeException("Failed to get email from GraphQLConfiguration", e);
+    }
+    return SendMessageResponse.Companion.from(
+      chatServiceV2.sendMessage(
+        input.getMemberId(),
+        input.getMessage(),
+        input.getForceSendMessage(),
+        email,
+        getToken(env)
+      )
+    );
   }
 
   private String getToken(DataFetchingEnvironment env) {
