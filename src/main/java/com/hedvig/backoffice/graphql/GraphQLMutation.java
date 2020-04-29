@@ -26,6 +26,7 @@ import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
+import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
@@ -94,7 +95,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     ProductPricingService productPricingService,
     PriceEngineService priceEngineService
   ) {
-
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
@@ -501,24 +501,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     }
   }
 
-  Boolean questionIsDone(
-    String memberId,
-    DataFetchingEnvironment env
-  ) {
-    GraphQLRequestContext context = env.getContext();
-    Principal principal = context.getUserPrincipal();
-
-    try {
-      Personnel personnel = personnelService.getPersonnelByEmail(principal.getName());
-      questionsService.done(memberId, personnel);
-    } catch (Exception e) {
-      String errorMessage = "Error when trying to update message as done!";
-      log.error(errorMessage, e);
-      throw new RuntimeException(errorMessage, e);
-    }
-    return true;
-  }
-
   public Boolean whitelistMember(
     String memberId,
     DataFetchingEnvironment env
@@ -624,9 +606,42 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return agreementId;
   }
 
+  public Boolean markQuestionAsDone(final String memberId, DataFetchingEnvironment env) {
+    Personnel personnel = getPersonnel(env);
+    try {
+      questionsService.done(memberId, personnel);
+    } catch(QuestionNotFoundException exception) {
+      log.error("Question not found when marking as done for memberId=" + memberId , exception);
+      throw new RuntimeException("Unable to mark question as done for memberId=" + memberId);
+    }
+    return true;
+  }
+
+  public Boolean answerQuestion(final String memberId, final String answer, DataFetchingEnvironment env) {
+    Personnel personnel = getPersonnel(env);
+    try {
+      questionsService.answer(memberId, answer, personnel);
+    } catch(QuestionNotFoundException exception) {
+      log.error("Question not found when answering for memberId=" + memberId , exception);
+      throw new RuntimeException("Unable to answer question for memberId=" + memberId);
+    }
+    return true;
+  }
+
   private String getToken(DataFetchingEnvironment env) {
     GraphQLRequestContext context = env.getContext();
     return personnelService.getIdToken(context.getUserPrincipal().getName());
+  }
+
+  private Personnel getPersonnel(DataFetchingEnvironment env) {
+    GraphQLRequestContext context = env.getContext();
+    Principal principal = context.getUserPrincipal();
+    try {
+      return personnelService.getPersonnelByEmail(principal.getName());
+    } catch (AuthorizationException exception) {
+      log.error("Unauthorized user attempted to get personnel by email", exception);
+      throw new RuntimeException("Unable to get personnel");
+    }
   }
 }
 

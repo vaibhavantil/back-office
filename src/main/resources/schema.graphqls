@@ -23,18 +23,6 @@ type QueryType {
   questionGroups: [QuestionGroup!]!
 }
 
-type QuestionGroup {
-  id: ID!
-  memberId: ID!
-  questions: [Question!]!
-}
-
-type Question {
-  id: ID!
-  timestamp: Instant!
-  messageJsonString: String!
-}
-
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
   addAccountEntryToMember(
@@ -62,7 +50,6 @@ type MutationType {
     memberId: String
     messageIds: [String!]
   ): AutoLabel
-  questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
@@ -94,6 +81,8 @@ type MutationType {
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
+  markQuestionAsDone(memberId: ID!): Boolean!
+  answerQuestion(memberId: ID!, answer: String!): Boolean!
 }
 
 type Contract {
@@ -1048,6 +1037,18 @@ enum ChargeStatus {
   CHARGE_INITIATED
   CHARGE_FAILED
   CHARGE_COMPLETED
+}
+
+type QuestionGroup {
+  id: ID!
+  memberId: ID!
+  questions: [Question!]!
+}
+
+type Question {
+  id: ID!
+  timestamp: Instant!
+  messageJsonString: String!
 }
 
 input TicketInput {
