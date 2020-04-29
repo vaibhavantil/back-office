@@ -16,6 +16,9 @@ interface ItemizerClient {
   @GetMapping("/_/item/families")
   fun getFamilies(): List<ItemFamily>
 
+  @GetMapping("/_/item/companies")
+  fun getCompanies(): List<ItemCompany>
+
   @GetMapping("/_/item/family/{itemFamilyId}/types")
   fun getTypesByFamily(
     @PathVariable itemFamilyId: String

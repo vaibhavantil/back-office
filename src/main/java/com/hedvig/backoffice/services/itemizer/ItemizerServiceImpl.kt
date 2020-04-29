@@ -14,7 +14,7 @@ class ItemizerServiceImpl(
     ItemCategoryKind.TYPE -> itemizerClient.getTypesByFamily(parentId!!)
     ItemCategoryKind.BRAND -> itemizerClient.getBrandsByType(UUID.fromString(parentId!!))
     ItemCategoryKind.MODEL -> itemizerClient.getModelsByBrand(UUID.fromString(parentId!!))
-    ItemCategoryKind.COMPANY -> throw RuntimeException("ItemCategoryKind.COMPANY not supported (kind=$kind, parentId=$parentId)")
+    ItemCategoryKind.COMPANY -> itemizerClient.getCompanies()
   }
 
   override fun upsertItemCompany(request: UpsertItemCompanyRequest, email: String) = itemizerClient.upsertItemCompany(request, email)
