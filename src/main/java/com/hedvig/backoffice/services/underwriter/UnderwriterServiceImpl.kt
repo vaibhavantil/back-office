@@ -2,15 +2,7 @@ package com.hedvig.backoffice.services.underwriter
 
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException
 import com.hedvig.backoffice.services.members.MemberService
-import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
-import com.hedvig.backoffice.services.underwriter.dtos.IncompleteApartmentQuoteDataDto
-import com.hedvig.backoffice.services.underwriter.dtos.IncompleteHouseQuoteDataDto
-import com.hedvig.backoffice.services.underwriter.dtos.ProductType
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
+import com.hedvig.backoffice.services.underwriter.dtos.*
 import feign.FeignException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory.getLogger
@@ -41,6 +33,8 @@ class UnderwriterServiceImpl(
         },
         incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData?.let((IncompleteApartmentQuoteDataDto)::from),
         incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData?.let((IncompleteHouseQuoteDataDto)::from),
+        norwegianHomeContentsData = quoteDto.norwegianHomeContentQuoteData?.let((IncompleteNorwegianHomeContentsQuoteDataDto)::from),
+        norwegianTravelData = quoteDto.norwegianTravelQuoteData?.let((IncompleteNorwegianTravelQuoteDataDto)::from),
         quotingPartner = null,
         underwritingGuidelinesBypassedBy = null
     )
@@ -59,6 +53,17 @@ class UnderwriterServiceImpl(
       )
     } catch (e: ExternalServiceBadRequestException) {
       logger.error("Failed to complete quote", e)
+      null
+    }
+  }
+
+  private fun underwriterCreateQuoteFromAgreement(
+    quoteRequest: QuoteFromAgreementRequestDto
+  ): QuoteResponseDto? {
+    return try {
+      underwriterClient.createQuoteFromAgreement(quoteRequest)
+    } catch (e: ExternalServiceBadRequestException) {
+      logger.error("Failed to create quote", e)
       null
     }
   }
@@ -88,9 +93,32 @@ class UnderwriterServiceImpl(
     return activatedQuote
   }
 
+  override fun addAgreementFromQuote(quoteId: UUID, contractId: UUID?, activeFrom: LocalDate?, activeTo: LocalDate?, previousAgreementActiveTo: LocalDate?): QuoteDto {
+    logger.info("Adding agreement from quote=$quoteId")
+    val addedQuote = underwriterClient.addAgreementFromQuote(AddAgreementFromQuoteRequest(
+      quoteId = quoteId,
+      contractId = contractId,
+      activeFrom = activeFrom,
+      activeTo = activeTo,
+      previousAgreementActiveTo = previousAgreementActiveTo
+    ))
+    logger.info("Successfully added agreement=${addedQuote.signedProductId} from quote=$quoteId")
+    return addedQuote
+  }
+
   override fun getQuotes(memberId: String): List<QuoteDto> =
     underwriterClient.getQuotes(memberId)
 
   override fun getQuote(id: UUID): QuoteDto =
     underwriterClient.getQuote(id)
+
+  override fun createQuoteFromAgreement(
+    quoteRequest: QuoteFromAgreementRequestDto
+  ): QuoteResponseDto {
+    val createdQuote = underwriterCreateQuoteFromAgreement(quoteRequest.copy(underwritingGuidelinesBypassedBy = null))
+      ?: underwriterCreateQuoteFromAgreement(quoteRequest)
+      ?: throw RuntimeException("Could not create quote from agreement ${quoteRequest.agreementId}")
+
+    return createdQuote
+  }
 }

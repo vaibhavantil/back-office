@@ -4,8 +4,10 @@ import java.util.UUID
 import com.hedvig.backoffice.graphql.types.QuoteFromProductInput
 
 data class CreateQuoteFromProductDto(
-  val incompleteHouseQuoteData: QuoteData.HouseQuoteData?,
-  val incompleteApartmentQuoteData: QuoteData.ApartmentQuoteData?,
+  val incompleteHouseQuoteData: QuoteData.HouseData?,
+  val incompleteApartmentQuoteData: QuoteData.ApartmentData?,
+  val norwegianHomeContentQuoteData: QuoteData.NorwegianHomeContentData?,
+  val norwegianTravelQuoteData: QuoteData.NorwegianTravelData?,
   val originatingProductId: UUID?,
   val currentInsurer: String?
 ) {
@@ -13,8 +15,10 @@ data class CreateQuoteFromProductDto(
     @JvmStatic
     fun from(dto: QuoteFromProductInput): CreateQuoteFromProductDto =
       CreateQuoteFromProductDto(
-        incompleteHouseQuoteData = dto.incompleteHouseQuoteData?.let((QuoteData.HouseQuoteData)::from),
-        incompleteApartmentQuoteData = dto.incompleteApartmentQuoteData?.let((QuoteData.ApartmentQuoteData)::from),
+        incompleteHouseQuoteData = dto.incompleteHouseQuoteData?.let((QuoteData.HouseData)::from),
+        incompleteApartmentQuoteData = dto.incompleteApartmentQuoteData?.let((QuoteData.ApartmentData)::from),
+        norwegianHomeContentQuoteData = dto.norwegianHomeContentQuoteData?.let((QuoteData.NorwegianHomeContentData)::from),
+        norwegianTravelQuoteData = dto.norwegianTravelQuoteData?.let((QuoteData.NorwegianTravelData)::from),
         currentInsurer = dto.currentInsurer,
         originatingProductId = dto.originatingProductId
       )
