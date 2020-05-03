@@ -18,19 +18,6 @@ type QueryType {
   claimItems(claimId: ID!): [ClaimItem!]!
 }
 
-type ClaimItem {
-  id: ID!
-  itemFamily: ItemFamily!
-  itemType: ItemType!
-  itemBrand: ItemBrand
-  itemModel: ItemModel
-  itemCompany: ItemCompany
-  dateOfPurchase: LocalDate
-  purchasePriceAmount: MonetaryAmountV2
-  dateOfLoss: LocalDate!
-  note: String
-}
-
 type MutationType {
   chargeMember(id: ID!, amount: MonetaryAmount!): Member
   addAccountEntryToMember(
@@ -89,10 +76,22 @@ type MutationType {
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
   upsertItemCompany(request: UpsertItemCompanyInput): ID!
-  upsertItemType(request: UpserttemTypeInput): ID!
-  upsertItemBrand(request: UpserttemBrandInput): ID!
+  upsertItemType(request: UpsertItemTypeInput): ID!
+  upsertItemBrand(request: UpsertItemBrandInput): ID!
   upsertItemModel(request: UpsertItemModelInput): ID!
   upsertClaimItem(request: UpsertClaimItemInput): ID!
+}
+type ClaimItem {
+  id: ID!
+  itemFamily: ItemFamily!
+  itemType: ItemType!
+  itemBrand: ItemBrand
+  itemModel: ItemModel
+  itemCompany: ItemCompany
+  dateOfPurchase: LocalDate
+  purchasePrice: MonetaryAmountV2
+  dateOfLoss: LocalDate!
+  note: String
 }
 
 input UpsertClaimItemInput {
@@ -103,7 +102,8 @@ input UpsertClaimItemInput {
   itemBrandId: ID
   itemModelId: ID
   dateOfPurchase: LocalDate
-  purchasePrice: MonetaryAmount
+  purchasePriceAmount: Float
+  purchasePriceCurrency: String
   dateOfLoss: LocalDate!
   note: String
 }
@@ -113,13 +113,13 @@ input UpsertItemCompanyInput {
   name: String!
 }
 
-input UpserttemTypeInput {
+input UpsertItemTypeInput {
   id: ID
   name: String!
   itemFamilyId: ID!
 }
 
-input UpserttemBrandInput {
+input UpsertItemBrandInput {
   id: ID
   name: String!
   itemTypeId: ID!
