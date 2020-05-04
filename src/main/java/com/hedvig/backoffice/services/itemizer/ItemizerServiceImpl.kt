@@ -28,4 +28,6 @@ class ItemizerServiceImpl(
   override fun upsertClaimItem(request: UpsertClaimItemRequest, email: String) = itemizerClient.upsertClaimItem(request, email)
 
   override fun getClaimItems(claimId: UUID): List<ClaimItem> = itemizerClient.getClaimItemsByClaimId(claimId)
+
+  override fun deleteClaimItemById(claimItemId: UUID): UUID = itemizerClient.deleteClaimItemById(claimItemId)
 }

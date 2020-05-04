@@ -630,6 +630,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return itemizerService.upsertClaimItem(request, getUserIdentity(env));
   }
 
+  public UUID deleteClaimItem(final UUID claimItemId) {
+    return itemizerService.deleteClaimItemById(claimItemId);
+  }
+
   private String getToken(DataFetchingEnvironment env) {
     GraphQLRequestContext context = env.getContext();
     return personnelService.getIdToken(context.getUserPrincipal().getName());

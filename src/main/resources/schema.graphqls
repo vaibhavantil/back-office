@@ -80,6 +80,7 @@ type MutationType {
   upsertItemBrand(request: UpsertItemBrandInput): ID!
   upsertItemModel(request: UpsertItemModelInput): ID!
   upsertClaimItem(request: UpsertClaimItemInput): ID!
+  deleteClaimItem(claimItemId: ID!): ID
 }
 type ClaimItem {
   id: ID!

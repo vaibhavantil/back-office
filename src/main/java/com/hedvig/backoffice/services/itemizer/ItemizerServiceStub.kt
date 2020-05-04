@@ -6,7 +6,7 @@ import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.request.*
 import java.util.*
 
-class ItemizerServiceStub: ItemizerService {
+class ItemizerServiceStub : ItemizerService {
   override fun getCategories(kind: ItemCategoryKind, parentId: String?): List<ItemCategory> = listOf()
 
   override fun upsertItemCompany(request: UpsertItemCompanyRequest, email: String): UUID = UUID.randomUUID()
@@ -20,4 +20,6 @@ class ItemizerServiceStub: ItemizerService {
   override fun upsertClaimItem(request: UpsertClaimItemRequest, email: String): UUID = UUID.randomUUID()
 
   override fun getClaimItems(claimId: UUID): List<ClaimItem> = listOf()
+
+  override fun deleteClaimItemById(claimItemId: UUID): UUID = UUID.randomUUID()
 }
