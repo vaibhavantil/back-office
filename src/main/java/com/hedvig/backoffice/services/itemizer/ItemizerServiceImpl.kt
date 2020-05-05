@@ -29,5 +29,5 @@ class ItemizerServiceImpl(
 
   override fun getClaimItems(claimId: UUID): List<ClaimItem> = itemizerClient.getClaimItemsByClaimId(claimId)
 
-  override fun deleteClaimItemById(claimItemId: UUID): UUID = itemizerClient.deleteClaimItemById(claimItemId)
+  override fun deleteClaimItem(claimItemId: UUID, email: String): UUID = itemizerClient.deleteClaimItem(claimItemId, email)
 }
