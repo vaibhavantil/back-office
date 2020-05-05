@@ -21,5 +21,5 @@ class ItemizerServiceStub : ItemizerService {
 
   override fun getClaimItems(claimId: UUID): List<ClaimItem> = listOf()
 
-  override fun deleteClaimItemById(claimItemId: UUID, email: String): UUID = UUID.randomUUID()
+  override fun deleteClaimItem(claimItemId: UUID, email: String): UUID = UUID.randomUUID()
 }
