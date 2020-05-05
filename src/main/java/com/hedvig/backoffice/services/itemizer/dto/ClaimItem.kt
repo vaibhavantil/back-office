@@ -16,7 +16,6 @@ data class ClaimItem(
   val dateOfPurchase: LocalDate?,
   val purchasePriceAmount: BigDecimal?,
   val purchasePriceCurrency: String?,
-  val dateOfLoss: LocalDate,
   val note: String?
 ) {
   val purchasePrice: MonetaryAmountV2?
