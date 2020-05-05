@@ -1,9 +1,8 @@
 package com.hedvig.backoffice.services.underwriter.dtos
 
-import com.hedvig.backoffice.services.product_pricing.dto.ProductType
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
 
 data class QuoteRequestDto(
   val firstName: String,
@@ -12,9 +11,11 @@ data class QuoteRequestDto(
   val birthDate: LocalDate?,
   val ssn: String?,
   val quotingPartner: String?,
-  val productType: com.hedvig.backoffice.services.underwriter.dtos.ProductType?,
+  val productType: ProductType?,
   val incompleteHouseQuoteData: IncompleteHouseQuoteDataDto?,
   val incompleteApartmentQuoteData: IncompleteApartmentQuoteDataDto?,
+  val norwegianHomeContentsData: IncompleteNorwegianHomeContentsQuoteDataDto?,
+  val norwegianTravelData: IncompleteNorwegianTravelQuoteDataDto?,
   val memberId: String? = null,
   val originatingProductId: UUID? = null,
   val underwritingGuidelinesBypassedBy: String?
@@ -31,11 +32,10 @@ data class IncompleteHouseQuoteDataDto(
   val yearOfConstruction: Int?,
   val numberOfBathrooms: Int?,
   val extraBuildings: List<ExtraBuilding>?,
-  val isSubleted: Boolean,
-  val floor: Int = 0
+  val isSubleted: Boolean
 ) {
   companion object {
-    fun from(dto: QuoteData.HouseQuoteData): IncompleteHouseQuoteDataDto =
+    fun from(dto: QuoteData.HouseData): IncompleteHouseQuoteDataDto =
       IncompleteHouseQuoteDataDto(
         street = dto.street,
         zipCode = dto.zipCode,
@@ -46,7 +46,6 @@ data class IncompleteHouseQuoteDataDto(
         yearOfConstruction = dto.yearOfConstruction,
         numberOfBathrooms = dto.numberOfBathrooms,
         extraBuildings = dto.extraBuildings,
-        floor = dto.floor,
         personalNumber = dto.ssn,
         isSubleted = dto.isSubleted ?: false
       )
@@ -59,19 +58,49 @@ data class IncompleteApartmentQuoteDataDto(
   val city: String?,
   val livingSpace: Int?,
   val householdSize: Int?,
-  val floor: Int?,
-  val subType: ProductType?
+  val subType: SwedishApartmentType?
 ) {
   companion object {
-    fun from(dto: QuoteData.ApartmentQuoteData): IncompleteApartmentQuoteDataDto =
+    fun from(dto: QuoteData.ApartmentData): IncompleteApartmentQuoteDataDto =
       IncompleteApartmentQuoteDataDto(
         street = dto.street,
         zipCode = dto.zipCode,
         city = dto.city,
         livingSpace = dto.livingSpace,
         householdSize = dto.householdSize,
-        floor = null,
         subType = dto.subType
+      )
+  }
+}
+
+data class IncompleteNorwegianHomeContentsQuoteDataDto(
+  val street: String?,
+  val zipCode: String?,
+  val city: String?,
+  val livingSpace: Int?,
+  val coInsured: Int?,
+  val type: NorwegianHomeContentType?
+) {
+  companion object {
+    fun from(dto: QuoteData.NorwegianHomeContentData): IncompleteNorwegianHomeContentsQuoteDataDto =
+      IncompleteNorwegianHomeContentsQuoteDataDto(
+        street = dto.street,
+        zipCode = dto.zipCode,
+        city = dto.city,
+        livingSpace = dto.livingSpace,
+        coInsured = dto.coInsured,
+        type = dto.type
+      )
+  }
+}
+
+data class IncompleteNorwegianTravelQuoteDataDto(
+  val coInsured: Int?
+) {
+  companion object {
+    fun from(dto: QuoteData.NorwegianTravelData): IncompleteNorwegianTravelQuoteDataDto =
+      IncompleteNorwegianTravelQuoteDataDto(
+        coInsured = dto.coInsured
       )
   }
 }

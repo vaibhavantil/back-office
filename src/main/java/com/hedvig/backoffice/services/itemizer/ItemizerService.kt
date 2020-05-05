@@ -14,4 +14,5 @@ interface ItemizerService {
   fun upsertItemModel(request: UpsertItemModelRequest, email: String): UUID
   fun upsertClaimItem(request: UpsertClaimItemRequest, email: String): UUID
   fun getClaimItems(claimId: UUID): List<ClaimItem>
+  fun deleteClaimItemById(claimItemId: UUID): UUID
 }

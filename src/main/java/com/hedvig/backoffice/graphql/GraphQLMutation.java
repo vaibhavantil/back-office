@@ -33,6 +33,7 @@ import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto;
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -414,9 +415,28 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return Quote.from(underwriterService.activateQuote(id, activationDate, terminationDate));
   }
 
+  public Quote addAgreementFromQuote(final UUID id, @Nullable final UUID contractId, @Nullable final LocalDate activeFrom,  @Nullable final LocalDate activeTo, @Nullable final LocalDate previousAgreementActiveTo) {
+    return Quote.from(underwriterService.addAgreementFromQuote(id, contractId, activeFrom, activeTo, previousAgreementActiveTo));
+  }
+
   public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData, final DataFetchingEnvironment env) {
     final UUID createdQuoteId = underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData), getUserIdentity(env)).getId();
     return Quote.from(underwriterService.getQuote(createdQuoteId));
+  }
+
+  public Quote createQuoteFromAgreement(
+    final UUID agreementId,
+    final String memberId,
+    final DataFetchingEnvironment env
+  ) {
+    final UUID createQuoteId = underwriterService.createQuoteFromAgreement(
+      new QuoteFromAgreementRequestDto(
+        agreementId,
+        memberId,
+        getUserIdentity(env)
+      )
+    ).getId();
+    return Quote.from(underwriterService.getQuote(createQuoteId));
   }
 
   public Quote updateQuote(
@@ -628,6 +648,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public UUID upsertClaimItem(final UpsertClaimItemRequest request, DataFetchingEnvironment env) {
     return itemizerService.upsertClaimItem(request, getUserIdentity(env));
+  }
+
+  public UUID deleteClaimItem(final UUID claimItemId) {
+    return itemizerService.deleteClaimItemById(claimItemId);
   }
 
   private String getToken(DataFetchingEnvironment env) {

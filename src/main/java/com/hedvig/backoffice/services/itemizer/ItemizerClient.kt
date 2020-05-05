@@ -68,4 +68,9 @@ interface ItemizerClient {
   fun getClaimItemsByClaimId(
     @PathVariable claimId: UUID
   ): List<ClaimItem>
+
+  @DeleteMapping("/_/claim/item/{claimItemId}")
+  fun deleteClaimItemById(
+    @PathVariable claimItemId: UUID
+  ): UUID
 }
