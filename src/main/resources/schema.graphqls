@@ -519,8 +519,7 @@ type Quote {
   id: ID!
   createdAt: Instant
   price: Float
-  productType:
-  QuoteProductType
+  productType: QuoteProductType
   state: QuoteState
   initiatedFrom: String
   attributedTo: String
@@ -638,6 +637,7 @@ type NorwegianTravelQuoteData implements IQuoteData{
   firstName: String
   lastName: String
   householdSize: Int
+  isYouth: Boolean
 }
 
 input QuoteInput {
@@ -687,6 +687,7 @@ input NorwegianHomeContentQuoteInput {
 
 input NorwegianTravelQuoteInput {
   householdSize: Int
+  isYouth: Boolean
 }
 
 input QuoteFromProductInput {

@@ -56,13 +56,19 @@ data class QuoteInputDto(
               city = quoteInput.norwegianHomeContentData.city,
               livingSpace = quoteInput.norwegianHomeContentData.livingSpace,
               coInsured = quoteInput.norwegianHomeContentData.householdSize?.minus(1),
-              type = quoteInput.norwegianHomeContentData.type
+              type = quoteInput.norwegianHomeContentData.type,
+              isYouth = when(quoteInput.norwegianHomeContentData.type) {
+                NorwegianHomeContentType.OWN, NorwegianHomeContentType.RENT -> false
+                NorwegianHomeContentType.YOUTH_OWN, NorwegianHomeContentType.YOUTH_RENT -> true
+                else -> null
+              }
             )
           },
         norwegianTravelQuoteData = quoteInput.norwegianTravelData
           ?.let {
             QuoteInputDataDto.NorwegianTravelQuoteInputDto(
-              coInsured = quoteInput.norwegianTravelData.householdSize?.minus(1)
+              coInsured = quoteInput.norwegianTravelData.householdSize?.minus(1),
+              isYouth = quoteInput.norwegianTravelData.isYouth
             )
           }
       )
@@ -106,12 +112,14 @@ sealed class QuoteInputDataDto {
     val zipCode: String? = null,
     val coInsured: Int? = null,
     val livingSpace: Int? = null,
+    val isYouth: Boolean? = null,
 
     val type: NorwegianHomeContentType? = null
   ) : QuoteInputDataDto()
 
   data class NorwegianTravelQuoteInputDto(
-    val coInsured: Int? = null
+    val coInsured: Int? = null,
+    val isYouth: Boolean? = null
   ) : QuoteInputDataDto()
 }
 

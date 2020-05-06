@@ -184,7 +184,7 @@ sealed class QuoteData {
     val zipCode: String? = null,
     val livingSpace: Int? = null,
     val coInsured: Int? = null,
-    val isStudent: Boolean? = null,
+    val isYouth: Boolean? = null,
     val type: NorwegianHomeContentType? = null
   ) : QuoteData() {
     companion object {
@@ -205,7 +205,7 @@ sealed class QuoteData {
             NorwegianHomeContentType.OWN, NorwegianHomeContentType.YOUTH_OWN -> NorwegianHomeContentType.OWN
             null -> null
           },
-          isStudent = when (norwegianHomeContentQuoteDataInput.type) {
+          isYouth = when (norwegianHomeContentQuoteDataInput.type) {
             NorwegianHomeContentType.YOUTH_RENT, NorwegianHomeContentType.YOUTH_OWN -> true
             NorwegianHomeContentType.RENT, NorwegianHomeContentType.OWN-> false
             null -> null
@@ -220,7 +220,8 @@ sealed class QuoteData {
     val firstName: String? = null,
     val lastName: String? = null,
 
-    val coInsured: Int? = null
+    val coInsured: Int? = null,
+    val isYouth: Boolean? = null
   ) : QuoteData() {
     companion object {
       fun from(norwegianTravelQuoteDataInput: NorwegianTravelQuoteDataInput): NorwegianTravelData =
@@ -229,7 +230,8 @@ sealed class QuoteData {
           ssn = norwegianTravelQuoteDataInput.ssn,
           firstName = norwegianTravelQuoteDataInput.firstName,
           lastName = norwegianTravelQuoteDataInput.lastName,
-          coInsured = norwegianTravelQuoteDataInput.householdSize?.minus(1)
+          coInsured = norwegianTravelQuoteDataInput.householdSize?.minus(1),
+          isYouth = norwegianTravelQuoteDataInput.isYouth
         )
     }
   }

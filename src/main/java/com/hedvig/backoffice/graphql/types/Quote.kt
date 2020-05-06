@@ -107,8 +107,8 @@ data class Quote(
             livingSpace = quote.data.livingSpace,
             householdSize = quote.data.coInsured?.plus(1),
             type = when (quote.data.type) {
-              NorwegianHomeContentType.RENT -> if (quote.data.isStudent != null && quote.data.isStudent) NorwegianHomeContentType.YOUTH_RENT else NorwegianHomeContentType.RENT
-              NorwegianHomeContentType.OWN -> if (quote.data.isStudent != null && quote.data.isStudent) NorwegianHomeContentType.YOUTH_OWN else NorwegianHomeContentType.OWN
+              NorwegianHomeContentType.RENT -> if (quote.data.isYouth != null && quote.data.isYouth) NorwegianHomeContentType.YOUTH_RENT else NorwegianHomeContentType.RENT
+              NorwegianHomeContentType.OWN -> if (quote.data.isYouth != null && quote.data.isYouth) NorwegianHomeContentType.YOUTH_OWN else NorwegianHomeContentType.OWN
               NorwegianHomeContentType.YOUTH_RENT -> NorwegianHomeContentType.YOUTH_RENT
               NorwegianHomeContentType.YOUTH_OWN -> NorwegianHomeContentType.YOUTH_OWN
               else -> null
@@ -119,7 +119,8 @@ data class Quote(
             ssn = quote.data.ssn,
             firstName = quote.data.firstName,
             lastName = quote.data.lastName,
-            householdSize = quote.data.coInsured?.plus(1)
+            householdSize = quote.data.coInsured?.plus(1),
+            isYouth = quote.data.isYouth
           )
         },
         state = QuoteState.valueOf(quote.state.toString()),
@@ -204,7 +205,8 @@ sealed class QuoteData {
     val firstName: String? = null,
     val lastName: String? = null,
 
-    val householdSize: Int? = null
+    val householdSize: Int? = null,
+    val isYouth: Boolean? = null
   ) : QuoteData()
 }
 

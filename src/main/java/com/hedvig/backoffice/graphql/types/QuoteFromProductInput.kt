@@ -62,5 +62,6 @@ data class NorwegianTravelQuoteDataInput(
   val firstName: String? = null,
   val lastName: String? = null,
 
-  val householdSize: Int? = null
+  val householdSize: Int? = null,
+  val isYouth: Boolean? = null
 )

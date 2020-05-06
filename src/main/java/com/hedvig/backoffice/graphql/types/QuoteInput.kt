@@ -52,7 +52,8 @@ sealed class QuoteInputData {
   ) : QuoteInputData()
 
   data class NorwegianTravelQuoteInput(
-    val householdSize: Int? = null
+    val householdSize: Int? = null,
+    val isYouth: Boolean? = null
   ) : QuoteInputData()
 }
 
