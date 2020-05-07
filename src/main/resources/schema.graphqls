@@ -621,7 +621,7 @@ type NorwegianHomeContentQuoteData implements IQuoteData{
   zipCode: String
   householdSize: Int
   livingSpace: Int
-  type: NorwegianHomeContentType
+  subType: NorwegianHomeContentType
 }
 
 enum NorwegianHomeContentType {
@@ -681,7 +681,7 @@ input NorwegianHomeContentQuoteInput {
   householdSize: Int
   livingSpace: Int
 
-  type: NorwegianHomeContentType
+  subType: NorwegianHomeContentType
 }
 
 
@@ -749,7 +749,7 @@ input NorwegianHomeContentQuoteDataInput {
   householdSize: Int
   livingSpace: Int
 
-  type: NorwegianHomeContentType
+  subType: NorwegianHomeContentType
 }
 
 input NorwegianTravelQuoteDataInput {

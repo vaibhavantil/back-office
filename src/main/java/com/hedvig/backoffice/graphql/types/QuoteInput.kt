@@ -48,7 +48,7 @@ sealed class QuoteInputData {
     val householdSize: Int? = null,
     val livingSpace: Int? = null,
 
-    val type: NorwegianHomeContentType? = null
+    val subType: NorwegianHomeContentType? = null
   ) : QuoteInputData()
 
   data class NorwegianTravelQuoteInput(

@@ -33,8 +33,8 @@ class UnderwriterServiceImpl(
         },
         incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData?.let((IncompleteApartmentQuoteDataDto)::from),
         incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData?.let((IncompleteHouseQuoteDataDto)::from),
-        norwegianHomeContentsData = quoteDto.norwegianHomeContentQuoteData?.let((IncompleteNorwegianHomeContentsQuoteDataDto)::from),
-        norwegianTravelData = quoteDto.norwegianTravelQuoteData?.let((IncompleteNorwegianTravelQuoteDataDto)::from),
+        norwegianHomeContentsData = quoteDto.norwegianHomeContentData?.let((IncompleteNorwegianHomeContentsQuoteDataDto)::from),
+        norwegianTravelData = quoteDto.norwegianTravelData?.let((IncompleteNorwegianTravelQuoteDataDto)::from),
         quotingPartner = null,
         underwritingGuidelinesBypassedBy = null
     )

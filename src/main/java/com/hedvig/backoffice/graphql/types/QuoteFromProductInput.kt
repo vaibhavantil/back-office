@@ -54,7 +54,7 @@ data class NorwegianHomeContentQuoteDataInput(
   val zipCode: String? = null,
   val householdSize: Int? = null,
   val livingSpace: Int? = null,
-  val type: NorwegianHomeContentType? = null
+  val subType: NorwegianHomeContentType? = null
 )
 
 data class NorwegianTravelQuoteDataInput(

@@ -106,7 +106,7 @@ data class Quote(
             city = quote.data.city,
             livingSpace = quote.data.livingSpace,
             householdSize = quote.data.coInsured?.plus(1),
-            type = when (quote.data.type) {
+            subType = when (quote.data.type) {
               NorwegianHomeContentType.RENT -> if (quote.data.isYouth != null && quote.data.isYouth) NorwegianHomeContentType.YOUTH_RENT else NorwegianHomeContentType.RENT
               NorwegianHomeContentType.OWN -> if (quote.data.isYouth != null && quote.data.isYouth) NorwegianHomeContentType.YOUTH_OWN else NorwegianHomeContentType.OWN
               NorwegianHomeContentType.YOUTH_RENT -> NorwegianHomeContentType.YOUTH_RENT
@@ -194,7 +194,7 @@ sealed class QuoteData {
     val householdSize: Int? = null,
     val livingSpace: Int? = null,
 
-    val type: NorwegianHomeContentType? = null
+    val subType: NorwegianHomeContentType? = null
   ) : QuoteData()
 
 

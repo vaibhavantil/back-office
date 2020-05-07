@@ -10,8 +10,8 @@ data class QuoteInputDto(
   val productType: ProductType?,
   val incompleteHouseQuoteData: QuoteInputDataDto.HouseQuoteInputDto?,
   val incompleteApartmentQuoteData: QuoteInputDataDto.ApartmentQuoteInputDto?,
-  val norwegianHomeContentQuoteData: QuoteInputDataDto.NorwegianHomeContentQuoteInputDto?,
-  val norwegianTravelQuoteData: QuoteInputDataDto.NorwegianTravelQuoteInputDto?,
+  val norwegianHomeContentsData: QuoteInputDataDto.NorwegianHomeContentQuoteInputDto?,
+  val norwegianTravelData: QuoteInputDataDto.NorwegianTravelQuoteInputDto?,
   val originatingProductId: UUID?,
   val currentInsurer: String? = null
 ) {
@@ -48,7 +48,7 @@ data class QuoteInputDto(
               subType = quoteInput.apartmentData.subType
             )
           },
-        norwegianHomeContentQuoteData = quoteInput.norwegianHomeContentData
+        norwegianHomeContentsData = quoteInput.norwegianHomeContentData
           ?.let {
             QuoteInputDataDto.NorwegianHomeContentQuoteInputDto(
               street = quoteInput.norwegianHomeContentData.street,
@@ -56,15 +56,19 @@ data class QuoteInputDto(
               city = quoteInput.norwegianHomeContentData.city,
               livingSpace = quoteInput.norwegianHomeContentData.livingSpace,
               coInsured = quoteInput.norwegianHomeContentData.householdSize?.minus(1),
-              type = quoteInput.norwegianHomeContentData.type,
-              isYouth = when(quoteInput.norwegianHomeContentData.type) {
+              subType = when(quoteInput.norwegianHomeContentData.subType) {
+                NorwegianHomeContentType.OWN, NorwegianHomeContentType.YOUTH_OWN -> NorwegianHomeContentType.OWN
+                NorwegianHomeContentType.RENT, NorwegianHomeContentType.YOUTH_RENT -> NorwegianHomeContentType.RENT
+                else -> null
+              },
+              isYouth = when(quoteInput.norwegianHomeContentData.subType) {
                 NorwegianHomeContentType.OWN, NorwegianHomeContentType.RENT -> false
                 NorwegianHomeContentType.YOUTH_OWN, NorwegianHomeContentType.YOUTH_RENT -> true
                 else -> null
               }
             )
           },
-        norwegianTravelQuoteData = quoteInput.norwegianTravelData
+        norwegianTravelData = quoteInput.norwegianTravelData
           ?.let {
             QuoteInputDataDto.NorwegianTravelQuoteInputDto(
               coInsured = quoteInput.norwegianTravelData.householdSize?.minus(1),
@@ -114,7 +118,7 @@ sealed class QuoteInputDataDto {
     val livingSpace: Int? = null,
     val isYouth: Boolean? = null,
 
-    val type: NorwegianHomeContentType? = null
+    val subType: NorwegianHomeContentType? = null
   ) : QuoteInputDataDto()
 
   data class NorwegianTravelQuoteInputDto(

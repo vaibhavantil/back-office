@@ -200,12 +200,12 @@ sealed class QuoteData {
           city = norwegianHomeContentQuoteDataInput.city,
           livingSpace = norwegianHomeContentQuoteDataInput.livingSpace,
           coInsured = norwegianHomeContentQuoteDataInput.householdSize?.minus(1),
-          type = when (norwegianHomeContentQuoteDataInput.type) {
+          type = when (norwegianHomeContentQuoteDataInput.subType) {
             NorwegianHomeContentType.RENT, NorwegianHomeContentType.YOUTH_RENT -> NorwegianHomeContentType.RENT
             NorwegianHomeContentType.OWN, NorwegianHomeContentType.YOUTH_OWN -> NorwegianHomeContentType.OWN
             null -> null
           },
-          isYouth = when (norwegianHomeContentQuoteDataInput.type) {
+          isYouth = when (norwegianHomeContentQuoteDataInput.subType) {
             NorwegianHomeContentType.YOUTH_RENT, NorwegianHomeContentType.YOUTH_OWN -> true
             NorwegianHomeContentType.RENT, NorwegianHomeContentType.OWN-> false
             null -> null
