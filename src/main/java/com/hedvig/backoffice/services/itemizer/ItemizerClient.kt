@@ -13,6 +13,15 @@ import java.util.*
   configuration = [FeignConfig::class]
 )
 interface ItemizerClient {
+  @GetMapping("/_/item/validate")
+  fun validateCategoryChain(
+    @RequestParam itemFamilyName: String,
+    @RequestParam itemTypeName: String?,
+    @RequestParam itemCompanyName: String?,
+    @RequestParam itemBrandName: String?,
+    @RequestParam itemModelName: String?
+  ): List<String>
+
   @GetMapping("/_/item/families")
   fun getFamilies(): List<ItemFamily>
 
@@ -57,6 +66,7 @@ interface ItemizerClient {
     @RequestBody request: UpsertItemModelRequest,
     @RequestParam updatedBy: String
   ): UUID
+
 
   @PostMapping("/_/claim/item/upsert")
   fun upsertClaimItem(

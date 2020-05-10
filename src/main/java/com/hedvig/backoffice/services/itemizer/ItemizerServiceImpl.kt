@@ -30,4 +30,17 @@ class ItemizerServiceImpl(
   override fun getClaimItems(claimId: UUID): List<ClaimItem> = itemizerClient.getClaimItemsByClaimId(claimId)
 
   override fun deleteClaimItem(claimItemId: UUID, email: String): UUID = itemizerClient.deleteClaimItem(claimItemId, email)
+  override fun validateCategoryChain(
+    itemFamilyName: String,
+    itemTypeName: String?,
+    itemCompanyName: String?,
+    itemBrandName: String?,
+    itemModelName: String?): List<String> =
+    itemizerClient.validateCategoryChain(
+    itemFamilyName,
+    itemTypeName,
+    itemCompanyName,
+    itemBrandName,
+    itemModelName
+  )
 }

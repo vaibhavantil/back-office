@@ -113,6 +113,20 @@ class GraphQLQuery(
     return itemizerService.getCategories(kind!!, parentId)
   }
 
+  fun validateCategoryChain(
+    itemFamilyName: String,
+    itemTypeName: String?,
+    itemCompanyName: String?,
+    itemBrandName: String?,
+    itemModelName: String?): List<String> {
+    return itemizerService.validateCategoryChain(
+      itemFamilyName,
+      itemTypeName,
+      itemCompanyName,
+      itemBrandName,
+      itemModelName)
+  }
+
   fun claimItems(claimId: UUID): List<ClaimItem> {
     return itemizerService.getClaimItems(claimId)
   }
