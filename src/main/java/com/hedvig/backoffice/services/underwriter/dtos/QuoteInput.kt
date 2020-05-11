@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.hedvig.backoffice.graphql.types.QuoteInput
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianHomeContentLineOfBusiness
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianTravelLineOfBusiness
 import java.util.UUID
 
 data class QuoteInputDto(
@@ -57,13 +59,13 @@ data class QuoteInputDto(
               livingSpace = quoteInput.norwegianHomeContentData.livingSpace,
               coInsured = quoteInput.norwegianHomeContentData.householdSize?.minus(1),
               subType = when(quoteInput.norwegianHomeContentData.subType) {
-                NorwegianHomeContentType.OWN, NorwegianHomeContentType.YOUTH_OWN -> NorwegianHomeContentType.OWN
-                NorwegianHomeContentType.RENT, NorwegianHomeContentType.YOUTH_RENT -> NorwegianHomeContentType.RENT
+                NorwegianHomeContentLineOfBusiness.OWN, NorwegianHomeContentLineOfBusiness.YOUTH_OWN -> NorwegianHomeContentLineOfBusiness.OWN
+                NorwegianHomeContentLineOfBusiness.RENT, NorwegianHomeContentLineOfBusiness.YOUTH_RENT -> NorwegianHomeContentLineOfBusiness.RENT
                 else -> null
               },
               isYouth = when(quoteInput.norwegianHomeContentData.subType) {
-                NorwegianHomeContentType.OWN, NorwegianHomeContentType.RENT -> false
-                NorwegianHomeContentType.YOUTH_OWN, NorwegianHomeContentType.YOUTH_RENT -> true
+                NorwegianHomeContentLineOfBusiness.OWN, NorwegianHomeContentLineOfBusiness.RENT -> false
+                NorwegianHomeContentLineOfBusiness.YOUTH_OWN, NorwegianHomeContentLineOfBusiness.YOUTH_RENT -> true
                 else -> null
               }
             )
@@ -72,7 +74,11 @@ data class QuoteInputDto(
           ?.let {
             QuoteInputDataDto.NorwegianTravelQuoteInputDto(
               coInsured = quoteInput.norwegianTravelData.householdSize?.minus(1),
-              isYouth = quoteInput.norwegianTravelData.isYouth
+              isYouth = when(quoteInput.norwegianTravelData.subType) {
+                NorwegianTravelLineOfBusiness.REGULAR -> false
+                NorwegianTravelLineOfBusiness.YOUTH -> true
+                else -> null
+              }
             )
           }
       )
@@ -118,7 +124,7 @@ sealed class QuoteInputDataDto {
     val livingSpace: Int? = null,
     val isYouth: Boolean? = null,
 
-    val subType: NorwegianHomeContentType? = null
+    val subType: NorwegianHomeContentLineOfBusiness? = null
   ) : QuoteInputDataDto()
 
   data class NorwegianTravelQuoteInputDto(

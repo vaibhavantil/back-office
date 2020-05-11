@@ -7,6 +7,8 @@ import com.hedvig.backoffice.graphql.types.NorwegianTravelQuoteDataInput
 import com.hedvig.backoffice.graphql.types.ApartmentQuoteDataInput
 import com.hedvig.backoffice.graphql.types.HouseQuoteDataInput
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianHomeContentLineOfBusiness
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianTravelLineOfBusiness
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -60,13 +62,6 @@ enum class SwedishApartmentType {
   RENT,
   STUDENT_BRF,
   STUDENT_RENT
-}
-
-enum class NorwegianHomeContentType {
-  OWN,
-  RENT,
-  YOUTH_OWN,
-  YOUTH_RENT
 }
 
 data class QuoteDto(
@@ -185,7 +180,7 @@ sealed class QuoteData {
     val livingSpace: Int? = null,
     val coInsured: Int? = null,
     val isYouth: Boolean? = null,
-    val type: NorwegianHomeContentType? = null
+    val type: NorwegianHomeContentLineOfBusiness? = null
   ) : QuoteData() {
     companion object {
       fun from(norwegianHomeContentQuoteDataInput: NorwegianHomeContentQuoteDataInput): NorwegianHomeContentData =
@@ -201,13 +196,13 @@ sealed class QuoteData {
           livingSpace = norwegianHomeContentQuoteDataInput.livingSpace,
           coInsured = norwegianHomeContentQuoteDataInput.householdSize?.minus(1),
           type = when (norwegianHomeContentQuoteDataInput.subType) {
-            NorwegianHomeContentType.RENT, NorwegianHomeContentType.YOUTH_RENT -> NorwegianHomeContentType.RENT
-            NorwegianHomeContentType.OWN, NorwegianHomeContentType.YOUTH_OWN -> NorwegianHomeContentType.OWN
+            NorwegianHomeContentLineOfBusiness.RENT, NorwegianHomeContentLineOfBusiness.YOUTH_RENT -> NorwegianHomeContentLineOfBusiness.RENT
+            NorwegianHomeContentLineOfBusiness.OWN, NorwegianHomeContentLineOfBusiness.YOUTH_OWN -> NorwegianHomeContentLineOfBusiness.OWN
             null -> null
           },
           isYouth = when (norwegianHomeContentQuoteDataInput.subType) {
-            NorwegianHomeContentType.YOUTH_RENT, NorwegianHomeContentType.YOUTH_OWN -> true
-            NorwegianHomeContentType.RENT, NorwegianHomeContentType.OWN-> false
+            NorwegianHomeContentLineOfBusiness.YOUTH_RENT, NorwegianHomeContentLineOfBusiness.YOUTH_OWN -> true
+            NorwegianHomeContentLineOfBusiness.RENT, NorwegianHomeContentLineOfBusiness.OWN-> false
             null -> null
           }
         )
@@ -231,7 +226,11 @@ sealed class QuoteData {
           firstName = norwegianTravelQuoteDataInput.firstName,
           lastName = norwegianTravelQuoteDataInput.lastName,
           coInsured = norwegianTravelQuoteDataInput.householdSize?.minus(1),
-          isYouth = norwegianTravelQuoteDataInput.isYouth
+          isYouth = when (norwegianTravelQuoteDataInput.subType) {
+            NorwegianTravelLineOfBusiness.YOUTH -> true
+            NorwegianTravelLineOfBusiness.REGULAR -> false
+            null -> null
+          }
         )
     }
   }

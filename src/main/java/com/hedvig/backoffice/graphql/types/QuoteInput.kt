@@ -1,8 +1,9 @@
 package com.hedvig.backoffice.graphql.types
 
-import com.hedvig.backoffice.services.underwriter.dtos.NorwegianHomeContentType
 import com.hedvig.backoffice.services.underwriter.dtos.SwedishApartmentType
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianHomeContentLineOfBusiness
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianTravelLineOfBusiness
 import java.math.BigDecimal
 import java.util.*
 
@@ -47,13 +48,12 @@ sealed class QuoteInputData {
     val zipCode: String? = null,
     val householdSize: Int? = null,
     val livingSpace: Int? = null,
-
-    val subType: NorwegianHomeContentType? = null
+    val subType: NorwegianHomeContentLineOfBusiness? = null
   ) : QuoteInputData()
 
   data class NorwegianTravelQuoteInput(
     val householdSize: Int? = null,
-    val isYouth: Boolean? = null
+    val subType: NorwegianTravelLineOfBusiness? = null
   ) : QuoteInputData()
 }
 
