@@ -15,12 +15,6 @@ type QueryType {
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
-  validateCategoryChain(
-    itemFamilyName: String!,
-    itemTypeName: String,
-    itemCompanyName: String,
-    itemBrandName: String,
-    itemModelName: String): [String!]!
   claimItems(claimId: ID!): [ClaimItem!]!
 }
 
@@ -100,7 +94,13 @@ type MutationType {
   upsertItemModel(request: UpsertItemModelInput): ID!
   upsertClaimItem(request: UpsertClaimItemInput): ID!
   deleteClaimItem(claimItemId: ID!): ID
+  addItemCategories(request: AddItemCategoriesInput): [Boolean!]!
 }
+
+input AddItemCategoriesInput {
+  itemCategoriesString: String!
+}
+
 type ClaimItem {
   id: ID!
   itemFamily: ItemFamily!

@@ -17,6 +17,7 @@ class ItemizerServiceImpl(
     ItemCategoryKind.COMPANY -> itemizerClient.getCompanies()
   }
 
+
   override fun upsertItemCompany(request: UpsertItemCompanyRequest, email: String) = itemizerClient.upsertItemCompany(request, email)
 
   override fun upsertItemType(request: UpsertItemTypeRequest, email: String) = itemizerClient.upsertItemType(request, email)
@@ -27,20 +28,9 @@ class ItemizerServiceImpl(
 
   override fun upsertClaimItem(request: UpsertClaimItemRequest, email: String) = itemizerClient.upsertClaimItem(request, email)
 
+  override fun addItemCategories(request: AddItemCategoriesRequest, email: String): List<Boolean> = itemizerClient.addItemCategories(request, email)
+
   override fun getClaimItems(claimId: UUID): List<ClaimItem> = itemizerClient.getClaimItemsByClaimId(claimId)
 
   override fun deleteClaimItem(claimItemId: UUID, email: String): UUID = itemizerClient.deleteClaimItem(claimItemId, email)
-  override fun validateCategoryChain(
-    itemFamilyName: String,
-    itemTypeName: String?,
-    itemCompanyName: String?,
-    itemBrandName: String?,
-    itemModelName: String?): List<String> =
-    itemizerClient.validateCategoryChain(
-    itemFamilyName,
-    itemTypeName,
-    itemCompanyName,
-    itemBrandName,
-    itemModelName
-  )
 }
