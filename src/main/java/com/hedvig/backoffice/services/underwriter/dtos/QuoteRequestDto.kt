@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.underwriter.dtos
 
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianHomeContentLineOfBusiness
 import java.time.LocalDate
 import java.util.*
 
@@ -79,7 +80,8 @@ data class IncompleteNorwegianHomeContentsQuoteDataDto(
   val city: String?,
   val livingSpace: Int?,
   val coInsured: Int?,
-  val type: NorwegianHomeContentType?
+  val type: NorwegianHomeContentLineOfBusiness?,
+  val isYouth: Boolean?
 ) {
   companion object {
     fun from(dto: QuoteData.NorwegianHomeContentData): IncompleteNorwegianHomeContentsQuoteDataDto =
@@ -89,18 +91,21 @@ data class IncompleteNorwegianHomeContentsQuoteDataDto(
         city = dto.city,
         livingSpace = dto.livingSpace,
         coInsured = dto.coInsured,
-        type = dto.type
+        type = dto.type,
+        isYouth = dto.isYouth
       )
   }
 }
 
 data class IncompleteNorwegianTravelQuoteDataDto(
-  val coInsured: Int?
+  val coInsured: Int?,
+  val isYouth: Boolean?
 ) {
   companion object {
     fun from(dto: QuoteData.NorwegianTravelData): IncompleteNorwegianTravelQuoteDataDto =
       IncompleteNorwegianTravelQuoteDataDto(
-        coInsured = dto.coInsured
+        coInsured = dto.coInsured,
+        isYouth = dto.isYouth
       )
   }
 }
