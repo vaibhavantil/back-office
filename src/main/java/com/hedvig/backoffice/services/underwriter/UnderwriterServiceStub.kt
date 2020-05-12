@@ -1,6 +1,16 @@
 package com.hedvig.backoffice.services.underwriter
 
-import com.hedvig.backoffice.services.underwriter.dtos.*
+import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
+import com.hedvig.backoffice.services.underwriter.dtos.ProductType
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteData
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteForNewContractRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteInitiatedFrom
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteState
+import com.hedvig.backoffice.services.underwriter.dtos.SwedishApartmentType
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -38,10 +48,10 @@ internal val QUOTE_DTO_MOCK = QuoteDto(
 
 class UnderwriterServiceStub : UnderwriterService {
   override fun createAndCompleteQuote(
-        memberId: String,
-        quoteDto: CreateQuoteFromProductDto,
-        underwritingGuidelinesBypassedBy: String?
-    ): QuoteResponseDto =
+    memberId: String,
+    quoteDto: CreateQuoteFromProductDto,
+    underwritingGuidelinesBypassedBy: String?
+  ): QuoteResponseDto =
     QuoteResponseDto(UUID.randomUUID())
 
   override fun updateQuote(
@@ -70,5 +80,9 @@ class UnderwriterServiceStub : UnderwriterService {
 
   override fun createQuoteFromAgreement(
     quoteRequest: QuoteFromAgreementRequestDto
+  ): QuoteResponseDto = QuoteResponseDto(UUID.randomUUID())
+
+  override fun createQuoteForNewContract(
+    request: QuoteForNewContractRequestDto
   ): QuoteResponseDto = QuoteResponseDto(UUID.randomUUID())
 }

@@ -49,4 +49,9 @@ interface UnderwriterClient {
   fun createQuoteFromAgreement(
     @RequestBody quoteRequest: QuoteFromAgreementRequestDto
   ): QuoteResponseDto
+
+  @PostMapping("/_/v1/quotes/createQuoteForNewContract")
+  fun createQuoteForNewContract(
+    @RequestBody quoteRequest: QuoteForNewContractRequestDto
+  ): QuoteResponseDto
 }
