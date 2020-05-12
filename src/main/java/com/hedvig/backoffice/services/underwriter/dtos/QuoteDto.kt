@@ -2,15 +2,15 @@ package com.hedvig.backoffice.services.underwriter.dtos
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.hedvig.backoffice.graphql.types.NorwegianHomeContentQuoteDataInput
-import com.hedvig.backoffice.graphql.types.NorwegianTravelQuoteDataInput
 import com.hedvig.backoffice.graphql.types.ApartmentQuoteDataInput
 import com.hedvig.backoffice.graphql.types.HouseQuoteDataInput
+import com.hedvig.backoffice.graphql.types.NorwegianHomeContentQuoteDataInput
+import com.hedvig.backoffice.graphql.types.NorwegianTravelQuoteDataInput
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 enum class ProductType {
   APARTMENT,
@@ -207,7 +207,7 @@ sealed class QuoteData {
           },
           isStudent = when (norwegianHomeContentQuoteDataInput.type) {
             NorwegianHomeContentType.YOUTH_RENT, NorwegianHomeContentType.YOUTH_OWN -> true
-            NorwegianHomeContentType.RENT, NorwegianHomeContentType.OWN-> false
+            NorwegianHomeContentType.RENT, NorwegianHomeContentType.OWN -> false
             null -> null
           }
         )

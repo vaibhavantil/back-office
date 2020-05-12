@@ -1,7 +1,15 @@
 package com.hedvig.backoffice.services.underwriter
 
 import com.hedvig.backoffice.config.feign.FeignConfig
-import com.hedvig.backoffice.services.underwriter.dtos.*
+import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.AddAgreementFromQuoteRequest
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteForNewContractRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
+import java.util.UUID
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -9,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
-import java.util.UUID
 
 @FeignClient(
   name = "underwriter",

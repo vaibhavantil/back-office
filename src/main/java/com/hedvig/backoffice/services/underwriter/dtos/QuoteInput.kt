@@ -114,4 +114,3 @@ sealed class QuoteInputDataDto {
     val coInsured: Int? = null
   ) : QuoteInputDataDto()
 }
-

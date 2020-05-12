@@ -17,10 +17,10 @@ import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
 import feign.FeignException
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory.getLogger
 import java.time.LocalDate
 import java.util.UUID
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory.getLogger
 
 private val logger: Logger = getLogger(UnderwriterServiceImpl::class.java)
 
