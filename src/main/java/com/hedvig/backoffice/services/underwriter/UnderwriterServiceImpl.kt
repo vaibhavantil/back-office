@@ -16,11 +16,15 @@ import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequest
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
+import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.SignedQuoteResponseDto
 import feign.FeignException
-import java.time.LocalDate
-import java.util.UUID
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory.getLogger
+import org.springframework.web.client.RestClientResponseException
+import java.lang.IllegalStateException
+import java.time.LocalDate
+import java.util.UUID
 
 private val logger: Logger = getLogger(UnderwriterServiceImpl::class.java)
 
@@ -167,5 +171,23 @@ class UnderwriterServiceImpl(
     return underwriterCreateQuoteForNewContract(request.copy(underwritingGuidelinesBypassedBy = null))
       ?: underwriterCreateQuoteForNewContract(request)
       ?: throw RuntimeException("Could not create quote for new contract from member ${request.quoteRequestDto.memberId}")
+  }
+
+  override fun signQuoteForNewContract(
+    completeQuoteId: UUID,
+    request: SignQuoteFromHopeRequestDto
+  ): SignedQuoteResponseDto {
+    try {
+      val response = underwriterClient.signQuoteForNewContract(completeQuoteId, request)
+      if (response.statusCode.is2xxSuccessful) {
+        return response.body as SignedQuoteResponseDto
+      }
+    } catch (ex: RestClientResponseException) {
+      if (ex.rawStatusCode == 422){
+        logger.error("Cannot sign quote [QuoteId: $completeQuoteId] [ResposneBody: ${ex.responseBodyAsString}] [Exception: $ex]")
+      }
+      throw ex
+    }
+    throw IllegalStateException("Cannot sign quote [QuoteId: $completeQuoteId]")
   }
 }

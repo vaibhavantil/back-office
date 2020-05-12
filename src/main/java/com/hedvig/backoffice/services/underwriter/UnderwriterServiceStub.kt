@@ -10,6 +10,8 @@ import com.hedvig.backoffice.services.underwriter.dtos.QuoteInitiatedFrom
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteState
+import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.SignedQuoteResponseDto
 import com.hedvig.backoffice.services.underwriter.dtos.SwedishApartmentType
 import java.math.BigDecimal
 import java.time.Instant
@@ -85,4 +87,9 @@ class UnderwriterServiceStub : UnderwriterService {
   override fun createQuoteForNewContract(
     request: QuoteForNewContractRequestDto
   ): QuoteResponseDto = QuoteResponseDto(UUID.randomUUID())
+
+  override fun signQuoteForNewContract(
+    completeQuoteId: UUID,
+    request: SignQuoteFromHopeRequestDto
+  ): SignedQuoteResponseDto = SignedQuoteResponseDto(UUID.randomUUID(), Instant.now())
 }

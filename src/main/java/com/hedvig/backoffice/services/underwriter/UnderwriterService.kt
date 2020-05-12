@@ -6,6 +6,8 @@ import com.hedvig.backoffice.services.underwriter.dtos.QuoteForNewContractReques
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
+import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.SignedQuoteResponseDto
 import java.time.LocalDate
 import java.util.UUID
 
@@ -40,4 +42,5 @@ interface UnderwriterService {
   fun getQuote(id: UUID): QuoteDto
   fun createQuoteFromAgreement(quoteRequest: QuoteFromAgreementRequestDto): QuoteResponseDto
   fun createQuoteForNewContract(request: QuoteForNewContractRequestDto): QuoteResponseDto
+  fun signQuoteForNewContract(completeQuoteId: UUID, request: SignQuoteFromHopeRequestDto): SignedQuoteResponseDto
 }

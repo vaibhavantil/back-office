@@ -9,14 +9,16 @@ import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequest
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
-import java.util.UUID
+import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto
 import org.springframework.cloud.openfeign.FeignClient
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
+import java.util.UUID
 
 @FeignClient(
   name = "underwriter",
@@ -61,4 +63,10 @@ interface UnderwriterClient {
   fun createQuoteForNewContract(
     @RequestBody quoteRequest: QuoteForNewContractRequestDto
   ): QuoteResponseDto
+
+  @PostMapping("/_/v1/quotes/{completeQuoteId}/signFromHope")
+  fun signQuoteForNewContract(
+    @PathVariable completeQuoteId: UUID,
+    @RequestBody request: SignQuoteFromHopeRequestDto
+  ): ResponseEntity<Any>
 }
