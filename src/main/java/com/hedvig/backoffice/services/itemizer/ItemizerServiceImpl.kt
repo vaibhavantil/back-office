@@ -28,7 +28,7 @@ class ItemizerServiceImpl(
 
   override fun upsertClaimItem(request: UpsertClaimItemRequest, email: String) = itemizerClient.upsertClaimItem(request, email)
 
-  override fun addItemCategories(request: AddItemCategoriesRequest, email: String): List<Boolean> = itemizerClient.addItemCategories(request, email)
+  override fun insertItemCategories(request: InsertItemCategoriesRequest, email: String): List<Boolean> = itemizerClient.insertItemCategories(request, email)
 
   override fun getClaimItems(claimId: UUID): List<ClaimItem> = itemizerClient.getClaimItemsByClaimId(claimId)
 

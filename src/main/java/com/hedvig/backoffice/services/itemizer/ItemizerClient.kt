@@ -14,9 +14,9 @@ import java.util.*
 )
 interface ItemizerClient {
   @PostMapping("/_/item/add")
-  fun addItemCategories(
-    @RequestBody request: AddItemCategoriesRequest,
-    @RequestParam updatedBy: String
+  fun insertItemCategories(
+    @RequestBody request: InsertItemCategoriesRequest,
+    @RequestParam insertedBy: String
   ): List<Boolean>
 
   @GetMapping("/_/item/families")

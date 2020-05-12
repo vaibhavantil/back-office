@@ -654,8 +654,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return itemizerService.deleteClaimItem(claimItemId, getUserIdentity(env));
   }
 
-  public List<Boolean> addItemCategories(final AddItemCategoriesRequest request, DataFetchingEnvironment env) {
-    return itemizerService.addItemCategories(request, getUserIdentity(env));
+  public List<Boolean> insertItemCategories(final InsertItemCategoriesRequest request, DataFetchingEnvironment env) {
+    return itemizerService.insertItemCategories(request, getUserIdentity(env));
   }
 
   private String getToken(DataFetchingEnvironment env) {

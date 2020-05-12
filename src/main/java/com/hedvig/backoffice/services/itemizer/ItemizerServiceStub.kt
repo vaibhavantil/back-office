@@ -19,7 +19,7 @@ class ItemizerServiceStub : ItemizerService {
 
   override fun upsertClaimItem(request: UpsertClaimItemRequest, email: String): UUID = UUID.randomUUID()
 
-  override fun addItemCategories(request: AddItemCategoriesRequest, email: String): List<Boolean> = listOf()
+  override fun insertItemCategories(request: InsertItemCategoriesRequest, email: String): List<Boolean> = listOf()
 
   override fun getClaimItems(claimId: UUID): List<ClaimItem> = listOf()
 
