@@ -1222,7 +1222,7 @@ type MonetaryAmountV2 {
   currency: String!
 }
 
-enum SignableContractType{
+enum SignableContractType {
   SWEDISH_APARTMENT,
   SWEDISH_HOUSE,
   NORWEGIAN_HOME_CONTENT,

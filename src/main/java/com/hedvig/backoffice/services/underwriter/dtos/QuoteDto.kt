@@ -40,35 +40,11 @@ enum class QuoteInitiatedFrom {
   HOPE
 }
 
-enum class ExtraBuildingType {
-  GARAGE,
-  CARPORT,
-  SHED,
-  STOREHOUSE,
-  FRIGGEBOD,
-  ATTEFALL,
-  OUTHOUSE,
-  GUESTHOUSE,
-  GAZEBO,
-  GREENHOUSE,
-  SAUNA,
-  BARN,
-  BOATHOUSE,
-  OTHER
-}
-
 enum class SwedishApartmentType {
   BRF,
   RENT,
   STUDENT_BRF,
   STUDENT_RENT
-}
-
-enum class NorwegianHomeContentType {
-  OWN,
-  RENT,
-  YOUTH_OWN,
-  YOUTH_RENT
 }
 
 data class QuoteDto(

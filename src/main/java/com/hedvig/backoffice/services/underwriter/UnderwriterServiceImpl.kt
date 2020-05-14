@@ -22,7 +22,6 @@ import feign.FeignException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory.getLogger
 import org.springframework.web.client.RestClientResponseException
-import java.lang.IllegalStateException
 import java.time.LocalDate
 import java.util.UUID
 
@@ -40,24 +39,24 @@ class UnderwriterServiceImpl(
     val member = memberService.findByMemberId(memberId, "")
     logger.info("Creating quote for member $memberId")
     val quoteRequestDto = QuoteRequestDto(
-        firstName = member.firstName!!,
-        lastName = member.lastName!!,
-        ssn = member.ssn,
-        memberId = memberId,
-        originatingProductId = quoteDto.originatingProductId,
-        currentInsurer = quoteDto.currentInsurer,
-        birthDate = member.birthDate,
-        productType = if (quoteDto.incompleteApartmentQuoteData != null) {
-          ProductType.APARTMENT
-        } else {
-          ProductType.HOUSE
-        },
-        incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData?.let((IncompleteApartmentQuoteDataDto)::from),
-        incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData?.let((IncompleteHouseQuoteDataDto)::from),
-        norwegianHomeContentsData = quoteDto.norwegianHomeContentData?.let((IncompleteNorwegianHomeContentsQuoteDataDto)::from),
-        norwegianTravelData = quoteDto.norwegianTravelData?.let((IncompleteNorwegianTravelQuoteDataDto)::from),
-        quotingPartner = null,
-        underwritingGuidelinesBypassedBy = null
+      firstName = member.firstName!!,
+      lastName = member.lastName!!,
+      ssn = member.ssn,
+      memberId = memberId,
+      originatingProductId = quoteDto.originatingProductId,
+      currentInsurer = quoteDto.currentInsurer,
+      birthDate = member.birthDate,
+      productType = if (quoteDto.incompleteApartmentQuoteData != null) {
+        ProductType.APARTMENT
+      } else {
+        ProductType.HOUSE
+      },
+      incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData?.let((IncompleteApartmentQuoteDataDto)::from),
+      incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData?.let((IncompleteHouseQuoteDataDto)::from),
+      norwegianHomeContentsData = quoteDto.norwegianHomeContentData?.let((IncompleteNorwegianHomeContentsQuoteDataDto)::from),
+      norwegianTravelData = quoteDto.norwegianTravelData?.let((IncompleteNorwegianTravelQuoteDataDto)::from),
+      quotingPartner = null,
+      underwritingGuidelinesBypassedBy = null
     )
 
     val createdQuote = underwriterCreateQuote(quoteRequestDto)
@@ -167,7 +166,9 @@ class UnderwriterServiceImpl(
     return createdQuote
   }
 
-  override fun createQuoteForNewContract(request: QuoteForNewContractRequestDto): QuoteResponseDto {
+  override fun createQuoteForNewContract(
+    request: QuoteForNewContractRequestDto
+  ): QuoteResponseDto {
     return underwriterCreateQuoteForNewContract(request.copy(underwritingGuidelinesBypassedBy = null))
       ?: underwriterCreateQuoteForNewContract(request)
       ?: throw RuntimeException("Could not create quote for new contract from member ${request.quoteRequestDto.memberId}")
@@ -183,8 +184,8 @@ class UnderwriterServiceImpl(
         return response.body as SignedQuoteResponseDto
       }
     } catch (ex: RestClientResponseException) {
-      if (ex.rawStatusCode == 422){
-        logger.error("Cannot sign quote [QuoteId: $completeQuoteId] [ResposneBody: ${ex.responseBodyAsString}] [Exception: $ex]")
+      if (ex.rawStatusCode == 422) {
+        logger.error("Cannot sign quote [QuoteId: $completeQuoteId] [ResponseBody: ${ex.responseBodyAsString}] [Exception: $ex]")
       }
       throw ex
     }
