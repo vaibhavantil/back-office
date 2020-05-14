@@ -96,7 +96,7 @@ type MutationType {
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
   createQuoteForNewContract(
-    memberId: String!,
+    memberId: ID!,
     quoteInput: QuoteInput!,
     bypassUnderwritingGuidelines: Boolean!
   ): Quote!
