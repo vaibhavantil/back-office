@@ -2,11 +2,13 @@ package com.hedvig.backoffice.services.underwriter.dtos
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.hedvig.backoffice.graphql.types.ApartmentQuoteDataInput
-import com.hedvig.backoffice.graphql.types.HouseQuoteDataInput
 import com.hedvig.backoffice.graphql.types.NorwegianHomeContentQuoteDataInput
 import com.hedvig.backoffice.graphql.types.NorwegianTravelQuoteDataInput
+import com.hedvig.backoffice.graphql.types.ApartmentQuoteDataInput
+import com.hedvig.backoffice.graphql.types.HouseQuoteDataInput
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianHomeContentLineOfBusiness
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianTravelLineOfBusiness
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -184,8 +186,8 @@ sealed class QuoteData {
     val zipCode: String? = null,
     val livingSpace: Int? = null,
     val coInsured: Int? = null,
-    val isStudent: Boolean? = null,
-    val type: NorwegianHomeContentType? = null
+    val isYouth: Boolean? = null,
+    val type: NorwegianHomeContentLineOfBusiness? = null
   ) : QuoteData() {
     companion object {
       fun from(norwegianHomeContentQuoteDataInput: NorwegianHomeContentQuoteDataInput): NorwegianHomeContentData =
@@ -200,14 +202,14 @@ sealed class QuoteData {
           city = norwegianHomeContentQuoteDataInput.city,
           livingSpace = norwegianHomeContentQuoteDataInput.livingSpace,
           coInsured = norwegianHomeContentQuoteDataInput.householdSize?.minus(1),
-          type = when (norwegianHomeContentQuoteDataInput.type) {
-            NorwegianHomeContentType.RENT, NorwegianHomeContentType.YOUTH_RENT -> NorwegianHomeContentType.RENT
-            NorwegianHomeContentType.OWN, NorwegianHomeContentType.YOUTH_OWN -> NorwegianHomeContentType.OWN
+          type = when (norwegianHomeContentQuoteDataInput.subType) {
+            NorwegianHomeContentLineOfBusiness.RENT, NorwegianHomeContentLineOfBusiness.YOUTH_RENT -> NorwegianHomeContentLineOfBusiness.RENT
+            NorwegianHomeContentLineOfBusiness.OWN, NorwegianHomeContentLineOfBusiness.YOUTH_OWN -> NorwegianHomeContentLineOfBusiness.OWN
             null -> null
           },
-          isStudent = when (norwegianHomeContentQuoteDataInput.type) {
-            NorwegianHomeContentType.YOUTH_RENT, NorwegianHomeContentType.YOUTH_OWN -> true
-            NorwegianHomeContentType.RENT, NorwegianHomeContentType.OWN -> false
+          isYouth = when (norwegianHomeContentQuoteDataInput.subType) {
+            NorwegianHomeContentLineOfBusiness.YOUTH_RENT, NorwegianHomeContentLineOfBusiness.YOUTH_OWN -> true
+            NorwegianHomeContentLineOfBusiness.RENT, NorwegianHomeContentLineOfBusiness.OWN-> false
             null -> null
           }
         )
@@ -220,7 +222,8 @@ sealed class QuoteData {
     val firstName: String? = null,
     val lastName: String? = null,
 
-    val coInsured: Int? = null
+    val coInsured: Int? = null,
+    val isYouth: Boolean? = null
   ) : QuoteData() {
     companion object {
       fun from(norwegianTravelQuoteDataInput: NorwegianTravelQuoteDataInput): NorwegianTravelData =
@@ -229,7 +232,12 @@ sealed class QuoteData {
           ssn = norwegianTravelQuoteDataInput.ssn,
           firstName = norwegianTravelQuoteDataInput.firstName,
           lastName = norwegianTravelQuoteDataInput.lastName,
-          coInsured = norwegianTravelQuoteDataInput.householdSize?.minus(1)
+          coInsured = norwegianTravelQuoteDataInput.householdSize?.minus(1),
+          isYouth = when (norwegianTravelQuoteDataInput.subType) {
+            NorwegianTravelLineOfBusiness.YOUTH -> true
+            NorwegianTravelLineOfBusiness.REGULAR -> false
+            null -> null
+          }
         )
     }
   }

@@ -1,8 +1,9 @@
 package com.hedvig.backoffice.graphql.types
 
-import com.hedvig.backoffice.services.underwriter.dtos.NorwegianHomeContentType
 import com.hedvig.backoffice.services.underwriter.dtos.SwedishApartmentType
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianHomeContentLineOfBusiness
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianTravelLineOfBusiness
 import java.util.UUID
 
 data class QuoteFromProductInput(
@@ -54,7 +55,7 @@ data class NorwegianHomeContentQuoteDataInput(
   val zipCode: String? = null,
   val householdSize: Int? = null,
   val livingSpace: Int? = null,
-  val type: NorwegianHomeContentType? = null
+  val subType: NorwegianHomeContentLineOfBusiness? = null
 )
 
 data class NorwegianTravelQuoteDataInput(
@@ -62,5 +63,6 @@ data class NorwegianTravelQuoteDataInput(
   val firstName: String? = null,
   val lastName: String? = null,
 
-  val householdSize: Int? = null
+  val householdSize: Int? = null,
+  val subType: NorwegianTravelLineOfBusiness? = null
 )

@@ -40,24 +40,24 @@ class UnderwriterServiceImpl(
     val member = memberService.findByMemberId(memberId, "")
     logger.info("Creating quote for member $memberId")
     val quoteRequestDto = QuoteRequestDto(
-      firstName = member.firstName!!,
-      lastName = member.lastName!!,
-      ssn = member.ssn,
-      memberId = memberId,
-      originatingProductId = quoteDto.originatingProductId,
-      currentInsurer = quoteDto.currentInsurer,
-      birthDate = member.birthDate,
-      productType = if (quoteDto.incompleteApartmentQuoteData != null) {
-        ProductType.APARTMENT
-      } else {
-        ProductType.HOUSE
-      },
-      incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData?.let((IncompleteApartmentQuoteDataDto)::from),
-      incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData?.let((IncompleteHouseQuoteDataDto)::from),
-      norwegianHomeContentsData = quoteDto.norwegianHomeContentQuoteData?.let((IncompleteNorwegianHomeContentsQuoteDataDto)::from),
-      norwegianTravelData = quoteDto.norwegianTravelQuoteData?.let((IncompleteNorwegianTravelQuoteDataDto)::from),
-      quotingPartner = null,
-      underwritingGuidelinesBypassedBy = null
+        firstName = member.firstName!!,
+        lastName = member.lastName!!,
+        ssn = member.ssn,
+        memberId = memberId,
+        originatingProductId = quoteDto.originatingProductId,
+        currentInsurer = quoteDto.currentInsurer,
+        birthDate = member.birthDate,
+        productType = if (quoteDto.incompleteApartmentQuoteData != null) {
+          ProductType.APARTMENT
+        } else {
+          ProductType.HOUSE
+        },
+        incompleteApartmentQuoteData = quoteDto.incompleteApartmentQuoteData?.let((IncompleteApartmentQuoteDataDto)::from),
+        incompleteHouseQuoteData = quoteDto.incompleteHouseQuoteData?.let((IncompleteHouseQuoteDataDto)::from),
+        norwegianHomeContentsData = quoteDto.norwegianHomeContentData?.let((IncompleteNorwegianHomeContentsQuoteDataDto)::from),
+        norwegianTravelData = quoteDto.norwegianTravelData?.let((IncompleteNorwegianTravelQuoteDataDto)::from),
+        quotingPartner = null,
+        underwritingGuidelinesBypassedBy = null
     )
 
     val createdQuote = underwriterCreateQuote(quoteRequestDto)
