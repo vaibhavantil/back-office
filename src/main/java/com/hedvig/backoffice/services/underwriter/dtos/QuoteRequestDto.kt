@@ -150,7 +150,12 @@ data class IncompleteNorwegianHomeContentsQuoteDataDto(
         city = input.city,
         livingSpace = input.livingSpace,
         coInsured = input.householdSize?.minus(1),
-        type = input.type
+        type = input.subType,
+        isYouth = when(input.subType) {
+          NorwegianHomeContentLineOfBusiness.OWN, NorwegianHomeContentLineOfBusiness.RENT -> false
+          NorwegianHomeContentLineOfBusiness.YOUTH_OWN, NorwegianHomeContentLineOfBusiness.YOUTH_RENT -> true
+          else -> null
+        }
       )
   }
 }
@@ -166,9 +171,14 @@ data class IncompleteNorwegianTravelQuoteDataDto(
         isYouth = dto.isYouth
       )
 
-    fun from(dto: QuoteInputData.NorwegianTravelQuoteInput): IncompleteNorwegianTravelQuoteDataDto =
+    fun from(input: QuoteInputData.NorwegianTravelQuoteInput): IncompleteNorwegianTravelQuoteDataDto =
       IncompleteNorwegianTravelQuoteDataDto(
-        coInsured = dto.householdSize?.minus(1)
+        coInsured = input.householdSize?.minus(1),
+        isYouth = when(input.subType) {
+          NorwegianHomeContentLineOfBusiness.OWN, NorwegianHomeContentLineOfBusiness.RENT -> false
+          NorwegianHomeContentLineOfBusiness.YOUTH_OWN, NorwegianHomeContentLineOfBusiness.YOUTH_RENT -> true
+          else -> null
+        }
       )
   }
 }
