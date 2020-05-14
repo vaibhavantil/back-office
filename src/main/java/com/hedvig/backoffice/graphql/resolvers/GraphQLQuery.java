@@ -169,7 +169,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       .collect(Collectors.toList());
   }
 
-  public SignableContractType typesForNewContractsToSign(
+  public SignableContractType availableSignableContractType(
     String memberId,
     DataFetchingEnvironment env
   ) {
