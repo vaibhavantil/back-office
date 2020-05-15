@@ -4,6 +4,7 @@ import com.hedvig.backoffice.graphql.types.QuoteInput
 import com.hedvig.backoffice.graphql.types.QuoteInputData
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
 import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianHomeContentLineOfBusiness
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianTravelLineOfBusiness
 import java.time.LocalDate
 import java.util.UUID
 
@@ -175,8 +176,8 @@ data class IncompleteNorwegianTravelQuoteDataDto(
       IncompleteNorwegianTravelQuoteDataDto(
         coInsured = input.householdSize?.minus(1),
         isYouth = when(input.subType) {
-          NorwegianHomeContentLineOfBusiness.OWN, NorwegianHomeContentLineOfBusiness.RENT -> false
-          NorwegianHomeContentLineOfBusiness.YOUTH_OWN, NorwegianHomeContentLineOfBusiness.YOUTH_RENT -> true
+          NorwegianTravelLineOfBusiness.REGULAR-> false
+          NorwegianTravelLineOfBusiness.YOUTH -> true
           else -> null
         }
       )
