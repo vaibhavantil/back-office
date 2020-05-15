@@ -132,4 +132,3 @@ sealed class QuoteInputDataDto {
     val isYouth: Boolean? = null
   ) : QuoteInputDataDto()
 }
-

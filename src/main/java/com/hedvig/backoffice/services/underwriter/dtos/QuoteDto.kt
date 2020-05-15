@@ -12,7 +12,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianTrav
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 enum class ProductType {
   APARTMENT,
@@ -38,23 +38,6 @@ enum class QuoteInitiatedFrom {
   IOS,
   ANDROID,
   HOPE
-}
-
-enum class ExtraBuildingType {
-  GARAGE,
-  CARPORT,
-  SHED,
-  STOREHOUSE,
-  FRIGGEBOD,
-  ATTEFALL,
-  OUTHOUSE,
-  GUESTHOUSE,
-  GAZEBO,
-  GREENHOUSE,
-  SAUNA,
-  BARN,
-  BOATHOUSE,
-  OTHER
 }
 
 enum class SwedishApartmentType {

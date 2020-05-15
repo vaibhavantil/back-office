@@ -15,10 +15,18 @@ import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
-import com.hedvig.backoffice.services.itemPricing.dto.*;
+import com.hedvig.backoffice.services.itemPricing.dto.CategoryDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.FilterDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.FilterSuggestionDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemPricepointDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
+import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchQueryDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ContractStatus;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
@@ -159,5 +167,34 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.getSwitchableSwitcherEmails().stream()
       .map(SwitchableSwitcherEmail::from)
       .collect(Collectors.toList());
+  }
+
+  public SignableContractType availableSignableContractType(
+    String memberId,
+    DataFetchingEnvironment env
+  ) {
+    List<Contract> listOfContracts = productPricingService.getContractsByMemberId(memberId);
+
+    listOfContracts = listOfContracts.stream().filter(contract -> contract.getStatus() != ContractStatus.TERMINATED).collect(Collectors.toList());
+
+    if (listOfContracts.size() != 1) {
+      return null;
+    }
+
+    Contract contract = listOfContracts.get(0);
+
+    if (contract.getContractTypeName() == "Swedish Apartment") {
+      return SignableContractType.SWEDISH_HOUSE;
+    }
+    if (contract.getContractTypeName() == "Swedish House") {
+      return SignableContractType.SWEDISH_APARTMENT;
+    }
+    if (contract.getContractTypeName() == "Norwegian Home Content") {
+      return SignableContractType.NORWEGIAN_TRAVEL;
+    }
+    if (contract.getContractTypeName() == "Norwegian Travel") {
+      return SignableContractType.NORWEGIAN_HOME_CONTENT;
+    }
+    throw new IllegalStateException(String.format("Cannot return available signable contract type for memberId: %s", memberId));
   }
 }
