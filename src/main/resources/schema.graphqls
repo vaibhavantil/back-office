@@ -542,6 +542,7 @@ type Quote {
   data: QuoteData
   signedProductId: ID
   originatingProductId: ID
+  isReadyToSign: Boolean
 }
 
 enum QuoteProductType {
