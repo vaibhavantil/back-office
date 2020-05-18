@@ -7,6 +7,7 @@ import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.MonthlySubscription;
+import com.hedvig.backoffice.graphql.types.ProductType;
 import com.hedvig.backoffice.graphql.types.SwitchableSwitcherEmail;
 import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
 import com.hedvig.backoffice.services.account.AccountService;
@@ -167,34 +168,5 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.getSwitchableSwitcherEmails().stream()
       .map(SwitchableSwitcherEmail::from)
       .collect(Collectors.toList());
-  }
-
-  public SignableContractType availableSignableContractType(
-    String memberId,
-    DataFetchingEnvironment env
-  ) {
-    List<Contract> listOfContracts = productPricingService.getContractsByMemberId(memberId);
-
-    listOfContracts = listOfContracts.stream().filter(contract -> contract.getStatus() != ContractStatus.TERMINATED).collect(Collectors.toList());
-
-    if (listOfContracts.size() != 1) {
-      return null;
-    }
-
-    Contract contract = listOfContracts.get(0);
-
-    if (contract.getContractTypeName() == "Swedish Apartment") {
-      return SignableContractType.SWEDISH_HOUSE;
-    }
-    if (contract.getContractTypeName() == "Swedish House") {
-      return SignableContractType.SWEDISH_APARTMENT;
-    }
-    if (contract.getContractTypeName() == "Norwegian Home Content") {
-      return SignableContractType.NORWEGIAN_TRAVEL;
-    }
-    if (contract.getContractTypeName() == "Norwegian Travel") {
-      return SignableContractType.NORWEGIAN_HOME_CONTENT;
-    }
-    throw new IllegalStateException(String.format("Cannot return available signable contract type for memberId: %s", memberId));
   }
 }

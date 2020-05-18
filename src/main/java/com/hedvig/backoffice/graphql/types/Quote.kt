@@ -50,7 +50,8 @@ data class Quote(
   val breachedUnderwritingGuidelines: List<String>?,
   val isComplete: Boolean,
   val signedProductId: UUID?,
-  val originatingProductId: UUID?
+  val originatingProductId: UUID?,
+  val isReadyToSign: Boolean = false
 ) {
   companion object {
     @JvmStatic
