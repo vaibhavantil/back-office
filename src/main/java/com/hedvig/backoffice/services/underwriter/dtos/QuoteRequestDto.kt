@@ -129,7 +129,7 @@ data class IncompleteNorwegianHomeContentsQuoteDataDto(
   val city: String?,
   val livingSpace: Int?,
   val coInsured: Int?,
-  val type: NorwegianHomeContentLineOfBusiness?,
+  val subType: NorwegianHomeContentLineOfBusiness?,
   val isYouth: Boolean?
 ) {
   companion object {
@@ -140,7 +140,7 @@ data class IncompleteNorwegianHomeContentsQuoteDataDto(
         city = dto.city,
         livingSpace = dto.livingSpace,
         coInsured = dto.coInsured,
-        type = dto.type,
+        subType = dto.type,
         isYouth = dto.isYouth
       )
 
@@ -151,7 +151,7 @@ data class IncompleteNorwegianHomeContentsQuoteDataDto(
         city = input.city,
         livingSpace = input.livingSpace,
         coInsured = input.householdSize?.minus(1),
-        type = input.subType,
+        subType = input.subType,
         isYouth = when(input.subType) {
           NorwegianHomeContentLineOfBusiness.OWN, NorwegianHomeContentLineOfBusiness.RENT -> false
           NorwegianHomeContentLineOfBusiness.YOUTH_OWN, NorwegianHomeContentLineOfBusiness.YOUTH_RENT -> true

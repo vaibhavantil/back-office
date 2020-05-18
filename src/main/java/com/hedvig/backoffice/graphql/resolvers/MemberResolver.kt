@@ -114,7 +114,7 @@ class MemberResolver(
     quotes: List<Quote>
   ): List<Quote> {
     val contractTypeNames = productPricingService.getContractsByMemberId(memberId)
-      .distinctBy { Contract::contractTypeName }.map { Contract::contractTypeName }
+      .map { contract -> contract.contractTypeName }.distinct()
     if (contractTypeNames.size == 1) {
       val contractTypeName = contractTypeNames.first()
       if (contractTypeName.equals("Swedish Apartment")) {

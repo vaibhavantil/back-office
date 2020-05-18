@@ -181,7 +181,7 @@ class UnderwriterServiceImpl(
     try {
       val response = underwriterClient.signQuoteForNewContract(completeQuoteId, request)
       if (response.statusCode.is2xxSuccessful) {
-        return response.body as SignedQuoteResponseDto
+        return SignedQuoteResponseDto.from(response.body as LinkedHashMap<String, String>)
       }
     } catch (ex: RestClientResponseException) {
       if (ex.rawStatusCode == 422) {
