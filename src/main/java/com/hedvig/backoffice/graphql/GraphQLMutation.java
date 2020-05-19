@@ -500,13 +500,13 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     final LocalDate activationDate,
     final DataFetchingEnvironment env
   ) {
-    final UUID createQuoteId = underwriterService.signQuoteForNewContract(
+    underwriterService.signQuoteForNewContract(
       quoteId,
       new SignQuoteFromHopeRequestDto(
         activationDate
       )
-    ).getId();
-    return Quote.from(underwriterService.getQuote(createQuoteId));
+    );
+    return Quote.from(underwriterService.getQuote(quoteId));
   }
 
   UUID createTicket(
