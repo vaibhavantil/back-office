@@ -48,7 +48,7 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
   }
 
   override fun getMembersByIds(ids: List<String>): List<MemberDTO> {
-    return client.getMembers(ChargeMembersDTO(ids))
+    return client.getMembers(ChargeMembersDTO(ids.distinct()))
   }
 
   override fun setFraudulentStatus(memberId: String, dto: MemberFraudulentStatusDTO, token: String) {
