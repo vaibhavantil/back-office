@@ -165,4 +165,7 @@ public interface ProductPricingClient {
     @PathVariable UUID agreementId,
     @RequestHeader("Authorization") String token
   );
+
+  @GetMapping("/i/campaign/partner/search")
+  ResponseEntity<List<PartnerCampaignSearchResponse>> searchPartnerCampaigns();
 }

@@ -387,6 +387,11 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
+  public List<PartnerCampaignSearchResponse> searchPartnerCampaigns() {
+    return null;
+  }
+
+  @Override
   public List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds) {
     return memberIds.stream()
       .map(memberId -> new MemberSearchResultDTOExtended(

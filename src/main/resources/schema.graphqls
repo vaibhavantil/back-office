@@ -20,6 +20,7 @@ type QueryType {
   filters(categoryId: String!): [FilterSuggestion!]!
   inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
+  findPartnerCampaigns: [VoucherCampaign!]!
 }
 
 type MutationType {
@@ -321,6 +322,14 @@ type AllRepliesEntry {
 
 type AutoLabel {
   message: Boolean
+}
+
+type VoucherCampaign {
+  id: ID!
+  campaignCode: String!
+  partnerId: String!
+  validFrom: Instant
+  validTo: Instant
 }
 
 input FilterPayload {

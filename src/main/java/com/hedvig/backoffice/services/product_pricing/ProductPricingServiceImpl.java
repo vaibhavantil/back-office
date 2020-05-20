@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.time.YearMonth;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -230,5 +231,14 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     String token
   ) {
     this.client.regenerateCertificate(agreementId, token);
+  }
+
+  @Override
+  public List<PartnerCampaignSearchResponse> searchPartnerCampaigns() {
+    ResponseEntity<List<PartnerCampaignSearchResponse>>  response = this.client.searchPartnerCampaigns();
+    if (response.getStatusCode() == HttpStatus.OK) {
+      return response.getBody();
+    }
+    return Collections.emptyList();
   }
 }
