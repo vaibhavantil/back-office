@@ -241,4 +241,18 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
     return Collections.emptyList();
   }
+
+  @Override
+  public void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request) {
+    this.client.assignCampaignToPartnerPercentageDiscount(request);
+  }
+
+  @Override
+  public List<PartnerResponseDto> getPartnerCampaignOwners() {
+    ResponseEntity<List<PartnerResponseDto>> response = this.client.getPartnerCampaignOwners();
+    if (response.getStatusCode() == HttpStatus.OK) {
+      return response.getBody();
+    }
+    return Collections.emptyList();
+  }
 }

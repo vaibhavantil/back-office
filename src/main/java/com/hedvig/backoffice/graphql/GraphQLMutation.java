@@ -5,19 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
-import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.ClaimInformationInput;
-import com.hedvig.backoffice.graphql.types.ClaimNoteInput;
-import com.hedvig.backoffice.graphql.types.ClaimPaymentInput;
-import com.hedvig.backoffice.graphql.types.ClaimState;
-import com.hedvig.backoffice.graphql.types.ClaimTypes;
-import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.graphql.types.MemberChargeApproval;
-import com.hedvig.backoffice.graphql.types.Quote;
-import com.hedvig.backoffice.graphql.types.QuoteFromProductInput;
-import com.hedvig.backoffice.graphql.types.QuoteInput;
-import com.hedvig.backoffice.graphql.types.RemindNotification;
-import com.hedvig.backoffice.graphql.types.TicketInput;
+import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
@@ -44,6 +32,7 @@ import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.AssignVoucherPercentageDiscountRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ActivatePendingAgreementRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeFromDateOnAgreementRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeTerminationDateRequest;
@@ -704,6 +693,13 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private String getToken(DataFetchingEnvironment env) {
     GraphQLRequestContext context = env.getContext();
     return personnelService.getIdToken(context.getUserPrincipal().getName());
+  }
+
+  public Boolean assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscount request, DataFetchingEnvironment env) {
+    productPricingService.assignCampaignToPartnerPercentageDiscount(
+      AssignVoucherPercentageDiscountRequest.Companion.from(request)
+    );
+    return true;
   }
 }
 

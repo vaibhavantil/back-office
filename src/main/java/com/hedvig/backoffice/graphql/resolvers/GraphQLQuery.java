@@ -25,6 +25,7 @@ import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchDTO;
 import com.hedvig.backoffice.services.itemPricing.dto.ItemSearchQueryDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.services.product_pricing.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
@@ -175,6 +176,10 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.searchPartnerCampaigns().stream().map( partnerCampaignSearchResponse ->
       VoucherCampaign.Companion.from(partnerCampaignSearchResponse)
     ).collect(Collectors.toList());
+  }
+
+  public List<PartnerResponseDto> getPartnerCampaignOwners() {
+    return productPricingService.getPartnerCampaignOwners();
   }
 }
 

@@ -88,4 +88,8 @@ public interface ProductPricingService {
   void regenerateCertificate(UUID agreementId, String token);
 
   List<PartnerCampaignSearchResponse> searchPartnerCampaigns();
+
+  void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request);
+
+  List<PartnerResponseDto> getPartnerCampaignOwners();
 }

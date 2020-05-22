@@ -392,6 +392,16 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
+  public void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request) {
+    //  noop
+  }
+
+  @Override
+  public List<PartnerResponseDto> getPartnerCampaignOwners() {
+    return null;
+  }
+
+  @Override
   public List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds) {
     return memberIds.stream()
       .map(memberId -> new MemberSearchResultDTOExtended(

@@ -168,4 +168,12 @@ public interface ProductPricingClient {
 
   @GetMapping("/i/campaign/partner/search")
   ResponseEntity<List<PartnerCampaignSearchResponse>> searchPartnerCampaigns();
+
+  @PostMapping("/i/campaign/partner/voucher-percentage-discount/assign")
+  void assignCampaignToPartnerPercentageDiscount(
+    @RequestBody AssignVoucherPercentageDiscountRequest request
+  );
+
+  @GetMapping("/i/campaign/partner/partnerCampaignOwners")
+  ResponseEntity<List<PartnerResponseDto>> getPartnerCampaignOwners();
 }
