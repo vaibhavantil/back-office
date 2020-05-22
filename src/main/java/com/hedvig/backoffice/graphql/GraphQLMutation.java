@@ -503,7 +503,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     underwriterService.signQuoteForNewContract(
       quoteId,
       new SignQuoteFromHopeRequestDto(
-        activationDate
+        activationDate,
+        getToken(env)
       )
     );
     return Quote.from(underwriterService.getQuote(quoteId));
