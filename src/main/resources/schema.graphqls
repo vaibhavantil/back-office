@@ -20,7 +20,7 @@ type QueryType {
   filters(categoryId: String!): [FilterSuggestion!]!
   inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
-  findPartnerCampaigns: [VoucherCampaign!]!
+  findPartnerCampaigns(input: CampaignFilter): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
 }
 
@@ -620,6 +620,13 @@ type HouseQuoteData implements IQuoteData {
   numberOfBathrooms: Int
   extraBuildings: [ExtraBuilding!]!
   isSubleted: Boolean
+}
+
+input CampaignFilter {
+  code: String
+  partnerId: String
+  activeFrom: LocalDate
+  activeTo: LocalDate
 }
 
 type ExtraBuilding {
