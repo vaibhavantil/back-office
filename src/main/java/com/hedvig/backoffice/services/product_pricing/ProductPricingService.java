@@ -87,7 +87,7 @@ public interface ProductPricingService {
 
   void regenerateCertificate(UUID agreementId, String token);
 
-  List<PartnerCampaignSearchResponse> searchPartnerCampaigns();
+  List<PartnerCampaignSearchResponse> searchPartnerCampaigns(String code, String partnerId, LocalDate activeFrom, LocalDate activeTo);
 
   void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request);
 

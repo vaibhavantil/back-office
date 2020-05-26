@@ -23,15 +23,14 @@ import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.ContractStatus;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import graphql.schema.DataFetchingEnvironment;
+import lombok.val;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
@@ -168,8 +167,13 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       .collect(Collectors.toList());
   }
 
-  public List<VoucherCampaign> findPartnerCampaigns() {
-    return productPricingService.searchPartnerCampaigns().stream().map( partnerCampaignSearchResponse ->
+  public List<VoucherCampaign> findPartnerCampaigns(CampaignFilter filter) {
+    final var code = filter == null ? null : filter.getCode();
+    final var partnerId = filter == null ? null : filter.getPartnerId();
+    final var activeFrom = filter == null ? null : filter.getActiveFrom();
+    final var activeTo = filter == null ? null : filter.getActiveTo();
+    return productPricingService.searchPartnerCampaigns(code, partnerId, activeFrom, activeTo)
+      .stream().map(partnerCampaignSearchResponse ->
       VoucherCampaign.Companion.from(partnerCampaignSearchResponse)
     ).collect(Collectors.toList());
   }

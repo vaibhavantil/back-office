@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Collections;
 import java.util.List;
@@ -234,8 +235,10 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   }
 
   @Override
-  public List<PartnerCampaignSearchResponse> searchPartnerCampaigns() {
-    ResponseEntity<List<PartnerCampaignSearchResponse>>  response = this.client.searchPartnerCampaigns();
+  public List<PartnerCampaignSearchResponse> searchPartnerCampaigns(String code, String partnerId, LocalDate activeFrom, LocalDate activeTo) {
+    ResponseEntity<List<PartnerCampaignSearchResponse>>  response = this.client.searchPartnerCampaigns(
+      code, partnerId, activeFrom, activeTo
+    );
     if (response.getStatusCode() == HttpStatus.OK) {
       return response.getBody();
     }

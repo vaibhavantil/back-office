@@ -20,7 +20,7 @@ type QueryType {
   filters(categoryId: String!): [FilterSuggestion!]!
   inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
-  findPartnerCampaigns: [VoucherCampaign!]!
+  findPartnerCampaigns(input:CampaignFilter): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
 }
 
