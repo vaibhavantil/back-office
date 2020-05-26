@@ -6,6 +6,8 @@ data class PartnerCampaignSearchResponse(
   val id: String,
   val campaignCode: String,
   val partnerId: String,
+  val partnerName: String,
   val validFrom: Instant?,
-  val validTo: Instant?
+  val validTo: Instant?,
+  val incentive: Incentive
 )
