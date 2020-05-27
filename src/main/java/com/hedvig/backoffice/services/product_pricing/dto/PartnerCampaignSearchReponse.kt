@@ -9,5 +9,5 @@ data class PartnerCampaignSearchResponse(
   val partnerName: String,
   val validFrom: Instant?,
   val validTo: Instant?,
-  val incentive: Incentive
+  val incentive: IncentiveDto
 )

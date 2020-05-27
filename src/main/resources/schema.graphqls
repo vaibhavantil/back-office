@@ -360,13 +360,26 @@ type VoucherCampaign {
   incentive: Incentive
 }
 
-type Incentive {
+type MonthlyPercentageDiscountFixedPeriod {
   numberOfMonths: Int,
-  amount: Float,
-  percentageDiscount: Float,
-  currency: String,
-  type: IncentiveType
+  percentage: Float
 }
+
+type FreeMonths {
+  numberOfMonths: Int
+}
+
+type CostDeduction {
+  amount: MonetaryAmount
+}
+
+type NoDiscount
+
+type IndefinitePercentageDiscount {
+  percentageDiscount: Float
+}
+
+union Incentive = MonthlyPercentageDiscountFixedPeriod | FreeMonths | CostDeduction | NoDiscount | IndefinitePercentageDiscount
 
 input FilterPayload {
   filters: [Filter!]!

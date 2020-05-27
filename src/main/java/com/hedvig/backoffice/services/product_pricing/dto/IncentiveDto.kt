@@ -1,19 +1,42 @@
 package com.hedvig.backoffice.services.product_pricing.dto
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.hedvig.backoffice.graphql.UnionType
 import java.math.BigDecimal
+import javax.money.MonetaryAmount
 
-data class Incentive(
-val numberOfMonths: Int?,
-val amount: BigDecimal?,
-val percentageDiscount: BigDecimal?,
-var currency: String?,
-val type: IncentiveType?
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes(
+  JsonSubTypes.Type(value = MonthlyPercentageDiscountFixedPeriod::class, name = "MonthlyPercentageDiscountFixedPeriod"),
+  JsonSubTypes.Type(value = FreeMonths::class, name = "FreeMonths"),
+  JsonSubTypes.Type(value = CostDeduction::class, name = "CostDeduction"),
+  JsonSubTypes.Type(value = NoDiscount::class, name = "NoDiscount"),
+  JsonSubTypes.Type(value = IndefinitePercentageDiscount::class, name = "IndefinitePercentageDiscount")
 )
+@UnionType
+sealed class IncentiveDto
 
-enum class IncentiveType {
-  COST_DEDUCTION,
-  FREE_MONTHS,
-  NO_DISCOUNT,
-  MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD,
-  INDEFINITE_PERCENTAGE_DISCOUNT
-}
+@UnionType
+data class MonthlyPercentageDiscountFixedPeriod(
+  val numberOfMonths: Int,
+  val percentage: BigDecimal
+): IncentiveDto()
+
+@UnionType
+data class FreeMonths(
+  val numberOfMonths: Int
+) : IncentiveDto()
+
+@UnionType
+data class CostDeduction(
+  val amount: MonetaryAmount
+) : IncentiveDto()
+
+@UnionType
+object NoDiscount : IncentiveDto()
+
+@UnionType
+data class IndefinitePercentageDiscount(
+  val percentageDiscount: BigDecimal
+) : IncentiveDto()

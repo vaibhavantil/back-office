@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
-import com.hedvig.backoffice.services.product_pricing.dto.Incentive
+import com.hedvig.backoffice.services.product_pricing.dto.IncentiveDto
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse
 import java.time.Instant
 
@@ -11,7 +11,7 @@ data class VoucherCampaign (
   val partnerName: String,
   val validFrom: Instant?,
   val validTo: Instant?,
-  val incentive: Incentive
+  val incentive: IncentiveDto
 ) {
 
   companion object {
