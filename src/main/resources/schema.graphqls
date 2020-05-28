@@ -885,8 +885,8 @@ type ClaimNote {
 }
 
 type ClaimTranscription {
-  text: String
-  confidenceScore: Float
+  text: String!
+  confidenceScore: Float!
 }
 
 enum ClaimTypes {
