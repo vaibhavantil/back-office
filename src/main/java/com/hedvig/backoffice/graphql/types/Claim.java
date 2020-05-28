@@ -23,6 +23,7 @@ public class Claim {
   String memberId;
   List<ClaimPayment> payments;
   List<ClaimNote> notes;
+  List<ClaimTranscription> transcriptions;
   List<ClaimEvent> events;
   List<ClaimData> _claimData;
   boolean coveringEmployee;
@@ -42,6 +43,8 @@ public class Claim {
       dto.getPayments().stream().map(paymentDto -> ClaimPayment.fromDto(paymentDto))
         .collect(Collectors.toList()),
       dto.getNotes().stream().map(noteDto -> ClaimNote.fromDTO(noteDto))
+        .collect(Collectors.toList()),
+      dto.getTranscriptions().stream().map(transcriptionDto -> ClaimTranscription.Companion.fromDTO(transcriptionDto))
         .collect(Collectors.toList()),
       dto.getEvents().stream().map(eventDto -> ClaimEvent.fromDTO(eventDto))
         .collect(Collectors.toList()),
