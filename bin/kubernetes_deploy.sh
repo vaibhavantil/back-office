@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Push only if it's not a pull request
-if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+#if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   # Push only if we're testing the master branch
   if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_BRANCH" == "feature/claims-revolution"]; then
     aws s3 cp s3://dev-com-hedvig-cluster-ett-data/kube ~/.kube --recursive
@@ -14,6 +14,6 @@ if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   else
     echo "Skipping deploy because branch is not 'develop'"
   fi
-else
-  echo "Skipping deploy because it's a pull request"
-fi
+#else
+#  echo "Skipping deploy because it's a pull request"
+#fi
