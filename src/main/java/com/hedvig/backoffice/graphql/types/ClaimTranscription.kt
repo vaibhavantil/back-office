@@ -4,11 +4,11 @@ import com.hedvig.backoffice.services.claims.dto.ClaimTranscription as ClaimTran
 
 data class ClaimTranscription(
   val text: String,
-  val confidencesScore: Float
+  val confidenceScore: Float
 ) {
   companion object {
     fun fromDTO(dto: ClaimTranscriptionDTO): ClaimTranscription? {
-      return ClaimTranscription(dto.text, dto.confidencesScore)
+      return ClaimTranscription(dto.text, dto.confidenceScore)
     }
   }
 }
