@@ -7,5 +7,7 @@ enum class NorwegianGripenFactorType {
   NUMBER_OF_PEOPLE,
   SQUARE_METERS,
   HOUSEHOLD_TYPE,
+  OBJECT_VALUE,
+  TYPE_OF_OBJECT,
   DEDUCTIBLE
 }
