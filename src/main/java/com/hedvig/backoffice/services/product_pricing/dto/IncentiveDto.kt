@@ -26,17 +26,17 @@ data class MonthlyPercentageDiscountFixedPeriod(
 @UnionType
 data class FreeMonths(
   val numberOfMonths: Int
-) : IncentiveDto()
+): IncentiveDto()
 
 @UnionType
 data class CostDeduction(
   val amount: MonetaryAmount
-) : IncentiveDto()
+): IncentiveDto()
 
 @UnionType
-object NoDiscount : IncentiveDto()
+object NoDiscount: IncentiveDto()
 
 @UnionType
 data class IndefinitePercentageDiscount(
   val percentageDiscount: BigDecimal
-) : IncentiveDto()
+): IncentiveDto()
