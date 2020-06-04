@@ -57,14 +57,27 @@ type MutationType {
   addInventoryItem(item: InventoryItemInput!): Boolean
   removeInventoryItem(inventoryItemId: ID!): Boolean
   activateQuote(
-    id: ID!
-    activationDate: LocalDate!
+    id: ID!,
+    activationDate: LocalDate!,
     terminationDate: LocalDate
   ): Quote!
+
+  addAgreementFromQuote(
+    id: ID!,
+    contractId: ID!,
+    activeFrom: LocalDate,
+    activeTo: LocalDate,
+    previousAgreementActiveTo: LocalDate
+  ): Quote!
+
   # Creates a quote from a product and returns the quote id
   createQuoteFromProduct(
     memberId: ID!
     quoteData: QuoteFromProductInput!
+  ): Quote!
+  createQuoteFromAgreement(
+    agreementId: ID!
+    memberId: ID!
   ): Quote!
   updateQuote(
     quoteId: ID!
@@ -80,11 +93,23 @@ type MutationType {
   addNorwegianPostalCodes(postalCodesString: String): Boolean!
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
+  regenerateCertificate(agreementId: ID!): ID!
+  createQuoteForNewContract(
+    memberId: ID!,
+    quoteInput: QuoteInput!,
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
+  signQuoteForNewContract(
+    quoteId: ID!,
+    activationDate: LocalDate
+  ): Quote!
 }
 
 type Contract {
   id: ID!
   holderMemberId: ID!
+  holderFirstName: String
+  holderLastName: String
   switchedFrom: String
   masterInception: LocalDate
   status: ContractStatus!
@@ -122,7 +147,7 @@ interface AgreementCore {
   id: ID!
   fromDate: LocalDate
   toDate: LocalDate
-  basePremium: MonetaryAmount!
+  premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
 }
@@ -131,19 +156,27 @@ type SwedishApartment implements AgreementCore {
   id: ID!
   fromDate: LocalDate
   toDate: LocalDate
-  basePremium: MonetaryAmount!
+  premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
+  lineOfBusiness: SwedishApartmentLineOfBusiness!
   address: Address!
   numberCoInsured: Int!
   squareMeters: Int!
+}
+
+enum SwedishApartmentLineOfBusiness {
+  RENT
+  BRF
+  STUDENT_RENT
+  STUDENT_BRF
 }
 
 type SwedishHouse implements AgreementCore {
   id: ID!
   fromDate: LocalDate
   toDate: LocalDate
-  basePremium: MonetaryAmount!
+  premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
   address: Address!
@@ -160,22 +193,36 @@ type NorwegianHomeContent implements AgreementCore {
   id: ID!
   fromDate: LocalDate
   toDate: LocalDate
-  basePremium: MonetaryAmount!
+  premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
+  lineOfBusiness: NorwegianHomeContentLineOfBusiness!
   address: Address!
   numberCoInsured: Int!
   squareMeters: Int!
+}
+
+enum NorwegianHomeContentLineOfBusiness {
+  RENT
+  OWN
+  YOUTH_RENT
+  YOUTH_OWN
 }
 
 type NorwegianTravel implements AgreementCore {
   id: ID!
   fromDate: LocalDate
   toDate: LocalDate
-  basePremium: MonetaryAmount!
+  premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
+  lineOfBusiness: NorwegianTravelLineOfBusiness!
   numberCoInsured: Int!
+}
+
+enum NorwegianTravelLineOfBusiness {
+  REGULAR
+  YOUTH
 }
 
 enum AgreementStatus {
@@ -475,14 +522,7 @@ enum Gender {
 
 interface IQuoteData {
   id: ID!
-  ssn: String
-  firstName: String
-  lastName: String
-  street: String
-  city: String
-  zipCode: String
   householdSize: Int
-  livingSpace: Int
 }
 
 type Quote {
@@ -502,12 +542,15 @@ type Quote {
   data: QuoteData
   signedProductId: ID
   originatingProductId: ID
+  isReadyToSign: Boolean
 }
 
 enum QuoteProductType {
-  APARTMENT
-  HOUSE
-  OBJECT
+  APARTMENT,
+  HOUSE,
+  OBJECT,
+  HOME_CONTENT,
+  TRAVEL
 }
 enum QuoteState {
   INCOMPLETE
@@ -516,28 +559,22 @@ enum QuoteState {
   EXPIRED
 }
 
-union QuoteData = ApartmentQuoteData | HouseQuoteData
+union QuoteData = ApartmentQuoteData | HouseQuoteData | NorwegianHomeContentQuoteData | NorwegianTravelQuoteData
 
 type ApartmentQuoteData implements IQuoteData {
   id: ID!
-  ssn: String
-  firstName: String
-  lastName: String
   street: String
   city: String
   zipCode: String
   householdSize: Int
   livingSpace: Int
-
   subType: ApartmentSubType
 }
 
 enum ApartmentSubType {
-  BRF
-  RENT
-  SUBLET_RENTAL
-  SUBLET_BRF
-  STUDENT_BRF
+  BRF,
+  RENT,
+  STUDENT_BRF,
   STUDENT_RENT
 }
 
@@ -584,11 +621,36 @@ enum ExtraBuildingType {
   OTHER
 }
 
+type NorwegianHomeContentQuoteData implements IQuoteData{
+  id: ID!
+  ssn:  String
+  firstName: String
+  lastName: String
+
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+  subType: NorwegianHomeContentLineOfBusiness
+}
+
+type NorwegianTravelQuoteData implements IQuoteData{
+  id: ID!
+  ssn:  String
+  firstName: String
+  lastName: String
+  householdSize: Int
+  subType: NorwegianTravelLineOfBusiness
+}
+
 input QuoteInput {
   productType: QuoteProductType
   currentInsurer: String
   apartmentData: ApartmentQuoteInput
   houseData: HouseQuoteInput
+  norwegianHomeContentData: NorwegianHomeContentQuoteInput
+  norwegianTravelData: NorwegianTravelQuoteInput
   originatingProductId: ID
 }
 
@@ -616,9 +678,27 @@ input HouseQuoteInput {
   isSubleted: Boolean
 }
 
+input NorwegianHomeContentQuoteInput {
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  subType: NorwegianHomeContentLineOfBusiness
+}
+
+
+input NorwegianTravelQuoteInput {
+  householdSize: Int
+  subType: NorwegianTravelLineOfBusiness
+}
+
 input QuoteFromProductInput {
   incompleteHouseQuoteData: HouseQuoteDataInput
   incompleteApartmentQuoteData: ApartmentQuoteDataInput
+  norwegianHomeContentQuoteData: NorwegianHomeContentQuoteDataInput
+  norwegianTravelQuoteData: NorwegianTravelQuoteDataInput
   originatingProductId: ID
   currentInsurer: String
 }
@@ -627,6 +707,7 @@ input ApartmentQuoteDataInput {
   ssn: String
   firstName: String
   lastName: String
+
   street: String
   city: String
   zipCode: String
@@ -640,6 +721,7 @@ input HouseQuoteDataInput {
   ssn: String
   firstName: String
   lastName: String
+
   street: String
   city: String
   zipCode: String
@@ -660,9 +742,32 @@ input ExtraBuildingInput {
   displayName: String
 }
 
+input NorwegianHomeContentQuoteDataInput {
+  ssn:  String
+  firstName: String
+  lastName: String
+
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  subType: NorwegianHomeContentLineOfBusiness
+}
+
+input NorwegianTravelQuoteDataInput {
+  ssn:  String
+  firstName: String
+  lastName: String
+
+  householdSize: Int
+  subType: NorwegianTravelLineOfBusiness
+}
+
 type Transaction {
   id: ID
-  amount: MonetaryAmount
+  amount: MonetaryAmountV2
   timestamp: Instant
   type: String
   status: String
@@ -686,16 +791,16 @@ type NumberFailedCharges {
 
 type Account {
   id: ID!
-  currentBalance: MonetaryAmount!
-  totalBalance: MonetaryAmount!
+  currentBalance: MonetaryAmountV2!
+  totalBalance: MonetaryAmountV2!
   chargeEstimation: AccountChargeEstimation!
   entries: [AccountEntry!]!
 }
 
 type AccountChargeEstimation {
-  subscription: MonetaryAmount!
-  discount: MonetaryAmount!
-  charge: MonetaryAmount!
+  subscription: MonetaryAmountV2!
+  discount: MonetaryAmountV2!
+  charge: MonetaryAmountV2!
   discountCodes: [String!]!
 }
 
@@ -727,7 +832,7 @@ input AccountEntryInput {
 type AccountEntry {
   id: ID!
   type: AccountEntryType!
-  amount: MonetaryAmount!
+  amount: MonetaryAmountV2!
   fromDate: LocalDate!
   reference: String!
   source: String!
@@ -745,6 +850,9 @@ enum AccountEntryType {
   CHARGE
   REFERRAL_DISCOUNT
   FREE_MONTH_DISCOUNT
+  PERCENTAGE_MONTH_DISCOUNT
+  BUNDLE_DISCOUNT_COST_DEDUCTION
+  BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION
   LOSS
 }
 
@@ -765,6 +873,7 @@ type Claim {
   reserves: MonetaryAmount
   registrationDate: Instant
   notes: [ClaimNote]
+  transcriptions: [ClaimTranscription]
   payments: [ClaimPayment]
   events: [ClaimEvent]
   coveringEmployee: Boolean!
@@ -774,6 +883,12 @@ type Claim {
 type ClaimNote {
   text: String
   date: LocalDateTime
+}
+
+type ClaimTranscription {
+  text: String!
+  confidenceScore: Float!
+  languageCode: String!
 }
 
 enum ClaimTypes {
@@ -1108,6 +1223,11 @@ enum NorwegianGripenFactorType {
   SQUARE_METERS
   HOUSEHOLD_TYPE
   DEDUCTIBLE
+}
+
+type MonetaryAmountV2 {
+  amount: String!,
+  currency: String!
 }
 
 # A String-representation of `java.time.YearMonth`, ex: `"2018-06"`

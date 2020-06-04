@@ -1,11 +1,16 @@
 package com.hedvig.backoffice.graphql.types
 
+import com.hedvig.backoffice.services.underwriter.dtos.SwedishApartmentType
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianHomeContentLineOfBusiness
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianTravelLineOfBusiness
 import java.util.UUID
 
 data class QuoteFromProductInput(
   val incompleteHouseQuoteData: HouseQuoteDataInput?,
   val incompleteApartmentQuoteData: ApartmentQuoteDataInput?,
+  val norwegianHomeContentQuoteData: NorwegianHomeContentQuoteDataInput?,
+  val norwegianTravelQuoteData: NorwegianTravelQuoteDataInput?,
   val originatingProductId: UUID,
   val currentInsurer: String?
 )
@@ -20,24 +25,44 @@ data class ApartmentQuoteDataInput(
   val zipCode: String? = null,
   val householdSize: Int? = null,
   val livingSpace: Int? = null,
-
-  val subType: com.hedvig.backoffice.services.product_pricing.dto.ProductType? = null
+  val subType: SwedishApartmentType? = null
 )
 
 data class HouseQuoteDataInput(
-  val ssn: String?,
-  val firstName: String?,
-  val lastName: String?,
+  val ssn: String? = null,
+  val firstName: String? = null,
+  val lastName: String? = null,
 
-  val street: String?,
-  val city: String?,
-  val zipCode: String?,
-  val householdSize: Int?,
-  val livingSpace: Int?,
+  val street: String? = null,
+  val city: String? = null,
+  val zipCode: String? = null,
+  val householdSize: Int? = null,
+  val livingSpace: Int? = null,
   val ancillaryArea: Int? = null,
   val yearOfConstruction: Int? = null,
   val numberOfBathrooms: Int? = null,
   val extraBuildings: List<ExtraBuilding>? = null,
-  val isSubleted: Boolean? = null,
-  val floor: Int = 0
+  val isSubleted: Boolean? = null
+)
+
+data class NorwegianHomeContentQuoteDataInput(
+  val ssn: String? = null,
+  val firstName: String? = null,
+  val lastName: String? = null,
+
+  val street: String? = null,
+  val city: String? = null,
+  val zipCode: String? = null,
+  val householdSize: Int? = null,
+  val livingSpace: Int? = null,
+  val subType: NorwegianHomeContentLineOfBusiness? = null
+)
+
+data class NorwegianTravelQuoteDataInput(
+  val ssn: String? = null,
+  val firstName: String? = null,
+  val lastName: String? = null,
+
+  val householdSize: Int? = null,
+  val subType: NorwegianTravelLineOfBusiness? = null
 )

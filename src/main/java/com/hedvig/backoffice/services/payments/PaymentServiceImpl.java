@@ -25,7 +25,7 @@ public class PaymentServiceImpl implements PaymentService {
   public List<Transaction> getTransactionsByMemberId(String memberId) {
     try {
       return paymentServiceClient.getTransactions(memberId).getTransactions().entrySet().stream()
-        .map(entry -> Transaction.fromTransactionDTO(entry.getKey(), entry.getValue()))
+        .map(entry -> Transaction.Companion.fromTransactionDTO(entry.getKey(), entry.getValue()))
         .collect(Collectors.toList());
     } catch (FeignException e) {
       if (e.status() == 404) {
@@ -52,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
   @Override
   public Transaction getTransactionById(UUID id) {
     TransactionDTO dto = paymentServiceClient.getTransactionById(id).getBody();
-    return Transaction.fromTransactionDTO(id, dto);
+    return Transaction.Companion.fromTransactionDTO(id, dto);
   }
 
   @Override

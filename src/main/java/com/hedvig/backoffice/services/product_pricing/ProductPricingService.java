@@ -93,4 +93,6 @@ public interface ProductPricingService {
   void changeToDate(UUID agreementId, ChangeToDateOnAgreementRequest request, String token);
 
   ContractMarketInfo getContractMarketInfoByMemberId(String memberId);
+
+  void regenerateCertificate(UUID agreementId, String token);
 }

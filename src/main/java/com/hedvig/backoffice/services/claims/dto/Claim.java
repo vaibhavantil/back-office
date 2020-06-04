@@ -24,6 +24,7 @@ public class Claim extends ClaimBackOffice {
   private ClaimSource claimSource;
 
   private List<ClaimNote> notes;
+  private List<ClaimTranscription> transcriptions;
   private List<ClaimPayment> payments;
   private List<ClaimAsset> assets;
   private List<ClaimEvent> events;

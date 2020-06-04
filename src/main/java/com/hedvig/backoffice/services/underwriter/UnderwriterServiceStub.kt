@@ -4,10 +4,15 @@ import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
 import com.hedvig.backoffice.services.underwriter.dtos.ProductType
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteData
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteForNewContractRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInitiatedFrom
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteState
+import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.SignedQuoteResponseDto
+import com.hedvig.backoffice.services.underwriter.dtos.SwedishApartmentType
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -22,7 +27,7 @@ internal val QUOTE_DTO_MOCK = QuoteDto(
   state = QuoteState.QUOTED,
   initiatedFrom = QuoteInitiatedFrom.RAPIO,
   attributedTo = "HEDVIG",
-  data = QuoteData.ApartmentQuoteData(
+  data = QuoteData.ApartmentData(
     UUID.randomUUID(),
     ssn = "191212121212",
     lastName = "Last",
@@ -30,7 +35,7 @@ internal val QUOTE_DTO_MOCK = QuoteDto(
     city = "Storstan",
     zipCode = "12345",
     householdSize = 3,
-    subType = com.hedvig.backoffice.services.product_pricing.dto.ProductType.BRF,
+    subType = SwedishApartmentType.BRF,
     firstName = "First",
     street = "Storgatan 1"
   ),
@@ -45,17 +50,46 @@ internal val QUOTE_DTO_MOCK = QuoteDto(
 
 class UnderwriterServiceStub : UnderwriterService {
   override fun createAndCompleteQuote(
-        memberId: String,
-        quoteDto: CreateQuoteFromProductDto,
-        underwritingGuidelinesBypassedBy: String?
-    ): QuoteResponseDto =
+    memberId: String,
+    quoteDto: CreateQuoteFromProductDto,
+    underwritingGuidelinesBypassedBy: String?
+  ): QuoteResponseDto =
     QuoteResponseDto(UUID.randomUUID())
 
-  override fun updateQuote(quoteId: UUID, quoteDto: QuoteInputDto, underwritingGuidelinesBypassedBy: String?): QuoteDto = QUOTE_DTO_MOCK
+  override fun updateQuote(
+    quoteId: UUID,
+    quoteDto: QuoteInputDto,
+    underwritingGuidelinesBypassedBy: String?
+  ): QuoteDto = QUOTE_DTO_MOCK
 
-  override fun activateQuote(quoteId: UUID, activationDate: LocalDate?, terminationDate: LocalDate?): QuoteDto = QUOTE_DTO_MOCK
+  override fun activateQuote(
+    quoteId: UUID,
+    activationDate: LocalDate?,
+    terminationDate: LocalDate?
+  ): QuoteDto = QUOTE_DTO_MOCK
+
+  override fun addAgreementFromQuote(
+    quoteId: UUID,
+    contractId: UUID?,
+    activeFrom: LocalDate?,
+    activeTo: LocalDate?,
+    previousAgreementActiveTo: LocalDate?
+  ): QuoteDto = QUOTE_DTO_MOCK
 
   override fun getQuotes(memberId: String): List<QuoteDto> = listOf(QUOTE_DTO_MOCK)
 
   override fun getQuote(id: UUID): QuoteDto = QUOTE_DTO_MOCK
+
+  override fun createQuoteFromAgreement(
+    quoteRequest: QuoteFromAgreementRequestDto
+  ): QuoteResponseDto = QuoteResponseDto(UUID.randomUUID())
+
+  override fun createQuoteForNewContract(
+    request: QuoteForNewContractRequestDto
+  ): QuoteResponseDto = QuoteResponseDto(UUID.randomUUID())
+
+  override fun signQuoteForNewContract(
+    completeQuoteId: UUID,
+    request: SignQuoteFromHopeRequestDto
+  ): SignedQuoteResponseDto = SignedQuoteResponseDto(UUID.randomUUID(), Instant.now())
 }
