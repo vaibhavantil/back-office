@@ -29,6 +29,7 @@ type MutationType {
     accountEntry: AccountEntryInput!
   ): Member!
   approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
+  createPaymentCompletionLink(memberId: ID!): PaymentCompletionResponse!
   updateClaimState(id: ID!, state: ClaimState!): Claim
   createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
@@ -762,6 +763,10 @@ input NorwegianTravelQuoteDataInput {
 
   householdSize: Int
   subType: NorwegianTravelLineOfBusiness
+}
+
+type PaymentCompletionResponse {
+  url: String!
 }
 
 type Transaction {

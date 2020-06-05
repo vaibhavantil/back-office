@@ -13,6 +13,7 @@ import com.hedvig.backoffice.graphql.types.ClaimState;
 import com.hedvig.backoffice.graphql.types.ClaimTypes;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.MemberChargeApproval;
+import com.hedvig.backoffice.graphql.types.PaymentCompletionResponse;
 import com.hedvig.backoffice.graphql.types.Quote;
 import com.hedvig.backoffice.graphql.types.QuoteFromProductInput;
 import com.hedvig.backoffice.graphql.types.QuoteInput;
@@ -22,6 +23,7 @@ import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
+import com.hedvig.backoffice.services.apigateway.ApiGatewayService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.AutoLabelDTO;
 import com.hedvig.backoffice.services.claims.ClaimsService;
@@ -105,6 +107,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final UnderwriterService underwriterService;
   private final ProductPricingService productPricingService;
   private final PriceEngineService priceEngineService;
+  private final ApiGatewayService apiGatewayService;
 
   public GraphQLMutation(
     PaymentService paymentService,
@@ -120,8 +123,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     ItemPricingService itemPricingService,
     UnderwriterService underwriterService,
     ProductPricingService productPricingService,
-    PriceEngineService priceEngineService
-  ) {
+    PriceEngineService priceEngineService,
+    final ApiGatewayService apiGatewayService) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
@@ -136,6 +139,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.underwriterService = underwriterService;
     this.productPricingService = productPricingService;
     this.priceEngineService = priceEngineService;
+    this.apiGatewayService = apiGatewayService;
   }
 
   public CompletableFuture<Member> chargeMember(
@@ -201,6 +205,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       GraphQLConfiguration.getEmail(env, personnelService)
     );
     return true;
+  }
+
+  public PaymentCompletionResponse createPaymentCompletionLink(final String memberId) {
+    return new PaymentCompletionResponse(
+      apiGatewayService.generatePaymentsLink(memberId).getUrl()
+    );
   }
 
   public CompletableFuture<Claim> updateClaimState(
