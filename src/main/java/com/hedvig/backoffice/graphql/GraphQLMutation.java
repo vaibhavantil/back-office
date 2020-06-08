@@ -6,7 +6,18 @@ import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.*;
+import com.hedvig.backoffice.graphql.types.ClaimInformationInput;
+import com.hedvig.backoffice.graphql.types.ClaimNoteInput;
+import com.hedvig.backoffice.graphql.types.ClaimPaymentInput;
+import com.hedvig.backoffice.graphql.types.ClaimState;
+import com.hedvig.backoffice.graphql.types.ClaimTypes;
+import com.hedvig.backoffice.graphql.types.Member;
+import com.hedvig.backoffice.graphql.types.MemberChargeApproval;
+import com.hedvig.backoffice.graphql.types.Quote;
+import com.hedvig.backoffice.graphql.types.QuoteFromProductInput;
+import com.hedvig.backoffice.graphql.types.QuoteInput;
+import com.hedvig.backoffice.graphql.types.RemindNotification;
+import com.hedvig.backoffice.graphql.types.TicketInput;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
@@ -14,26 +25,42 @@ import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.AutoLabelDTO;
 import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.claims.dto.ClaimData;
+import com.hedvig.backoffice.services.claims.dto.ClaimFileCategoryDTO;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
-import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.request.*;
+import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimSource;
+import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.EmployeeClaimRequestDTO;
+import com.hedvig.backoffice.services.claims.dto.MarkClaimFileAsDeletedDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ActivatePendingAgreementRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeFromDateOnAgreementRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeTerminationDateRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeToDateOnAgreementRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.TerminateContractRequest;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto;
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteForNewContractRequestDto;
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto;
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto;
+import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -95,7 +122,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     PriceEngineService priceEngineService,
     ItemizerService itemizerService
   ) {
-
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
@@ -415,7 +441,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return Quote.from(underwriterService.activateQuote(id, activationDate, terminationDate));
   }
 
-  public Quote addAgreementFromQuote(final UUID id, @Nullable final UUID contractId, @Nullable final LocalDate activeFrom,  @Nullable final LocalDate activeTo, @Nullable final LocalDate previousAgreementActiveTo) {
+  public Quote addAgreementFromQuote(final UUID id, @Nullable final UUID contractId, @Nullable final LocalDate activeFrom, @Nullable final LocalDate activeTo, @Nullable final LocalDate previousAgreementActiveTo) {
     return Quote.from(underwriterService.addAgreementFromQuote(id, contractId, activeFrom, activeTo, previousAgreementActiveTo));
   }
 
@@ -450,6 +476,38 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       QuoteInputDto.from(quoteInput),
       bypassUnderwritingGuidelines ? getUserIdentity(env) : null
     ));
+  }
+
+  Quote createQuoteForNewContract(
+    final String memberId,
+    final QuoteInput quoteInput,
+    final boolean bypassUnderwritingGuidelines,
+    final DataFetchingEnvironment env
+  ) {
+    final String bypassUnderwritingGuidelinesFrom = bypassUnderwritingGuidelines ? getUserIdentity(env) : null;
+
+    final UUID createQuoteId = underwriterService.createQuoteForNewContract(
+      new QuoteForNewContractRequestDto(
+        QuoteRequestDto.Companion.from(quoteInput, memberId, bypassUnderwritingGuidelinesFrom),
+        bypassUnderwritingGuidelinesFrom
+      )
+    ).getId();
+    return Quote.from(underwriterService.getQuote(createQuoteId));
+  }
+
+  Quote signQuoteForNewContract(
+    final UUID quoteId,
+    final LocalDate activationDate,
+    final DataFetchingEnvironment env
+  ) {
+    underwriterService.signQuoteForNewContract(
+      quoteId,
+      new SignQuoteFromHopeRequestDto(
+        activationDate,
+        getToken(env)
+      )
+    );
+    return Quote.from(underwriterService.getQuote(quoteId));
   }
 
   UUID createTicket(
