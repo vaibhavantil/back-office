@@ -442,14 +442,14 @@ type Debt {
 }
 
 type Person {
-  personFlags: [Flag]
+  personFlags: String
   debt: Debt
   whitelisted: Whitelisted
   status: PersonStatus
 }
 
 type PersonStatus {
-  flag: Flag
+  flag: String
   whitelisted: Boolean
 }
 
@@ -458,11 +458,11 @@ type Whitelisted {
   whitelistedBy: String
 }
 
-enum Flag {
-  GREEN
-  AMBER
-  RED
-}
+#enum Flag {
+#  GREEN
+#  AMBER
+#  RED
+#}
 
 input ClaimInformationInput {
   location: String
