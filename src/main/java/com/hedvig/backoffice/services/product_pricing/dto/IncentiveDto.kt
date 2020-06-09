@@ -34,7 +34,9 @@ data class CostDeduction(
 ): IncentiveDto()
 
 @UnionType
-object NoDiscount: IncentiveDto()
+data class NoDiscount(
+  val `_`: Boolean = true
+): IncentiveDto()
 
 @UnionType
 data class IndefinitePercentageDiscount(
