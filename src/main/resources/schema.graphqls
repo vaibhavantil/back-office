@@ -458,6 +458,12 @@ type Whitelisted {
   whitelistedBy: String
 }
 
+enum Flag {
+  GREEN
+  AMBER
+  RED
+}
+
 input ClaimInformationInput {
   location: String
   date: LocalDate

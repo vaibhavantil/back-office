@@ -97,7 +97,7 @@ class MemberResolver(
     val memberId = member.memberId
     val personDTO = memberService.getPerson(memberId)
     return Person(
-      personFlags = personDTO.flags.debtFlag,
+      debtFlag = personDTO.flags.debtFlag,
       debt = personDTO.debt,
       whitelisted = personDTO.whitelisted,
       status = personDTO.status
