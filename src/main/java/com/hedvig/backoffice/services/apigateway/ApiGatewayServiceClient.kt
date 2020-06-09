@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 
 @FeignClient(
   name = "apigateway-service",
-  url = "\${api-gateway.baseUrl}",
+  url = "\${apiGateway.baseUrl}",
   configuration = [FeignConfig::class]
 )
 interface ApiGatewayServiceClient {

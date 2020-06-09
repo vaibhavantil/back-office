@@ -69,4 +69,7 @@ interface MemberServiceClient {
     @PathVariable("memberId") memberId: String,
     @RequestParam("whitelistedBy") whitelistedBy: String
   )
+
+  @GetMapping("/_/member/{memberId}/pickedLocale")
+  fun findPickedLocaleByMemberId(@PathVariable("memberId") memberId: String): PickedLocaleDTO
 }

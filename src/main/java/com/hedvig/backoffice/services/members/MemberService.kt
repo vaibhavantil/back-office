@@ -5,6 +5,7 @@ import com.hedvig.backoffice.services.members.dto.MemberDTO
 import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn
 import com.hedvig.backoffice.services.members.dto.PersonDTO
+import com.hedvig.backoffice.services.members.dto.PickedLocaleDTO
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO
 import org.springframework.data.domain.Sort
 
@@ -36,4 +37,6 @@ interface MemberService {
     fun getPerson(memberId: String): PersonDTO
 
     fun whitelistMember(memberId: String, whitelistedBy: String)
+
+    fun findPickedLocaleByMemberId(memberId: String): PickedLocaleDTO
 }

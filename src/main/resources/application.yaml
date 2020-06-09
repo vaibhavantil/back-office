@@ -115,7 +115,7 @@ gatekeeper:
   baseUrl: https://id.dev.hedvigit.com
   stub: false
 
-api-gateway:
+apiGateway:
   baseUrl: http://localhost:8080
   stub: false
   token: blah
