@@ -20,6 +20,7 @@ import com.hedvig.backoffice.graphql.types.QuoteInput;
 import com.hedvig.backoffice.graphql.types.RemindNotification;
 import com.hedvig.backoffice.graphql.types.TicketInput;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
+import com.hedvig.backoffice.graphql.types.AssignVoucherPercentageDiscount;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
