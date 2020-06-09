@@ -31,6 +31,7 @@ type MutationType {
     accountEntry: AccountEntryInput!
   ): Member!
   approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
+  createPaymentCompletionLink(memberId: ID!): PaymentCompletionResponse!
   updateClaimState(id: ID!, state: ClaimState!): Claim
   createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
@@ -830,6 +831,10 @@ input NorwegianTravelQuoteDataInput {
   subType: NorwegianTravelLineOfBusiness
 }
 
+type PaymentCompletionResponse {
+  url: String!
+}
+
 type Transaction {
   id: ID
   amount: MonetaryAmountV2
@@ -938,6 +943,7 @@ type Claim {
   reserves: MonetaryAmount
   registrationDate: Instant
   notes: [ClaimNote]
+  transcriptions: [ClaimTranscription]
   payments: [ClaimPayment]
   events: [ClaimEvent]
   coveringEmployee: Boolean!
@@ -947,6 +953,12 @@ type Claim {
 type ClaimNote {
   text: String
   date: LocalDateTime
+}
+
+type ClaimTranscription {
+  text: String!
+  confidenceScore: Float!
+  languageCode: String!
 }
 
 enum ClaimTypes {

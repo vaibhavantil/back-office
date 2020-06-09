@@ -10,11 +10,14 @@ import com.hedvig.backoffice.services.members.dto.PaymentDefaultDTO;
 import com.hedvig.backoffice.services.members.dto.PersonDTO;
 import com.hedvig.backoffice.services.members.dto.PersonFlags;
 import com.hedvig.backoffice.services.members.dto.PersonStatusDTO;
+import com.hedvig.backoffice.services.members.dto.PickedLocale;
+import com.hedvig.backoffice.services.members.dto.PickedLocaleDTO;
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.javamoney.moneta.Money;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -38,7 +41,7 @@ import static com.hedvig.backoffice.services.members.dto.Flag.RED;
 public class MemberServiceStub implements MemberService {
 
   private static Logger logger = LoggerFactory.getLogger(MemberServiceStub.class);
-  public static long[] testMemberIds = {123456L, 3267661L, 2820671L, 6865256L, 9417985L, 9403769L,
+  public static long[] testMemberIds = {123456L, 3267661L, 12377567L, 6865256L, 9417985L, 9403769L,
     6871398L, 5418127L, 2134653L, 2503961L, 5867700L, 4254211, 9908657L, 1074023L};
 
   private List<MemberDTO> users;
@@ -266,6 +269,12 @@ public class MemberServiceStub implements MemberService {
     );
 
     return personDTO;
+  }
+
+  @NotNull
+  @Override
+  public PickedLocaleDTO findPickedLocaleByMemberId(@NotNull final String memberId) {
+    return new PickedLocaleDTO(PickedLocale.sv_SE);
   }
 
   private enum FraudulentStatus {
