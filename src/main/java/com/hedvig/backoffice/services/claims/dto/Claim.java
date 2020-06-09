@@ -31,6 +31,6 @@ public class Claim extends ClaimBackOffice {
   public List<ClaimEvent> events;
   public List<ClaimData> data;
 
-  private boolean coveringEmployee;
+  public boolean coveringEmployee;
   public List<ClaimFileDTO> claimFiles = new ArrayList<>();
 }
