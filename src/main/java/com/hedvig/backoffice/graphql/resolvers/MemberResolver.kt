@@ -13,6 +13,7 @@ import com.hedvig.backoffice.graphql.types.Quote
 import com.hedvig.backoffice.graphql.types.Transaction
 import com.hedvig.backoffice.graphql.types.account.Account
 import com.hedvig.backoffice.graphql.types.account.NumberFailedCharges
+import com.hedvig.backoffice.graphql.types.claims.TestClaim
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.account.AccountService
 import com.hedvig.backoffice.services.claims.ClaimsService
@@ -109,7 +110,9 @@ class MemberResolver(
   }
 
   fun getTotalNumberOfClaims(member: Member, env: DataFetchingEnvironment): Int {
-    return claimsService.listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService)).size
+    return claimsService.listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService)).filterNot {
+      it.type == "TestClaim"
+    }.size
   }
 
   fun getQuotes(member: Member): List<Quote> {
