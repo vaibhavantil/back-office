@@ -5,7 +5,7 @@ import com.hedvig.backoffice.services.members.dto.Flag
 import com.hedvig.backoffice.services.members.dto.PersonStatusDTO
 
 data class Person(
-  val personFlags: Flag,
+  val debtFlag: Flag,
   val debt: DebtDTO,
   val whitelisted: Whitelisted?,
   val status: PersonStatusDTO
