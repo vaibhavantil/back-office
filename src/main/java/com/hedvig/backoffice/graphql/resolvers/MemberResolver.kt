@@ -110,8 +110,8 @@ class MemberResolver(
   }
 
   fun getTotalNumberOfClaims(member: Member, env: DataFetchingEnvironment): Int {
-    return claimsService.listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService)).filterNot {
-      it.type == "TestClaim"
+    return claimsService.listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService)).filter { claim ->
+      claim.type != "Test"
     }.size
   }
 

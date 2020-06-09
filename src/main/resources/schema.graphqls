@@ -449,7 +449,7 @@ type Person {
 }
 
 type PersonStatus {
-  flag: String
+  flag: Flag
   whitelisted: Boolean
 }
 
