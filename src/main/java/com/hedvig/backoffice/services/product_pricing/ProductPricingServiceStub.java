@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 
 import javax.money.Monetary;
 import java.math.BigDecimal;
@@ -384,6 +383,21 @@ public class ProductPricingServiceStub implements ProductPricingService {
   @Override
   public void regenerateCertificate(UUID agreementId, String token) {
     // noop
+  }
+
+  @Override
+  public List<PartnerCampaignSearchResponse> searchPartnerCampaigns(String code, String partnerId, LocalDate activeFrom, LocalDate activeTo) {
+    return null;
+  }
+
+  @Override
+  public void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request) {
+    //  noop
+  }
+
+  @Override
+  public List<PartnerResponseDto> getPartnerCampaignOwners() {
+    return null;
   }
 
   @Override

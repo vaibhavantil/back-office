@@ -1,15 +1,6 @@
 package com.hedvig.backoffice.services.product_pricing;
 
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlyBordereauDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MonthlySubscriptionDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.ProductType;
-import com.hedvig.backoffice.services.product_pricing.dto.SwitchableSwitcherEmailDTO;
+import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
@@ -95,4 +86,10 @@ public interface ProductPricingService {
   ContractMarketInfo getContractMarketInfoByMemberId(String memberId);
 
   void regenerateCertificate(UUID agreementId, String token);
+
+  List<PartnerCampaignSearchResponse> searchPartnerCampaigns(String code, String partnerId, LocalDate activeFrom, LocalDate activeTo);
+
+  void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request);
+
+  List<PartnerResponseDto> getPartnerCampaignOwners();
 }
