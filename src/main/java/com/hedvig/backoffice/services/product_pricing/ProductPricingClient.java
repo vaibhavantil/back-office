@@ -9,9 +9,11 @@ import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -165,4 +167,26 @@ public interface ProductPricingClient {
     @PathVariable UUID agreementId,
     @RequestHeader("Authorization") String token
   );
+
+  @GetMapping("/i/campaign/partner/search")
+  ResponseEntity<List<PartnerCampaignSearchResponse>> searchPartnerCampaigns(
+    @RequestParam
+      String code,
+    @RequestParam
+      String partnerId,
+    @RequestParam
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+      LocalDate activeFrom,
+    @RequestParam
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+      LocalDate activeTo
+  );
+
+  @PostMapping("/i/campaign/partner/voucher-percentage-discount/assign")
+  void assignCampaignToPartnerPercentageDiscount(
+    @RequestBody AssignVoucherPercentageDiscountRequest request
+  );
+
+  @GetMapping("/i/campaign/partner/partnerCampaignOwners")
+  ResponseEntity<List<PartnerResponseDto>> getPartnerCampaignOwners();
 }

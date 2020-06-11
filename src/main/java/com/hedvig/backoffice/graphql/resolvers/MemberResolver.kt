@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.graphql.resolvers
 
 import com.coxautodev.graphql.tools.GraphQLResolver
+import com.hedvig.backoffice.graphql.GraphQLConfiguration
 import com.hedvig.backoffice.graphql.dataloaders.AccountLoader
 import com.hedvig.backoffice.graphql.types.DirectDebitStatus
 import com.hedvig.backoffice.graphql.types.FileUpload
@@ -12,17 +13,21 @@ import com.hedvig.backoffice.graphql.types.Quote
 import com.hedvig.backoffice.graphql.types.Transaction
 import com.hedvig.backoffice.graphql.types.account.Account
 import com.hedvig.backoffice.graphql.types.account.NumberFailedCharges
+import com.hedvig.backoffice.graphql.types.claims.TestClaim
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.account.AccountService
+import com.hedvig.backoffice.services.claims.ClaimsService
 import com.hedvig.backoffice.services.meerkat.Meerkat
 import com.hedvig.backoffice.services.meerkat.dto.SanctionStatus
 import com.hedvig.backoffice.services.members.MemberService
 import com.hedvig.backoffice.services.messages.BotService
 import com.hedvig.backoffice.services.payments.PaymentService
+import com.hedvig.backoffice.services.personnel.PersonnelService
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService
 import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ContractMarketInfo
 import com.hedvig.backoffice.services.underwriter.UnderwriterService
+import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Component
 import java.time.YearMonth
 import java.util.ArrayList
@@ -38,7 +43,9 @@ class MemberResolver(
   private val uploadedFilePostprocessor: UploadedFilePostprocessor,
   private val memberService: MemberService,
   private val accountService: AccountService,
-  private val underwriterService: UnderwriterService
+  private val underwriterService: UnderwriterService,
+  private val claimsService: ClaimsService,
+  private val personnelService: PersonnelService
 ) : GraphQLResolver<Member> {
 
   fun getTransactions(member: Member): List<Transaction> {
@@ -91,7 +98,7 @@ class MemberResolver(
     val memberId = member.memberId
     val personDTO = memberService.getPerson(memberId)
     return Person(
-      personFlags = listOf(personDTO.flags.debtFlag),
+      debtFlag = personDTO.flags.debtFlag,
       debt = personDTO.debt,
       whitelisted = personDTO.whitelisted,
       status = personDTO.status
@@ -102,12 +109,19 @@ class MemberResolver(
     return NumberFailedCharges.from(accountService.getNumberFailedCharges(member.memberId))
   }
 
+  fun getTotalNumberOfClaims(member: Member, env: DataFetchingEnvironment): Int {
+    return claimsService.listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService)).filter { claim ->
+      claim.type != "Test"
+    }.size
+  }
+
   fun getQuotes(member: Member): List<Quote> {
     val quotes = underwriterService.getQuotes(member.memberId)
       .map((Quote)::from)
 
     return reqularAndSignableQuotes(member.memberId, quotes)
   }
+
 
   private fun reqularAndSignableQuotes(
     memberId: String,

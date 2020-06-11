@@ -115,6 +115,11 @@ itemizer:
   baseUrl: http://localhost:5700
   stub: false
 
+apiGateway:
+  baseUrl: http://localhost:8080
+  stub: false
+  token: blah
+
 graphql:
   servlet:
     mapping: /api/graphql
