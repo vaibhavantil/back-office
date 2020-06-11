@@ -32,6 +32,8 @@ import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimFileCategoryDTO;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
+import com.hedvig.backoffice.services.itemizer.ItemizerService;
+import com.hedvig.backoffice.services.itemizer.dto.request.*;
 import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
 import com.hedvig.backoffice.services.claims.dto.ClaimSource;
 import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
@@ -39,8 +41,6 @@ import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
 import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
 import com.hedvig.backoffice.services.claims.dto.EmployeeClaimRequestDTO;
 import com.hedvig.backoffice.services.claims.dto.MarkClaimFileAsDeletedDTO;
-import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
-import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
@@ -105,10 +105,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
   private final QuestionService questionsService;
   private final MemberService memberService;
-  private final ItemPricingService itemPricingService;
   private final UnderwriterService underwriterService;
   private final ProductPricingService productPricingService;
   private final PriceEngineService priceEngineService;
+  private final ItemizerService itemizerService;
   private final ApiGatewayService apiGatewayService;
 
   public GraphQLMutation(
@@ -122,10 +122,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     AutoAnswerSuggestionService autoAnswerSuggestionService,
     QuestionService questionsService,
     MemberService memberService,
-    ItemPricingService itemPricingService,
     UnderwriterService underwriterService,
     ProductPricingService productPricingService,
     PriceEngineService priceEngineService,
+    ItemizerService itemizerService,
     final ApiGatewayService apiGatewayService) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
@@ -137,10 +137,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
     this.questionsService = questionsService;
     this.memberService = memberService;
-    this.itemPricingService = itemPricingService;
     this.underwriterService = underwriterService;
     this.productPricingService = productPricingService;
     this.priceEngineService = priceEngineService;
+    this.itemizerService = itemizerService;
     this.apiGatewayService = apiGatewayService;
   }
 
@@ -639,20 +639,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return category;
   }
 
-  public boolean addInventoryItem(ClaimInventoryItemDTO item) {
-    return itemPricingService.addInventoryItem(item);
-  }
-
-  public boolean removeInventoryItem(String inventoryItemId) {
-    boolean itemWasRemoved = itemPricingService.removeInventoryItem(inventoryItemId);
-
-    if (itemWasRemoved) {
-      itemPricingService.removeInventoryFilters(inventoryItemId);
-      return true;
-    }
-    return false;
-  }
-
   public Boolean markSwitchableSwitcherEmailAsReminded(final UUID emailId) {
     productPricingService.markSwitchableSwitcherEmailAsReminded(emailId);
     return true;
@@ -712,6 +698,34 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       getToken(env)
     );
     return agreementId;
+  }
+
+  public UUID upsertItemCompany(final UpsertItemCompanyRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemCompany(request, getUserIdentity(env));
+  }
+
+  public UUID upsertItemType(final UpsertItemTypeRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemType(request, getUserIdentity(env));
+  }
+
+  public UUID upsertItemBrand(final UpsertItemBrandRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemBrand(request, getUserIdentity(env));
+  }
+
+  public UUID upsertItemModel(final UpsertItemModelRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemModel(request, getUserIdentity(env));
+  }
+
+  public UUID upsertClaimItem(final UpsertClaimItemRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertClaimItem(request, getUserIdentity(env));
+  }
+
+  public UUID deleteClaimItem(final UUID claimItemId, DataFetchingEnvironment env) {
+    return itemizerService.deleteClaimItem(claimItemId, getUserIdentity(env));
+  }
+
+  public List<Boolean> insertItemCategories(final InsertItemCategoriesRequest request, DataFetchingEnvironment env) {
+    return itemizerService.insertItemCategories(request, getUserIdentity(env));
   }
 
   private String getToken(DataFetchingEnvironment env) {

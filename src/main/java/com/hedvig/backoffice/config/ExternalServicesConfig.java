@@ -21,6 +21,9 @@ import com.hedvig.backoffice.services.expo.ExpoNotificationServiceStub;
 import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteService;
 import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteServiceImpl;
 import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteServiceStub;
+import com.hedvig.backoffice.services.itemizer.ItemizerService;
+import com.hedvig.backoffice.services.itemizer.ItemizerServiceStub;
+import com.hedvig.backoffice.services.itemizer.ItemizerServiceImpl;
 import com.hedvig.backoffice.services.meerkat.Meerkat;
 import com.hedvig.backoffice.services.meerkat.MeerkatImpl;
 import com.hedvig.backoffice.services.meerkat.MeerkatStub;
@@ -33,9 +36,6 @@ import com.hedvig.backoffice.services.messages.BotServiceStub;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.payments.PaymentServiceImpl;
 import com.hedvig.backoffice.services.payments.PaymentServiceStub;
-import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
-import com.hedvig.backoffice.services.itemPricing.ItemPricingServiceImpl;
-import com.hedvig.backoffice.services.itemPricing.ItemPricingServiceStub;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineServiceImpl;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineServiceStub;
@@ -133,16 +133,6 @@ public class ExternalServicesConfig {
   }
 
   @Bean
-  public ItemPricingService itemPricingService(
-    @Value("${itemPricing.stub:false}") boolean stub
-  ) {
-    val factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(ItemPricingServiceStub.class)
-      : factory.createBean(ItemPricingServiceImpl.class);
-  }
-
-  @Bean
   public UnderwriterService underwriterService(
     @Value("${underwriter.stub:false}") boolean stub
   ) {
@@ -198,6 +188,14 @@ public class ExternalServicesConfig {
     return stub
       ? factory.createBean(PriceEngineServiceStub.class)
       : factory.createBean(PriceEngineServiceImpl.class);
+  }
+
+  @Bean
+  public ItemizerService itemizerService(@Value("${itemizer.stub:false}") boolean stub) {
+    val factory = context.getAutowireCapableBeanFactory();
+    return stub
+      ? factory.createBean(ItemizerServiceStub.class)
+      : factory.createBean(ItemizerServiceImpl.class);
   }
 
   @Bean
