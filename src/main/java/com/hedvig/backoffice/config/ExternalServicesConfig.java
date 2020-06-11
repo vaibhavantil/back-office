@@ -196,6 +196,7 @@ public class ExternalServicesConfig {
     return stub
       ? factory.createBean(ItemizerServiceStub.class)
       : factory.createBean(ItemizerServiceImpl.class);
+  }
 
   @Bean
   public ApiGatewayService apiGatewayService(@Value("${apiGateway.stub:false}") boolean stub) {

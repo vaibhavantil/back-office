@@ -125,7 +125,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     UnderwriterService underwriterService,
     ProductPricingService productPricingService,
     PriceEngineService priceEngineService,
-    ItemizerService itemizerService
+    ItemizerService itemizerService,
     final ApiGatewayService apiGatewayService) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
