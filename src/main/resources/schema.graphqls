@@ -16,6 +16,8 @@ type QueryType {
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
   claimItems(claimId: ID!): [ClaimItem!]!
+  findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
+  getPartnerCampaignOwners: [CampaignOwnerPartner!]!
 }
 
 type MutationType {
@@ -25,6 +27,7 @@ type MutationType {
     accountEntry: AccountEntryInput!
   ): Member!
   approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
+  createPaymentCompletionLink(memberId: ID!): PaymentCompletionResponse!
   updateClaimState(id: ID!, state: ClaimState!): Claim
   createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
@@ -97,7 +100,6 @@ type MutationType {
     quoteId: ID!,
     activationDate: LocalDate
   ): Quote!
-  
   upsertItemCompany(request: UpsertItemCompanyInput): ID!
   upsertItemType(request: UpsertItemTypeInput): ID!
   upsertItemBrand(request: UpsertItemBrandInput): ID!
@@ -105,6 +107,9 @@ type MutationType {
   upsertClaimItem(request: UpsertClaimItemInput): ID!
   deleteClaimItem(claimItemId: ID!): ID
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
+  assignCampaignToPartnerPercentageDiscount(
+    request: AssignVoucherPercentageDiscount
+  ): Boolean!
 }
 
 input InsertItemCategoriesInput {
@@ -371,6 +376,76 @@ interface ItemCategoryCore {
   searchTerms: String!
 }
 
+input AssignVoucherPercentageDiscount {
+  partnerId: String!
+  numberOfMonths: Int!
+  percentageDiscount: Float!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+}
+
+type CampaignOwnerPartner {
+  partnerId: String!
+}
+
+type Suggestion {
+  intent: String!
+  reply: String!
+  text: String!
+  confidence: Float!
+  allReplies: [AllRepliesEntry!]!
+}
+type AllRepliesEntry {
+  intent: String!
+  reply: String!
+}
+
+type AutoLabel {
+  message: Boolean
+}
+
+enum IncentiveType {
+  COST_DEDUCTION
+  FREE_MONTHS
+  NO_DISCOUNT
+  MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD
+  INDEFINITE_PERCENTAGE_DISCOUNT
+}
+
+type VoucherCampaign {
+  id: ID!
+  campaignCode: String!
+  partnerId: String!
+  partnerName: String!
+  validFrom: Instant
+  validTo: Instant
+  incentive: Incentive
+}
+
+type MonthlyPercentageDiscountFixedPeriod {
+  numberOfMonths: Int,
+  percentage: Float
+}
+
+type FreeMonths {
+  numberOfMonths: Int
+}
+
+type CostDeduction {
+  amount: MonetaryAmount
+}
+
+type NoDiscount {
+  _: Boolean
+}
+
+type IndefinitePercentageDiscount {
+  percentageDiscount: Float
+}
+
+union Incentive = MonthlyPercentageDiscountFixedPeriod | FreeMonths | CostDeduction | NoDiscount | IndefinitePercentageDiscount
+
 type ItemFamily implements ItemCategoryCore {
   id: ID!
   nextKind: ItemCategoryKind
@@ -470,7 +545,7 @@ type Debt {
 }
 
 type Person {
-  personFlags: [Flag]
+  debtFlag: Flag
   debt: Debt
   whitelisted: Whitelisted
   status: PersonStatus
@@ -526,6 +601,7 @@ type Member {
   fileUploads: [FileUpload!]!
   person: Person
   numberFailedCharges: NumberFailedCharges
+  totalNumberOfClaims: Int!
   quotes: [Quote!]!
   contracts: [Contract!]!
   contractMarketInfo: ContractMarketInfo
@@ -621,6 +697,13 @@ type HouseQuoteData implements IQuoteData {
   numberOfBathrooms: Int
   extraBuildings: [ExtraBuilding!]!
   isSubleted: Boolean
+}
+
+input CampaignFilter {
+  code: String
+  partnerId: String
+  activeFrom: LocalDate
+  activeTo: LocalDate
 }
 
 type ExtraBuilding {
@@ -790,6 +873,10 @@ input NorwegianTravelQuoteDataInput {
 
   householdSize: Int
   subType: NorwegianTravelLineOfBusiness
+}
+
+type PaymentCompletionResponse {
+  url: String!
 }
 
 type Transaction {

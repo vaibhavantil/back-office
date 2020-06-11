@@ -11,25 +11,26 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
+//@Data Makes private fields accessible in Java, it is not Kotlin-compatible
 @Data
 @Builder(toBuilder=true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Claim extends ClaimBackOffice {
 
-  private String audioURL;
-  private ClaimState state;
-  private BigDecimal reserve;
-  private String type;
-  private ClaimSource claimSource;
+  public String audioURL;
+  public ClaimState state;
+  public BigDecimal reserve;
+  public String type;
+  public ClaimSource claimSource;
 
-  private List<ClaimNote> notes;
-  private List<ClaimTranscription> transcriptions;
-  private List<ClaimPayment> payments;
-  private List<ClaimAsset> assets;
-  private List<ClaimEvent> events;
-  private List<ClaimData> data;
+  public List<ClaimNote> notes;
+  public List<ClaimTranscription> transcriptions;
+  public List<ClaimPayment> payments;
+  public List<ClaimAsset> assets;
+  public List<ClaimEvent> events;
+  public List<ClaimData> data;
 
-  private boolean coveringEmployee;
+  public boolean coveringEmployee;
   public List<ClaimFileDTO> claimFiles = new ArrayList<>();
 }

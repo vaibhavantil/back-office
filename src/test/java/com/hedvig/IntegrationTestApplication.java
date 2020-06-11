@@ -1,11 +1,10 @@
-package com.hedvig.backoffice;
+package com.hedvig;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication(scanBasePackages = "com.hedvig.backoffice")
+@SpringBootApplication(scanBasePackages = "com.hedvig")
 @EnableFeignClients
-@ComponentScan(basePackages = "com.hedvig.backoffice")
 public class IntegrationTestApplication {
 }
