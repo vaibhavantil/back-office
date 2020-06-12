@@ -152,7 +152,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   public List<VoucherCampaign> findPartnerCampaigns(CampaignFilter filter) {
     List<PartnerCampaignSearchResponse> partnerCampaignSearchResponse = filter == null
       ? productPricingService.searchPartnerCampaigns(null, null, null, null)
-      : productPricingService.searchPartnerCampaigns(filter.getCode(), filter.getPartnerId(), filter.getActiveFrom(), filter.getActiveTo())
+      : productPricingService.searchPartnerCampaigns(filter.getCode(), filter.getPartnerId(), filter.getActiveFrom(), filter.getActiveTo());
 
     return partnerCampaignSearchResponse
       .stream()
