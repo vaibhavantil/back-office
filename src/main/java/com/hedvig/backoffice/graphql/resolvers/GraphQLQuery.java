@@ -4,10 +4,10 @@ import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
+import com.hedvig.backoffice.graphql.types.CampaignFilter;
 import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.graphql.types.MonthlySubscription;
-import com.hedvig.backoffice.graphql.types.ProductType;
 import com.hedvig.backoffice.graphql.types.SwitchableSwitcherEmail;
 import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory;
@@ -21,9 +21,9 @@ import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.services.product_pricing.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.ContractStatus;
+import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
@@ -147,5 +147,21 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
   public List<ClaimItem> claimItems(UUID claimId) {
     return itemizerService.getClaimItems(claimId);
+  }
+
+  public List<VoucherCampaign> findPartnerCampaigns(CampaignFilter filter) {
+    List<PartnerCampaignSearchResponse> partnerCampaignSearchResponse = filter == null
+      ? productPricingService.searchPartnerCampaigns(null, null, null, null)
+      : productPricingService.searchPartnerCampaigns(filter.getCode(), filter.getPartnerId(), filter.getActiveFrom(), filter.getActiveTo());
+
+    return partnerCampaignSearchResponse
+      .stream()
+      .map(VoucherCampaign.Companion::from)
+      .collect(Collectors.toList());
+  }
+
+
+  public List<PartnerResponseDto> getPartnerCampaignOwners() {
+    return productPricingService.getPartnerCampaignOwners();
   }
 }
