@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.config.feign;
 
+import feign.Contract;
 import feign.Request;
 import feign.codec.ErrorDecoder;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -57,7 +59,7 @@ public class FeignConfig {
   }
 
   @Bean
-  public feign.Logger.Level feignLogger() {
-    return feign.Logger.Level.NONE;
+  public Contract feignContract() {
+    return new SpringMvcContract();
   }
 }

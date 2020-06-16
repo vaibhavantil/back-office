@@ -8,6 +8,7 @@ import org.javamoney.moneta.Money;
 import javax.money.MonetaryAmount;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class Claim {
   String memberId;
   List<ClaimPayment> payments;
   List<ClaimNote> notes;
+  List<ClaimTranscription> transcriptions;
   List<ClaimEvent> events;
   List<ClaimData> _claimData;
   boolean coveringEmployee;
@@ -43,6 +45,8 @@ public class Claim {
         .collect(Collectors.toList()),
       dto.getNotes().stream().map(noteDto -> ClaimNote.fromDTO(noteDto))
         .collect(Collectors.toList()),
+      (dto.getTranscriptions() != null) ? dto.getTranscriptions().stream().map(transcriptionDto -> ClaimTranscription.Companion.fromDTO(transcriptionDto))
+        .collect(Collectors.toList()) : Collections.emptyList(),
       dto.getEvents().stream().map(eventDto -> ClaimEvent.fromDTO(eventDto))
         .collect(Collectors.toList()),
       dto.getData(),

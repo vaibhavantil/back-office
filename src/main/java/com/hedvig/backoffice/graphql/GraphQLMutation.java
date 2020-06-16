@@ -11,20 +11,22 @@ import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
+import com.hedvig.backoffice.services.apigateway.ApiGatewayService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.AutoLabelDTO;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.claims.dto.*;
-import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
-import com.hedvig.backoffice.services.itemPricing.dto.ClaimInventoryItemDTO;
+import com.hedvig.backoffice.services.itemizer.ItemizerService;
+import com.hedvig.backoffice.services.itemizer.dto.request.*;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.AssignVoucherPercentageDiscountRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
@@ -32,8 +34,7 @@ import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
-import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto;
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
+import com.hedvig.backoffice.services.underwriter.dtos.*;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -74,10 +75,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
   private final QuestionService questionsService;
   private final MemberService memberService;
-  private final ItemPricingService itemPricingService;
   private final UnderwriterService underwriterService;
   private final ProductPricingService productPricingService;
   private final PriceEngineService priceEngineService;
+  private final ItemizerService itemizerService;
+  private final ApiGatewayService apiGatewayService;
 
   public GraphQLMutation(
     PaymentService paymentService,
@@ -90,10 +92,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     AutoAnswerSuggestionService autoAnswerSuggestionService,
     QuestionService questionsService,
     MemberService memberService,
-    ItemPricingService itemPricingService,
     UnderwriterService underwriterService,
     ProductPricingService productPricingService,
-    PriceEngineService priceEngineService
+    PriceEngineService priceEngineService,
+    ItemizerService itemizerService,
+    final ApiGatewayService apiGatewayService
   ) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
@@ -105,10 +108,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
     this.questionsService = questionsService;
     this.memberService = memberService;
-    this.itemPricingService = itemPricingService;
     this.underwriterService = underwriterService;
     this.productPricingService = productPricingService;
     this.priceEngineService = priceEngineService;
+    this.itemizerService = itemizerService;
+    this.apiGatewayService = apiGatewayService;
   }
 
   public CompletableFuture<Member> chargeMember(
@@ -174,6 +178,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       GraphQLConfiguration.getEmail(env, personnelService)
     );
     return true;
+  }
+
+  public PaymentCompletionResponse createPaymentCompletionLink(final String memberId) {
+    return new PaymentCompletionResponse(
+      apiGatewayService.generatePaymentsLink(memberId).getUrl()
+    );
   }
 
   public CompletableFuture<Claim> updateClaimState(
@@ -410,13 +420,36 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-  public Quote activateQuote(final UUID id, final LocalDate activationDate, @Nullable final LocalDate terminationDate) {
+  public Quote activateQuote(final UUID id, final LocalDate activationDate,
+                             @Nullable final LocalDate terminationDate) {
     return Quote.from(underwriterService.activateQuote(id, activationDate, terminationDate));
   }
 
-  public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData, final DataFetchingEnvironment env) {
+  public Quote addAgreementFromQuote(final UUID id, @Nullable final UUID contractId,
+                                     @Nullable final LocalDate activeFrom, @Nullable final LocalDate activeTo,
+                                     @Nullable final LocalDate previousAgreementActiveTo) {
+    return Quote.from(underwriterService.addAgreementFromQuote(id, contractId, activeFrom, activeTo, previousAgreementActiveTo));
+  }
+
+  public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData,
+                                      final DataFetchingEnvironment env) {
     final UUID createdQuoteId = underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData), getUserIdentity(env)).getId();
     return Quote.from(underwriterService.getQuote(createdQuoteId));
+  }
+
+  public Quote createQuoteFromAgreement(
+    final UUID agreementId,
+    final String memberId,
+    final DataFetchingEnvironment env
+  ) {
+    final UUID createQuoteId = underwriterService.createQuoteFromAgreement(
+      new QuoteFromAgreementRequestDto(
+        agreementId,
+        memberId,
+        getUserIdentity(env)
+      )
+    ).getId();
+    return Quote.from(underwriterService.getQuote(createQuoteId));
   }
 
   public Quote updateQuote(
@@ -430,6 +463,38 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       QuoteInputDto.from(quoteInput),
       bypassUnderwritingGuidelines ? getUserIdentity(env) : null
     ));
+  }
+
+  Quote createQuoteForNewContract(
+    final String memberId,
+    final QuoteInput quoteInput,
+    final boolean bypassUnderwritingGuidelines,
+    final DataFetchingEnvironment env
+  ) {
+    final String bypassUnderwritingGuidelinesFrom = bypassUnderwritingGuidelines ? getUserIdentity(env) : null;
+
+    final UUID createQuoteId = underwriterService.createQuoteForNewContract(
+      new QuoteForNewContractRequestDto(
+        QuoteRequestDto.Companion.from(quoteInput, memberId, bypassUnderwritingGuidelinesFrom),
+        bypassUnderwritingGuidelinesFrom
+      )
+    ).getId();
+    return Quote.from(underwriterService.getQuote(createQuoteId));
+  }
+
+  Quote signQuoteForNewContract(
+    final UUID quoteId,
+    final LocalDate activationDate,
+    final DataFetchingEnvironment env
+  ) {
+    underwriterService.signQuoteForNewContract(
+      quoteId,
+      new SignQuoteFromHopeRequestDto(
+        activationDate,
+        getToken(env)
+      )
+    );
+    return Quote.from(underwriterService.getQuote(quoteId));
   }
 
   UUID createTicket(
@@ -531,36 +596,25 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return category;
   }
 
-  public boolean addInventoryItem(ClaimInventoryItemDTO item) {
-    return itemPricingService.addInventoryItem(item);
-  }
-
-  public boolean removeInventoryItem(String inventoryItemId) {
-    boolean itemWasRemoved = itemPricingService.removeInventoryItem(inventoryItemId);
-
-    if (itemWasRemoved) {
-      itemPricingService.removeInventoryFilters(inventoryItemId);
-      return true;
-    }
-    return false;
-  }
-
   public Boolean markSwitchableSwitcherEmailAsReminded(final UUID emailId) {
     productPricingService.markSwitchableSwitcherEmailAsReminded(emailId);
     return true;
   }
 
-  public Contract activatePendingAgreement(final UUID contractId, final ActivatePendingAgreementRequest request, DataFetchingEnvironment env) {
+  public Contract activatePendingAgreement(final UUID contractId,
+                                           final ActivatePendingAgreementRequest request, DataFetchingEnvironment env) {
     productPricingService.activatePendingAgreement(contractId, request, getToken(env));
     return productPricingService.getContractById(contractId);
   }
 
-  public Contract terminateContract(final UUID contractId, final TerminateContractRequest request, DataFetchingEnvironment env) {
+  public Contract terminateContract(final UUID contractId,
+                                    final TerminateContractRequest request, DataFetchingEnvironment env) {
     productPricingService.terminateContract(contractId, request, getToken(env));
     return productPricingService.getContractById(contractId);
   }
 
-  public Contract changeTerminationDate(final UUID contractId, final ChangeTerminationDateRequest request, DataFetchingEnvironment env) {
+  public Contract changeTerminationDate(final UUID contractId,
+                                        final ChangeTerminationDateRequest request, DataFetchingEnvironment env) {
     productPricingService.changeTerminationDate(contractId, request, getToken(env));
     return productPricingService.getContractById(contractId);
   }
@@ -570,7 +624,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return productPricingService.getContractById(contractId);
   }
 
-  public Boolean createNorwegianGripenPriceEngine(final CreateNorwegianGripenRequest request, DataFetchingEnvironment env) {
+  public Boolean createNorwegianGripenPriceEngine(
+    final CreateNorwegianGripenRequest request, DataFetchingEnvironment env) {
     priceEngineService.createNorwegianGripenPriceEngine(request, getToken(env));
     return true;
   }
@@ -580,7 +635,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
-  public UUID changeToDate(final UUID agreementId, final ChangeToDateOnAgreementRequest request, DataFetchingEnvironment env) {
+  public UUID changeToDate(final UUID agreementId,
+                           final ChangeToDateOnAgreementRequest request, DataFetchingEnvironment env) {
     productPricingService.changeToDate(
       agreementId,
       request,
@@ -589,7 +645,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return agreementId;
   }
 
-  public UUID changeFromDate(final UUID agreementId, final ChangeFromDateOnAgreementRequest request, DataFetchingEnvironment env) {
+  public UUID changeFromDate(final UUID agreementId,
+                             final ChangeFromDateOnAgreementRequest request, DataFetchingEnvironment env) {
     productPricingService.changeFromDate(
       agreementId,
       request,
@@ -610,8 +667,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     Personnel personnel = getPersonnel(env);
     try {
       questionsService.done(memberId, personnel);
-    } catch(QuestionNotFoundException exception) {
-      log.error("Question not found when marking as done for memberId=" + memberId , exception);
+    } catch (QuestionNotFoundException exception) {
+      log.error("Question not found when marking as done for memberId=" + memberId, exception);
       throw new RuntimeException("Unable to mark question as done for memberId=" + memberId);
     }
     return true;
@@ -621,10 +678,45 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     Personnel personnel = getPersonnel(env);
     try {
       questionsService.answer(memberId, answer, personnel);
-    } catch(QuestionNotFoundException exception) {
-      log.error("Question not found when answering for memberId=" + memberId , exception);
+    } catch (QuestionNotFoundException exception) {
+      log.error("Question not found when answering for memberId=" + memberId, exception);
       throw new RuntimeException("Unable to answer question for memberId=" + memberId);
     }
+    return true;
+  }
+
+  public UUID upsertItemCompany(final UpsertItemCompanyRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemCompany(request, getUserIdentity(env));
+  }
+
+  public UUID upsertItemType(final UpsertItemTypeRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemType(request, getUserIdentity(env));
+  }
+
+  public UUID upsertItemBrand(final UpsertItemBrandRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemBrand(request, getUserIdentity(env));
+  }
+
+  public UUID upsertItemModel(final UpsertItemModelRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertItemModel(request, getUserIdentity(env));
+  }
+
+  public UUID upsertClaimItem(final UpsertClaimItemRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertClaimItem(request, getUserIdentity(env));
+  }
+
+  public UUID deleteClaimItem(final UUID claimItemId, DataFetchingEnvironment env) {
+    return itemizerService.deleteClaimItem(claimItemId, getUserIdentity(env));
+  }
+
+  public List<Boolean> insertItemCategories(final InsertItemCategoriesRequest request, DataFetchingEnvironment env) {
+    return itemizerService.insertItemCategories(request, getUserIdentity(env));
+  }
+
+  public Boolean assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscount request, DataFetchingEnvironment env) {
+    productPricingService.assignCampaignToPartnerPercentageDiscount(
+      AssignVoucherPercentageDiscountRequest.Companion.from(request)
+    );
     return true;
   }
 

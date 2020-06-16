@@ -4,7 +4,14 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.hedvig.backoffice.graphql.UnionType
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianHomeContentLineOfBusiness
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianTravelLineOfBusiness
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
+import com.hedvig.backoffice.services.underwriter.dtos.SwedishApartmentType
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteData.ApartmentData
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteData.HouseData
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteData.NorwegianHomeContentData
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteData.NorwegianTravelData
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -15,6 +22,8 @@ enum class ProductType {
   APARTMENT,
   HOUSE,
   OBJECT,
+  HOME_CONTENT,
+  TRAVEL,
   UNKNOWN
 }
 
@@ -41,7 +50,8 @@ data class Quote(
   val breachedUnderwritingGuidelines: List<String>?,
   val isComplete: Boolean,
   val signedProductId: UUID?,
-  val originatingProductId: UUID?
+  val originatingProductId: UUID?,
+  val isReadyToSign: Boolean = false
 ) {
   companion object {
     @JvmStatic
@@ -52,8 +62,43 @@ data class Quote(
         memberId = quote.memberId,
         startDate = quote.startDate,
         price = quote.price,
-        data = when {
-          quote.data is com.hedvig.backoffice.services.underwriter.dtos.QuoteData.ApartmentQuoteData -> QuoteData.ApartmentQuoteData(
+        data = when (quote.data) {
+            is ApartmentData -> QuoteData.ApartmentQuoteData(
+                id = quote.data.id!!,
+                ssn = quote.data.ssn,
+                firstName = quote.data.firstName,
+                lastName = quote.data.lastName,
+                street = quote.data.street,
+                zipCode = quote.data.zipCode,
+                city = quote.data.city,
+                livingSpace = quote.data.livingSpace,
+                householdSize = quote.data.householdSize,
+                subType = quote.data.subType
+            )
+          is HouseData -> QuoteData.HouseQuoteData(
+                id = quote.data.id!!,
+                ssn = quote.data.ssn,
+                firstName = quote.data.firstName,
+                lastName = quote.data.lastName,
+                street = quote.data.street,
+                zipCode = quote.data.zipCode,
+                city = quote.data.city,
+                livingSpace = quote.data.livingSpace,
+                householdSize = quote.data.householdSize,
+                numberOfBathrooms = quote.data.numberOfBathrooms,
+                extraBuildings = quote.data.extraBuildings?.map { extraBuilding ->
+                  ExtraBuilding(
+                    type = extraBuilding.type,
+                    area = extraBuilding.area,
+                    hasWaterConnected = extraBuilding.hasWaterConnected,
+                    displayName = extraBuilding.displayName
+                  )
+                },
+                ancillaryArea = quote.data.ancillaryArea,
+                yearOfConstruction = quote.data.yearOfConstruction,
+                isSubleted = quote.data.isSubleted
+          )
+          is NorwegianHomeContentData -> QuoteData.NorwegianHomeContentQuoteData(
             id = quote.data.id!!,
             ssn = quote.data.ssn,
             firstName = quote.data.firstName,
@@ -62,34 +107,27 @@ data class Quote(
             zipCode = quote.data.zipCode,
             city = quote.data.city,
             livingSpace = quote.data.livingSpace,
-            householdSize = quote.data.householdSize,
-            subType = quote.data.subType
+            householdSize = quote.data.coInsured?.plus(1),
+            subType = when (quote.data.type) {
+              NorwegianHomeContentLineOfBusiness.RENT -> if (quote.data.isYouth != null && quote.data.isYouth) NorwegianHomeContentLineOfBusiness.YOUTH_RENT else NorwegianHomeContentLineOfBusiness.RENT
+              NorwegianHomeContentLineOfBusiness.OWN -> if (quote.data.isYouth != null && quote.data.isYouth) NorwegianHomeContentLineOfBusiness.YOUTH_OWN else NorwegianHomeContentLineOfBusiness.OWN
+              NorwegianHomeContentLineOfBusiness.YOUTH_RENT -> NorwegianHomeContentLineOfBusiness.YOUTH_RENT
+              NorwegianHomeContentLineOfBusiness.YOUTH_OWN -> NorwegianHomeContentLineOfBusiness.YOUTH_OWN
+              else -> null
+            }
           )
-          quote.data is com.hedvig.backoffice.services.underwriter.dtos.QuoteData.HouseQuoteData -> QuoteData.HouseQuoteData(
+          is NorwegianTravelData -> QuoteData.NorwegianTravelQuoteData(
             id = quote.data.id!!,
             ssn = quote.data.ssn,
             firstName = quote.data.firstName,
             lastName = quote.data.lastName,
-            street = quote.data.street,
-            zipCode = quote.data.zipCode,
-            city = quote.data.city,
-            livingSpace = quote.data.livingSpace,
-            householdSize = quote.data.householdSize,
-            numberOfBathrooms = quote.data.numberOfBathrooms,
-            extraBuildings = quote.data.extraBuildings?.map { extraBuilding ->
-              ExtraBuilding(
-                type = extraBuilding.type,
-                area = extraBuilding.area,
-                hasWaterConnected = extraBuilding.hasWaterConnected,
-                displayName = extraBuilding.displayName
-              )
-            },
-            ancillaryArea = quote.data.ancillaryArea,
-            yearOfConstruction = quote.data.yearOfConstruction,
-            isSubleted = quote.data.isSubleted,
-            floor = quote.data.floor
+            householdSize = quote.data.coInsured?.plus(1),
+            subType = when (quote.data.isYouth) {
+              true -> NorwegianTravelLineOfBusiness.YOUTH
+              false -> NorwegianTravelLineOfBusiness.REGULAR
+              null -> null
+            }
           )
-          else -> throw IllegalArgumentException("No such quote data type ${quote.data::class}")
         },
         state = QuoteState.valueOf(quote.state.toString()),
         productType = ProductType.valueOf(quote.productType.toString()),
@@ -108,7 +146,9 @@ data class Quote(
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes(
   JsonSubTypes.Type(value = QuoteData.ApartmentQuoteData::class, name = "apartment"),
-  JsonSubTypes.Type(value = QuoteData.HouseQuoteData::class, name = "house")
+  JsonSubTypes.Type(value = QuoteData.HouseQuoteData::class, name = "house"),
+  JsonSubTypes.Type(value = QuoteData.NorwegianHomeContentQuoteData::class, name = "norwegianHomeContent"),
+  JsonSubTypes.Type(value = QuoteData.NorwegianTravelQuoteData::class, name = "norwegianTravel")
 )
 @UnionType
 sealed class QuoteData {
@@ -125,7 +165,7 @@ sealed class QuoteData {
     val householdSize: Int? = null,
     val livingSpace: Int? = null,
 
-    val subType: com.hedvig.backoffice.services.product_pricing.dto.ProductType? = null
+    val subType: SwedishApartmentType? = null
   ) : QuoteData()
 
   @UnionType
@@ -144,8 +184,35 @@ sealed class QuoteData {
     val yearOfConstruction: Int? = null,
     val numberOfBathrooms: Int? = null,
     val extraBuildings: List<ExtraBuilding>? = null,
-    val isSubleted: Boolean? = null,
-    val floor: Int = 0
+    val isSubleted: Boolean? = null
+  ) : QuoteData()
+
+  @UnionType
+  data class NorwegianHomeContentQuoteData(
+    val id: UUID,
+    val ssn: String? = null,
+    val firstName: String? = null,
+    val lastName: String? = null,
+
+    val street: String? = null,
+    val city: String? = null,
+    val zipCode: String? = null,
+    val householdSize: Int? = null,
+    val livingSpace: Int? = null,
+
+    val subType: NorwegianHomeContentLineOfBusiness? = null
+  ) : QuoteData()
+
+
+  @UnionType
+  data class NorwegianTravelQuoteData(
+    val id: UUID,
+    val ssn: String? = null,
+    val firstName: String? = null,
+    val lastName: String? = null,
+
+    val householdSize: Int? = null,
+    val subType: NorwegianTravelLineOfBusiness? = null
   ) : QuoteData()
 }
 

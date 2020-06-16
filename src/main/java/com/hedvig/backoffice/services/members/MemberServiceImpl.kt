@@ -6,6 +6,7 @@ import com.hedvig.backoffice.services.members.dto.MemberDTO
 import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO
 import com.hedvig.backoffice.services.members.dto.MembersSortColumn
 import com.hedvig.backoffice.services.members.dto.PersonDTO
+import com.hedvig.backoffice.services.members.dto.PickedLocaleDTO
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
@@ -67,6 +68,9 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
   override fun whitelistMember(memberId: String, whitelistedBy: String) {
     client.whitelistMember(memberId, whitelistedBy)
   }
+
+  override fun findPickedLocaleByMemberId(memberId: String): PickedLocaleDTO =
+    client.findPickedLocaleByMemberId(memberId)
 
   companion object {
     private val logger = LoggerFactory.getLogger(MemberServiceImpl::class.java)

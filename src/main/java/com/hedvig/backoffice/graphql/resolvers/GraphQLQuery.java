@@ -4,22 +4,23 @@ import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
-import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.graphql.types.MonthlySubscription;
-import com.hedvig.backoffice.graphql.types.SwitchableSwitcherEmail;
+import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
+import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory;
+import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind;
 import com.hedvig.backoffice.graphql.types.questions.QuestionGroupType;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
-import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
-import com.hedvig.backoffice.services.itemPricing.dto.*;
+import com.hedvig.backoffice.services.itemizer.ItemizerService;
+import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.services.product_pricing.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
@@ -42,8 +43,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final MemberLoader memberLoader;
   private final ClaimLoader claimLoader;
   private final AccountService accountService;
-  private final MemberService memberService;
-  private final ItemPricingService itemPricingService;
+  private final ItemizerService itemizerService;
   private final TicketService ticketService;
   private final PersonnelService personnelService;
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
@@ -58,15 +58,14 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     TicketService ticketService,
     PersonnelService personnelService,
     AutoAnswerSuggestionService autoAnswerSuggestionService,
-    ItemPricingService itemPricingService,
-    QuestionService questionService
+    QuestionService questionService,
+    ItemizerService itemizerService
   ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.accountService = accountService;
-    this.memberService = memberService;
-    this.itemPricingService = itemPricingService;
+    this.itemizerService = itemizerService;
     this.ticketService = ticketService;
     this.personnelService = personnelService;
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
@@ -111,31 +110,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       .collect(Collectors.toList());
   }
 
-  public List<CategoryDTO> categories() {
-    return itemPricingService.getCategories();
-  }
-
-  public ItemSearchDTO items(ItemSearchQueryDTO payload) {
-    return itemPricingService.getItems(payload);
-  }
-
-  public List<ItemPricepointDTO> prices(String date, List<String> ids) {
-    return itemPricingService.getPrices(date, ids);
-  }
-
-  public List<ClaimInventoryItemDTO> inventory(String claimId) {
-    return itemPricingService.getInventory(claimId);
-  }
-
-  public List<FilterSuggestionDTO> filters(String categoryId) {
-
-    return itemPricingService.getAllFilters(categoryId);
-  }
-
-  public List<FilterDTO> inventoryItemFilters(String inventoryItemId) {
-    return itemPricingService.getInventoryItemFilters(inventoryItemId);
-  }
-
   public TicketDto ticket(UUID id) {
 
     return this.ticketService.getTicketById(id);
@@ -168,5 +142,29 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
   public List<QuestionGroupType> questionGroups() {
     return questionService.notAnswered().stream().map(QuestionGroupType.Companion::from).collect(Collectors.toList());
+  }
+
+  public List<ItemCategory> itemCategories(ItemCategoryKind kind, String parentId) {
+    return itemizerService.getCategories(kind, parentId);
+  }
+
+  public List<ClaimItem> claimItems(UUID claimId) {
+    return itemizerService.getClaimItems(claimId);
+  }
+
+  public List<VoucherCampaign> findPartnerCampaigns(CampaignFilter filter) {
+    List<PartnerCampaignSearchResponse> partnerCampaignSearchResponse = filter == null
+      ? productPricingService.searchPartnerCampaigns(null, null, null, null)
+      : productPricingService.searchPartnerCampaigns(filter.getCode(), filter.getPartnerId(), filter.getActiveFrom(), filter.getActiveTo());
+
+    return partnerCampaignSearchResponse
+      .stream()
+      .map(VoucherCampaign.Companion::from)
+      .collect(Collectors.toList());
+  }
+
+
+  public List<PartnerResponseDto> getPartnerCampaignOwners() {
+    return productPricingService.getPartnerCampaignOwners();
   }
 }

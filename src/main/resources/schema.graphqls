@@ -8,19 +8,17 @@ type QueryType {
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
-  categories: [Category!]
-  items(payload: Payload!): ItemSearch!
-  prices(date: String!, ids: [String!]!): [PricePoint!]!
   ticket(id: ID!): Ticket
   getFullTicketHistory(id: ID!): TicketHistory
   tickets(resolved: Boolean): [Ticket!]!
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
-  inventory(claimId: ID!): [InventoryItem]!
-  filters(categoryId: String!): [FilterSuggestion!]!
-  inventoryItemFilters(inventoryItemId: String!): [FilterOutput]
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   questionGroups: [QuestionGroup!]!
+  itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
+  claimItems(claimId: ID!): [ClaimItem!]!
+  findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
+  getPartnerCampaignOwners: [CampaignOwnerPartner!]!
 }
 
 type MutationType {
@@ -30,6 +28,7 @@ type MutationType {
     accountEntry: AccountEntryInput!
   ): Member!
   approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
+  createPaymentCompletionLink(memberId: ID!): PaymentCompletionResponse!
   updateClaimState(id: ID!, state: ClaimState!): Claim
   createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): ID
   addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
@@ -54,17 +53,28 @@ type MutationType {
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
   setClaimFileCategory(claimId: ID!, claimFileId: ID!, category: String): String
-  addInventoryItem(item: InventoryItemInput!): Boolean
-  removeInventoryItem(inventoryItemId: ID!): Boolean
   activateQuote(
-    id: ID!
-    activationDate: LocalDate!
+    id: ID!,
+    activationDate: LocalDate!,
     terminationDate: LocalDate
   ): Quote!
+
+  addAgreementFromQuote(
+    id: ID!,
+    contractId: ID!,
+    activeFrom: LocalDate,
+    activeTo: LocalDate,
+    previousAgreementActiveTo: LocalDate
+  ): Quote!
+
   # Creates a quote from a product and returns the quote id
   createQuoteFromProduct(
     memberId: ID!
     quoteData: QuoteFromProductInput!
+  ): Quote!
+  createQuoteFromAgreement(
+    agreementId: ID!
+    memberId: ID!
   ): Quote!
   updateQuote(
     quoteId: ID!
@@ -83,6 +93,78 @@ type MutationType {
   regenerateCertificate(agreementId: ID!): ID!
   markQuestionAsDone(memberId: ID!): Boolean!
   answerQuestion(memberId: ID!, answer: String!): Boolean!
+  createQuoteForNewContract(
+    memberId: ID!,
+    quoteInput: QuoteInput!,
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
+  signQuoteForNewContract(
+    quoteId: ID!,
+    activationDate: LocalDate
+  ): Quote!
+  upsertItemCompany(request: UpsertItemCompanyInput): ID!
+  upsertItemType(request: UpsertItemTypeInput): ID!
+  upsertItemBrand(request: UpsertItemBrandInput): ID!
+  upsertItemModel(request: UpsertItemModelInput): ID!
+  upsertClaimItem(request: UpsertClaimItemInput): ID!
+  deleteClaimItem(claimItemId: ID!): ID
+  insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
+  assignCampaignToPartnerPercentageDiscount(
+    request: AssignVoucherPercentageDiscount
+  ): Boolean!
+}
+
+input InsertItemCategoriesInput {
+  itemCategoriesString: String!
+}
+
+type ClaimItem {
+  id: ID!
+  itemFamily: ItemFamily!
+  itemType: ItemType!
+  itemBrand: ItemBrand
+  itemModel: ItemModel
+  itemCompany: ItemCompany
+  dateOfPurchase: LocalDate
+  purchasePrice: MonetaryAmountV2
+  note: String
+}
+
+input UpsertClaimItemInput {
+  id: ID
+  claimId: ID!
+  itemFamilyId: ID!
+  itemTypeId: ID!
+  itemBrandId: ID
+  itemModelId: ID
+  dateOfPurchase: LocalDate
+  purchasePriceAmount: Float
+  purchasePriceCurrency: String
+  note: String
+}
+
+input UpsertItemCompanyInput {
+  id: ID
+  name: String!
+}
+
+input UpsertItemTypeInput {
+  id: ID
+  name: String!
+  itemFamilyId: ID!
+}
+
+input UpsertItemBrandInput {
+  id: ID
+  name: String!
+  itemTypeId: ID!
+  itemCompanyId: ID!
+}
+
+input UpsertItemModelInput {
+  id: ID
+  name: String!
+  itemBrandId: ID!
 }
 
 type Contract {
@@ -287,6 +369,113 @@ input ChangeFromDateInput {
   newFromDate: LocalDate!
 }
 
+union ItemCategory = ItemFamily | ItemType | ItemBrand | ItemModel | ItemCompany
+
+interface ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+}
+
+input AssignVoucherPercentageDiscount {
+  partnerId: String!
+  numberOfMonths: Int!
+  percentageDiscount: Float!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+}
+
+type CampaignOwnerPartner {
+  partnerId: String!
+}
+
+enum IncentiveType {
+  COST_DEDUCTION
+  FREE_MONTHS
+  NO_DISCOUNT
+  MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD
+  INDEFINITE_PERCENTAGE_DISCOUNT
+}
+
+type VoucherCampaign {
+  id: ID!
+  campaignCode: String!
+  partnerId: String!
+  partnerName: String!
+  validFrom: Instant
+  validTo: Instant
+  incentive: Incentive
+}
+
+type MonthlyPercentageDiscountFixedPeriod {
+  numberOfMonths: Int,
+  percentage: Float
+}
+
+type FreeMonths {
+  numberOfMonths: Int
+}
+
+type CostDeduction {
+  amount: MonetaryAmount
+}
+
+type NoDiscount {
+  _: Boolean
+}
+
+type IndefinitePercentageDiscount {
+  percentageDiscount: Float
+}
+
+union Incentive = MonthlyPercentageDiscountFixedPeriod | FreeMonths | CostDeduction | NoDiscount | IndefinitePercentageDiscount
+
+type ItemFamily implements ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+}
+
+type ItemType implements ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+}
+
+type ItemBrand implements ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+  companyName: String!
+}
+
+type ItemModel implements ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+}
+
+type ItemCompany implements ItemCategoryCore {
+  id: ID!
+  nextKind: ItemCategoryKind
+  displayName: String!
+  searchTerms: String!
+}
+
+enum ItemCategoryKind {
+  FAMILY
+  TYPE
+  BRAND
+  MODEL
+  COMPANY
+}
+
 type Suggestion {
   intent: String!
   reply: String!
@@ -301,86 +490,6 @@ type AllRepliesEntry {
 
 type AutoLabel {
   message: Boolean
-}
-
-input FilterPayload {
-  filters: [Filter!]!
-  inventoryItemId: ID!
-}
-
-input InventoryItemInput {
-  inventoryItemId: String
-  claimId: String!
-  itemName: String!
-  categoryName: String!
-  categoryId: String!
-  value: Float!
-  source: String!
-  upperRange: Float
-  lowerRange: Float
-  itemId: String
-  filters: [Filter]
-}
-
-type InventoryItem {
-  inventoryItemId: ID!
-  claimId: String!
-  itemName: String!
-  categoryName: String!
-  categoryId: String!
-  value: Float!
-  source: String!
-  upperRange: Float
-  lowerRange: Float
-  itemId: String
-  filters: [FilterOutput]
-}
-
-type PricePoint {
-  id: String!
-  itemId: String!
-  date: String!
-  lower: Float!
-  mean: Float!
-  upper: Float!
-}
-
-type Category {
-  id: String!
-  name: String!
-}
-
-input Payload {
-  category: String!
-  query: String!
-  filters: [Filter!]!
-}
-
-input Filter {
-  name: String!
-  value: String!
-}
-
-type FilterOutput {
-  name: String!
-  value: String!
-}
-
-type ItemSearch {
-  products: [Item!]!
-  suggestions: [FilterSuggestion!]!
-}
-
-type FilterSuggestion {
-  name: String!
-  items: [String!]!
-  others: [String!]!
-}
-
-type Item {
-  category: String!
-  id: String!
-  name: String!
 }
 
 type FileUpload {
@@ -422,7 +531,7 @@ type Debt {
 }
 
 type Person {
-  personFlags: [Flag]
+  debtFlag: Flag
   debt: Debt
   whitelisted: Whitelisted
   status: PersonStatus
@@ -478,6 +587,7 @@ type Member {
   fileUploads: [FileUpload!]!
   person: Person
   numberFailedCharges: NumberFailedCharges
+  totalNumberOfClaims: Int!
   quotes: [Quote!]!
   contracts: [Contract!]!
   contractMarketInfo: ContractMarketInfo
@@ -501,14 +611,7 @@ enum Gender {
 
 interface IQuoteData {
   id: ID!
-  ssn: String
-  firstName: String
-  lastName: String
-  street: String
-  city: String
-  zipCode: String
   householdSize: Int
-  livingSpace: Int
 }
 
 type Quote {
@@ -528,12 +631,15 @@ type Quote {
   data: QuoteData
   signedProductId: ID
   originatingProductId: ID
+  isReadyToSign: Boolean
 }
 
 enum QuoteProductType {
-  APARTMENT
-  HOUSE
-  OBJECT
+  APARTMENT,
+  HOUSE,
+  OBJECT,
+  HOME_CONTENT,
+  TRAVEL
 }
 enum QuoteState {
   INCOMPLETE
@@ -542,28 +648,22 @@ enum QuoteState {
   EXPIRED
 }
 
-union QuoteData = ApartmentQuoteData | HouseQuoteData
+union QuoteData = ApartmentQuoteData | HouseQuoteData | NorwegianHomeContentQuoteData | NorwegianTravelQuoteData
 
 type ApartmentQuoteData implements IQuoteData {
   id: ID!
-  ssn: String
-  firstName: String
-  lastName: String
   street: String
   city: String
   zipCode: String
   householdSize: Int
   livingSpace: Int
-
   subType: ApartmentSubType
 }
 
 enum ApartmentSubType {
-  BRF
-  RENT
-  SUBLET_RENTAL
-  SUBLET_BRF
-  STUDENT_BRF
+  BRF,
+  RENT,
+  STUDENT_BRF,
   STUDENT_RENT
 }
 
@@ -583,6 +683,13 @@ type HouseQuoteData implements IQuoteData {
   numberOfBathrooms: Int
   extraBuildings: [ExtraBuilding!]!
   isSubleted: Boolean
+}
+
+input CampaignFilter {
+  code: String
+  partnerId: String
+  activeFrom: LocalDate
+  activeTo: LocalDate
 }
 
 type ExtraBuilding {
@@ -610,11 +717,36 @@ enum ExtraBuildingType {
   OTHER
 }
 
+type NorwegianHomeContentQuoteData implements IQuoteData{
+  id: ID!
+  ssn:  String
+  firstName: String
+  lastName: String
+
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+  subType: NorwegianHomeContentLineOfBusiness
+}
+
+type NorwegianTravelQuoteData implements IQuoteData{
+  id: ID!
+  ssn:  String
+  firstName: String
+  lastName: String
+  householdSize: Int
+  subType: NorwegianTravelLineOfBusiness
+}
+
 input QuoteInput {
   productType: QuoteProductType
   currentInsurer: String
   apartmentData: ApartmentQuoteInput
   houseData: HouseQuoteInput
+  norwegianHomeContentData: NorwegianHomeContentQuoteInput
+  norwegianTravelData: NorwegianTravelQuoteInput
   originatingProductId: ID
 }
 
@@ -642,9 +774,27 @@ input HouseQuoteInput {
   isSubleted: Boolean
 }
 
+input NorwegianHomeContentQuoteInput {
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  subType: NorwegianHomeContentLineOfBusiness
+}
+
+
+input NorwegianTravelQuoteInput {
+  householdSize: Int
+  subType: NorwegianTravelLineOfBusiness
+}
+
 input QuoteFromProductInput {
   incompleteHouseQuoteData: HouseQuoteDataInput
   incompleteApartmentQuoteData: ApartmentQuoteDataInput
+  norwegianHomeContentQuoteData: NorwegianHomeContentQuoteDataInput
+  norwegianTravelQuoteData: NorwegianTravelQuoteDataInput
   originatingProductId: ID
   currentInsurer: String
 }
@@ -653,6 +803,7 @@ input ApartmentQuoteDataInput {
   ssn: String
   firstName: String
   lastName: String
+
   street: String
   city: String
   zipCode: String
@@ -666,6 +817,7 @@ input HouseQuoteDataInput {
   ssn: String
   firstName: String
   lastName: String
+
   street: String
   city: String
   zipCode: String
@@ -684,6 +836,33 @@ input ExtraBuildingInput {
   area: Int!
   hasWaterConnected: Boolean!
   displayName: String
+}
+
+input NorwegianHomeContentQuoteDataInput {
+  ssn:  String
+  firstName: String
+  lastName: String
+
+  street: String
+  city: String
+  zipCode: String
+  householdSize: Int
+  livingSpace: Int
+
+  subType: NorwegianHomeContentLineOfBusiness
+}
+
+input NorwegianTravelQuoteDataInput {
+  ssn:  String
+  firstName: String
+  lastName: String
+
+  householdSize: Int
+  subType: NorwegianTravelLineOfBusiness
+}
+
+type PaymentCompletionResponse {
+  url: String!
 }
 
 type Transaction {
@@ -794,6 +973,7 @@ type Claim {
   reserves: MonetaryAmount
   registrationDate: Instant
   notes: [ClaimNote]
+  transcriptions: [ClaimTranscription]
   payments: [ClaimPayment]
   events: [ClaimEvent]
   coveringEmployee: Boolean!
@@ -803,6 +983,12 @@ type Claim {
 type ClaimNote {
   text: String
   date: LocalDateTime
+}
+
+type ClaimTranscription {
+  text: String!
+  confidenceScore: Float!
+  languageCode: String!
 }
 
 enum ClaimTypes {
