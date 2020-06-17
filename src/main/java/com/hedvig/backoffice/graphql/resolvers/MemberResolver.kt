@@ -28,6 +28,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ContractMarketInfo
 import com.hedvig.backoffice.services.underwriter.UnderwriterService
 import graphql.schema.DataFetchingEnvironment
+import io.sentry.Sentry
 import org.springframework.stereotype.Component
 import java.time.YearMonth
 import java.util.ArrayList
@@ -94,15 +95,20 @@ class MemberResolver(
     return fileUploads
   }
 
-  fun getPerson(member: Member): Person {
+  fun getPerson(member: Member): Person? {
     val memberId = member.memberId
-    val personDTO = memberService.getPerson(memberId)
-    return Person(
-      debtFlag = personDTO.flags.debtFlag,
-      debt = personDTO.debt,
-      whitelisted = personDTO.whitelisted,
-      status = personDTO.status
-    )
+    return try {
+      val personDTO = memberService.getPerson(memberId)
+      return Person(
+        debtFlag = personDTO.flags.debtFlag,
+        debt = personDTO.debt,
+        whitelisted = personDTO.whitelisted,
+        status = personDTO.status
+      )
+    } catch (exception: Exception) {
+      Sentry.capture(exception)
+      null
+    }
   }
 
   fun getNumberFailedCharges(member: Member): NumberFailedCharges {
