@@ -420,14 +420,21 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-  public Quote activateQuote(final UUID id, final LocalDate activationDate,
-                             @Nullable final LocalDate terminationDate) {
+  public Quote activateQuote(
+    final UUID id,
+    final LocalDate activationDate,
+    @Nullable final LocalDate terminationDate
+  ) {
     return Quote.from(underwriterService.activateQuote(id, activationDate, terminationDate));
   }
 
-  public Quote addAgreementFromQuote(final UUID id, @Nullable final UUID contractId,
-                                     @Nullable final LocalDate activeFrom, @Nullable final LocalDate activeTo,
-                                     @Nullable final LocalDate previousAgreementActiveTo) {
+  public Quote addAgreementFromQuote(
+    final UUID id,
+    @Nullable final UUID contractId,
+    @Nullable final LocalDate activeFrom,
+    @Nullable final LocalDate activeTo,
+    @Nullable final LocalDate previousAgreementActiveTo
+  ) {
     return Quote.from(underwriterService.addAgreementFromQuote(id, contractId, activeFrom, activeTo, previousAgreementActiveTo));
   }
 
@@ -556,16 +563,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return ticketId;
   }
 
-  private String getUserIdentity(DataFetchingEnvironment env) {
-    try {
-      return GraphQLConfiguration.getEmail(env, personnelService);
-    } catch (Exception e) {
-      String errorMessage = "Error: Unverified user. Could not get email from personnelService.";
-      log.error(errorMessage, e);
-      throw new RuntimeException(errorMessage, e);
-    }
-  }
-
   public Boolean whitelistMember(
     String memberId,
     DataFetchingEnvironment env
@@ -601,20 +598,17 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
-  public Contract activatePendingAgreement(final UUID contractId,
-                                           final ActivatePendingAgreementRequest request, DataFetchingEnvironment env) {
+  public Contract activatePendingAgreement(final UUID contractId, final ActivatePendingAgreementRequest request, DataFetchingEnvironment env) {
     productPricingService.activatePendingAgreement(contractId, request, getToken(env));
     return productPricingService.getContractById(contractId);
   }
 
-  public Contract terminateContract(final UUID contractId,
-                                    final TerminateContractRequest request, DataFetchingEnvironment env) {
+  public Contract terminateContract(final UUID contractId, final TerminateContractRequest request, DataFetchingEnvironment env) {
     productPricingService.terminateContract(contractId, request, getToken(env));
     return productPricingService.getContractById(contractId);
   }
 
-  public Contract changeTerminationDate(final UUID contractId,
-                                        final ChangeTerminationDateRequest request, DataFetchingEnvironment env) {
+  public Contract changeTerminationDate(final UUID contractId, final ChangeTerminationDateRequest request, DataFetchingEnvironment env) {
     productPricingService.changeTerminationDate(contractId, request, getToken(env));
     return productPricingService.getContractById(contractId);
   }
@@ -635,8 +629,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
-  public UUID changeToDate(final UUID agreementId,
-                           final ChangeToDateOnAgreementRequest request, DataFetchingEnvironment env) {
+  public UUID changeToDate(final UUID agreementId, final ChangeToDateOnAgreementRequest request, DataFetchingEnvironment env) {
     productPricingService.changeToDate(
       agreementId,
       request,
@@ -645,8 +638,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return agreementId;
   }
 
-  public UUID changeFromDate(final UUID agreementId,
-                             final ChangeFromDateOnAgreementRequest request, DataFetchingEnvironment env) {
+  public UUID changeFromDate(final UUID agreementId, final ChangeFromDateOnAgreementRequest request, DataFetchingEnvironment env) {
     productPricingService.changeFromDate(
       agreementId,
       request,
@@ -718,6 +710,16 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       AssignVoucherPercentageDiscountRequest.Companion.from(request)
     );
     return true;
+  }
+
+  private String getUserIdentity(DataFetchingEnvironment env) {
+    try {
+      return GraphQLConfiguration.getEmail(env, personnelService);
+    } catch (Exception e) {
+      String errorMessage = "Error: Unverified user. Could not get email from personnelService.";
+      log.error(errorMessage, e);
+      throw new RuntimeException(errorMessage, e);
+    }
   }
 
   private String getToken(DataFetchingEnvironment env) {
