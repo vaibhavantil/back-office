@@ -663,7 +663,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return agreementId;
   }
 
-  public Boolean markQuestionAsDone(final String memberId, DataFetchingEnvironment env) {
+  public Boolean markQuestionAsResolved(final String memberId, DataFetchingEnvironment env) {
     Personnel personnel = getPersonnel(env);
     try {
       questionsService.done(memberId, personnel);
