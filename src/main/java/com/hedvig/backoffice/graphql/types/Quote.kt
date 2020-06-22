@@ -3,8 +3,9 @@ package com.hedvig.backoffice.graphql.types
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.hedvig.backoffice.graphql.UnionType
-import com.hedvig.backoffice.services.underwriter.dtos.NorwegianHomeContentType
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ExtraBuilding
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianHomeContentLineOfBusiness
+import com.hedvig.backoffice.services.product_pricing.dto.contract.NorwegianTravelLineOfBusiness
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
 import com.hedvig.backoffice.services.underwriter.dtos.SwedishApartmentType
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteData.ApartmentData
@@ -49,7 +50,8 @@ data class Quote(
   val breachedUnderwritingGuidelines: List<String>?,
   val isComplete: Boolean,
   val signedProductId: UUID?,
-  val originatingProductId: UUID?
+  val originatingProductId: UUID?,
+  val isReadyToSign: Boolean = false
 ) {
   companion object {
     @JvmStatic
@@ -106,11 +108,11 @@ data class Quote(
             city = quote.data.city,
             livingSpace = quote.data.livingSpace,
             householdSize = quote.data.coInsured?.plus(1),
-            type = when (quote.data.type) {
-              NorwegianHomeContentType.RENT -> if (quote.data.isStudent != null && quote.data.isStudent) NorwegianHomeContentType.YOUTH_RENT else NorwegianHomeContentType.RENT
-              NorwegianHomeContentType.OWN -> if (quote.data.isStudent != null && quote.data.isStudent) NorwegianHomeContentType.YOUTH_OWN else NorwegianHomeContentType.OWN
-              NorwegianHomeContentType.YOUTH_RENT -> NorwegianHomeContentType.YOUTH_RENT
-              NorwegianHomeContentType.YOUTH_OWN -> NorwegianHomeContentType.YOUTH_OWN
+            subType = when (quote.data.type) {
+              NorwegianHomeContentLineOfBusiness.RENT -> if (quote.data.isYouth != null && quote.data.isYouth) NorwegianHomeContentLineOfBusiness.YOUTH_RENT else NorwegianHomeContentLineOfBusiness.RENT
+              NorwegianHomeContentLineOfBusiness.OWN -> if (quote.data.isYouth != null && quote.data.isYouth) NorwegianHomeContentLineOfBusiness.YOUTH_OWN else NorwegianHomeContentLineOfBusiness.OWN
+              NorwegianHomeContentLineOfBusiness.YOUTH_RENT -> NorwegianHomeContentLineOfBusiness.YOUTH_RENT
+              NorwegianHomeContentLineOfBusiness.YOUTH_OWN -> NorwegianHomeContentLineOfBusiness.YOUTH_OWN
               else -> null
             }
           )
@@ -119,7 +121,12 @@ data class Quote(
             ssn = quote.data.ssn,
             firstName = quote.data.firstName,
             lastName = quote.data.lastName,
-            householdSize = quote.data.coInsured?.plus(1)
+            householdSize = quote.data.coInsured?.plus(1),
+            subType = when (quote.data.isYouth) {
+              true -> NorwegianTravelLineOfBusiness.YOUTH
+              false -> NorwegianTravelLineOfBusiness.REGULAR
+              null -> null
+            }
           )
         },
         state = QuoteState.valueOf(quote.state.toString()),
@@ -193,7 +200,7 @@ sealed class QuoteData {
     val householdSize: Int? = null,
     val livingSpace: Int? = null,
 
-    val type: NorwegianHomeContentType? = null
+    val subType: NorwegianHomeContentLineOfBusiness? = null
   ) : QuoteData()
 
 
@@ -204,7 +211,8 @@ sealed class QuoteData {
     val firstName: String? = null,
     val lastName: String? = null,
 
-    val householdSize: Int? = null
+    val householdSize: Int? = null,
+    val subType: NorwegianTravelLineOfBusiness? = null
   ) : QuoteData()
 }
 

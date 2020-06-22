@@ -18,7 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -230,5 +232,30 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     String token
   ) {
     this.client.regenerateCertificate(agreementId, token);
+  }
+
+  @Override
+  public List<PartnerCampaignSearchResponse> searchPartnerCampaigns(String code, String partnerId, LocalDate activeFrom, LocalDate activeTo) {
+    ResponseEntity<List<PartnerCampaignSearchResponse>>  response = this.client.searchPartnerCampaigns(
+      code, partnerId, activeFrom, activeTo
+    );
+    if (response.getStatusCode() == HttpStatus.OK) {
+      return response.getBody();
+    }
+    return Collections.emptyList();
+  }
+
+  @Override
+  public void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request) {
+    this.client.assignCampaignToPartnerPercentageDiscount(request);
+  }
+
+  @Override
+  public List<PartnerResponseDto> getPartnerCampaignOwners() {
+    ResponseEntity<List<PartnerResponseDto>> response = this.client.getPartnerCampaignOwners();
+    if (response.getStatusCode() == HttpStatus.OK) {
+      return response.getBody();
+    }
+    return Collections.emptyList();
   }
 }

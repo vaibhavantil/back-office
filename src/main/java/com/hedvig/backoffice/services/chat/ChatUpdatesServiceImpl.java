@@ -55,8 +55,8 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
       SystemSettingsService systemSettingsService,
       QuestionService questionService,
       ChatContextRepository chatContextRepository,
-      @Value("${botservice.questionId}") String[] questionId) {
-
+      @Value("${botservice.questionId}") String[] questionId
+  ) {
     this.chatService = chatService;
     this.botService = botService;
     this.systemSettingsService = systemSettingsService;
@@ -86,8 +86,7 @@ public class ChatUpdatesServiceImpl implements ChatUpdatesService {
   @Scheduled(fixedDelayString = "${intervals.chat}")
   @Override
   public void update() {
-    List<BackOfficeMessage> fetched =
-        botService.fetch(lastTimestamp(), systemSettingsService.getInternalAccessToken());
+    List<BackOfficeMessage> fetched = botService.fetch(lastTimestamp(), systemSettingsService.getInternalAccessToken());
 
     if (fetched == null) {
       if (!serviceUnavailable.get()) {

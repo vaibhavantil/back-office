@@ -7,6 +7,9 @@ import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
+import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory;
+import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind;
+import com.hedvig.backoffice.graphql.types.questions.QuestionGroupType;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
@@ -14,12 +17,14 @@ import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
-import com.hedvig.backoffice.services.claims.ClaimsService;
-import com.hedvig.backoffice.services.itemPricing.ItemPricingService;
-import com.hedvig.backoffice.services.itemPricing.dto.*;
+import com.hedvig.backoffice.services.itemizer.ItemizerService;
+import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import com.hedvig.backoffice.services.product_pricing.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
+import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
@@ -41,12 +46,12 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final MemberLoader memberLoader;
   private final ClaimLoader claimLoader;
   private final AccountService accountService;
-  private final MemberService memberService;
-  private final ItemPricingService itemPricingService;
+  private final ItemizerService itemizerService;
   private final TicketService ticketService;
   private final PersonnelService personnelService;
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
   private final ChatServiceV2 chatServiceV2;
+  private final QuestionService questionService;
 
   public GraphQLQuery(
     ProductPricingService productPricingService,
@@ -57,19 +62,20 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     TicketService ticketService,
     PersonnelService personnelService,
     AutoAnswerSuggestionService autoAnswerSuggestionService,
-    ItemPricingService itemPricingService,
-    ChatServiceV2 chatServiceV2
+    ChatServiceV2 chatServiceV2,
+    QuestionService questionService,
+    ItemizerService itemizerService
   ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
     this.claimLoader = claimLoader;
     this.accountService = accountService;
-    this.memberService = memberService;
-    this.itemPricingService = itemPricingService;
+    this.itemizerService = itemizerService;
     this.ticketService = ticketService;
     this.personnelService = personnelService;
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
     this.chatServiceV2 = chatServiceV2;
+    this.questionService = questionService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -108,31 +114,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
         )
       )
       .collect(Collectors.toList());
-  }
-
-  public List<CategoryDTO> categories() {
-    return itemPricingService.getCategories();
-  }
-
-  public ItemSearchDTO items(ItemSearchQueryDTO payload) {
-    return itemPricingService.getItems(payload);
-  }
-
-  public List<ItemPricepointDTO> prices(String date, List<String> ids) {
-    return itemPricingService.getPrices(date, ids);
-  }
-
-  public List<ClaimInventoryItemDTO> inventory(String claimId) {
-    return itemPricingService.getInventory(claimId);
-  }
-
-  public List<FilterSuggestionDTO> filters(String categoryId) {
-
-    return itemPricingService.getAllFilters(categoryId);
-  }
-
-  public List<FilterDTO> inventoryItemFilters(String inventoryItemId) {
-    return itemPricingService.getInventoryItemFilters(inventoryItemId);
   }
 
   public TicketDto ticket(UUID id) {
@@ -177,5 +158,33 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return chatServiceV2.fetchMessages(memberId, email, token).stream()
       .map(ChatMessage::new)
       .collect(Collectors.toList());
+  }
+
+  public List<QuestionGroupType> questionGroups() {
+    return questionService.notAnswered().stream().map(QuestionGroupType.Companion::from).collect(Collectors.toList());
+  }
+
+  public List<ItemCategory> itemCategories(ItemCategoryKind kind, String parentId) {
+    return itemizerService.getCategories(kind, parentId);
+  }
+
+  public List<ClaimItem> claimItems(UUID claimId) {
+    return itemizerService.getClaimItems(claimId);
+  }
+
+  public List<VoucherCampaign> findPartnerCampaigns(CampaignFilter filter) {
+    List<PartnerCampaignSearchResponse> partnerCampaignSearchResponse = filter == null
+      ? productPricingService.searchPartnerCampaigns(null, null, null, null)
+      : productPricingService.searchPartnerCampaigns(filter.getCode(), filter.getPartnerId(), filter.getActiveFrom(), filter.getActiveTo());
+
+    return partnerCampaignSearchResponse
+      .stream()
+      .map(VoucherCampaign.Companion::from)
+      .collect(Collectors.toList());
+  }
+
+
+  public List<PartnerResponseDto> getPartnerCampaignOwners() {
+    return productPricingService.getPartnerCampaignOwners();
   }
 }

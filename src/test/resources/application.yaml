@@ -76,6 +76,7 @@ memberservice:
 claims:
   baseUrl: http://localhost:7083
   bucketName: ""
+  claimFileUploadBucketName: ""
   stub: false
 
 productPricing:
@@ -85,6 +86,15 @@ productPricing:
 paymentService:
   baseUrl: http://localhost:7086
   stub: false
+
+gatekeeper:
+  baseUrl: http://localhost:1337
+  stub: false
+
+apiGateway:
+  baseUrl: http://localhost:8080
+  stub: false
+  token: blah
 
 oauth:
   enabled: true
