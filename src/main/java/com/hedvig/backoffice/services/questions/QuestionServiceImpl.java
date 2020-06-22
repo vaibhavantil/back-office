@@ -17,13 +17,14 @@ import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.updates.UpdateType;
 import com.hedvig.backoffice.services.updates.UpdatesService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -50,8 +51,8 @@ public class QuestionServiceImpl implements QuestionService {
     PersonnelService personnelService,
     NotificationService notificationService,
     TicketService ticketService,
-    UploadedFilePostprocessor messagesPostprocessor) {
-
+    UploadedFilePostprocessor messagesPostprocessor
+  ) {
     this.questionRepository = questionRepository;
     this.questionGroupRepository = questionGroupRepository;
     this.subscriptionService = subscriptionService;
@@ -72,41 +73,41 @@ public class QuestionServiceImpl implements QuestionService {
   @Override
   public List<QuestionGroupDTO> list() {
     return questionGroupRepository
-        .findAll()
-        .stream()
-        .map(QuestionGroupDTO::fromDomain)
-        .map(this::postProcessQuestionGroup)
-        .collect(Collectors.toList());
+      .findAll()
+      .stream()
+      .map(QuestionGroupDTO.Companion::fromDomain)
+      .map(this::postProcessQuestionGroup)
+      .collect(Collectors.toList());
   }
 
   @Override
   public List<QuestionGroupDTO> answered() {
     return questionGroupRepository
-        .answered()
-        .stream()
-        .map(QuestionGroupDTO::fromDomain)
+      .answered()
+      .stream()
+      .map(QuestionGroupDTO.Companion::fromDomain)
       .map(this::postProcessQuestionGroup)
-        .collect(Collectors.toList());
+      .collect(Collectors.toList());
   }
 
   @Override
   public List<QuestionGroupDTO> notAnswered() {
     return questionGroupRepository
-        .notAnswered()
-        .stream()
-        .map(QuestionGroupDTO::fromDomain)
+      .notAnswered()
+      .stream()
+      .map(QuestionGroupDTO.Companion::fromDomain)
       .map(this::postProcessQuestionGroup)
-        .collect(Collectors.toList());
+      .collect(Collectors.toList());
   }
 
   @Transactional
   @Override
   public QuestionGroupDTO answer(String memberId, String message, Personnel personnel)
-      throws QuestionNotFoundException {
+    throws QuestionNotFoundException {
     QuestionGroup group =
-        questionGroupRepository
-            .findUnasweredByMemberId(memberId)
-            .orElseThrow(() -> new QuestionNotFoundException(memberId));
+      questionGroupRepository
+        .findUnasweredByMemberId(memberId)
+        .orElseThrow(() -> new QuestionNotFoundException(memberId));
     group.setAnswerDate(Instant.now());
     group.setAnswer(message);
     group.setPersonnel(personnel);
@@ -116,21 +117,21 @@ public class QuestionServiceImpl implements QuestionService {
     questionGroupRepository.save(group);
     updatesService.changeOn(-1, UpdateType.QUESTIONS);
 
-    return QuestionGroupDTO.fromDomain(group);
+    return QuestionGroupDTO.Companion.fromDomain(group);
   }
 
   @Override
   public QuestionGroupDTO done(String memberId, Personnel personnel) throws QuestionNotFoundException {
     QuestionGroup group = questionGroupRepository
-        .findUnasweredByMemberId(memberId)
-        .orElseThrow(() -> new QuestionNotFoundException(memberId));
+      .findUnasweredByMemberId(memberId)
+      .orElseThrow(() -> new QuestionNotFoundException(memberId));
     group.setAnswerDate(Instant.now());
     group.setAnswer("");
     group.setPersonnel(personnel);
     questionGroupRepository.save(group);
 
     updatesService.changeOn(-1, UpdateType.QUESTIONS);
-    return QuestionGroupDTO.fromDomain(group);
+    return QuestionGroupDTO.Companion.fromDomain(group);
   }
 
   @Transactional
@@ -144,15 +145,15 @@ public class QuestionServiceImpl implements QuestionService {
 
       Subscription sub = subscriptionService.getOrCreateSubscription("" + message.getHeader().getFromId());
       QuestionGroup group =
-          questionGroupRepository.findUnasweredBySub(sub).orElseGet(() -> new QuestionGroup(sub));
+        questionGroupRepository.findUnasweredBySub(sub).orElseGet(() -> new QuestionGroup(sub));
 
       group.addQuestion(
-          question.orElseGet(
-              () ->
-                  new Question(
-                      message.getGlobalId(),
-                      message.toJson(),
-                      message.getTimestamp())));
+        question.orElseGet(
+          () ->
+            new Question(
+              message.getGlobalId(),
+              message.toJson(),
+              message.getTimestamp())));
       group.correctDate(message.getTimestamp());
       questionGroupRepository.save(group);
     }

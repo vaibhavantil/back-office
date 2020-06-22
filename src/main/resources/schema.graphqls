@@ -14,6 +14,7 @@ type QueryType {
   getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
+  questionGroups: [QuestionGroup!]!
   itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
   claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
@@ -48,7 +49,6 @@ type MutationType {
     memberId: String
     messageIds: [String!]
   ): AutoLabel
-  questionIsDone(memberId: ID!): Boolean
   whitelistMember(memberId: ID!): Boolean
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
@@ -91,6 +91,8 @@ type MutationType {
   changeToDate(agreementId: ID!, request: ChangeToDateInput): ID!
   changeFromDate(agreementId: ID!, request: ChangeFromDateInput): ID!
   regenerateCertificate(agreementId: ID!): ID!
+  markQuestionAsResolved(memberId: ID!): Boolean!
+  answerQuestion(memberId: ID!, answer: String!): Boolean!
   createQuoteForNewContract(
     memberId: ID!,
     quoteInput: QuoteInput!,
@@ -387,22 +389,6 @@ input AssignVoucherPercentageDiscount {
 
 type CampaignOwnerPartner {
   partnerId: String!
-}
-
-type Suggestion {
-  intent: String!
-  reply: String!
-  text: String!
-  confidence: Float!
-  allReplies: [AllRepliesEntry!]!
-}
-type AllRepliesEntry {
-  intent: String!
-  reply: String!
-}
-
-type AutoLabel {
-  message: Boolean
 }
 
 enum IncentiveType {
@@ -1237,6 +1223,18 @@ enum ChargeStatus {
   CHARGE_INITIATED
   CHARGE_FAILED
   CHARGE_COMPLETED
+}
+
+type QuestionGroup {
+  id: ID!
+  memberId: ID!
+  questions: [Question!]!
+}
+
+type Question {
+  id: ID!
+  timestamp: Instant!
+  messageJsonString: String!
 }
 
 input TicketInput {

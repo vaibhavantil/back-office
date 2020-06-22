@@ -6,21 +6,8 @@ import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.ClaimInformationInput;
-import com.hedvig.backoffice.graphql.types.ClaimNoteInput;
-import com.hedvig.backoffice.graphql.types.ClaimPaymentInput;
-import com.hedvig.backoffice.graphql.types.ClaimState;
-import com.hedvig.backoffice.graphql.types.ClaimTypes;
-import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.graphql.types.MemberChargeApproval;
-import com.hedvig.backoffice.graphql.types.PaymentCompletionResponse;
-import com.hedvig.backoffice.graphql.types.Quote;
-import com.hedvig.backoffice.graphql.types.QuoteFromProductInput;
-import com.hedvig.backoffice.graphql.types.QuoteInput;
-import com.hedvig.backoffice.graphql.types.RemindNotification;
-import com.hedvig.backoffice.graphql.types.TicketInput;
+import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
-import com.hedvig.backoffice.graphql.types.AssignVoucherPercentageDiscount;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
@@ -28,19 +15,11 @@ import com.hedvig.backoffice.services.apigateway.ApiGatewayService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.AutoLabelDTO;
 import com.hedvig.backoffice.services.claims.ClaimsService;
-import com.hedvig.backoffice.services.claims.dto.ClaimData;
-import com.hedvig.backoffice.services.claims.dto.ClaimFileCategoryDTO;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
+import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.request.*;
-import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimSource;
-import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
-import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
-import com.hedvig.backoffice.services.claims.dto.EmployeeClaimRequestDTO;
-import com.hedvig.backoffice.services.claims.dto.MarkClaimFileAsDeletedDTO;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
@@ -48,23 +27,14 @@ import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.AssignVoucherPercentageDiscountRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.ActivatePendingAgreementRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeFromDateOnAgreementRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeTerminationDateRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeToDateOnAgreementRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.TerminateContractRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
+import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
-import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto;
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteForNewContractRequestDto;
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto;
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto;
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto;
-import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto;
+import com.hedvig.backoffice.services.underwriter.dtos.*;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -126,7 +96,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     ProductPricingService productPricingService,
     PriceEngineService priceEngineService,
     ItemizerService itemizerService,
-    final ApiGatewayService apiGatewayService) {
+    final ApiGatewayService apiGatewayService
+  ) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
     this.memberLoader = memberLoader;
@@ -449,15 +420,26 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return claimLoader.load(id);
   }
 
-  public Quote activateQuote(final UUID id, final LocalDate activationDate, @Nullable final LocalDate terminationDate) {
+  public Quote activateQuote(
+    final UUID id,
+    final LocalDate activationDate,
+    @Nullable final LocalDate terminationDate
+  ) {
     return Quote.from(underwriterService.activateQuote(id, activationDate, terminationDate));
   }
 
-  public Quote addAgreementFromQuote(final UUID id, @Nullable final UUID contractId, @Nullable final LocalDate activeFrom, @Nullable final LocalDate activeTo, @Nullable final LocalDate previousAgreementActiveTo) {
+  public Quote addAgreementFromQuote(
+    final UUID id,
+    @Nullable final UUID contractId,
+    @Nullable final LocalDate activeFrom,
+    @Nullable final LocalDate activeTo,
+    @Nullable final LocalDate previousAgreementActiveTo
+  ) {
     return Quote.from(underwriterService.addAgreementFromQuote(id, contractId, activeFrom, activeTo, previousAgreementActiveTo));
   }
 
-  public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData, final DataFetchingEnvironment env) {
+  public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData,
+                                      final DataFetchingEnvironment env) {
     final UUID createdQuoteId = underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData), getUserIdentity(env)).getId();
     return Quote.from(underwriterService.getQuote(createdQuoteId));
   }
@@ -581,34 +563,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return ticketId;
   }
 
-  private String getUserIdentity(DataFetchingEnvironment env) {
-    try {
-      return GraphQLConfiguration.getEmail(env, personnelService);
-    } catch (Exception e) {
-      String errorMessage = "Error: Unverified user. Could not get email from personnelService.";
-      log.error(errorMessage, e);
-      throw new RuntimeException(errorMessage, e);
-    }
-  }
-
-  Boolean questionIsDone(
-    String memberId,
-    DataFetchingEnvironment env
-  ) {
-    GraphQLRequestContext context = env.getContext();
-    Principal principal = context.getUserPrincipal();
-
-    try {
-      Personnel personnel = personnelService.getPersonnelByEmail(principal.getName());
-      questionsService.done(memberId, personnel);
-    } catch (Exception e) {
-      String errorMessage = "Error when trying to update message as done!";
-      log.error(errorMessage, e);
-      throw new RuntimeException(errorMessage, e);
-    }
-    return true;
-  }
-
   public Boolean whitelistMember(
     String memberId,
     DataFetchingEnvironment env
@@ -664,7 +618,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return productPricingService.getContractById(contractId);
   }
 
-  public Boolean createNorwegianGripenPriceEngine(final CreateNorwegianGripenRequest request, DataFetchingEnvironment env) {
+  public Boolean createNorwegianGripenPriceEngine(
+    final CreateNorwegianGripenRequest request, DataFetchingEnvironment env) {
     priceEngineService.createNorwegianGripenPriceEngine(request, getToken(env));
     return true;
   }
@@ -700,6 +655,28 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return agreementId;
   }
 
+  public Boolean markQuestionAsResolved(final String memberId, DataFetchingEnvironment env) {
+    Personnel personnel = getPersonnel(env);
+    try {
+      questionsService.done(memberId, personnel);
+    } catch (QuestionNotFoundException exception) {
+      log.error("Question not found when marking as done for memberId=" + memberId, exception);
+      throw new RuntimeException("Unable to mark question as done for memberId=" + memberId);
+    }
+    return true;
+  }
+
+  public Boolean answerQuestion(final String memberId, final String answer, DataFetchingEnvironment env) {
+    Personnel personnel = getPersonnel(env);
+    try {
+      questionsService.answer(memberId, answer, personnel);
+    } catch (QuestionNotFoundException exception) {
+      log.error("Question not found when answering for memberId=" + memberId, exception);
+      throw new RuntimeException("Unable to answer question for memberId=" + memberId);
+    }
+    return true;
+  }
+
   public UUID upsertItemCompany(final UpsertItemCompanyRequest request, DataFetchingEnvironment env) {
     return itemizerService.upsertItemCompany(request, getUserIdentity(env));
   }
@@ -728,16 +705,37 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return itemizerService.insertItemCategories(request, getUserIdentity(env));
   }
 
-  private String getToken(DataFetchingEnvironment env) {
-    GraphQLRequestContext context = env.getContext();
-    return personnelService.getIdToken(context.getUserPrincipal().getName());
-  }
-
   public Boolean assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscount request, DataFetchingEnvironment env) {
     productPricingService.assignCampaignToPartnerPercentageDiscount(
       AssignVoucherPercentageDiscountRequest.Companion.from(request)
     );
     return true;
+  }
+
+  private String getUserIdentity(DataFetchingEnvironment env) {
+    try {
+      return GraphQLConfiguration.getEmail(env, personnelService);
+    } catch (Exception e) {
+      String errorMessage = "Error: Unverified user. Could not get email from personnelService.";
+      log.error(errorMessage, e);
+      throw new RuntimeException(errorMessage, e);
+    }
+  }
+
+  private String getToken(DataFetchingEnvironment env) {
+    GraphQLRequestContext context = env.getContext();
+    return personnelService.getIdToken(context.getUserPrincipal().getName());
+  }
+
+  private Personnel getPersonnel(DataFetchingEnvironment env) {
+    GraphQLRequestContext context = env.getContext();
+    Principal principal = context.getUserPrincipal();
+    try {
+      return personnelService.getPersonnelByEmail(principal.getName());
+    } catch (AuthorizationException exception) {
+      log.error("Unauthorized user attempted to get personnel by email", exception);
+      throw new RuntimeException("Unable to get personnel");
+    }
   }
 }
 
