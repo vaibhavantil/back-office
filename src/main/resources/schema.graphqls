@@ -1340,7 +1340,11 @@ enum NorwegianGripenFactorType {
 }
 
 type ChatMessage {
-  messageAsJson: String!
+  globalId: ID!
+  author: String,
+  fromId: String!,
+  timestamp: Instant,
+  messageBodyJsonString: String!
 }
 
 union SendMessageResponse = SendMessageSuccessful | SendMessageFailed
@@ -1356,7 +1360,7 @@ type SendMessageFailed {
 }
 
 input SendMessageInput {
-  memberId: String!
+  memberId: ID!
   message: String!
   forceSendMessage: Boolean!
 }

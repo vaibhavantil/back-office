@@ -6,6 +6,7 @@ import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.chat.data.SendMessageResponse
 import com.hedvig.backoffice.services.expo.ExpoNotificationService
 import com.hedvig.backoffice.services.messages.BotService
+import com.hedvig.backoffice.services.messages.dto.BotMessageDTO
 import com.hedvig.backoffice.services.notificationService.NotificationService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -17,10 +18,10 @@ class ChatServiceV2Impl(
     private val notificationService: NotificationService,
     private val expoNotificationService: ExpoNotificationService
 ) : ChatServiceV2 {
-  override fun fetchMessages(memberId: String, personnelEmail: String, personnelToken: String): List<String> {
+  override fun fetchMessages(memberId: String, personnelEmail: String, personnelToken: String): List<BotMessageDTO> {
     val botServiceMessages = botService.messages(memberId, personnelToken)
     botServiceMessages.forEach { messagePostProcessor.processMessage(it) }
-    return botServiceMessages.map { it.toJson() }
+    return botServiceMessages
   }
 
   override fun sendMessage(memberId: String, message: String, forceSendMessage: Boolean, personnelId: String, personnelToken: String): SendMessageResponse {

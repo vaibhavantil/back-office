@@ -156,7 +156,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       throw new RuntimeException("Failed to get email from GraphQLConfiguration", e);
     }
     return chatServiceV2.fetchMessages(memberId, email, token).stream()
-      .map(ChatMessage::new)
+      .map(ChatMessage.Companion::from)
       .collect(Collectors.toList());
   }
 
