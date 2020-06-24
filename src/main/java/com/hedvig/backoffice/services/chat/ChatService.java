@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.chat;
 
 import com.hedvig.backoffice.services.chat.data.Message;
 
+@Deprecated
 public interface ChatService {
 
   void send(String memberId, String personnelEmail, Message message);

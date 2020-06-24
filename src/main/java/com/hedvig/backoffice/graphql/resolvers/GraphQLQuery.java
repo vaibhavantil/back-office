@@ -2,6 +2,7 @@ package com.hedvig.backoffice.graphql.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
+import com.hedvig.backoffice.graphql.GraphQLRequestContext;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.*;
@@ -9,11 +10,13 @@ import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory;
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind;
 import com.hedvig.backoffice.graphql.types.questions.QuestionGroupType;
+import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
+import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
 import com.hedvig.backoffice.services.members.MemberService;
@@ -47,6 +50,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final TicketService ticketService;
   private final PersonnelService personnelService;
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
+  private final ChatServiceV2 chatServiceV2;
   private final QuestionService questionService;
 
   public GraphQLQuery(
@@ -58,6 +62,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     TicketService ticketService,
     PersonnelService personnelService,
     AutoAnswerSuggestionService autoAnswerSuggestionService,
+    ChatServiceV2 chatServiceV2,
     QuestionService questionService,
     ItemizerService itemizerService
   ) {
@@ -69,6 +74,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.ticketService = ticketService;
     this.personnelService = personnelService;
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
+    this.chatServiceV2 = chatServiceV2;
     this.questionService = questionService;
   }
 
@@ -111,17 +117,14 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   }
 
   public TicketDto ticket(UUID id) {
-
     return this.ticketService.getTicketById(id);
   }
 
   public TicketHistoryDto getFullTicketHistory(UUID id) {
-
     return this.ticketService.getTicketHistory(id);
   }
 
   public List<TicketDto> tickets(Boolean resolved) {
-
     return ticketService.getAllTickets(resolved);
   }
 
@@ -129,7 +132,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     try {
       return GraphQLConfiguration.getEmail(env, personnelService);
     } catch (Exception e) {
-      log.info("Exception occured when trying to access user email: " + e);
+      log.info("Exception occured when trying to access user getEmail: " + e);
       return null;
     }
   }
@@ -137,6 +140,15 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   public List<SwitchableSwitcherEmail> switchableSwitcherEmails(DataFetchingEnvironment env) {
     return productPricingService.getSwitchableSwitcherEmails().stream()
       .map(SwitchableSwitcherEmail::from)
+      .collect(Collectors.toList());
+  }
+
+  public List<ChatMessage> messageHistory(String memberId, DataFetchingEnvironment env) {
+    String email = getEmail(env);
+    String token = getToken(env);
+    return chatServiceV2.fetchMessages(memberId, email, token)
+      .stream()
+      .map(ChatMessage.Companion::from)
       .collect(Collectors.toList());
   }
 
@@ -163,8 +175,20 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       .collect(Collectors.toList());
   }
 
-
   public List<PartnerResponseDto> getPartnerCampaignOwners() {
     return productPricingService.getPartnerCampaignOwners();
+  }
+
+  private String getToken(DataFetchingEnvironment env) {
+    GraphQLRequestContext context = env.getContext();
+    return personnelService.getIdToken(context.getUserPrincipal().getName());
+  }
+
+  private String getEmail(DataFetchingEnvironment  env) {
+    try {
+      return GraphQLConfiguration.getEmail(env, personnelService);
+    } catch (AuthorizationException e) {
+      throw new RuntimeException("Failed to get email from GraphQLConfiguration", e);
+    }
   }
 }

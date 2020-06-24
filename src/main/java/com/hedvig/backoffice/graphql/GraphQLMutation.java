@@ -14,6 +14,7 @@ import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.apigateway.ApiGatewayService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.AutoLabelDTO;
+import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
@@ -78,6 +79,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final UnderwriterService underwriterService;
   private final ProductPricingService productPricingService;
   private final PriceEngineService priceEngineService;
+  private final ChatServiceV2 chatServiceV2;
   private final ItemizerService itemizerService;
   private final ApiGatewayService apiGatewayService;
 
@@ -95,6 +97,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     UnderwriterService underwriterService,
     ProductPricingService productPricingService,
     PriceEngineService priceEngineService,
+    ChatServiceV2 chatServiceV2,
     ItemizerService itemizerService,
     final ApiGatewayService apiGatewayService
   ) {
@@ -111,6 +114,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.underwriterService = underwriterService;
     this.productPricingService = productPricingService;
     this.priceEngineService = priceEngineService;
+    this.chatServiceV2 = chatServiceV2;
     this.itemizerService = itemizerService;
     this.apiGatewayService = apiGatewayService;
   }
@@ -440,7 +444,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData,
                                       final DataFetchingEnvironment env) {
-    final UUID createdQuoteId = underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData), getUserIdentity(env)).getId();
+    final UUID createdQuoteId = underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData), getEmail(env)).getId();
     return Quote.from(underwriterService.getQuote(createdQuoteId));
   }
 
@@ -453,7 +457,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       new QuoteFromAgreementRequestDto(
         agreementId,
         memberId,
-        getUserIdentity(env)
+        getEmail(env)
       )
     ).getId();
     return Quote.from(underwriterService.getQuote(createQuoteId));
@@ -468,7 +472,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return Quote.from(underwriterService.updateQuote(
       quoteId,
       QuoteInputDto.from(quoteInput),
-      bypassUnderwritingGuidelines ? getUserIdentity(env) : null
+      bypassUnderwritingGuidelines ? getEmail(env) : null
     ));
   }
 
@@ -478,7 +482,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     final boolean bypassUnderwritingGuidelines,
     final DataFetchingEnvironment env
   ) {
-    final String bypassUnderwritingGuidelinesFrom = bypassUnderwritingGuidelines ? getUserIdentity(env) : null;
+    final String bypassUnderwritingGuidelinesFrom = bypassUnderwritingGuidelines ? getEmail(env) : null;
 
     final UUID createQuoteId = underwriterService.createQuoteForNewContract(
       new QuoteForNewContractRequestDto(
@@ -508,7 +512,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     TicketInput ticket,
     DataFetchingEnvironment env
   ) {
-    String createdBy = getUserIdentity(env);
+    String createdBy = getEmail(env);
     CreateTicketDto ticketDto = CreateTicketDto.Companion.from(ticket, createdBy);
     return this.ticketService.createTicket(ticketDto, createdBy);
   }
@@ -518,7 +522,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     String newDescription,
     DataFetchingEnvironment env
   ) {
-    String modifiedBy = getUserIdentity(env);
+    String modifiedBy = getEmail(env);
     this.ticketService.changeDescription(ticketId, newDescription, modifiedBy);
     return ticketId;
   }
@@ -528,7 +532,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     String teamMemberId,
     DataFetchingEnvironment env
   ) {
-    String modifiedBy = getUserIdentity(env);
+    String modifiedBy = getEmail(env);
     this.ticketService.changeAssignedTo(ticketId, teamMemberId, modifiedBy);
     return ticketId;
   }
@@ -538,7 +542,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     TicketStatus newStatus,
     DataFetchingEnvironment env
   ) {
-    String modifiedBy = getUserIdentity(env);
+    String modifiedBy = getEmail(env);
     this.ticketService.changeStatus(ticketId, newStatus, modifiedBy);
     return ticketId;
   }
@@ -548,7 +552,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     RemindNotification newReminder,
     DataFetchingEnvironment env
   ) {
-    String modifiedBy = getUserIdentity(env);
+    String modifiedBy = getEmail(env);
     this.ticketService.changeReminder(ticketId, newReminder, modifiedBy);
     return ticketId;
   }
@@ -558,7 +562,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     float newPriority,
     DataFetchingEnvironment env
   ) {
-    String modifiedBy = getUserIdentity(env);
+    String modifiedBy = getEmail(env);
     this.ticketService.changePriority(ticketId, newPriority, modifiedBy);
     return ticketId;
   }
@@ -567,7 +571,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     String memberId,
     DataFetchingEnvironment env
   ) throws AuthorizationException {
-    String email = getUserIdentity(env);
+    String email = getEmail(env);
     memberService.whitelistMember(memberId, email);
     return true;
   }
@@ -577,7 +581,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     UUID claimFileId,
     DataFetchingEnvironment env
   ) {
-    String email = getUserIdentity(env);
+    String email = getEmail(env);
     MarkClaimFileAsDeletedDTO deletedBy = new MarkClaimFileAsDeletedDTO(email);
     claimsService.markClaimFileAsDeleted(claimId, claimFileId, deletedBy);
     return true;
@@ -655,6 +659,18 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return agreementId;
   }
 
+  public SendMessageResponse sendMessage(SendMessageInput input, DataFetchingEnvironment env) {
+    return SendMessageResponse.Companion.from(
+      chatServiceV2.sendMessage(
+        input.getMemberId(),
+        input.getMessage(),
+        input.getForceSendMessage(),
+        getEmail(env),
+        getToken(env)
+      )
+    );
+  }
+
   public Boolean markQuestionAsResolved(final String memberId, DataFetchingEnvironment env) {
     Personnel personnel = getPersonnel(env);
     try {
@@ -678,31 +694,31 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
   public UUID upsertItemCompany(final UpsertItemCompanyRequest request, DataFetchingEnvironment env) {
-    return itemizerService.upsertItemCompany(request, getUserIdentity(env));
+    return itemizerService.upsertItemCompany(request, getEmail(env));
   }
 
   public UUID upsertItemType(final UpsertItemTypeRequest request, DataFetchingEnvironment env) {
-    return itemizerService.upsertItemType(request, getUserIdentity(env));
+    return itemizerService.upsertItemType(request, getEmail(env));
   }
 
   public UUID upsertItemBrand(final UpsertItemBrandRequest request, DataFetchingEnvironment env) {
-    return itemizerService.upsertItemBrand(request, getUserIdentity(env));
+    return itemizerService.upsertItemBrand(request, getEmail(env));
   }
 
   public UUID upsertItemModel(final UpsertItemModelRequest request, DataFetchingEnvironment env) {
-    return itemizerService.upsertItemModel(request, getUserIdentity(env));
+    return itemizerService.upsertItemModel(request, getEmail(env));
   }
 
   public UUID upsertClaimItem(final UpsertClaimItemRequest request, DataFetchingEnvironment env) {
-    return itemizerService.upsertClaimItem(request, getUserIdentity(env));
+    return itemizerService.upsertClaimItem(request, getEmail(env));
   }
 
   public UUID deleteClaimItem(final UUID claimItemId, DataFetchingEnvironment env) {
-    return itemizerService.deleteClaimItem(claimItemId, getUserIdentity(env));
+    return itemizerService.deleteClaimItem(claimItemId, getEmail(env));
   }
 
   public List<Boolean> insertItemCategories(final InsertItemCategoriesRequest request, DataFetchingEnvironment env) {
-    return itemizerService.insertItemCategories(request, getUserIdentity(env));
+    return itemizerService.insertItemCategories(request, getEmail(env));
   }
 
   public Boolean assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscount request, DataFetchingEnvironment env) {
@@ -712,7 +728,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
-  private String getUserIdentity(DataFetchingEnvironment env) {
+  private String getEmail(DataFetchingEnvironment env) {
     try {
       return GraphQLConfiguration.getEmail(env, personnelService);
     } catch (Exception e) {

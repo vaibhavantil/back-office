@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 
+@Deprecated
 @Service
 @Slf4j
 public class ChatServiceImpl implements ChatService {
@@ -38,13 +39,11 @@ public class ChatServiceImpl implements ChatService {
 
   private final PersonnelService personnelService;
 
-  private final ExpoNotificationService expoNotificationService;
-
   private final SubscriptionService subscriptionService;
 
-  private final NotificationService notificationService;
-
   private final UploadedFilePostprocessor messagePostProcessor;
+
+  private final ChatServiceV2 chatServiceV2;
 
   public ChatServiceImpl(
     SimpMessagingTemplate simpMessagingTemplate,
@@ -52,20 +51,18 @@ public class ChatServiceImpl implements ChatService {
     MemberService memberService,
     ChatContextRepository chatContextRepository,
     PersonnelService personnelService,
-    ExpoNotificationService expoNotificationService,
     SubscriptionService subscriptionService,
-    NotificationService notificationService,
-    UploadedFilePostprocessor messagePostProcessor) {
+    UploadedFilePostprocessor messagePostProcessor,
+    ChatServiceV2 chatServiceV2) {
 
     this.template = simpMessagingTemplate;
     this.botService = botService;
     this.memberService = memberService;
     this.chatContextRepository = chatContextRepository;
     this.personnelService = personnelService;
-    this.expoNotificationService = expoNotificationService;
     this.subscriptionService = subscriptionService;
-    this.notificationService = notificationService;
     this.messagePostProcessor = messagePostProcessor;
+    this.chatServiceV2 = chatServiceV2;
   }
 
   @Override
@@ -77,7 +74,7 @@ public class ChatServiceImpl implements ChatService {
   public void append(String memberId, String message, boolean forceSendMessage, String personnelId, String token) {
     try {
       botService.response(memberId, message, forceSendMessage, token);
-      sendNotification(memberId, token);
+      chatServiceV2.sendNotification(memberId, token);
     } catch (ExternalServiceBadRequestException e) {
       send(memberId, personnelId, Message.error(400, e.getMessage()));
       log.error("chat not updated memberId = " + memberId, e);
@@ -179,12 +176,5 @@ public class ChatServiceImpl implements ChatService {
     return "/messages/";
   }
 
-  private void sendNotification(String memberId, String personnelToken) {
-    if (notificationService.getFirebaseToken(memberId).isPresent()) {
-      notificationService.sendPushNotification(memberId);
-      return;
-    }
 
-    expoNotificationService.sendNotification(memberId, personnelToken);
-  }
 }

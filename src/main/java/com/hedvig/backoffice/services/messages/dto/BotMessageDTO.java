@@ -16,12 +16,12 @@ import java.util.Objects;
 @NoArgsConstructor
 @Data
 public class BotMessageDTO {
-  Long globalId;
-  String id;
-  BotMessageHeaderDTO header;
+  public Long globalId;
+  public String id;
+  public BotMessageHeaderDTO header;
   public JsonNode body;
-  Instant timestamp;
-  String author;
+  public Instant timestamp;
+  public String author;
 
   public boolean isBotMessage() {
     return Objects.equals(header.getFromId(), 1L);
