@@ -188,7 +188,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     try {
       return GraphQLConfiguration.getEmail(env, personnelService);
     } catch (AuthorizationException e) {
-      throw new RuntimeException("Failed to get getEmail from GraphQLConfiguration", e);
+      throw new RuntimeException("Failed to get email from GraphQLConfiguration", e);
     }
   }
 }
