@@ -117,17 +117,14 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   }
 
   public TicketDto ticket(UUID id) {
-
     return this.ticketService.getTicketById(id);
   }
 
   public TicketHistoryDto getFullTicketHistory(UUID id) {
-
     return this.ticketService.getTicketHistory(id);
   }
 
   public List<TicketDto> tickets(Boolean resolved) {
-
     return ticketService.getAllTickets(resolved);
   }
 
@@ -135,7 +132,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     try {
       return GraphQLConfiguration.getEmail(env, personnelService);
     } catch (Exception e) {
-      log.info("Exception occured when trying to access user email: " + e);
+      log.info("Exception occured when trying to access user getEmail: " + e);
       return null;
     }
   }
@@ -147,15 +144,10 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   }
 
   public List<ChatMessage> messageHistory(String memberId, DataFetchingEnvironment env) {
-    GraphQLRequestContext context = env.getContext();
-    String token = personnelService.getIdToken(context.getUserPrincipal().getName());
-    String email;
-    try {
-      email = GraphQLConfiguration.getEmail(env, personnelService);
-    } catch (AuthorizationException e) {
-      throw new RuntimeException("Failed to get email from GraphQLConfiguration", e);
-    }
-    return chatServiceV2.fetchMessages(memberId, email, token).stream()
+    String email = getEmail(env);
+    String token = getToken(env);
+    return chatServiceV2.fetchMessages(memberId, email, token)
+      .stream()
       .map(ChatMessage.Companion::from)
       .collect(Collectors.toList());
   }
@@ -183,8 +175,20 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       .collect(Collectors.toList());
   }
 
-
   public List<PartnerResponseDto> getPartnerCampaignOwners() {
     return productPricingService.getPartnerCampaignOwners();
+  }
+
+  private String getToken(DataFetchingEnvironment env) {
+    GraphQLRequestContext context = env.getContext();
+    return personnelService.getIdToken(context.getUserPrincipal().getName());
+  }
+
+  private String getEmail(DataFetchingEnvironment  env) {
+    try {
+      return GraphQLConfiguration.getEmail(env, personnelService);
+    } catch (AuthorizationException e) {
+      throw new RuntimeException("Failed to get getEmail from GraphQLConfiguration", e);
+    }
   }
 }
