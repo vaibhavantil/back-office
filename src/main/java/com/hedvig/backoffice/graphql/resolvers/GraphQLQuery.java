@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import com.hedvig.backoffice.domain.Updates;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.GraphQLRequestContext;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
@@ -12,7 +11,7 @@ import com.hedvig.backoffice.graphql.types.dashboard.DashboardNumbers;
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory;
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind;
 import com.hedvig.backoffice.graphql.types.questions.QuestionGroupType;
-import com.hedvig.backoffice.repository.UpdatesRepository;
+import com.hedvig.backoffice.repository.QuestionGroupRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
@@ -20,6 +19,7 @@ import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
 import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
+import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
 import com.hedvig.backoffice.services.members.MemberService;
@@ -31,7 +31,6 @@ import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
-import com.hedvig.backoffice.services.updates.UpdateType;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +55,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
   private final ChatServiceV2 chatServiceV2;
   private final QuestionService questionService;
-  private final UpdatesRepository updatesRepository;
+  private final QuestionGroupRepository questionGroupRepository;
+  private final ClaimsService claimsService;
 
   public GraphQLQuery(
     ProductPricingService productPricingService,
@@ -70,7 +70,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     ChatServiceV2 chatServiceV2,
     QuestionService questionService,
     ItemizerService itemizerService,
-    UpdatesRepository updatesRepository
+    QuestionGroupRepository questionGroupRepository,
+    ClaimsService claimsService
   ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
@@ -82,7 +83,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
     this.chatServiceV2 = chatServiceV2;
     this.questionService = questionService;
-    this.updatesRepository = updatesRepository;
+    this.questionGroupRepository = questionGroupRepository;
+    this.claimsService = claimsService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -186,22 +188,10 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.getPartnerCampaignOwners();
   }
 
-  public DashboardNumbers getDashboardNumbers() {
-    List<Updates> claimUpdates = updatesRepository.findByType(UpdateType.CLAIMS);
-    Long claims;
-    if (claimUpdates.size() == 0) {
-      claims = 0L;
-    } else {
-      claims = claimUpdates.get(claimUpdates.size() - 1).getCount();
-    }
-
-    List<Updates> questionUpdates = updatesRepository.findByType(UpdateType.QUESTIONS);
-    Long questions;
-    if (questionUpdates.size() == 0) {
-      questions = 0L;
-    } else {
-      questions = questionUpdates.get(questionUpdates.size() - 1).getCount();
-    }
+  public DashboardNumbers getDashboardNumbers(DataFetchingEnvironment env) {
+    String token = getToken(env);
+    Long claims = claimsService.totalClaims(token);
+    Long questions = questionGroupRepository.notAnsweredCount();
     return new DashboardNumbers(claims, questions);
   }
 
