@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import com.hedvig.backoffice.domain.Updates;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.GraphQLRequestContext;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
@@ -11,6 +12,7 @@ import com.hedvig.backoffice.graphql.types.dashboard.DashboardNumbers;
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory;
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind;
 import com.hedvig.backoffice.graphql.types.questions.QuestionGroupType;
+import com.hedvig.backoffice.repository.UpdatesRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
@@ -30,7 +32,6 @@ import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import com.hedvig.backoffice.services.updates.UpdateType;
-import com.hedvig.backoffice.services.updates.UpdatesService;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +56,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
   private final ChatServiceV2 chatServiceV2;
   private final QuestionService questionService;
-  private final UpdatesService updatesService;
+  private final UpdatesRepository updatesRepository;
 
   public GraphQLQuery(
     ProductPricingService productPricingService,
@@ -69,7 +70,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     ChatServiceV2 chatServiceV2,
     QuestionService questionService,
     ItemizerService itemizerService,
-    UpdatesService updatesService
+    UpdatesRepository updatesRepository
   ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
@@ -81,7 +82,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
     this.chatServiceV2 = chatServiceV2;
     this.questionService = questionService;
-    this.updatesService = updatesService;
+    this.updatesRepository = updatesRepository;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -186,8 +187,21 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   }
 
   public DashboardNumbers getDashboardNumbers() {
-    Long claims = updatesService.get(UpdateType.CLAIMS);
-    Long questions = updatesService.get(UpdateType.QUESTIONS);
+    List<Updates> claimUpdates = updatesRepository.findByType(UpdateType.CLAIMS);
+    Long claims;
+    if (claimUpdates.size() == 0) {
+      claims = 0L;
+    } else {
+      claims = claimUpdates.get(0).getCount();
+    }
+
+    List<Updates> questionUpdates = updatesRepository.findByType(UpdateType.QUESTIONS);
+    Long questions;
+    if (questionUpdates.size() == 0) {
+      questions = 0L;
+    } else {
+      questions = questionUpdates.get(0).getCount();
+    }
     return new DashboardNumbers(claims, questions);
   }
 
@@ -196,7 +210,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return personnelService.getIdToken(context.getUserPrincipal().getName());
   }
 
-  private String getEmail(DataFetchingEnvironment  env) {
+  private String getEmail(DataFetchingEnvironment env) {
     try {
       return GraphQLConfiguration.getEmail(env, personnelService);
     } catch (AuthorizationException e) {

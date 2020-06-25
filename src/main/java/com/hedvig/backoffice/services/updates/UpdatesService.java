@@ -8,8 +8,6 @@ public interface UpdatesService {
 
   void set(long count, UpdateType type);
 
-  Long get(UpdateType type);
-
   void updates(String personnelEmail);
 
   void subscribe(String personnelEmail, String sessionId) throws AuthorizationException;

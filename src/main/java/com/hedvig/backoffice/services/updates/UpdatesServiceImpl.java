@@ -3,25 +3,22 @@ package com.hedvig.backoffice.services.updates;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.domain.UpdateContext;
 import com.hedvig.backoffice.domain.Updates;
-import com.hedvig.backoffice.repository.AssetRepository;
-import com.hedvig.backoffice.repository.PersonnelRepository;
-import com.hedvig.backoffice.repository.QuestionGroupRepository;
-import com.hedvig.backoffice.repository.UpdateContextRepository;
-import com.hedvig.backoffice.repository.UpdatesRepository;
+import com.hedvig.backoffice.repository.*;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.settings.SystemSettingsService;
 import com.hedvig.backoffice.services.updates.data.UpdatesDTO;
 import com.hedvig.common.constant.AssetState;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UpdatesServiceImpl implements UpdatesService {
@@ -37,14 +34,14 @@ public class UpdatesServiceImpl implements UpdatesService {
   private final SimpMessagingTemplate template;
 
   public UpdatesServiceImpl(
-      UpdatesRepository updatesRepository,
-      PersonnelRepository personnelRepository,
-      AssetRepository assetRepository,
-      QuestionGroupRepository questionRepository,
-      ClaimsService claimsService,
-      SystemSettingsService settingsService,
-      SimpMessagingTemplate template,
-      UpdateContextRepository updateContextRepository) {
+    UpdatesRepository updatesRepository,
+    PersonnelRepository personnelRepository,
+    AssetRepository assetRepository,
+    QuestionGroupRepository questionRepository,
+    ClaimsService claimsService,
+    SystemSettingsService settingsService,
+    SimpMessagingTemplate template,
+    UpdateContextRepository updateContextRepository) {
 
     this.updatesRepository = updatesRepository;
     this.personnelRepository = personnelRepository;
@@ -62,6 +59,7 @@ public class UpdatesServiceImpl implements UpdatesService {
     updatesRepository.deleteAll();
     updateContextRepository.deleteAll();
   }
+
 
   @Override
   @Transactional
@@ -87,17 +85,6 @@ public class UpdatesServiceImpl implements UpdatesService {
 
   @Override
   @Transactional
-  public Long get(UpdateType type) {
-    List<Updates> updates = updatesRepository.findByType(type);
-    if (updates.size() == 0) {
-      return 0L;
-    } else {
-      return updates.get(0).getCount();
-    }
-  }
-
-  @Override
-  @Transactional
   public void updates(String personnelEmail) {
     List<Updates> updates = updatesRepository.findByPersonnelEmail(personnelEmail);
     send(personnelEmail, updates);
@@ -107,7 +94,7 @@ public class UpdatesServiceImpl implements UpdatesService {
   @Transactional
   public void subscribe(String personnelEmail, String sessionId) throws AuthorizationException {
     Personnel personnel =
-        personnelRepository.findByEmail(personnelEmail).orElseThrow(AuthorizationException::new);
+      personnelRepository.findByEmail(personnelEmail).orElseThrow(AuthorizationException::new);
 
     UpdateContext uc = new UpdateContext(personnel, sessionId);
     updateContextRepository.save(uc);
@@ -117,22 +104,22 @@ public class UpdatesServiceImpl implements UpdatesService {
       switch (type) {
         case QUESTIONS:
           updates.add(
-              new Updates(
-                  UpdateType.QUESTIONS,
-                  uc,
-                  Optional.ofNullable(questionRepository.notAnsweredCount()).orElse(0L)));
+            new Updates(
+              UpdateType.QUESTIONS,
+              uc,
+              Optional.ofNullable(questionRepository.notAnsweredCount()).orElse(0L)));
           break;
         case ASSETS:
           updates.add(
-              new Updates(
-                  UpdateType.ASSETS, uc, assetRepository.countAllByState(AssetState.PENDING)));
+            new Updates(
+              UpdateType.ASSETS, uc, assetRepository.countAllByState(AssetState.PENDING)));
           break;
         case CLAIMS:
           updates.add(
-              new Updates(
-                  UpdateType.CLAIMS,
-                  uc,
-                  claimsService.totalClaims(settingsService.getInternalAccessToken())));
+            new Updates(
+              UpdateType.CLAIMS,
+              uc,
+              claimsService.totalClaims(settingsService.getInternalAccessToken())));
           break;
         default:
           updates.add(new Updates(type, uc, 0L));
@@ -147,7 +134,7 @@ public class UpdatesServiceImpl implements UpdatesService {
   @Transactional
   public void unsubscribe(String personnelEmail, String sessionId) {
     Optional<UpdateContext> optional =
-        updateContextRepository.findByPersonnelEmailAndSessionId(personnelEmail, sessionId);
+      updateContextRepository.findByPersonnelEmailAndSessionId(personnelEmail, sessionId);
 
     if (optional.isPresent()) {
       UpdateContext uc = optional.get();
@@ -162,7 +149,7 @@ public class UpdatesServiceImpl implements UpdatesService {
 
   private void send(String personnelEmail, List<Updates> updates) {
     List<UpdatesDTO> dto =
-        updates.stream().map(UpdatesDTO::fromDomain).collect(Collectors.toList());
+      updates.stream().map(UpdatesDTO::fromDomain).collect(Collectors.toList());
 
     template.convertAndSendToUser(personnelEmail, "/updates", dto);
   }
