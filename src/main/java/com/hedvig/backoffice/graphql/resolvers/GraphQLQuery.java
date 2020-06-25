@@ -7,6 +7,7 @@ import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
+import com.hedvig.backoffice.graphql.types.dashboard.DashboardNumbers;
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory;
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind;
 import com.hedvig.backoffice.graphql.types.questions.QuestionGroupType;
@@ -28,6 +29,8 @@ import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
+import com.hedvig.backoffice.services.updates.UpdateType;
+import com.hedvig.backoffice.services.updates.UpdatesService;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
@@ -52,6 +55,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final AutoAnswerSuggestionService autoAnswerSuggestionService;
   private final ChatServiceV2 chatServiceV2;
   private final QuestionService questionService;
+  private final UpdatesService updatesService;
 
   public GraphQLQuery(
     ProductPricingService productPricingService,
@@ -64,7 +68,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     AutoAnswerSuggestionService autoAnswerSuggestionService,
     ChatServiceV2 chatServiceV2,
     QuestionService questionService,
-    ItemizerService itemizerService
+    ItemizerService itemizerService,
+    UpdatesService updatesService
   ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
@@ -76,6 +81,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.autoAnswerSuggestionService = autoAnswerSuggestionService;
     this.chatServiceV2 = chatServiceV2;
     this.questionService = questionService;
+    this.updatesService = updatesService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -177,6 +183,12 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
   public List<PartnerResponseDto> getPartnerCampaignOwners() {
     return productPricingService.getPartnerCampaignOwners();
+  }
+
+  public DashboardNumbers getDashboardNumbers() {
+    Long claims = updatesService.get(UpdateType.CLAIMS);
+    Long questions = updatesService.get(UpdateType.QUESTIONS);
+    return new DashboardNumbers(claims, questions);
   }
 
   private String getToken(DataFetchingEnvironment env) {

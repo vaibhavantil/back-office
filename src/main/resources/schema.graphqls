@@ -20,6 +20,12 @@ type QueryType {
   claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
+  dashboardNumbers: DashboardNumbers
+}
+
+type DashboardNumbers {
+  numberOfClaims: Int!
+  numberOfQuestions: Int!
 }
 
 type MutationType {
