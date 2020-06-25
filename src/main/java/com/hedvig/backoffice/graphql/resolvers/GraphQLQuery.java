@@ -192,7 +192,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     if (claimUpdates.size() == 0) {
       claims = 0L;
     } else {
-      claims = claimUpdates.get(0).getCount();
+      claims = claimUpdates.get(claimUpdates.size() - 1).getCount();
     }
 
     List<Updates> questionUpdates = updatesRepository.findByType(UpdateType.QUESTIONS);
@@ -200,7 +200,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     if (questionUpdates.size() == 0) {
       questions = 0L;
     } else {
-      questions = questionUpdates.get(0).getCount();
+      questions = questionUpdates.get(questionUpdates.size() - 1).getCount();
     }
     return new DashboardNumbers(claims, questions);
   }
