@@ -87,6 +87,17 @@ public class UpdatesServiceImpl implements UpdatesService {
 
   @Override
   @Transactional
+  public Long get(UpdateType type) {
+    List<Updates> updates = updatesRepository.findByType(type);
+    if (updates.size() == 0) {
+      return 0L;
+    } else {
+      return updates.get(0).getCount();
+    }
+  }
+
+  @Override
+  @Transactional
   public void updates(String personnelEmail) {
     List<Updates> updates = updatesRepository.findByPersonnelEmail(personnelEmail);
     send(personnelEmail, updates);
