@@ -46,9 +46,6 @@ intervals:
   chat: 1000000000
   claims: 600000000000
 
-websocket:
-  max-sile-size: 5242880
-
 tracker:
   baseUrl: http://localhost:7082
   urls:

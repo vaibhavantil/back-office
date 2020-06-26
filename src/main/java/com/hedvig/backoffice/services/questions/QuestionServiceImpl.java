@@ -15,8 +15,6 @@ import com.hedvig.backoffice.services.notificationService.NotificationService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
 import com.hedvig.backoffice.services.tickets.TicketService;
-import com.hedvig.backoffice.services.updates.UpdateType;
-import com.hedvig.backoffice.services.updates.UpdatesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +30,6 @@ public class QuestionServiceImpl implements QuestionService {
   private final QuestionRepository questionRepository;
   private final QuestionGroupRepository questionGroupRepository;
   private final SubscriptionService subscriptionService;
-  private final UpdatesService updatesService;
   private final BotService botService;
   private final ExpoNotificationService expoNotificationService;
   private final PersonnelService personnelService;
@@ -45,7 +42,6 @@ public class QuestionServiceImpl implements QuestionService {
     QuestionRepository questionRepository,
     QuestionGroupRepository questionGroupRepository,
     SubscriptionService subscriptionService,
-    UpdatesService updatesService,
     BotService botService,
     ExpoNotificationService expoNotificationService,
     PersonnelService personnelService,
@@ -56,7 +52,6 @@ public class QuestionServiceImpl implements QuestionService {
     this.questionRepository = questionRepository;
     this.questionGroupRepository = questionGroupRepository;
     this.subscriptionService = subscriptionService;
-    this.updatesService = updatesService;
     this.botService = botService;
     this.expoNotificationService = expoNotificationService;
     this.personnelService = personnelService;
@@ -81,16 +76,6 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public List<QuestionGroupDTO> answered() {
-    return questionGroupRepository
-      .answered()
-      .stream()
-      .map(QuestionGroupDTO.Companion::fromDomain)
-      .map(this::postProcessQuestionGroup)
-      .collect(Collectors.toList());
-  }
-
-  @Override
   public List<QuestionGroupDTO> notAnswered() {
     return questionGroupRepository
       .notAnswered()
@@ -102,8 +87,7 @@ public class QuestionServiceImpl implements QuestionService {
 
   @Transactional
   @Override
-  public QuestionGroupDTO answer(String memberId, String message, Personnel personnel)
-    throws QuestionNotFoundException {
+  public QuestionGroupDTO answer(String memberId, String message, Personnel personnel) throws QuestionNotFoundException {
     QuestionGroup group =
       questionGroupRepository
         .findUnasweredByMemberId(memberId)
@@ -115,7 +99,6 @@ public class QuestionServiceImpl implements QuestionService {
     botService.answerQuestion(memberId, message, personnelService.getIdToken(personnel.getEmail()));
     sendNotification(memberId, personnelService.getIdToken(personnel.getEmail()));
     questionGroupRepository.save(group);
-    updatesService.changeOn(-1, UpdateType.QUESTIONS);
 
     return QuestionGroupDTO.Companion.fromDomain(group);
   }
@@ -130,7 +113,6 @@ public class QuestionServiceImpl implements QuestionService {
     group.setPersonnel(personnel);
     questionGroupRepository.save(group);
 
-    updatesService.changeOn(-1, UpdateType.QUESTIONS);
     return QuestionGroupDTO.Companion.fromDomain(group);
   }
 
@@ -157,9 +139,6 @@ public class QuestionServiceImpl implements QuestionService {
       group.correctDate(message.getTimestamp());
       questionGroupRepository.save(group);
     }
-
-    long count = Optional.ofNullable(questionGroupRepository.notAnsweredCount()).orElse(0L);
-    updatesService.set(count, UpdateType.QUESTIONS);
   }
 
   private void sendNotification(String memberId, String personnelToken) {

@@ -58,14 +58,8 @@ public class ClaimsServiceStub implements ClaimsService {
 
   private List<Claim> claims;
   private List<ClaimType> types;
-  private UploadClaimFiles uploadClaimFiles;
 
-  public ClaimsServiceStub(
-    MemberService memberService,
-    SystemSettingsService settingsService,
-    UploadClaimFiles uploadClaimFiles
-  ) {
-    this.uploadClaimFiles = uploadClaimFiles;
+  public ClaimsServiceStub() {
     long minSignedOnDay = LocalDate.of(2011, 1, 3).toEpochDay();
     long maxSignedOnDay = LocalDate.of(2018, 12, 31).toEpochDay();
     try {
@@ -76,13 +70,9 @@ public class ClaimsServiceStub implements ClaimsService {
       throw new UncheckedIOException(e);
     }
 
-    List<String> memberIds = memberService.search(false, "", settingsService.getInternalAccessToken()).stream()
-      .map(o -> o.getMemberId() + "").collect(Collectors.toList());
-
     claims = IntStream.range(0, 10).mapToObj(i -> {
       String id = UUID.randomUUID().toString();
-      String memberId = memberIds.size() > i ? memberIds.get(i)
-        : memberIds.size() > 0 ? memberIds.get(0) : "123456";
+      String memberId = "123456";
 
       val note = new ClaimNote();
       note.setText("Testnote 123");

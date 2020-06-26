@@ -10,8 +10,6 @@ public interface QuestionService {
 
   List<QuestionGroupDTO> list();
 
-  List<QuestionGroupDTO> answered();
-
   List<QuestionGroupDTO> notAnswered();
 
   QuestionGroupDTO answer(String memberId, String message, Personnel personnel)
