@@ -94,14 +94,11 @@ interface ItemizerClient {
     @RequestParam baseDate: LocalDate?
   ): Evaluation
 
-  @GetMapping("/_/evaluate/item")
+  @GetMapping("/_/evaluate/rule/exists")
   fun canEvaluate(
-    @RequestParam purchasePrice: BigDecimal,
-    @RequestParam itemFamilyId: String,
-    @RequestParam itemTypeId: UUID?,
     @RequestParam typeOfContract: String,
-    @RequestParam purchaseDate: LocalDate,
-    @RequestParam baseDate: LocalDate?
+    @RequestParam itemFamilyId: String,
+    @RequestParam itemTypeId: UUID?
   ): CanEvaluate
 
 }

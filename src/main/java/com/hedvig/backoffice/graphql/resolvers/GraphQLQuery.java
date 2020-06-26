@@ -21,6 +21,7 @@ import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
+import com.hedvig.backoffice.services.itemizer.dto.CanEvaluate;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.Evaluation;
 import com.hedvig.backoffice.services.members.MemberService;
@@ -219,6 +220,10 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       purchaseDate,
       baseDate
     );
+  }
+
+  public CanEvaluate canEvaluate(String typeOfContract, String itemFamilyId, UUID itemTypeId) {
+    return itemizerService.canEvaluate(typeOfContract, itemFamilyId, itemTypeId);
   }
 
   private String getEmail(DataFetchingEnvironment env) {

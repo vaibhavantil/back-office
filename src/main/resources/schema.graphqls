@@ -29,6 +29,11 @@ type QueryType {
     purchaseDate: LocalDate!,
     baseDate: LocalDate
   ): Evaluation!
+  canEvaluate(
+    typeOfContract: String!,
+    itemFamilyId: String!,
+    itemTypeId: ID
+  ): CanEvaluate
 }
 
 type DashboardNumbers {
@@ -159,6 +164,12 @@ type EvaluationRule {
   typeOfContract: String!
   evaluationType: String!
   depreciation: Float
+}
+
+type CanEvaluate {
+  canEvaluate: Boolean!
+  itemFamily: String
+  itemTypeId: ID
 }
 
 input UpsertClaimItemInput {

@@ -41,9 +41,8 @@ class ItemizerServiceImpl(
     TODO("Not yet implemented")
   }
 
-  override fun canEvaluate(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?): CanEvaluate {
-    TODO("Not yet implemented")
-  }
+  override fun canEvaluate(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?) =
+    itemizerClient.canEvaluate(typeOfContract, itemFamilyId, itemTypeId)
 
   override fun getEvaluation(
     purchasePrice: BigDecimal,
