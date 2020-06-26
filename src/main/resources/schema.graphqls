@@ -20,6 +20,7 @@ type QueryType {
   claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
+  dashboardNumbers: DashboardNumbers
   getEvaluation(
     purchasePrice: Float!,
     itemFamilyId: String!,
@@ -28,6 +29,11 @@ type QueryType {
     purchaseDate: LocalDate!,
     baseDate: LocalDate
   ): Evaluation!
+}
+
+type DashboardNumbers {
+  numberOfClaims: Int!
+  numberOfQuestions: Int!
 }
 
 type MutationType {
