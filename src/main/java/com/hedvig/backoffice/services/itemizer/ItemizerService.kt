@@ -2,8 +2,13 @@ package com.hedvig.backoffice.services.itemizer
 
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
+import com.hedvig.backoffice.services.itemizer.dto.CanEvaluate
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
+import com.hedvig.backoffice.services.itemizer.dto.Evaluation
 import com.hedvig.backoffice.services.itemizer.dto.request.*
+import com.hedvig.itemizer.evaluations.web.dto.request.UpsertEvaluationRuleRequest
+import java.math.BigDecimal
+import java.time.LocalDate
 import java.util.*
 
 interface ItemizerService {
@@ -16,4 +21,14 @@ interface ItemizerService {
   fun insertItemCategories(request: InsertItemCategoriesRequest, email: String): List<Boolean>
   fun getClaimItems(claimId: UUID): List<ClaimItem>
   fun deleteClaimItem(claimItemId: UUID, email: String): UUID
+  fun upsertEvaluationRule(request: UpsertEvaluationRuleRequest, email: String): UUID
+  fun canEvaluate(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?): CanEvaluate
+  fun getEvaluation(
+    purchasePrice: BigDecimal,
+    itemFamilyId: String,
+    itemTypeId: UUID?,
+    typeOfContract: String,
+    purchaseDate: LocalDate,
+    baseDate: LocalDate?
+  ): Evaluation
 }

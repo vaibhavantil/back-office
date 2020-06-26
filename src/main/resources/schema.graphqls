@@ -20,6 +20,14 @@ type QueryType {
   claimItems(claimId: ID!): [ClaimItem!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
+  getEvaluation(
+    purchasePrice: Float!,
+    itemFamilyId: String!,
+    itemTypeId: ID,
+    typeOfContract: String!,
+    purchaseDate: LocalDate!,
+    baseDate: LocalDate
+  ): Evaluation!
 }
 
 type MutationType {
@@ -130,6 +138,21 @@ type ClaimItem {
   dateOfPurchase: LocalDate
   purchasePrice: MonetaryAmountV2
   note: String
+}
+
+type Evaluation {
+  depreciatedValue: Float
+  evaluationRule: EvaluationRule
+}
+
+type EvaluationRule {
+  evaluationName: String!
+  itemFamily: String!
+  itemTypeId: ID
+  ageLimit: Float!
+  typeOfContract: String!
+  evaluationType: String!
+  depreciation: Float
 }
 
 input UpsertClaimItemInput {

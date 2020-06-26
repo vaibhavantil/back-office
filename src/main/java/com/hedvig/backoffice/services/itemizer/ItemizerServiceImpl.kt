@@ -2,8 +2,11 @@ package com.hedvig.backoffice.services.itemizer
 
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
-import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
+import com.hedvig.backoffice.services.itemizer.dto.CanEvaluate
 import com.hedvig.backoffice.services.itemizer.dto.request.*
+import com.hedvig.itemizer.evaluations.web.dto.request.UpsertEvaluationRuleRequest
+import java.math.BigDecimal
+import java.time.LocalDate
 import java.util.*
 
 class ItemizerServiceImpl(
@@ -28,9 +31,32 @@ class ItemizerServiceImpl(
 
   override fun upsertClaimItem(request: UpsertClaimItemRequest, email: String) = itemizerClient.upsertClaimItem(request, email)
 
-  override fun insertItemCategories(request: InsertItemCategoriesRequest, email: String): List<Boolean> = itemizerClient.insertItemCategories(request, email)
+  override fun insertItemCategories(request: InsertItemCategoriesRequest, email: String) = itemizerClient.insertItemCategories(request, email)
 
-  override fun getClaimItems(claimId: UUID): List<ClaimItem> = itemizerClient.getClaimItemsByClaimId(claimId)
+  override fun getClaimItems(claimId: UUID) = itemizerClient.getClaimItemsByClaimId(claimId)
 
-  override fun deleteClaimItem(claimItemId: UUID, email: String): UUID = itemizerClient.deleteClaimItem(claimItemId, email)
+  override fun deleteClaimItem(claimItemId: UUID, email: String) = itemizerClient.deleteClaimItem(claimItemId, email)
+
+  override fun upsertEvaluationRule(request: UpsertEvaluationRuleRequest, email: String): UUID {
+    TODO("Not yet implemented")
+  }
+
+  override fun canEvaluate(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?): CanEvaluate {
+    TODO("Not yet implemented")
+  }
+
+  override fun getEvaluation(
+    purchasePrice: BigDecimal,
+    itemFamilyId: String,
+    itemTypeId: UUID?,
+    typeOfContract: String,
+    purchaseDate: LocalDate,
+    baseDate: LocalDate?) = itemizerClient.getEvaluation(
+    purchasePrice,
+    itemFamilyId,
+    itemTypeId,
+    typeOfContract,
+    purchaseDate,
+    baseDate
+  )
 }

@@ -5,6 +5,8 @@ import com.hedvig.backoffice.services.itemizer.dto.*
 import com.hedvig.backoffice.services.itemizer.dto.request.*
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.*
+import java.math.BigDecimal
+import java.time.LocalDate
 import java.util.*
 
 @FeignClient(
@@ -81,4 +83,25 @@ interface ItemizerClient {
     @PathVariable claimItemId: UUID,
     @RequestParam removedBy: String
   ): UUID
+
+  @GetMapping("/_/evaluate/item")
+  fun getEvaluation(
+    @RequestParam purchasePrice: BigDecimal,
+    @RequestParam itemFamilyId: String,
+    @RequestParam itemTypeId: UUID?,
+    @RequestParam typeOfContract: String,
+    @RequestParam purchaseDate: LocalDate,
+    @RequestParam baseDate: LocalDate?
+  ): Evaluation
+
+  @GetMapping("/_/evaluate/item")
+  fun canEvaluate(
+    @RequestParam purchasePrice: BigDecimal,
+    @RequestParam itemFamilyId: String,
+    @RequestParam itemTypeId: UUID?,
+    @RequestParam typeOfContract: String,
+    @RequestParam purchaseDate: LocalDate,
+    @RequestParam baseDate: LocalDate?
+  ): CanEvaluate
+
 }
