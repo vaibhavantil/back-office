@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.claims;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
+import com.hedvig.backoffice.graphql.types.claims.AddContractIdToClaim;
 import com.hedvig.backoffice.services.claims.dto.*;
 import feign.FeignException;
 import java.io.IOException;
@@ -213,6 +214,11 @@ public class ClaimsServiceImpl implements ClaimsService {
     findClaimFileOrThrowException(claimFileId, claimId);
 
     this.client.setClaimFileCategory(claimId, claimFileId, category);
+  }
+
+  @Override
+  public void addContractIdToClaim(AddContractIdToClaim request) {
+    client.addContractIdToClaim(request);
   }
 
   private ClaimFileDTO findClaimFileOrThrowException(UUID claimFileId, String claimId) {
