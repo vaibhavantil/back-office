@@ -16,8 +16,6 @@ import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
@@ -52,7 +50,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final ItemizerService itemizerService;
   private final TicketService ticketService;
   private final PersonnelService personnelService;
-  private final AutoAnswerSuggestionService autoAnswerSuggestionService;
   private final ChatServiceV2 chatServiceV2;
   private final QuestionService questionService;
   private final QuestionGroupRepository questionGroupRepository;
@@ -66,7 +63,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     MemberService memberService,
     TicketService ticketService,
     PersonnelService personnelService,
-    AutoAnswerSuggestionService autoAnswerSuggestionService,
     ChatServiceV2 chatServiceV2,
     QuestionService questionService,
     ItemizerService itemizerService,
@@ -80,7 +76,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.itemizerService = itemizerService;
     this.ticketService = ticketService;
     this.personnelService = personnelService;
-    this.autoAnswerSuggestionService = autoAnswerSuggestionService;
     this.chatServiceV2 = chatServiceV2;
     this.questionService = questionService;
     this.questionGroupRepository = questionGroupRepository;
@@ -92,10 +87,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.getMonthlyPayments(month).stream()
       .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getSubscription()))
       .collect(Collectors.toList());
-  }
-
-  public List<SuggestionDTO> getAnswerSuggestion(String question) {
-    return autoAnswerSuggestionService.getAnswerSuggestion(question);
   }
 
   public CompletableFuture<Member> member(String id) {

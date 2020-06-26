@@ -12,8 +12,6 @@ import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.apigateway.ApiGatewayService;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.AutoLabelDTO;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
@@ -73,7 +71,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ClaimsService claimsService;
   private final AccountService accountService;
   private final TicketService ticketService;
-  private final AutoAnswerSuggestionService autoAnswerSuggestionService;
   private final QuestionService questionsService;
   private final MemberService memberService;
   private final UnderwriterService underwriterService;
@@ -91,7 +88,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     ClaimsService claimsService,
     AccountService accountService,
     TicketService ticketService,
-    AutoAnswerSuggestionService autoAnswerSuggestionService,
     QuestionService questionsService,
     MemberService memberService,
     UnderwriterService underwriterService,
@@ -108,7 +104,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.claimsService = claimsService;
     this.accountService = accountService;
     this.ticketService = ticketService;
-    this.autoAnswerSuggestionService = autoAnswerSuggestionService;
     this.questionsService = questionsService;
     this.memberService = memberService;
     this.underwriterService = underwriterService;
@@ -129,16 +124,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       email, id, amount.toString());
     paymentService.chargeMember(id, amount, email);
     return memberLoader.load(id);
-  }
-
-  public AutoLabelDTO autoLabelQuestion(
-    String question,
-    String label,
-    String memberId,
-    List<String> messageIds
-  ) {
-    autoAnswerSuggestionService.autoLabelQuestion(question, label, memberId, messageIds);
-    return new AutoLabelDTO(true);
   }
 
   public CompletableFuture<Member> addAccountEntryToMember(
