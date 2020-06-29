@@ -995,6 +995,7 @@ type Claim {
   events: [ClaimEvent]
   coveringEmployee: Boolean!
   claimFiles: [ClaimFileUpload!]!
+  contract: Contract
 }
 
 type ClaimNote {

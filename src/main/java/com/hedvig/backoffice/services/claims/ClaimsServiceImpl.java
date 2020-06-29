@@ -153,6 +153,7 @@ public class ClaimsServiceImpl implements ClaimsService {
         claimWithSigned.setClaimID(c.getClaimID());
         claimWithSigned.setDate(c.getDate());
         claimWithSigned.setUserId(c.getUserId());
+        claimWithSigned.setContractId(c.getContractId());
         return claimWithSigned;
       })
       .collect(Collectors.toList());

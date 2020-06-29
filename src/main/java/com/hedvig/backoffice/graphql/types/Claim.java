@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.graphql.types;
 
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
 import lombok.Value;
 
 import org.javamoney.moneta.Money;
@@ -29,6 +30,7 @@ public class Claim {
   List<ClaimData> _claimData;
   boolean coveringEmployee;
   public List<ClaimFile> claimFiles;
+  UUID contractId;
 
   public static Claim fromDTO(com.hedvig.backoffice.services.claims.dto.Claim dto) {
     return new Claim(UUID.fromString(dto.getId()), dto.getAudioURL(),
@@ -53,7 +55,9 @@ public class Claim {
       dto.isCoveringEmployee(),
       dto.getClaimFiles().stream().map(ClaimFile.Companion::fromDTO)
         .collect(Collectors.toList()
-      ));
+      ),
+      dto.getContractId()
+    );
   }
 
 }
