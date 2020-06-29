@@ -130,6 +130,7 @@ type MutationType {
   upsertClaimItem(request: UpsertClaimItemInput): ID!
   deleteClaimItem(claimItemId: ID!): ID
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
+  upsertEvaluationRule(request: UpsertEvaluationRuleInput): ID!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
@@ -148,6 +149,7 @@ type ClaimItem {
   itemCompany: ItemCompany
   dateOfPurchase: LocalDate
   purchasePrice: MonetaryAmountV2
+  valuation: MonetaryAmountV2
   note: String
 }
 
@@ -182,6 +184,8 @@ input UpsertClaimItemInput {
   dateOfPurchase: LocalDate
   purchasePriceAmount: Float
   purchasePriceCurrency: String
+  valuationAmount: Float
+  valuationCurrency: String
   note: String
 }
 
@@ -207,6 +211,17 @@ input UpsertItemModelInput {
   id: ID
   name: String!
   itemBrandId: ID!
+}
+
+input UpsertEvaluationRuleInput {
+  id: ID
+  name: String!
+  ageLimit: Float!
+  typeOfContract: String!
+  itemFamilyId: String!
+  itemTypeId: String
+  evaluationType: String!
+  depreciation: Float
 }
 
 type Contract {

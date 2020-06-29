@@ -2,9 +2,7 @@ package com.hedvig.backoffice.services.itemizer
 
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
-import com.hedvig.backoffice.services.itemizer.dto.CanEvaluate
 import com.hedvig.backoffice.services.itemizer.dto.request.*
-import com.hedvig.itemizer.evaluations.web.dto.request.UpsertEvaluationRuleRequest
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
@@ -37,9 +35,8 @@ class ItemizerServiceImpl(
 
   override fun deleteClaimItem(claimItemId: UUID, email: String) = itemizerClient.deleteClaimItem(claimItemId, email)
 
-  override fun upsertEvaluationRule(request: UpsertEvaluationRuleRequest, email: String): UUID {
-    TODO("Not yet implemented")
-  }
+  override fun upsertEvaluationRule(request: UpsertEvaluationRuleRequest, email: String) =
+    itemizerClient.upsertEvaluationRule(request, email)
 
   override fun canEvaluate(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?) =
     itemizerClient.canEvaluate(typeOfContract, itemFamilyId, itemTypeId)

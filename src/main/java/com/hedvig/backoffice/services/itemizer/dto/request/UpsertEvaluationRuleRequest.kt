@@ -1,4 +1,4 @@
-package com.hedvig.itemizer.evaluations.web.dto.request
+package com.hedvig.backoffice.services.itemizer.dto.request
 
 import java.math.BigDecimal
 import java.util.*

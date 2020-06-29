@@ -101,4 +101,10 @@ interface ItemizerClient {
     @RequestParam itemTypeId: UUID?
   ): CanEvaluate
 
+  @PostMapping("/_/evaluate/rule/upsert")
+  fun upsertEvaluationRule(
+    @RequestBody request: UpsertEvaluationRuleRequest,
+    @RequestParam updatedBy: String
+  ): UUID
+
 }

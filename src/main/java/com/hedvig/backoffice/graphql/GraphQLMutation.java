@@ -717,6 +717,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return itemizerService.deleteClaimItem(claimItemId, getEmail(env));
   }
 
+  public UUID upsertEvaluationRule(final UpsertEvaluationRuleRequest request, DataFetchingEnvironment env) {
+    return itemizerService.upsertEvaluationRule(request, getEmail(env));
+  }
+
   public List<Boolean> insertItemCategories(final InsertItemCategoriesRequest request, DataFetchingEnvironment env) {
     return itemizerService.insertItemCategories(request, getEmail(env));
   }

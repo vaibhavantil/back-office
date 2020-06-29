@@ -15,5 +15,7 @@ data class UpsertClaimItemRequest(
     val dateOfPurchase: LocalDate?,
     val purchasePriceAmount: BigDecimal?,
     val purchasePriceCurrency: String?,
+    val valuationAmount: BigDecimal?,
+    val valuationCurrency: String?,
     val note: String?
 )

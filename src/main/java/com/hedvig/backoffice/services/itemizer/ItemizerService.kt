@@ -6,7 +6,6 @@ import com.hedvig.backoffice.services.itemizer.dto.CanEvaluate
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.Evaluation
 import com.hedvig.backoffice.services.itemizer.dto.request.*
-import com.hedvig.itemizer.evaluations.web.dto.request.UpsertEvaluationRuleRequest
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
