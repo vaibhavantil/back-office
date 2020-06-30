@@ -8,6 +8,7 @@ import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.Claim;
 import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
+import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
@@ -712,6 +713,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     );
     return true;
   }
+
+  public Boolean setContractForClaim(SetContractForClaim request) {
+    claimsService.setContractForClaim(request);
+    return true;
+  }
+
 
   private String getEmail(DataFetchingEnvironment env) {
     try {

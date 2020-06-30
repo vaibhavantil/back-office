@@ -2,10 +2,10 @@ package com.hedvig.backoffice.services.claims;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
+import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
 import com.hedvig.backoffice.services.claims.dto.*;
 import feign.FeignException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.stream.Stream;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,6 +152,7 @@ public class ClaimsServiceImpl implements ClaimsService {
         claimWithSigned.setClaimID(c.getClaimID());
         claimWithSigned.setDate(c.getDate());
         claimWithSigned.setUserId(c.getUserId());
+        claimWithSigned.setContractId(c.getContractId());
         return claimWithSigned;
       })
       .collect(Collectors.toList());
@@ -213,6 +214,11 @@ public class ClaimsServiceImpl implements ClaimsService {
     findClaimFileOrThrowException(claimFileId, claimId);
 
     this.client.setClaimFileCategory(claimId, claimFileId, category);
+  }
+
+  @Override
+  public void setContractForClaim(SetContractForClaim request) {
+    client.setContractForClaim(request);
   }
 
   private ClaimFileDTO findClaimFileOrThrowException(UUID claimFileId, String claimId) {

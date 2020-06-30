@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
+import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
 import com.hedvig.backoffice.services.claims.dto.*;
 import java.util.UUID;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -85,4 +86,7 @@ public interface ClaimsServiceClient {
     @PathVariable String claimId, @PathVariable UUID claimFileId,
     @RequestBody ClaimFileCategoryDTO dto
   );
+
+  @PostMapping("/_/claims/setContractForClaim")
+  ResponseEntity<Void> setContractForClaim(@RequestBody SetContractForClaim request);
 }
