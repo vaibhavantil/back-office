@@ -2,11 +2,10 @@ package com.hedvig.backoffice.services.claims;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
-import com.hedvig.backoffice.graphql.types.claims.AddContractIdToClaim;
+import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
 import com.hedvig.backoffice.services.claims.dto.*;
 import feign.FeignException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.stream.Stream;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -218,7 +217,7 @@ public class ClaimsServiceImpl implements ClaimsService {
   }
 
   @Override
-  public void addContractIdToClaim(AddContractIdToClaim request) {
+  public void setContractForClaim(SetContractForClaim request) {
     client.addContractIdToClaim(request);
   }
 

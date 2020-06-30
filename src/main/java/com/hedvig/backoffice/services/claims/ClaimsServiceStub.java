@@ -3,7 +3,7 @@ package com.hedvig.backoffice.services.claims;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
-import com.hedvig.backoffice.graphql.types.claims.AddContractIdToClaim;
+import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
 import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimEvent;
@@ -329,7 +329,7 @@ public class ClaimsServiceStub implements ClaimsService {
   }
 
   @Override
-  public void addContractIdToClaim(AddContractIdToClaim request) {
+  public void setContractForClaim(SetContractForClaim request) {
   }
 
   private void addEvent(Claim claim, String message) {

@@ -1,6 +1,6 @@
 package com.hedvig.backoffice.services.claims;
 
-import com.hedvig.backoffice.graphql.types.claims.AddContractIdToClaim;
+import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
 import com.hedvig.backoffice.services.claims.dto.*;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -134,7 +134,7 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   }
 
   @Override
-  public ResponseEntity<Void> addContractIdToClaim(AddContractIdToClaim request) {
+  public ResponseEntity<Void> setContractForClaim(SetContractForClaim request) {
     log.error("request to claim-service failed");
     return null;
   }
