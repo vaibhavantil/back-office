@@ -84,26 +84,26 @@ interface ItemizerClient {
     @RequestParam removedBy: String
   ): UUID
 
-  @GetMapping("/_/evaluate/item")
-  fun getEvaluation(
+  @GetMapping("/_/valuate/item")
+  fun getValuation(
     @RequestParam purchasePrice: BigDecimal,
     @RequestParam itemFamilyId: String,
     @RequestParam itemTypeId: UUID?,
     @RequestParam typeOfContract: String,
     @RequestParam purchaseDate: LocalDate,
     @RequestParam baseDate: LocalDate?
-  ): Evaluation
+  ): ClaimItemValuation
 
-  @GetMapping("/_/evaluate/rule/exists")
-  fun canEvaluate(
+  @GetMapping("/_/valuate/rule/exists")
+  fun canValuateClaimItem(
     @RequestParam typeOfContract: String,
     @RequestParam itemFamilyId: String,
     @RequestParam itemTypeId: UUID?
-  ): CanEvaluate
+  ): CanValuateClaimItem
 
-  @PostMapping("/_/evaluate/rule/upsert")
-  fun upsertEvaluationRule(
-    @RequestBody request: UpsertEvaluationRuleRequest,
+  @PostMapping("/_/valuate/rule/upsert")
+  fun upsertValuationRule(
+    @RequestBody request: UpsertValuationRuleRequest,
     @RequestParam updatedBy: String
   ): UUID
 

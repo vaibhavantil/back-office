@@ -21,9 +21,9 @@ import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
-import com.hedvig.backoffice.services.itemizer.dto.CanEvaluate;
+import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
-import com.hedvig.backoffice.services.itemizer.dto.Evaluation;
+import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.PartnerResponseDto;
@@ -204,7 +204,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return personnelService.getIdToken(context.getUserPrincipal().getName());
   }
 
-  public Evaluation getEvaluation(
+  public ClaimItemValuation getClaimItemValuation(
     BigDecimal purchasePrice,
     String itemFamilyId,
     UUID itemTypeId,
@@ -212,7 +212,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     LocalDate purchaseDate,
     LocalDate baseDate
   ) {
-    return itemizerService.getEvaluation(
+    return itemizerService.getValuation(
       purchasePrice,
       itemFamilyId,
       itemTypeId,
@@ -222,8 +222,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     );
   }
 
-  public CanEvaluate canEvaluate(String typeOfContract, String itemFamilyId, UUID itemTypeId) {
-    return itemizerService.canEvaluate(typeOfContract, itemFamilyId, itemTypeId);
+  public CanValuateClaimItem canValuateClaimItem(String typeOfContract, String itemFamilyId, UUID itemTypeId) {
+    return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
   }
 
   private String getEmail(DataFetchingEnvironment env) {

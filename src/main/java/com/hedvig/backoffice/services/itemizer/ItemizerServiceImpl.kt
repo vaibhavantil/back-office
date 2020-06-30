@@ -35,19 +35,19 @@ class ItemizerServiceImpl(
 
   override fun deleteClaimItem(claimItemId: UUID, email: String) = itemizerClient.deleteClaimItem(claimItemId, email)
 
-  override fun upsertEvaluationRule(request: UpsertEvaluationRuleRequest, email: String) =
-    itemizerClient.upsertEvaluationRule(request, email)
+  override fun upsertValuationRule(request: UpsertValuationRuleRequest, email: String) =
+    itemizerClient.upsertValuationRule(request, email)
 
-  override fun canEvaluate(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?) =
-    itemizerClient.canEvaluate(typeOfContract, itemFamilyId, itemTypeId)
+  override fun canValuateClaimItem(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?) =
+    itemizerClient.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId)
 
-  override fun getEvaluation(
+  override fun getValuation(
     purchasePrice: BigDecimal,
     itemFamilyId: String,
     itemTypeId: UUID?,
     typeOfContract: String,
     purchaseDate: LocalDate,
-    baseDate: LocalDate?) = itemizerClient.getEvaluation(
+    baseDate: LocalDate?) = itemizerClient.getValuation(
     purchasePrice,
     itemFamilyId,
     itemTypeId,
