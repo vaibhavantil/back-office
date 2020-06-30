@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface NotificationService {
 
-  void sendPushNotification(String memberId);
+  void sendPushNotification(String memberId, String message);
 
   Optional<String> getFirebaseToken(String memberId);
 

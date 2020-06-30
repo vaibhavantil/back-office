@@ -27,7 +27,7 @@ class ChatServiceV2Impl(
   override fun sendMessage(memberId: String, message: String, forceSendMessage: Boolean, personnelId: String, personnelToken: String): SendMessageResponse {
     try {
       botService.response(memberId, message, forceSendMessage, personnelToken)
-      sendNotification(memberId, personnelToken)
+      sendNotification(memberId, personnelToken, message)
     } catch (e: ExternalServiceBadRequestException) {
       logger.error("chat not updated memberId = $memberId", e)
       return SendMessageResponse.Failed(memberId, 400, e.message)
@@ -38,9 +38,9 @@ class ChatServiceV2Impl(
     return SendMessageResponse.Successful(memberId)
   }
 
-  override fun sendNotification(memberId: String, personnelToken: String) {
+  override fun sendNotification(memberId: String, personnelToken: String, message: String) {
     if (notificationService.getFirebaseToken(memberId).isPresent) {
-      notificationService.sendPushNotification(memberId)
+      notificationService.sendPushNotification(memberId, message)
       return
     }
     expoNotificationService.sendNotification(memberId, personnelToken)

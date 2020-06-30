@@ -1,5 +1,7 @@
 package com.hedvig.backoffice.services.notificationService;
 
+import com.hedvig.backoffice.services.notificationService.dto.SendPushNotificationRequest;
+
 import feign.FeignException;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -17,8 +19,8 @@ public class NotificationServiceImpl implements NotificationService {
   }
 
   @Override
-  public void sendPushNotification(String memberId) {
-    notificationServiceClient.sendPushNotification(memberId);
+  public void sendPushNotification(String memberId, String message) {
+    notificationServiceClient.sendPushNotification(memberId, new SendPushNotificationRequest(message));
   }
 
   @Override
