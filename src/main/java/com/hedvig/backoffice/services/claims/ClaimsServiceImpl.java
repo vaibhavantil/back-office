@@ -218,7 +218,7 @@ public class ClaimsServiceImpl implements ClaimsService {
 
   @Override
   public void setContractForClaim(SetContractForClaim request) {
-    client.addContractIdToClaim(request);
+    client.setContractForClaim(request);
   }
 
   private ClaimFileDTO findClaimFileOrThrowException(UUID claimFileId, String claimId) {
