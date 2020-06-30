@@ -329,9 +329,9 @@ type Renewal {
 }
 
 input AddContractIdToClaim {
+  claimId: String!
   memberId: String!
-  claimId: ID!
-  contractId: ID!
+  contractId: String!
 }
 
 input TerminateContractInput {
