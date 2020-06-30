@@ -729,7 +729,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
-  public Boolean setContractForClaim(SetContractForClaim request, DataFetchingEnvironment env) {
+  public Boolean setContractForClaim(SetContractForClaim request) {
     claimsService.setContractForClaim(request);
     return true;
   }
