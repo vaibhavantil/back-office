@@ -28,7 +28,7 @@ public class AccountServiceStub implements AccountService {
       new AccountEntryDTO(
         UUID.randomUUID(),
         LocalDate.now(),
-        Money.of(50, "SEK"),
+        Money.of(BigDecimal.TEN, "SEK"),
         AccountEntryType.CAMPAIGN,
         "Member",
         "123123",
@@ -43,7 +43,7 @@ public class AccountServiceStub implements AccountService {
       new AccountEntryDTO(
         UUID.randomUUID(),
         LocalDate.now(),
-        Money.of(-100, "SEK"),
+        Money.of(BigDecimal.TEN.negate(), "SEK"),
         AccountEntryType.SUBSCRIPTION,
         "Product",
         UUID.randomUUID().toString(),

@@ -48,22 +48,11 @@ intervals:
   chat: 1000
   claims: 60000
 
-websocket:
-  max-sile-size: 5242880
-
 tracker:
   baseUrl: http://localhost:4082
   urls:
     assets: /assets
     update: /asset
-  stub: false
-
-hopeAutocompleteService:
-  baseUrl: http://localhost:5000
-  stub: true
-
-autoAnswerSuggestionService:
-  baseUrl: http://localhost:5001
   stub: false
 
 botservice:

@@ -11,7 +11,6 @@ type QueryType {
   ticket(id: ID!): Ticket
   getFullTicketHistory(id: ID!): TicketHistory
   tickets(resolved: Boolean): [Ticket!]!
-  getAnswerSuggestion(question: String): [Suggestion!]!
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   messageHistory(memberId: ID!): [ChatMessage!]!
@@ -63,12 +62,6 @@ type MutationType {
   changeTicketStatus(ticketId: ID!, newStatus: TicketStatus): ID
   changeTicketReminder(ticketId: ID!, newReminder: RemindNotification): ID
   changeTicketPriority(ticketId: ID!, newPriority: Float): ID
-  autoLabelQuestion(
-    question: String!
-    label: String!
-    memberId: String
-    messageIds: [String!]
-  ): AutoLabel
   whitelistMember(memberId: ID!): Boolean
   markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
   backfillSubscriptions(memberId: ID!): Member!
@@ -133,6 +126,9 @@ type MutationType {
   upsertValuationRule(request: UpsertValuationRuleInput): ID!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
+  ): Boolean!
+  setContractForClaim(
+    request: SetContractForClaim!
   ): Boolean!
 }
 
@@ -374,6 +370,12 @@ type Renewal {
   draftOfAgreementId: ID
 }
 
+input SetContractForClaim {
+  claimId: String!
+  memberId: String!
+  contractId: String!
+}
+
 input TerminateContractInput {
   terminationDate: LocalDate!
   terminationReason: TerminationReason!
@@ -531,22 +533,6 @@ enum ItemCategoryKind {
   BRAND
   MODEL
   COMPANY
-}
-
-type Suggestion {
-  intent: String!
-  reply: String!
-  text: String!
-  confidence: Float!
-  allReplies: [AllRepliesEntry!]!
-}
-type AllRepliesEntry {
-  intent: String!
-  reply: String!
-}
-
-type AutoLabel {
-  message: Boolean
 }
 
 type FileUpload {
@@ -1035,6 +1021,7 @@ type Claim {
   events: [ClaimEvent]
   coveringEmployee: Boolean!
   claimFiles: [ClaimFileUpload!]!
+  contract: Contract
 }
 
 type ClaimNote {
