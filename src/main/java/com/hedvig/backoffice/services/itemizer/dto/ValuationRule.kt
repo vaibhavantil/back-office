@@ -10,5 +10,5 @@ data class ValuationRule (
   val ageLimit: BigDecimal,
   val typeOfContract: String,
   val valuationType: String,
-  val depreciation: BigDecimal?
+  val depreciation: Int?
 )

@@ -11,5 +11,5 @@ data class UpsertValuationRuleRequest(
   val itemFamilyId: String,
   val itemTypeId: UUID?,
   val valuationType: String,
-  val depreciation: BigDecimal?
+  val depreciation: Int?
 )
