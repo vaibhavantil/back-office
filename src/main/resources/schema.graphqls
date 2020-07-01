@@ -183,11 +183,9 @@ input UpsertClaimItemInput {
   itemBrandId: ID
   itemModelId: ID
   dateOfPurchase: LocalDate
-  purchasePriceAmount: Float
-  purchasePriceCurrency: String
-  valuationAmount: Float
-  customValuationAmount: Float
-  valuationCurrency: String
+  purchasePrice: MonetaryAmount
+  valuation: MonetaryAmount
+  customValuation: MonetaryAmount
   note: String
 }
 
