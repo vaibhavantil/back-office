@@ -22,6 +22,7 @@ import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation;
+import com.hedvig.backoffice.services.itemizer.dto.request.GetValuationRequest;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.PartnerResponseDto;
@@ -34,8 +35,6 @@ import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
@@ -195,22 +194,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return personnelService.getIdToken(context.getUserPrincipal().getName());
   }
 
-  public ClaimItemValuation getClaimItemValuation(
-    BigDecimal purchasePrice,
-    String itemFamilyId,
-    UUID itemTypeId,
-    String typeOfContract,
-    LocalDate purchaseDate,
-    LocalDate baseDate
-  ) {
-    return itemizerService.getValuation(
-      purchasePrice,
-      itemFamilyId,
-      itemTypeId,
-      typeOfContract,
-      purchaseDate,
-      baseDate
-    );
+  public ClaimItemValuation getClaimItemValuation(GetValuationRequest request) {
+    return itemizerService.getValuation(request);
   }
 
   public CanValuateClaimItem canValuateClaimItem(String typeOfContract, String itemFamilyId, UUID itemTypeId) {

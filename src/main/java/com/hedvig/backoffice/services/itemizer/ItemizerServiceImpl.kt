@@ -3,8 +3,6 @@ package com.hedvig.backoffice.services.itemizer
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
 import com.hedvig.backoffice.services.itemizer.dto.request.*
-import java.math.BigDecimal
-import java.time.LocalDate
 import java.util.*
 
 class ItemizerServiceImpl(
@@ -41,18 +39,5 @@ class ItemizerServiceImpl(
   override fun canValuateClaimItem(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?) =
     itemizerClient.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId)
 
-  override fun getValuation(
-    purchasePrice: BigDecimal,
-    itemFamilyId: String,
-    itemTypeId: UUID?,
-    typeOfContract: String,
-    purchaseDate: LocalDate,
-    baseDate: LocalDate?) = itemizerClient.getValuation(
-    purchasePrice,
-    itemFamilyId,
-    itemTypeId,
-    typeOfContract,
-    purchaseDate,
-    baseDate
-  )
+  override fun getValuation(request: GetValuationRequest) = itemizerClient.getValuation(request)
 }

@@ -6,8 +6,7 @@ import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation
 import com.hedvig.backoffice.services.itemizer.dto.request.*
-import java.math.BigDecimal
-import java.time.LocalDate
+import com.hedvig.graphql.commons.type.MonetaryAmountV2
 import java.util.*
 
 class ItemizerServiceStub : ItemizerService {
@@ -33,12 +32,5 @@ class ItemizerServiceStub : ItemizerService {
 
   override fun canValuateClaimItem(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?) = CanValuateClaimItem(false, null, null)
 
-  override fun getValuation(
-    purchasePrice: BigDecimal,
-    itemFamilyId: String,
-    itemTypeId: UUID?,
-    typeOfContract: String,
-    purchaseDate: LocalDate,
-    baseDate: LocalDate?
-  ) = ClaimItemValuation(BigDecimal(1000), null)
+  override fun getValuation(request: GetValuationRequest) = ClaimItemValuation(MonetaryAmountV2("1000", "SEK"), null)
 }
