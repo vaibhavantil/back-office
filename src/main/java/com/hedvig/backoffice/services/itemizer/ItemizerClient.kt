@@ -19,7 +19,7 @@ interface ItemizerClient {
     @RequestParam insertedBy: String
   ): List<Boolean>
 
-  @PostMapping("/_/valuation/add")
+  @PostMapping("/_/valuate/add")
   fun insertValuationRules(
     @RequestBody request: InsertValuationRulesRequest,
     @RequestParam insertedBy: String
