@@ -20,20 +20,19 @@ class QuestionGroupResolver
 ) :
   GraphQLResolver<QuestionGroupType?> {
   fun getMember(
-    schedulerStatus: QuestionGroupType,
+    QuestionGroup: QuestionGroupType,
     env: DataFetchingEnvironment?
   ): Member {
-    val token = GraphQLConfiguration.getIdToken(env, personnelService)
     return try {
       fromDTO(
         memberService.findByMemberId(
-          schedulerStatus.memberId,
-          token
+          QuestionGroup.memberId,
+          GraphQLConfiguration.getIdToken(env, personnelService)
         )
       )
     } catch (e: Exception) {
       Member(
-        schedulerStatus.memberId,
+        QuestionGroup.memberId,
         "UNKNOWN",
         "UNKNOWN",
         "Unknown",
