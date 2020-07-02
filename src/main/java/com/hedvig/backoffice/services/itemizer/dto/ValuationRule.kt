@@ -8,7 +8,7 @@ data class ValuationRule (
   val itemFamily: String,
   val itemTypeId: UUID?,
   val ageLimit: BigDecimal,
-  val typeOfContract: String,
+  val typeOfContract: String?,
   val valuationType: String,
   val depreciation: Int?
 )

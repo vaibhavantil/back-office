@@ -8,7 +8,7 @@ data class GetValuationRequest(
   val purchasePrice: MonetaryAmount,
   val itemFamilyId: String,
   val itemTypeId: UUID?,
-  val typeOfContract: String,
+  val typeOfContract: String?,
   val purchaseDate: LocalDate,
   val baseDate: LocalDate?
 )

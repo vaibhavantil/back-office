@@ -7,7 +7,7 @@ data class UpsertValuationRuleRequest(
   val id: UUID? = null,
   val name: String,
   val ageLimit: BigDecimal,
-  val typeOfContract: String,
+  val typeOfContract: String?,
   val itemFamilyId: String,
   val itemTypeId: UUID?,
   val valuationType: String,

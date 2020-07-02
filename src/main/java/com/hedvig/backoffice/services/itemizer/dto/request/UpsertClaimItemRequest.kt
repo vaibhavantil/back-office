@@ -13,7 +13,7 @@ data class UpsertClaimItemRequest(
     val itemModelId: UUID?,
     val dateOfPurchase: LocalDate?,
     val purchasePrice: MonetaryAmount?,
-    val valuation: MonetaryAmount?,
+    val automaticValuation: MonetaryAmount?,
     val customValuation: MonetaryAmount?,
     val note: String?
 )
