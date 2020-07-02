@@ -26,7 +26,9 @@ class QuestionGroupResolver
           GraphQLConfiguration.getIdToken(env, personnelService)
         )
       )
-    } catch (e: Exception) {
+    } catch (exception: Exception) {
+      logger.error("Unable get to resolve member for Question Group (memberId=${questionGroup.memberId}), exception)
+      Sentry.capture(exception)
       null
     }
   }
