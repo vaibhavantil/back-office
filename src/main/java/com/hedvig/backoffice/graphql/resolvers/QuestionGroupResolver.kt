@@ -17,8 +17,7 @@ class QuestionGroupResolver
   (
   private val memberService: MemberService,
   private val personnelService: PersonnelService
-) :
-  GraphQLResolver<QuestionGroupType?> {
+) : GraphQLResolver<QuestionGroupType?> {
   fun getMember(
     QuestionGroup: QuestionGroupType,
     env: DataFetchingEnvironment?
