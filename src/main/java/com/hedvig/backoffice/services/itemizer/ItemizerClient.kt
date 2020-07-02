@@ -19,6 +19,12 @@ interface ItemizerClient {
     @RequestParam insertedBy: String
   ): List<Boolean>
 
+  @PostMapping("/_/valuation/add")
+  fun insertValuationRules(
+    @RequestBody request: InsertValuationRulesRequest,
+    @RequestParam insertedBy: String
+  ): List<Boolean>
+
   @GetMapping("/_/item/families")
   fun getFamilies(): List<ItemFamily>
 

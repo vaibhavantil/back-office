@@ -21,11 +21,7 @@ type QueryType {
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   dashboardNumbers: DashboardNumbers
   getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
-  canValuateClaimItem(
-    typeOfContract: String,
-    itemFamilyId: String!,
-    itemTypeId: ID
-  ): CanValuateClaimItem
+  canValuateClaimItem(typeOfContract: String, itemFamilyId: String!, itemTypeId: ID): CanValuateClaimItem
 }
 
 type DashboardNumbers {
@@ -116,6 +112,7 @@ type MutationType {
   upsertClaimItem(request: UpsertClaimItemInput): ID!
   deleteClaimItem(claimItemId: ID!): ID
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
+  insertValuationRules(request: InsertValuationRulesInput): [Boolean!]!
   upsertValuationRule(request: UpsertValuationRuleInput): ID!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
@@ -123,10 +120,6 @@ type MutationType {
   setContractForClaim(
     request: SetContractForClaim!
   ): Boolean!
-}
-
-input InsertItemCategoriesInput {
-  itemCategoriesString: String!
 }
 
 type ClaimItem {
@@ -140,6 +133,14 @@ type ClaimItem {
   purchasePrice: MonetaryAmountV2
   valuation: MonetaryAmountV2
   note: String
+}
+
+input InsertItemCategoriesInput {
+  itemCategoriesString: String!
+}
+
+input InsertValuationRulesInput {
+  valuationRulesString: String!
 }
 
 input GetValuationInput {
@@ -216,7 +217,7 @@ input UpsertValuationRuleInput {
   id: ID
   name: String!
   ageLimit: Float!
-  typeOfContract: String
+  typeOfContract: String!
   itemFamilyId: String!
   itemTypeId: String
   valuationType: String!

@@ -711,6 +711,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return itemizerService.insertItemCategories(request, getEmail(env));
   }
 
+  public List<Boolean> insertValuationRules(final InsertValuationRulesRequest request, DataFetchingEnvironment env) {
+    return itemizerService.insertValuationRules(request, getEmail(env));
+  }
+
   public Boolean assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscount request, DataFetchingEnvironment env) {
     productPricingService.assignCampaignToPartnerPercentageDiscount(
       AssignVoucherPercentageDiscountRequest.Companion.from(request)
