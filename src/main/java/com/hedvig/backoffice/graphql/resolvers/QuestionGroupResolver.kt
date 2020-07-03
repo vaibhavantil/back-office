@@ -38,7 +38,7 @@ class QuestionGroupResolver
   }
 
   companion object {
-    private val logger = LoggerFactory.getLogger(ChatServiceV2Impl::class.java)
+    private val logger = LoggerFactory.getLogger(QuestionGroupResolver::class.java)
   }
 
 }
