@@ -20,6 +20,6 @@ interface ItemizerService {
   fun getClaimItems(claimId: UUID): List<ClaimItem>
   fun deleteClaimItem(claimItemId: UUID, email: String): UUID
   fun upsertValuationRule(request: UpsertValuationRuleRequest, email: String): UUID
-  fun canValuateClaimItem(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?): CanValuateClaimItem
+  fun canValuateClaimItem(typeOfContract: String?, itemFamilyId: String, itemTypeId: UUID?): CanValuateClaimItem
   fun getValuation(request: GetValuationRequest): ClaimItemValuation
 }

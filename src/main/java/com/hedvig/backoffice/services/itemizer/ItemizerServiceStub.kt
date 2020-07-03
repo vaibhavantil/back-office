@@ -32,7 +32,7 @@ class ItemizerServiceStub : ItemizerService {
 
   override fun upsertValuationRule(request: UpsertValuationRuleRequest, email: String): UUID = UUID.randomUUID()
 
-  override fun canValuateClaimItem(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?) = CanValuateClaimItem(false, null, null, null)
+  override fun canValuateClaimItem(typeOfContract: String?, itemFamilyId: String, itemTypeId: UUID?) = CanValuateClaimItem(false, null, null, null)
 
   override fun getValuation(request: GetValuationRequest) = ClaimItemValuation(MonetaryAmountV2("1000", "SEK"), null)
 }
