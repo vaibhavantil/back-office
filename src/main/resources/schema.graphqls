@@ -179,6 +179,7 @@ type Contract {
   switchedFrom: String
   masterInception: LocalDate
   status: ContractStatus!
+  typeOfContract: TypeOfContract!
   isTerminated: Boolean!
   terminationDate: LocalDate
   currentAgreementId: ID!
@@ -191,6 +192,20 @@ type Contract {
   signSource: SignSource
   contractTypeName: String!
   createdAt: Instant!
+}
+
+enum TypeOfContract {
+  SE_HOUSE
+  SE_APARTMENT_BRF
+  SE_APARTMENT_RENT
+  SE_APARTMENT_STUDENT_BR
+  SE_APARTMENT_STUDENT_REN
+  NO_HOME_CONTENT_OWN
+  NO_HOME_CONTENT_RENT
+  NO_HOME_CONTENT_YOUTH_OWN
+  NO_HOME_CONTENT_YOUTH_RENT
+  NO_TRAVEL
+  NO_TRAVEL_YOUTH
 }
 
 enum ContractStatus {
