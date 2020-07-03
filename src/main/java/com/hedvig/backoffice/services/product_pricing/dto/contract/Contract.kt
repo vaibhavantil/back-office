@@ -14,6 +14,7 @@ data class Contract(
   val switchedFrom: String?,
   val masterInception: LocalDate?,
   val status: ContractStatus,
+  val typeOfContract: TypeOfContract,
   @get:JsonProperty("isTerminated")
   val isTerminated: Boolean,
   val terminationDate: LocalDate?,
