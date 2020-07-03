@@ -10,6 +10,8 @@ import com.hedvig.backoffice.graphql.types.ClaimFileUpload;
 import com.hedvig.backoffice.graphql.types.Member;
 import com.hedvig.backoffice.services.UploadedFilePostprocessor;
 import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +27,18 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
   private final MemberLoader memberLoader;
   private final UploadedFilePostprocessor uploadedFilePostprocessor;
   private final ClaimsService claimsService;
+  private final ProductPricingService productPricingService;
 
-  public ClaimResolver(MemberLoader memberLoader,
-                       UploadedFilePostprocessor uploadedFilePostprocessor,
-                       ClaimsService claimsService) {
+  public ClaimResolver(
+    MemberLoader memberLoader,
+    UploadedFilePostprocessor uploadedFilePostprocessor,
+    ClaimsService claimsService,
+    ProductPricingService productPricingService
+  ) {
     this.memberLoader = memberLoader;
     this.uploadedFilePostprocessor = uploadedFilePostprocessor;
     this.claimsService = claimsService;
+    this.productPricingService = productPricingService;
   }
 
   public CompletableFuture<Member> getMember(Claim claim) {
@@ -138,5 +145,12 @@ public class ClaimResolver implements GraphQLResolver<Claim> {
       }
     }
     throw new RuntimeException(String.format("Unsupported claim type: %s", claim.get_type()));
+  }
+
+  public Contract getContract(Claim claim) {
+   if(claim.getContractId() != null) {
+     return productPricingService.getContractById(claim.getContractId());
+   }
+   return null;
   }
 }

@@ -9,7 +9,6 @@ import com.hedvig.backoffice.services.members.dto.PickedLocaleDTO
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO
 import org.springframework.data.domain.Sort
 
-
 interface MemberService {
 
     fun search(includeAll: Boolean?, query: String, token: String): List<MemberDTO>

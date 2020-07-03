@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.claims;
 
+import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
 import com.hedvig.backoffice.services.claims.dto.*;
 import java.io.IOException;
 import org.springframework.data.domain.Sort;
@@ -51,4 +52,6 @@ public interface ClaimsService {
   void markClaimFileAsDeleted(String claimId, UUID claimFileId, MarkClaimFileAsDeletedDTO deletedBy);
 
   void setClaimFileCategory(String claimId, UUID claimFileId, ClaimFileCategoryDTO category);
+
+  void setContractForClaim(SetContractForClaim request);
 }

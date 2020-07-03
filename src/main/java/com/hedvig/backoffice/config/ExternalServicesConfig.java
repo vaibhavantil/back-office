@@ -6,21 +6,12 @@ import com.hedvig.backoffice.services.account.AccountServiceStub;
 import com.hedvig.backoffice.services.apigateway.ApiGatewayService;
 import com.hedvig.backoffice.services.apigateway.ApiGatewayServiceImpl;
 import com.hedvig.backoffice.services.apigateway.ApiGatewayServiceStub;
-import com.hedvig.backoffice.services.assettracker.AssetTrackerClient;
-import com.hedvig.backoffice.services.assettracker.AssetTrackerClientImpl;
-import com.hedvig.backoffice.services.assettracker.AssetTrackerClientStub;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionServiceImpl;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionServiceStub;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.ClaimsServiceImpl;
 import com.hedvig.backoffice.services.claims.ClaimsServiceStub;
 import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.expo.ExpoNotificationServiceImpl;
 import com.hedvig.backoffice.services.expo.ExpoNotificationServiceStub;
-import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteService;
-import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteServiceImpl;
-import com.hedvig.backoffice.services.hopeAutocomplete.HopeAutocompleteServiceStub;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.ItemizerServiceStub;
 import com.hedvig.backoffice.services.itemizer.ItemizerServiceImpl;
@@ -66,23 +57,6 @@ public class ExternalServicesConfig {
   @Autowired
   public ExternalServicesConfig(ApplicationContext context) {
     this.context = context;
-  }
-
-  @Bean
-  public AssetTrackerClient assetTracker(@Value("${tracker.stub:false}") boolean stub) {
-    val factory = context.getAutowireCapableBeanFactory();
-
-    return stub
-      ? factory.createBean(AssetTrackerClientStub.class)
-      : factory.createBean(AssetTrackerClientImpl.class);
-  }
-
-  @Bean
-  public HopeAutocompleteService hopeAutocompleteService(@Value("${hopeAutocompleteService.stub:false}") boolean stub) {
-    AutowireCapableBeanFactory factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(HopeAutocompleteServiceStub.class)
-      : factory.createBean(HopeAutocompleteServiceImpl.class);
   }
 
   @Bean
@@ -172,14 +146,6 @@ public class ExternalServicesConfig {
     return stub
       ? factory.createBean(TicketServiceStub.class)
       : factory.createBean(TicketServiceImpl.class);
-  }
-
-  @Bean
-  public AutoAnswerSuggestionService autoAnswerSuggestionService(@Value("${autoAnswerSuggestionService.stub:false}") boolean stub) {
-    val factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(AutoAnswerSuggestionServiceStub.class)
-      : factory.createBean(AutoAnswerSuggestionServiceImpl.class);
   }
 
   @Bean

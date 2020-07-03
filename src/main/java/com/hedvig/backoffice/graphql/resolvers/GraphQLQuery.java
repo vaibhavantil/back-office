@@ -7,16 +7,17 @@ import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
 import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.graphql.types.account.SchedulerStatus;
+import com.hedvig.backoffice.graphql.types.dashboard.DashboardNumbers;
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory;
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind;
 import com.hedvig.backoffice.graphql.types.questions.QuestionGroupType;
+import com.hedvig.backoffice.repository.QuestionGroupRepository;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.account.AccountService;
 import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.AutoAnswerSuggestionService;
-import com.hedvig.backoffice.services.autoAnswerSuggestion.DTOs.SuggestionDTO;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
+import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
 import com.hedvig.backoffice.services.members.MemberService;
@@ -49,9 +50,10 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final ItemizerService itemizerService;
   private final TicketService ticketService;
   private final PersonnelService personnelService;
-  private final AutoAnswerSuggestionService autoAnswerSuggestionService;
   private final ChatServiceV2 chatServiceV2;
   private final QuestionService questionService;
+  private final QuestionGroupRepository questionGroupRepository;
+  private final ClaimsService claimsService;
 
   public GraphQLQuery(
     ProductPricingService productPricingService,
@@ -61,10 +63,11 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     MemberService memberService,
     TicketService ticketService,
     PersonnelService personnelService,
-    AutoAnswerSuggestionService autoAnswerSuggestionService,
     ChatServiceV2 chatServiceV2,
     QuestionService questionService,
-    ItemizerService itemizerService
+    ItemizerService itemizerService,
+    QuestionGroupRepository questionGroupRepository,
+    ClaimsService claimsService
   ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
@@ -73,9 +76,10 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.itemizerService = itemizerService;
     this.ticketService = ticketService;
     this.personnelService = personnelService;
-    this.autoAnswerSuggestionService = autoAnswerSuggestionService;
     this.chatServiceV2 = chatServiceV2;
     this.questionService = questionService;
+    this.questionGroupRepository = questionGroupRepository;
+    this.claimsService = claimsService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -83,10 +87,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.getMonthlyPayments(month).stream()
       .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getSubscription()))
       .collect(Collectors.toList());
-  }
-
-  public List<SuggestionDTO> getAnswerSuggestion(String question) {
-    return autoAnswerSuggestionService.getAnswerSuggestion(question);
   }
 
   public CompletableFuture<Member> member(String id) {
@@ -179,12 +179,19 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return productPricingService.getPartnerCampaignOwners();
   }
 
+  public DashboardNumbers getDashboardNumbers(DataFetchingEnvironment env) {
+    String token = getToken(env);
+    Long claims = claimsService.totalClaims(token);
+    Long questions = questionGroupRepository.notAnsweredCount();
+    return new DashboardNumbers(claims, questions);
+  }
+
   private String getToken(DataFetchingEnvironment env) {
     GraphQLRequestContext context = env.getContext();
     return personnelService.getIdToken(context.getUserPrincipal().getName());
   }
 
-  private String getEmail(DataFetchingEnvironment  env) {
+  private String getEmail(DataFetchingEnvironment env) {
     try {
       return GraphQLConfiguration.getEmail(env, personnelService);
     } catch (AuthorizationException e) {
