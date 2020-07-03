@@ -1224,6 +1224,7 @@ type QuestionGroup {
   id: ID!
   memberId: ID!
   questions: [Question!]!
+  member: Member
 }
 
 type Question {
