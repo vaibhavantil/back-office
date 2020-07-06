@@ -95,7 +95,7 @@ interface ItemizerClient {
 
   @GetMapping("/_/valuate/rule/exists")
   fun canValuateClaimItem(
-    @RequestParam typeOfContract: String?,
+    @RequestParam typeOfContract: String,
     @RequestParam itemFamilyId: String,
     @RequestParam itemTypeId: UUID?
   ): CanValuateClaimItem

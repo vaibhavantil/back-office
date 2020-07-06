@@ -40,7 +40,7 @@ class ItemizerServiceImpl(
   override fun upsertValuationRule(request: UpsertValuationRuleRequest, email: String) =
     itemizerClient.upsertValuationRule(request, email)
 
-  override fun canValuateClaimItem(typeOfContract: String?, itemFamilyId: String, itemTypeId: UUID?) =
+  override fun canValuateClaimItem(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?) =
     itemizerClient.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId)
 
   override fun getValuation(request: GetValuationRequest) = itemizerClient.getValuation(request)
