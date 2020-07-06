@@ -21,7 +21,7 @@ type QueryType {
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   dashboardNumbers: DashboardNumbers
   getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
-  canValuateClaimItem(typeOfContract: String!, itemFamilyId: String!, itemTypeId: ID): CanValuateClaimItem
+  canValuateClaimItem(typeOfContract: TypeOfContract!, itemFamilyId: String!, itemTypeId: ID): CanValuateClaimItem
 }
 
 type DashboardNumbers {
@@ -147,7 +147,7 @@ input GetValuationInput {
   purchasePrice: MonetaryAmount!
   itemFamilyId: String!
   itemTypeId: ID
-  typeOfContract: String!
+  typeOfContract: TypeOfContract!
   purchaseDate: LocalDate!
   baseDate: LocalDate
 }
@@ -170,7 +170,7 @@ type ValuationRule {
 type CanValuateClaimItem
 {
   canValuate: Boolean!
-  typeOfContract: String
+  typeOfContract: TypeOfContract
   itemFamily: String
   itemTypeId: ID
 }
@@ -217,7 +217,7 @@ input UpsertValuationRuleInput {
   id: ID
   name: String!
   ageLimit: Float!
-  typeOfContract: String!
+  typeOfContract: TypeOfContract!
   itemFamilyId: String!
   itemTypeId: String
   valuationType: String!
@@ -251,8 +251,8 @@ enum TypeOfContract {
   SE_HOUSE
   SE_APARTMENT_BRF
   SE_APARTMENT_RENT
-  SE_APARTMENT_STUDENT_BR
-  SE_APARTMENT_STUDENT_REN
+  SE_APARTMENT_STUDENT_BRF
+  SE_APARTMENT_STUDENT_RENT
   NO_HOME_CONTENT_OWN
   NO_HOME_CONTENT_RENT
   NO_HOME_CONTENT_YOUTH_OWN

@@ -6,6 +6,7 @@ import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation
 import com.hedvig.backoffice.services.itemizer.dto.request.*
+import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract
 import java.util.*
 
 interface ItemizerService {
@@ -20,6 +21,6 @@ interface ItemizerService {
   fun getClaimItems(claimId: UUID): List<ClaimItem>
   fun deleteClaimItem(claimItemId: UUID, email: String): UUID
   fun upsertValuationRule(request: UpsertValuationRuleRequest, email: String): UUID
-  fun canValuateClaimItem(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?): CanValuateClaimItem
+  fun canValuateClaimItem(typeOfContract: TypeOfContract, itemFamilyId: String, itemTypeId: UUID?): CanValuateClaimItem
   fun getValuation(request: GetValuationRequest): ClaimItemValuation
 }

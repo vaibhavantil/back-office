@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.itemizer
 import com.hedvig.backoffice.config.feign.FeignConfig
 import com.hedvig.backoffice.services.itemizer.dto.*
 import com.hedvig.backoffice.services.itemizer.dto.request.*
+import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -95,7 +96,7 @@ interface ItemizerClient {
 
   @GetMapping("/_/valuate/rule/exists")
   fun canValuateClaimItem(
-    @RequestParam typeOfContract: String,
+    @RequestParam typeOfContract: TypeOfContract,
     @RequestParam itemFamilyId: String,
     @RequestParam itemTypeId: UUID?
   ): CanValuateClaimItem

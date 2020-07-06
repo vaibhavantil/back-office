@@ -28,6 +28,7 @@ import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
@@ -198,7 +199,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return itemizerService.getValuation(request);
   }
 
-  public CanValuateClaimItem canValuateClaimItem(String typeOfContract, String itemFamilyId, UUID itemTypeId) {
+  public CanValuateClaimItem canValuateClaimItem(TypeOfContract typeOfContract, String itemFamilyId, UUID itemTypeId) {
     return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
   }
 
