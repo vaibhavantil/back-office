@@ -14,11 +14,7 @@ data class ClaimItem(
   val itemModel: ItemModel?,
   val itemCompany: ItemCompany?,
   val dateOfPurchase: LocalDate?,
-  val purchasePriceAmount: BigDecimal?,
-  val purchasePriceCurrency: String?,
+  val purchasePrice: MonetaryAmountV2?,
+  val valuation: MonetaryAmountV2?,
   val note: String?
-) {
-  val purchasePrice: MonetaryAmountV2?
-    get() = if (purchasePriceAmount != null && purchasePriceCurrency != null)
-      MonetaryAmountV2.of(purchasePriceAmount, purchasePriceCurrency) else null
-}
+)

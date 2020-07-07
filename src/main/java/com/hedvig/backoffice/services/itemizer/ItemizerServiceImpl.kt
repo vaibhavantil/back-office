@@ -2,8 +2,8 @@ package com.hedvig.backoffice.services.itemizer
 
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
-import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.request.*
+import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract
 import java.util.*
 
 class ItemizerServiceImpl(
@@ -28,9 +28,21 @@ class ItemizerServiceImpl(
 
   override fun upsertClaimItem(request: UpsertClaimItemRequest, email: String) = itemizerClient.upsertClaimItem(request, email)
 
-  override fun insertItemCategories(request: InsertItemCategoriesRequest, email: String): List<Boolean> = itemizerClient.insertItemCategories(request, email)
+  override fun insertItemCategories(request: InsertItemCategoriesRequest, email: String) =
+    itemizerClient.insertItemCategories(request, email)
 
-  override fun getClaimItems(claimId: UUID): List<ClaimItem> = itemizerClient.getClaimItemsByClaimId(claimId)
+  override fun insertValuationRules(request: InsertValuationRulesRequest, email: String): List<Boolean> =
+    itemizerClient.insertValuationRules(request, email)
 
-  override fun deleteClaimItem(claimItemId: UUID, email: String): UUID = itemizerClient.deleteClaimItem(claimItemId, email)
+  override fun getClaimItems(claimId: UUID) = itemizerClient.getClaimItemsByClaimId(claimId)
+
+  override fun deleteClaimItem(claimItemId: UUID, email: String) = itemizerClient.deleteClaimItem(claimItemId, email)
+
+  override fun upsertValuationRule(request: UpsertValuationRuleRequest, email: String) =
+    itemizerClient.upsertValuationRule(request, email)
+
+  override fun canValuateClaimItem(typeOfContract: TypeOfContract, itemFamilyId: String, itemTypeId: UUID?) =
+    itemizerClient.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId)
+
+  override fun getValuation(request: GetValuationRequest) = itemizerClient.getValuation(request)
 }

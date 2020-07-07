@@ -19,12 +19,16 @@ import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
+import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
+import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation;
+import com.hedvig.backoffice.services.itemizer.dto.request.GetValuationRequest;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
@@ -189,6 +193,14 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private String getToken(DataFetchingEnvironment env) {
     GraphQLRequestContext context = env.getContext();
     return personnelService.getIdToken(context.getUserPrincipal().getName());
+  }
+
+  public ClaimItemValuation getClaimItemValuation(GetValuationRequest request) {
+    return itemizerService.getValuation(request);
+  }
+
+  public CanValuateClaimItem canValuateClaimItem(TypeOfContract typeOfContract, String itemFamilyId, UUID itemTypeId) {
+    return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
   }
 
   private String getEmail(DataFetchingEnvironment env) {

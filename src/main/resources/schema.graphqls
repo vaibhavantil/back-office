@@ -20,6 +20,8 @@ type QueryType {
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   dashboardNumbers: DashboardNumbers
+  getClaimItemValuation(request: GetValuationInput): ClaimItemValuation!
+  canValuateClaimItem(typeOfContract: TypeOfContract!, itemFamilyId: String!, itemTypeId: ID): CanValuateClaimItem
 }
 
 type DashboardNumbers {
@@ -110,16 +112,14 @@ type MutationType {
   upsertClaimItem(request: UpsertClaimItemInput): ID!
   deleteClaimItem(claimItemId: ID!): ID
   insertItemCategories(request: InsertItemCategoriesInput): [Boolean!]!
+  insertValuationRules(request: InsertValuationRulesInput): [Boolean!]!
+  upsertValuationRule(request: UpsertValuationRuleInput): ID!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
   ): Boolean!
   setContractForClaim(
     request: SetContractForClaim!
   ): Boolean!
-}
-
-input InsertItemCategoriesInput {
-  itemCategoriesString: String!
 }
 
 type ClaimItem {
@@ -131,7 +131,48 @@ type ClaimItem {
   itemCompany: ItemCompany
   dateOfPurchase: LocalDate
   purchasePrice: MonetaryAmountV2
+  valuation: MonetaryAmountV2
   note: String
+}
+
+input InsertItemCategoriesInput {
+  itemCategoriesString: String!
+}
+
+input InsertValuationRulesInput {
+  valuationRulesString: String!
+}
+
+input GetValuationInput {
+  purchasePrice: MonetaryAmount!
+  itemFamilyId: String!
+  itemTypeId: ID
+  typeOfContract: TypeOfContract!
+  purchaseDate: LocalDate!
+  baseDate: LocalDate
+}
+
+type ClaimItemValuation {
+  depreciatedValue: MonetaryAmountV2
+  valuationRule: ValuationRule
+}
+
+type ValuationRule {
+  valuationName: String!
+  itemFamily: String!
+  itemTypeId: ID
+  ageLimit: Float!
+  valuationTable: String!
+  valuationType: String!
+  depreciation: Int
+}
+
+type CanValuateClaimItem
+{
+  canValuate: Boolean!
+  typeOfContract: TypeOfContract
+  itemFamily: String
+  itemTypeId: ID
 }
 
 input UpsertClaimItemInput {
@@ -142,8 +183,9 @@ input UpsertClaimItemInput {
   itemBrandId: ID
   itemModelId: ID
   dateOfPurchase: LocalDate
-  purchasePriceAmount: Float
-  purchasePriceCurrency: String
+  purchasePrice: MonetaryAmount
+  automaticValuation: MonetaryAmount
+  customValuation: MonetaryAmount
   note: String
 }
 
@@ -169,6 +211,17 @@ input UpsertItemModelInput {
   id: ID
   name: String!
   itemBrandId: ID!
+}
+
+input UpsertValuationRuleInput {
+  id: ID
+  name: String!
+  ageLimit: Float!
+  typeOfContract: TypeOfContract!
+  itemFamilyId: String!
+  itemTypeId: String
+  valuationType: String!
+  depreciation: Float
 }
 
 type Contract {

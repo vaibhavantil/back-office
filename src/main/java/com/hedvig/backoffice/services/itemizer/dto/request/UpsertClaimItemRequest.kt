@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.services.itemizer.dto.request
 
-import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.UUID
 import javax.money.MonetaryAmount
@@ -13,7 +12,8 @@ data class UpsertClaimItemRequest(
     val itemBrandId: UUID?,
     val itemModelId: UUID?,
     val dateOfPurchase: LocalDate?,
-    val purchasePriceAmount: BigDecimal?,
-    val purchasePriceCurrency: String?,
+    val purchasePrice: MonetaryAmount?,
+    val automaticValuation: MonetaryAmount?,
+    val customValuation: MonetaryAmount?,
     val note: String?
 )

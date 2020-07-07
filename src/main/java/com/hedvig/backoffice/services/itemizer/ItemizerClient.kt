@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.itemizer
 import com.hedvig.backoffice.config.feign.FeignConfig
 import com.hedvig.backoffice.services.itemizer.dto.*
 import com.hedvig.backoffice.services.itemizer.dto.request.*
+import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -16,6 +17,12 @@ interface ItemizerClient {
   @PostMapping("/_/item/add")
   fun insertItemCategories(
     @RequestBody request: InsertItemCategoriesRequest,
+    @RequestParam insertedBy: String
+  ): List<Boolean>
+
+  @PostMapping("/_/valuate/add")
+  fun insertValuationRules(
+    @RequestBody request: InsertValuationRulesRequest,
     @RequestParam insertedBy: String
   ): List<Boolean>
 
@@ -81,4 +88,23 @@ interface ItemizerClient {
     @PathVariable claimItemId: UUID,
     @RequestParam removedBy: String
   ): UUID
+
+  @PostMapping("/_/valuate/item")
+  fun getValuation(
+    @RequestBody request: GetValuationRequest
+  ): ClaimItemValuation
+
+  @GetMapping("/_/valuate/rule/exists")
+  fun canValuateClaimItem(
+    @RequestParam typeOfContract: TypeOfContract,
+    @RequestParam itemFamilyId: String,
+    @RequestParam itemTypeId: UUID?
+  ): CanValuateClaimItem
+
+  @PostMapping("/_/valuate/rule/upsert")
+  fun upsertValuationRule(
+    @RequestBody request: UpsertValuationRuleRequest,
+    @RequestParam updatedBy: String
+  ): UUID
+
 }
