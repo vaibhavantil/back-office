@@ -97,7 +97,7 @@ public class QuestionServiceImpl implements QuestionService {
     group.setPersonnel(personnel);
 
     botService.answerQuestion(memberId, message, personnelService.getIdToken(personnel.getEmail()));
-    sendNotification(memberId, personnelService.getIdToken(personnel.getEmail()));
+    sendNotification(memberId, personnelService.getIdToken(personnel.getEmail()), message);
     questionGroupRepository.save(group);
 
     return QuestionGroupDTO.Companion.fromDomain(group);
@@ -141,9 +141,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
   }
 
-  private void sendNotification(String memberId, String personnelToken) {
+  private void sendNotification(String memberId, String personnelToken, String message) {
     if (notificationService.getFirebaseToken(memberId).isPresent()) {
-      notificationService.sendPushNotification(memberId);
+      notificationService.sendPushNotification(memberId, message);
       return;
     }
 
