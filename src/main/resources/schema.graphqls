@@ -658,10 +658,14 @@ type Member {
 
 type ReferralInformation {
   eligible: Boolean
+  campaign: ReferralCampaign!
+  referredBy: MemberReferral
+  hasReferred: [MemberReferral!]!
+}
+
+type ReferralCampaign {
   code: String!
   incentive: Incentive
-  referredBy: MemberReferral,
-  hasReferred: [MemberReferral!]!
 }
 
 type MemberReferral {
