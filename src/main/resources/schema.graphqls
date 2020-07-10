@@ -657,6 +657,7 @@ type Member {
 }
 
 type ReferralInformation {
+  eligible: Boolean
   code: String!
   incentive: Incentive
   referredBy: MemberReferral,
