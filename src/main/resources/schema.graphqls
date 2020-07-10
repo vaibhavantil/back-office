@@ -653,6 +653,21 @@ type Member {
   quotes: [Quote!]!
   contracts: [Contract!]!
   contractMarketInfo: ContractMarketInfo
+  referralInformation: ReferralInformation
+}
+
+type ReferralInformation {
+  code: String!
+  incentive: Incentive
+  referredBy: MemberReferral,
+  hasReferred: [MemberReferral!]!
+}
+
+type MemberReferral {
+  memberId: String!
+  name: String
+  status: String!
+  incentive: Incentive!
 }
 
 type ContractMarketInfo {
