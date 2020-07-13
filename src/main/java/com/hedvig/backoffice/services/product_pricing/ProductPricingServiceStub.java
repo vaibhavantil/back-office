@@ -411,6 +411,16 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
+  public Boolean manualRedeemCampaign(String memberId, ManualRedeemCampaignRequest request) {
+    return false;
+  }
+
+  @Override
+  public Boolean manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request) {
+    return false;
+  }
+
+  @Override
   public List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds) {
     return memberIds.stream()
       .map(memberId -> new MemberSearchResultDTOExtended(

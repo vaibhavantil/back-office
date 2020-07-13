@@ -268,4 +268,14 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   public EligibleForReferralDto getEligibleForReferral(String memberId) {
     return this.client.getEligibleForReferral(memberId);
   }
+
+  @Override
+  public Boolean manualRedeemCampaign(String memberId, ManualRedeemCampaignRequest request) {
+    return this.client.manualRedeemCampaign(memberId, request);
+  }
+
+  @Override
+  public Boolean manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request) {
+    return this.client.manualRedeemEnableReferralsCampaign(market, request);
+  }
 }
