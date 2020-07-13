@@ -122,7 +122,7 @@ type MutationType {
   ): Boolean!
   manualRedeemCampaign(memberId: ID!, request: ManualRedeemCampaignInput!): Boolean!
   manualUnRedeemCampaign(memberId: ID!, request: ManualUnRedeemCampaignInput!): Boolean!
-  manualRedeemEnableReferralsCampaign(market: Market!, request: ManualRedeemEnableReferralsCampaignInput): Boolean!
+  manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
 }
 
 type ClaimItem {
@@ -685,10 +685,6 @@ input ManualRedeemCampaignInput {
 
 input ManualUnRedeemCampaignInput {
   campaignCode: String!
-}
-
-input ManualRedeemEnableReferralsCampaignInput {
-  memberIds: [ID!]!
 }
 
 type ContractMarketInfo {

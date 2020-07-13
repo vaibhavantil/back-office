@@ -740,8 +740,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
-  public Boolean manualRedeemEnableReferralsCampaign(final Market market, final ManualRedeemEnableReferralsCampaignRequest request) {
-    productPricingService.manualRedeemEnableReferralsCampaign(market, request);
+  public Boolean manualRedeemEnableReferralsCampaign(final String memberId, final Market market) {
+    productPricingService.manualRedeemEnableReferralsCampaign(
+      market,
+      new ManualRedeemEnableReferralsCampaignRequest(List.of(memberId))
+    );
     return true;
   }
 
