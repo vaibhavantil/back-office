@@ -3,23 +3,16 @@ package com.hedvig.backoffice.graphql.resolvers
 import com.coxautodev.graphql.tools.GraphQLResolver
 import com.hedvig.backoffice.graphql.GraphQLConfiguration
 import com.hedvig.backoffice.graphql.dataloaders.AccountLoader
-import com.hedvig.backoffice.graphql.types.DirectDebitStatus
-import com.hedvig.backoffice.graphql.types.FileUpload
-import com.hedvig.backoffice.graphql.types.Member
-import com.hedvig.backoffice.graphql.types.MonthlySubscription
-import com.hedvig.backoffice.graphql.types.Person
-import com.hedvig.backoffice.graphql.types.ProductType
-import com.hedvig.backoffice.graphql.types.Quote
-import com.hedvig.backoffice.graphql.types.Transaction
+import com.hedvig.backoffice.graphql.types.*
 import com.hedvig.backoffice.graphql.types.account.Account
 import com.hedvig.backoffice.graphql.types.account.NumberFailedCharges
-import com.hedvig.backoffice.graphql.types.claims.TestClaim
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.account.AccountService
 import com.hedvig.backoffice.services.claims.ClaimsService
 import com.hedvig.backoffice.services.meerkat.Meerkat
 import com.hedvig.backoffice.services.meerkat.dto.SanctionStatus
 import com.hedvig.backoffice.services.members.MemberService
+import com.hedvig.backoffice.services.members.dto.PickedLocale
 import com.hedvig.backoffice.services.messages.BotService
 import com.hedvig.backoffice.services.payments.PaymentService
 import com.hedvig.backoffice.services.personnel.PersonnelService
@@ -31,7 +24,7 @@ import graphql.schema.DataFetchingEnvironment
 import io.sentry.Sentry
 import org.springframework.stereotype.Component
 import java.time.YearMonth
-import java.util.ArrayList
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 @Component
@@ -179,6 +172,7 @@ class MemberResolver(
     return contracts
   }
 
-  fun getContractMarketInfo(member: Member): ContractMarketInfo? =
-    productPricingService.getContractMarketInfoByMemberId(member.memberId)
+  fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
+
+  fun getPickedLocale(member: Member): PickedLocale = memberService.findPickedLocaleByMemberId(member.memberId).pickedLocale
 }
