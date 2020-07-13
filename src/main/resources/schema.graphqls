@@ -638,13 +638,13 @@ type Member {
   personalNumber: String
   birthDate: LocalDate
   gender: Gender
+  fraudulentStatus: String
+  fraudulentStatusDescription: String
   createdOn: Instant
   signedOn: Instant
   transactions: [Transaction]
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription
-  fraudulentStatus: String
-  fraudulentStatusDescription: String
   sanctionStatus: SanctionStatus
   account: Account
   fileUploads: [FileUpload!]!
