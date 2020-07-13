@@ -653,6 +653,7 @@ type Member {
   quotes: [Quote!]!
   contracts: [Contract!]!
   contractMarketInfo: ContractMarketInfo
+  pickedLocale: PickedLocale
 }
 
 type ContractMarketInfo {
@@ -663,6 +664,13 @@ type ContractMarketInfo {
 enum Market {
   SWEDEN
   NORWAY
+}
+
+enum PickedLocale {
+  sv_SE
+  en_SE
+  nb_NO
+  en_NO
 }
 
 enum Gender {
