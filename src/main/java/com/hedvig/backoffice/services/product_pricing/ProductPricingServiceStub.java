@@ -416,6 +416,11 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
+  public Boolean manualUnRedeemCampaign(String memberId, ManualUnRedeemCampaignRequest request) {
+    return false;
+  }
+
+  @Override
   public Boolean manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request) {
     return false;
   }

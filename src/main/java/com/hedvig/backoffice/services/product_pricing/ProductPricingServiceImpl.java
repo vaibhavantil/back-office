@@ -275,6 +275,11 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   }
 
   @Override
+  public Boolean manualUnRedeemCampaign(String memberId, ManualUnRedeemCampaignRequest request) {
+    return this.client.manualUnRedeemCampaign(memberId, request);
+  }
+
+  @Override
   public Boolean manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request) {
     return this.client.manualRedeemEnableReferralsCampaign(market, request);
   }

@@ -29,6 +29,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.ManualRedeemCampaignRe
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.AssignVoucherPercentageDiscountRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.ManualRedeemEnableReferralsCampaignRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.ManualUnRedeemCampaignRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
@@ -731,6 +732,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public Boolean manualRedeemCampaign(final String memberId, final ManualRedeemCampaignRequest request) {
     productPricingService.manualRedeemCampaign(memberId, request);
+    return true;
+  }
+
+  public Boolean manualUnRedeemCampaign(final String memberId, final ManualUnRedeemCampaignRequest request) {
+    productPricingService.manualUnRedeemCampaign(memberId, request);
     return true;
   }
 

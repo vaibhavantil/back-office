@@ -93,5 +93,6 @@ public interface ProductPricingService {
   EligibleForReferralDto getEligibleForReferral(String memberId);
 
   Boolean manualRedeemCampaign(String memberId, ManualRedeemCampaignRequest request);
+  Boolean manualUnRedeemCampaign(String memberId, ManualUnRedeemCampaignRequest request);
   Boolean manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request);
 }

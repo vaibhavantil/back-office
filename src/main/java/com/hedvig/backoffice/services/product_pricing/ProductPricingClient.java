@@ -199,6 +199,9 @@ public interface ProductPricingClient {
   @PostMapping("/i/campaign/member/{memberId}/manualRedeemCampaign")
   Boolean manualRedeemCampaign(@PathVariable String memberId, @RequestBody ManualRedeemCampaignRequest request);
 
+  @PostMapping("/i/campaign/member/{memberId}/manualUnRedeemCampaign")
+  Boolean manualUnRedeemCampaign(@PathVariable String memberId, @RequestBody ManualUnRedeemCampaignRequest request);
+
   @PostMapping("/i/campaign/member/{market}/manualRedeemEnableReferralsCampaign")
   Boolean manualRedeemEnableReferralsCampaign(@PathVariable Market market, @RequestBody ManualRedeemEnableReferralsCampaignRequest request);
 }
