@@ -92,4 +92,8 @@ public interface ProductPricingService {
   void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request);
 
   List<PartnerResponseDto> getPartnerCampaignOwners();
+
+  ReferralInformationDto getReferralInformation(String memberId);
+
+  EligibleForReferralDto getEligibleForReferral(String memberId);
 }

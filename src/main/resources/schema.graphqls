@@ -657,7 +657,7 @@ type Member {
 }
 
 type ReferralInformation {
-  eligible: Boolean
+  eligible: Boolean!
   campaign: ReferralCampaign!
   referredBy: MemberReferral
   hasReferred: [MemberReferral!]!

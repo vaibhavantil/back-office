@@ -258,4 +258,14 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
     return Collections.emptyList();
   }
+
+  @Override
+  public ReferralInformationDto getReferralInformation(String memberId) {
+    return this.client.getReferralInformation(memberId);
+  }
+
+  @Override
+  public EligibleForReferralDto getEligibleForReferral(String memberId) {
+    return this.client.getEligibleForReferral(memberId);
+  }
 }

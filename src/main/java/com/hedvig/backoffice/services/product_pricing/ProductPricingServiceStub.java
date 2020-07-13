@@ -401,6 +401,16 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
+  public ReferralInformationDto getReferralInformation(String memberId) {
+    return null;
+  }
+
+  @Override
+  public EligibleForReferralDto getEligibleForReferral(String memberId) {
+    return new EligibleForReferralDto(false);
+  }
+
+  @Override
   public List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds) {
     return memberIds.stream()
       .map(memberId -> new MemberSearchResultDTOExtended(

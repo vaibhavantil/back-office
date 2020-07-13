@@ -189,4 +189,10 @@ public interface ProductPricingClient {
 
   @GetMapping("/i/campaign/partner/partnerCampaignOwners")
   ResponseEntity<List<PartnerResponseDto>> getPartnerCampaignOwners();
+
+  @GetMapping("/i/campaign/member/{memberId}/referralInformation")
+  ReferralInformationDto getReferralInformation(@PathVariable String memberId);
+
+  @GetMapping("/i/campaign/member/{memberId}/eligibleForReferral")
+  EligibleForReferralDto getEligibleForReferral(@PathVariable String memberId);
 }

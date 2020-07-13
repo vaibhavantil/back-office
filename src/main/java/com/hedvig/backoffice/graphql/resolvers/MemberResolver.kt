@@ -3,17 +3,9 @@ package com.hedvig.backoffice.graphql.resolvers
 import com.coxautodev.graphql.tools.GraphQLResolver
 import com.hedvig.backoffice.graphql.GraphQLConfiguration
 import com.hedvig.backoffice.graphql.dataloaders.AccountLoader
-import com.hedvig.backoffice.graphql.types.DirectDebitStatus
-import com.hedvig.backoffice.graphql.types.FileUpload
-import com.hedvig.backoffice.graphql.types.Member
-import com.hedvig.backoffice.graphql.types.MonthlySubscription
-import com.hedvig.backoffice.graphql.types.Person
-import com.hedvig.backoffice.graphql.types.ProductType
-import com.hedvig.backoffice.graphql.types.Quote
-import com.hedvig.backoffice.graphql.types.Transaction
+import com.hedvig.backoffice.graphql.types.*
 import com.hedvig.backoffice.graphql.types.account.Account
 import com.hedvig.backoffice.graphql.types.account.NumberFailedCharges
-import com.hedvig.backoffice.graphql.types.claims.TestClaim
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.account.AccountService
 import com.hedvig.backoffice.services.claims.ClaimsService
@@ -31,7 +23,7 @@ import graphql.schema.DataFetchingEnvironment
 import io.sentry.Sentry
 import org.springframework.stereotype.Component
 import java.time.YearMonth
-import java.util.ArrayList
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 @Component
@@ -181,4 +173,17 @@ class MemberResolver(
 
   fun getContractMarketInfo(member: Member): ContractMarketInfo? =
     productPricingService.getContractMarketInfoByMemberId(member.memberId)
+
+  fun getReferralInformation(member: Member): ReferralInformation? {
+    val referralInformation = productPricingService.getReferralInformation(member.memberId)
+    val campaign = ReferralCampaign(referralInformation.code, referralInformation.incentive)
+    val eligible = productPricingService.getEligibleForReferral(member.memberId).eligible
+
+    return ReferralInformation(
+      eligible = eligible,
+      campaign = campaign,
+      referredBy = referralInformation?.referredBy?.toGraphqlType(),
+      hasReferred = referralInformation.hasReferred.map { it.toGraphqlType() }
+    )
+  }
 }
