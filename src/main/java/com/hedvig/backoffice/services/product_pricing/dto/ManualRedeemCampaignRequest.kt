@@ -4,5 +4,5 @@ import java.time.LocalDate
 
 data class ManualRedeemCampaignRequest (
   val campaignCode: String,
-  val activationDate: LocalDate
+  val activationDate: LocalDate?
 )
