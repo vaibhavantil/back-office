@@ -175,4 +175,17 @@ class MemberResolver(
   fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
 
   fun getPickedLocale(member: Member): PickedLocale = memberService.findPickedLocaleByMemberId(member.memberId).pickedLocale
+
+  fun getReferralInformation(member: Member): ReferralInformation? {
+    val referralInformation = productPricingService.getReferralInformation(member.memberId)
+    val campaign = ReferralCampaign(referralInformation.code, referralInformation.incentive)
+    val eligible = productPricingService.getEligibleForReferral(member.memberId).eligible
+
+    return ReferralInformation(
+      eligible = eligible,
+      campaign = campaign,
+      referredBy = referralInformation?.referredBy?.toGraphqlType(),
+      hasReferred = referralInformation.hasReferred.map { it.toGraphqlType() }
+    )
+  }
 }

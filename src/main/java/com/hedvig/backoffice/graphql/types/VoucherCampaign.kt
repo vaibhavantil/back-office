@@ -1,4 +1,4 @@
-package com.hedvig.backoffice.graphql.resolvers;
+package com.hedvig.backoffice.graphql.types;
 
 import com.hedvig.backoffice.services.product_pricing.dto.IncentiveDto
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse

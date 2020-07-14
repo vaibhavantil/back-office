@@ -25,8 +25,11 @@ import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.ManualRedeemCampaignRequest;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.AssignVoucherPercentageDiscountRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.ManualRedeemEnableReferralsCampaignRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.ManualUnRedeemCampaignRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
@@ -724,6 +727,24 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public Boolean setContractForClaim(SetContractForClaim request) {
     claimsService.setContractForClaim(request);
+    return true;
+  }
+
+  public Boolean manualRedeemCampaign(final String memberId, final ManualRedeemCampaignRequest request) {
+    productPricingService.manualRedeemCampaign(memberId, request);
+    return true;
+  }
+
+  public Boolean manualUnRedeemCampaign(final String memberId, final ManualUnRedeemCampaignRequest request) {
+    productPricingService.manualUnRedeemCampaign(memberId, request);
+    return true;
+  }
+
+  public Boolean manualRedeemEnableReferralsCampaign(final String memberId, final Market market) {
+    productPricingService.manualRedeemEnableReferralsCampaign(
+      market,
+      new ManualRedeemEnableReferralsCampaignRequest(List.of(memberId))
+    );
     return true;
   }
 

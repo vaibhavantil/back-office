@@ -258,4 +258,29 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
     return Collections.emptyList();
   }
+
+  @Override
+  public ReferralInformationDto getReferralInformation(String memberId) {
+    return this.client.getReferralInformation(memberId);
+  }
+
+  @Override
+  public EligibleForReferralDto getEligibleForReferral(String memberId) {
+    return this.client.getEligibleForReferral(memberId);
+  }
+
+  @Override
+  public Boolean manualRedeemCampaign(String memberId, ManualRedeemCampaignRequest request) {
+    return this.client.manualRedeemCampaign(memberId, request);
+  }
+
+  @Override
+  public Boolean manualUnRedeemCampaign(String memberId, ManualUnRedeemCampaignRequest request) {
+    return this.client.manualUnRedeemCampaign(memberId, request);
+  }
+
+  @Override
+  public Boolean manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request) {
+    return this.client.manualRedeemEnableReferralsCampaign(market, request);
+  }
 }

@@ -120,6 +120,9 @@ type MutationType {
   setContractForClaim(
     request: SetContractForClaim!
   ): Boolean!
+  manualRedeemCampaign(memberId: ID!, request: ManualRedeemCampaignInput!): Boolean!
+  manualUnRedeemCampaign(memberId: ID!, request: ManualUnRedeemCampaignInput!): Boolean!
+  manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
 }
 
 type ClaimItem {
@@ -654,6 +657,35 @@ type Member {
   contracts: [Contract!]!
   contractMarketInfo: ContractMarketInfo
   pickedLocale: PickedLocale
+  referralInformation: ReferralInformation
+}
+
+type ReferralInformation {
+  eligible: Boolean!
+  campaign: ReferralCampaign!
+  referredBy: MemberReferral
+  hasReferred: [MemberReferral!]!
+}
+
+type ReferralCampaign {
+  code: String!
+  incentive: Incentive
+}
+
+type MemberReferral {
+  memberId: String!
+  name: String
+  status: String!
+  incentive: Incentive!
+}
+
+input ManualRedeemCampaignInput {
+  campaignCode: String!
+  activationDate: LocalDate
+}
+
+input ManualUnRedeemCampaignInput {
+  campaignCode: String!
 }
 
 type ContractMarketInfo {

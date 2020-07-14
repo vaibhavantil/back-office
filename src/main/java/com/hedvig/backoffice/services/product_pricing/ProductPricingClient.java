@@ -114,7 +114,7 @@ public interface ProductPricingClient {
   List<Contract> getContractByMemberId(@PathVariable("memberId") String memberId);
 
   @GetMapping("/_/contracts/{contractId}")
-  Contract getContractById(@PathVariable  UUID contractId);
+  Contract getContractById(@PathVariable UUID contractId);
 
   @PostMapping("/_/contracts/{contractId}/activate/pending")
   void activatePendingAgreement(
@@ -189,4 +189,19 @@ public interface ProductPricingClient {
 
   @GetMapping("/i/campaign/partner/partnerCampaignOwners")
   ResponseEntity<List<PartnerResponseDto>> getPartnerCampaignOwners();
+
+  @GetMapping("/i/campaign/member/{memberId}/referralInformation")
+  ReferralInformationDto getReferralInformation(@PathVariable String memberId);
+
+  @GetMapping("/i/campaign/member/{memberId}/eligibleForReferral")
+  EligibleForReferralDto getEligibleForReferral(@PathVariable String memberId);
+
+  @PostMapping("/i/campaign/member/{memberId}/manualRedeemCampaign")
+  Boolean manualRedeemCampaign(@PathVariable String memberId, @RequestBody ManualRedeemCampaignRequest request);
+
+  @PostMapping("/i/campaign/member/{memberId}/manualUnRedeemCampaign")
+  Boolean manualUnRedeemCampaign(@PathVariable String memberId, @RequestBody ManualUnRedeemCampaignRequest request);
+
+  @PostMapping("/i/campaign/member/{market}/manualRedeemEnableReferralsCampaign")
+  Boolean manualRedeemEnableReferralsCampaign(@PathVariable Market market, @RequestBody ManualRedeemEnableReferralsCampaignRequest request);
 }

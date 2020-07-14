@@ -7,11 +7,6 @@ import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -92,4 +87,12 @@ public interface ProductPricingService {
   void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request);
 
   List<PartnerResponseDto> getPartnerCampaignOwners();
+
+  ReferralInformationDto getReferralInformation(String memberId);
+
+  EligibleForReferralDto getEligibleForReferral(String memberId);
+
+  Boolean manualRedeemCampaign(String memberId, ManualRedeemCampaignRequest request);
+  Boolean manualUnRedeemCampaign(String memberId, ManualUnRedeemCampaignRequest request);
+  Boolean manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request);
 }
