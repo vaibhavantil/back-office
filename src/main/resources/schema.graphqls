@@ -645,6 +645,7 @@ type Member {
   fraudulentStatusDescription: String
   createdOn: Instant
   signedOn: Instant
+  status: String
   transactions: [Transaction]
   directDebitStatus: DirectDebitStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription

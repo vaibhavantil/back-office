@@ -17,7 +17,8 @@ data class Member(
   val fraudulentStatus: String?,
   val fraudulentStatusDescription: String?,
   val createdOn: Instant?,
-  val signedOn: Instant?
+  val signedOn: Instant?,
+  val status: String?
 ) {
   companion object {
     fun fromDTO(dto: MemberDTO): Member = Member(
@@ -32,7 +33,8 @@ data class Member(
       fraudulentStatus = dto.fraudulentStatus,
       fraudulentStatusDescription = dto.fraudulentDescription,
       createdOn = dto.createdOn,
-      signedOn = dto.signedOn
+      signedOn = dto.signedOn,
+      status = dto.status?.name
     )
   }
 }
