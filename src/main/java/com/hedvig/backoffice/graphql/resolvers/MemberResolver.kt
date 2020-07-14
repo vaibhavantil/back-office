@@ -12,6 +12,7 @@ import com.hedvig.backoffice.services.claims.ClaimsService
 import com.hedvig.backoffice.services.meerkat.Meerkat
 import com.hedvig.backoffice.services.meerkat.dto.SanctionStatus
 import com.hedvig.backoffice.services.members.MemberService
+import com.hedvig.backoffice.services.members.dto.PickedLocale
 import com.hedvig.backoffice.services.messages.BotService
 import com.hedvig.backoffice.services.payments.PaymentService
 import com.hedvig.backoffice.services.personnel.PersonnelService
@@ -171,8 +172,9 @@ class MemberResolver(
     return contracts
   }
 
-  fun getContractMarketInfo(member: Member): ContractMarketInfo? =
-    productPricingService.getContractMarketInfoByMemberId(member.memberId)
+  fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
+
+  fun getPickedLocale(member: Member): PickedLocale = memberService.findPickedLocaleByMemberId(member.memberId).pickedLocale
 
   fun getReferralInformation(member: Member): ReferralInformation? {
     val referralInformation = productPricingService.getReferralInformation(member.memberId)
