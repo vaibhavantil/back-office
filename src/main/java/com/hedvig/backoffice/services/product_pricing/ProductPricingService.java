@@ -55,11 +55,12 @@ public interface ProductPricingService {
   MonthlySubscriptionDTO getMonthlyPaymentsByMember(YearMonth month, String memberId);
 
   List<MonthlyBordereauDTO> getMonthlyBordereauByProductType(YearMonth month,
-    ProductType productType);
+                                                             ProductType productType);
 
   List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds);
 
   List<SwitchableSwitcherEmailDTO> getSwitchableSwitcherEmails();
+
   void markSwitchableSwitcherEmailAsReminded(UUID emailId);
 
   Contract getContractById(UUID contractId);
@@ -93,6 +94,10 @@ public interface ProductPricingService {
   EligibleForReferralDto getEligibleForReferral(String memberId);
 
   Boolean manualRedeemCampaign(String memberId, ManualRedeemCampaignRequest request);
+
   Boolean manualUnRedeemCampaign(String memberId, ManualUnRedeemCampaignRequest request);
+
   Boolean manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request);
+
+  List<RedeemedCampaignDto> redeemedCampaigns(String memberId);
 }

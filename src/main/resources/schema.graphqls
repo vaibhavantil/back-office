@@ -666,6 +666,22 @@ type ReferralInformation {
   campaign: ReferralCampaign!
   referredBy: MemberReferral
   hasReferred: [MemberReferral!]!
+  redeemedCampaigns: [RedeemedCampaign!]!
+}
+
+type RedeemedCampaign {
+  code: String!
+  type: String!
+  incentive: Incentive!
+  redemptionState: RedemptionState!
+}
+
+type RedemptionState {
+  redeemedAt: Instant!
+  activatedAt: Instant
+  activeTo: Instant
+  terminatedAt: Instant
+  unRedeemedAt: Instant
 }
 
 type ReferralCampaign {

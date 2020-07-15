@@ -236,7 +236,7 @@ public class ProductPricingServiceImpl implements ProductPricingService {
 
   @Override
   public List<PartnerCampaignSearchResponse> searchPartnerCampaigns(String code, String partnerId, LocalDate activeFrom, LocalDate activeTo) {
-    ResponseEntity<List<PartnerCampaignSearchResponse>>  response = this.client.searchPartnerCampaigns(
+    ResponseEntity<List<PartnerCampaignSearchResponse>> response = this.client.searchPartnerCampaigns(
       code, partnerId, activeFrom, activeTo
     );
     if (response.getStatusCode() == HttpStatus.OK) {
@@ -282,5 +282,10 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   @Override
   public Boolean manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request) {
     return this.client.manualRedeemEnableReferralsCampaign(market, request);
+  }
+
+  @Override
+  public List<RedeemedCampaignDto> redeemedCampaigns(String memberId) {
+    return this.client.redeemedCampaigns(memberId);
   }
 }
