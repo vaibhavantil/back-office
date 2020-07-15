@@ -25,7 +25,7 @@ import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation;
 import com.hedvig.backoffice.services.itemizer.dto.request.GetValuationRequest;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
-import com.hedvig.backoffice.services.product_pricing.PartnerResponseDto;
+import com.hedvig.backoffice.services.product_pricing.dto.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract;

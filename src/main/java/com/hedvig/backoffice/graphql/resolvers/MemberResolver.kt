@@ -178,6 +178,7 @@ class MemberResolver(
 
   fun getReferralInformation(member: Member): ReferralInformation? {
     val referralInformation = productPricingService.getReferralInformation(member.memberId)
+    val redeemedCampaigns = productPricingService.redeemedCampaigns(member.memberId)
     val campaign = ReferralCampaign(referralInformation.code, referralInformation.incentive)
     val eligible = productPricingService.getEligibleForReferral(member.memberId).eligible
 
@@ -185,7 +186,8 @@ class MemberResolver(
       eligible = eligible,
       campaign = campaign,
       referredBy = referralInformation?.referredBy?.toGraphqlType(),
-      hasReferred = referralInformation.hasReferred.map { it.toGraphqlType() }
+      hasReferred = referralInformation.hasReferred.map { it.toGraphqlType() },
+      redeemedCampaigns = redeemedCampaigns
     )
   }
 }

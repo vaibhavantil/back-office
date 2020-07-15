@@ -204,4 +204,7 @@ public interface ProductPricingClient {
 
   @PostMapping("/i/campaign/member/{market}/manualRedeemEnableReferralsCampaign")
   Boolean manualRedeemEnableReferralsCampaign(@PathVariable Market market, @RequestBody ManualRedeemEnableReferralsCampaignRequest request);
+
+  @GetMapping("/i/campaign/member/{memberId}/redeemedCampaigns")
+  List<RedeemedCampaignDto> redeemedCampaigns(@PathVariable String memberId);
 }
