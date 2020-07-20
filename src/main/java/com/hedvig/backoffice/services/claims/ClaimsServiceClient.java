@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.claims;
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
 import com.hedvig.backoffice.services.claims.dto.*;
+import java.util.UUID;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @FeignClient(name = "claims-service", url = "${claims.baseUrl}", configuration = FeignConfig.class,
   fallback = ClaimsServiceClientFallback.class)
