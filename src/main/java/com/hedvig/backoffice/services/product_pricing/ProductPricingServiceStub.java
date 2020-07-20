@@ -421,8 +421,8 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
-  public Boolean manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request) {
-    return false;
+  public ManualRedeemEnableReferralsCampaignResponse manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request) {
+    return new ManualRedeemEnableReferralsCampaignResponse(new ArrayList<>());
   }
 
   @Override
