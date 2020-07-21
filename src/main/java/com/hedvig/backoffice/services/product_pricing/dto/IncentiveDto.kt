@@ -6,7 +6,7 @@ import com.hedvig.backoffice.graphql.UnionType
 import java.math.BigDecimal
 import javax.money.MonetaryAmount
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", defaultImpl = UnknownIncentive::class)
 @JsonSubTypes(
   JsonSubTypes.Type(value = MonthlyPercentageDiscountFixedPeriod::class, name = "MonthlyPercentageDiscountFixedPeriod"),
   JsonSubTypes.Type(value = FreeMonths::class, name = "FreeMonths"),
@@ -46,5 +46,10 @@ data class IndefinitePercentageDiscount(
 
 @UnionType
 data class VisibleNoDiscount(
+  val `_`: Boolean = true
+): IncentiveDto()
+
+@UnionType
+data class UnknownIncentive(
   val `_`: Boolean = true
 ): IncentiveDto()
