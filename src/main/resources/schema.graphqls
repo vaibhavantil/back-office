@@ -472,15 +472,6 @@ type CampaignOwnerPartner {
   partnerId: String!
 }
 
-enum IncentiveType {
-  COST_DEDUCTION
-  FREE_MONTHS
-  NO_DISCOUNT
-  MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD
-  INDEFINITE_PERCENTAGE_DISCOUNT
-  VISIBLE_NO_DISCOUNT
-}
-
 type VoucherCampaign {
   id: ID!
   campaignCode: String!
