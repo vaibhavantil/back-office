@@ -478,6 +478,7 @@ enum IncentiveType {
   NO_DISCOUNT
   MONTHLY_PERCENTAGE_DISCOUNT_FIXED_PERIOD
   INDEFINITE_PERCENTAGE_DISCOUNT
+  VISIBLE_NO_DISCOUNT
 }
 
 type VoucherCampaign {
@@ -511,7 +512,11 @@ type IndefinitePercentageDiscount {
   percentageDiscount: Float
 }
 
-union Incentive = MonthlyPercentageDiscountFixedPeriod | FreeMonths | CostDeduction | NoDiscount | IndefinitePercentageDiscount
+type VisibleNoDiscount {
+  _: Boolean
+}
+
+union Incentive = MonthlyPercentageDiscountFixedPeriod | FreeMonths | CostDeduction | NoDiscount | IndefinitePercentageDiscount | VisibleNoDiscount
 
 type ItemFamily implements ItemCategoryCore {
   id: ID!

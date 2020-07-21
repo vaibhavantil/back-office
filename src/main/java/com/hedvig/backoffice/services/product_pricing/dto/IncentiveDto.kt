@@ -12,7 +12,8 @@ import javax.money.MonetaryAmount
   JsonSubTypes.Type(value = FreeMonths::class, name = "FreeMonths"),
   JsonSubTypes.Type(value = CostDeduction::class, name = "CostDeduction"),
   JsonSubTypes.Type(value = NoDiscount::class, name = "NoDiscount"),
-  JsonSubTypes.Type(value = IndefinitePercentageDiscount::class, name = "IndefinitePercentageDiscount")
+  JsonSubTypes.Type(value = IndefinitePercentageDiscount::class, name = "IndefinitePercentageDiscount"),
+  JsonSubTypes.Type(value = VisibleNoDiscount::class, name = "VisibleNoDiscount")
 )
 @UnionType
 sealed class IncentiveDto
@@ -41,4 +42,9 @@ data class NoDiscount(
 @UnionType
 data class IndefinitePercentageDiscount(
   val percentageDiscount: BigDecimal
+): IncentiveDto()
+
+@UnionType
+data class VisibleNoDiscount(
+  val `_`: Boolean = true
 ): IncentiveDto()
