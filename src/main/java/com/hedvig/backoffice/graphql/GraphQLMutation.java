@@ -31,6 +31,8 @@ import com.hedvig.backoffice.services.product_pricing.dto.AssignVoucherPercentag
 import com.hedvig.backoffice.services.product_pricing.dto.ManualRedeemEnableReferralsCampaignRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.ManualUnRedeemCampaignRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
+import com.hedvig.backoffice.services.qualityassurance.QualityAssuranceService;
+import com.hedvig.backoffice.services.qualityassurance.dto.UnsignMemberRequest;
 import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
@@ -83,6 +85,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   private final ChatServiceV2 chatServiceV2;
   private final ItemizerService itemizerService;
   private final ApiGatewayService apiGatewayService;
+  private final QualityAssuranceService qualityAssuranceService;
 
   public GraphQLMutation(
     PaymentService paymentService,
@@ -99,7 +102,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     PriceEngineService priceEngineService,
     ChatServiceV2 chatServiceV2,
     ItemizerService itemizerService,
-    final ApiGatewayService apiGatewayService
+    final ApiGatewayService apiGatewayService,
+    QualityAssuranceService qualityAssuranceService
   ) {
     this.paymentService = paymentService;
     this.personnelService = personnelService;
@@ -116,6 +120,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     this.chatServiceV2 = chatServiceV2;
     this.itemizerService = itemizerService;
     this.apiGatewayService = apiGatewayService;
+    this.qualityAssuranceService = qualityAssuranceService;
   }
 
   public CompletableFuture<Member> chargeMember(
@@ -748,6 +753,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
+  public Boolean unsignMember(final String market, final String ssn) {
+    qualityAssuranceService.unsignMember(new UnsignMemberRequest(ssn), market);
+    return true;
+  }
 
   private String getEmail(DataFetchingEnvironment env) {
     try {
