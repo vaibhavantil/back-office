@@ -2,8 +2,8 @@ package com.hedvig.backoffice.services.members
 
 import com.hedvig.backoffice.config.feign.FeignConfig
 import com.hedvig.backoffice.services.members.dto.*
+import com.hedvig.backoffice.services.qualityassurance.dto.UnsignMemberRequest
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO
-import com.hedvig.backoffice.web.dto.MemberStatus
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
@@ -72,4 +72,11 @@ interface MemberServiceClient {
 
   @GetMapping("/_/member/{memberId}/pickedLocale")
   fun findPickedLocaleByMemberId(@PathVariable("memberId") memberId: String): PickedLocaleDTO
+
+  @PostMapping("/_/staging/{market}/unsignMember")
+  fun unsignMember(
+    @PathVariable("market") market: String,
+    @RequestBody request: UnsignMemberRequest
+
+  )
 }
