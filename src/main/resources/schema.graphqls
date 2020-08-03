@@ -124,6 +124,7 @@ type MutationType {
   manualUnRedeemCampaign(memberId: ID!, request: ManualUnRedeemCampaignInput!): Boolean!
   manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
   unsignMember(market: String!, ssn: String!): Boolean!
+  editMemberInfo(request: EditMemberInfoInput!): Boolean!
 }
 
 type ClaimItem {
@@ -145,6 +146,14 @@ input InsertItemCategoriesInput {
 
 input InsertValuationRulesInput {
   valuationRulesString: String!
+}
+
+input EditMemberInfoInput {
+  memberId: String!
+  firstName: String
+  lastName: String
+  email: String
+  phoneNumber: String
 }
 
 input GetValuationInput {
@@ -658,6 +667,7 @@ type Member {
   totalNumberOfClaims: Int!
   quotes: [Quote!]!
   contracts: [Contract!]!
+  claims: [Claim!]!
   contractMarketInfo: ContractMarketInfo
   pickedLocale: PickedLocale
   referralInformation: ReferralInformation

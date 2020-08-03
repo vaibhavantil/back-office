@@ -172,6 +172,11 @@ class MemberResolver(
     return contracts
   }
 
+  fun getClaims(member: Member, env: DataFetchingEnvironment): List<Claim> {
+    val claims = claimsService.listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService))
+    return claims.map { claim -> Claim.fromDTO(claim) }
+  }
+
   fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
 
   fun getPickedLocale(member: Member): PickedLocale = memberService.findPickedLocaleByMemberId(member.memberId).pickedLocale

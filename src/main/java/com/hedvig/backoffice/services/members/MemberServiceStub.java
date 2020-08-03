@@ -1,17 +1,7 @@
 package com.hedvig.backoffice.services.members;
 
 import com.hedvig.backoffice.graphql.types.Whitelisted;
-import com.hedvig.backoffice.services.members.dto.DebtDTO;
-import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
-import com.hedvig.backoffice.services.members.dto.MemberDTO;
-import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
-import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
-import com.hedvig.backoffice.services.members.dto.PaymentDefaultDTO;
-import com.hedvig.backoffice.services.members.dto.PersonDTO;
-import com.hedvig.backoffice.services.members.dto.PersonFlags;
-import com.hedvig.backoffice.services.members.dto.PersonStatusDTO;
-import com.hedvig.backoffice.services.members.dto.PickedLocale;
-import com.hedvig.backoffice.services.members.dto.PickedLocaleDTO;
+import com.hedvig.backoffice.services.members.dto.*;
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import com.hedvig.backoffice.web.dto.MemberStatus;
 import org.apache.commons.lang3.RandomUtils;
@@ -275,6 +265,11 @@ public class MemberServiceStub implements MemberService {
   @Override
   public PickedLocaleDTO findPickedLocaleByMemberId(@NotNull final String memberId) {
     return new PickedLocaleDTO(PickedLocale.sv_SE);
+  }
+
+  @Override
+  public void editMemberInfo(@NotNull EditMemberInfoRequest request, @NotNull String token) {
+    // noop
   }
 
   private enum FraudulentStatus {

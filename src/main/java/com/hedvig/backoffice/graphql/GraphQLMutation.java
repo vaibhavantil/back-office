@@ -21,6 +21,7 @@ import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.request.*;
 import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.dto.EditMemberInfoRequest;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
@@ -755,6 +756,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public Boolean unsignMember(final String market, final String ssn) {
     qualityAssuranceService.unsignMember(new UnsignMemberRequest(ssn), market);
+    return true;
+  }
+
+  public Boolean editMemberInfo(final EditMemberInfoRequest request, DataFetchingEnvironment env) {
+    memberService.editMemberInfo(request, getToken(env));
     return true;
   }
 
