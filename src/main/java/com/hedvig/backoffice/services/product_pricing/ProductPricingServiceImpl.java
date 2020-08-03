@@ -223,8 +223,11 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     try {
       ResponseEntity<ContractMarketInfo> response = client.getContractMarketInfoForMember(memberId);
       return response.getBody();
-    } catch (FeignException e) {
-      log.error("Failed to fetch member market info for member id: " + memberId, e);
+    } catch (ExternalServiceNotFoundException externalServiceNotFoundException) {
+      log.error("Failed to fetch member market info for member id: " + memberId, externalServiceNotFoundException);
+      return null;
+    } catch (FeignException feignException) {
+      log.error("Failed to fetch member market info for member id: " + memberId, feignException);
       return null;
     }
   }
