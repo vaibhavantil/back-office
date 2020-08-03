@@ -4,7 +4,6 @@ import com.coxautodev.graphql.tools.GraphQLResolver
 import com.hedvig.backoffice.graphql.GraphQLConfiguration
 import com.hedvig.backoffice.graphql.types.Member
 import com.hedvig.backoffice.graphql.types.questions.QuestionGroupType
-import com.hedvig.backoffice.services.chat.ChatServiceV2Impl
 import com.hedvig.backoffice.services.members.MemberService
 import com.hedvig.backoffice.services.personnel.PersonnelService
 import graphql.schema.DataFetchingEnvironment
@@ -13,11 +12,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
-class QuestionGroupResolver
-  (
-    private val memberService: MemberService,
+class QuestionGroupResolver(
+  private val memberService: MemberService,
   private val personnelService: PersonnelService
-
 ) : GraphQLResolver<QuestionGroupType> {
   fun getMember(
     questionGroup: QuestionGroupType,
@@ -31,7 +28,7 @@ class QuestionGroupResolver
         )
       )
     } catch (exception: Exception) {
-      logger.error("Unable get to resolve member for Question Group (memberId=${questionGroup.memberId}), exception");
+      logger.error("Unable get to resolve member for Question Group (memberId=${questionGroup.memberId})", exception);
       Sentry.capture(exception)
       null
     }
@@ -40,5 +37,4 @@ class QuestionGroupResolver
   companion object {
     private val logger = LoggerFactory.getLogger(QuestionGroupResolver::class.java)
   }
-
 }
