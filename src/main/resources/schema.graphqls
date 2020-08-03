@@ -124,7 +124,7 @@ type MutationType {
   manualUnRedeemCampaign(memberId: ID!, request: ManualUnRedeemCampaignInput!): Boolean!
   manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
   unsignMember(market: String!, ssn: String!): Boolean!
-  editMemberInfo(request: EditMemberInfoRequest): Boolean!
+  editMemberInfo(request: EditMemberInfoRequest!): Boolean!
 }
 
 type ClaimItem {
