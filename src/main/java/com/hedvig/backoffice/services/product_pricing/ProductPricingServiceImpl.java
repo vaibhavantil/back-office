@@ -9,6 +9,7 @@ import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,11 +220,13 @@ public class ProductPricingServiceImpl implements ProductPricingService {
 
   @Override
   public ContractMarketInfo getContractMarketInfoByMemberId(String memberId) {
-    ResponseEntity<ContractMarketInfo> response = client.getContractMarketInfoForMember(memberId);
-    if (response.getStatusCode() != HttpStatus.OK) {
+    try {
+      ResponseEntity<ContractMarketInfo> response = client.getContractMarketInfoForMember(memberId);
+      return response.getBody();
+    } catch (FeignException e) {
+      log.error("Failed to fetch member market info for member id: " + memberId, e);
       return null;
     }
-    return response.getBody();
   }
 
   @Override
