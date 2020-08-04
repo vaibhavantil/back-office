@@ -80,7 +80,7 @@ interface MemberServiceClient {
 
   @PostMapping("/_/member/edit/info")
   fun editMemberInfo(
-    @PathVariable request: EditMemberInfoRequest,
+    @RequestBody request: EditMemberInfoRequest,
     @RequestHeader("Authorization") token: String
   )
 }
