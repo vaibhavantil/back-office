@@ -78,7 +78,7 @@ interface MemberServiceClient {
     @RequestBody request: UnsignMemberRequest
   )
 
-  @PostMapping("/_/member/info/edit")
+  @PostMapping("/_/member/edit/info")
   fun editMemberInfo(
     @PathVariable request: EditMemberInfoRequest,
     @RequestHeader("Authorization") token: String
