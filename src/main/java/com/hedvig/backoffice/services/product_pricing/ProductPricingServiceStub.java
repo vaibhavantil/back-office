@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.product_pricing;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
+import com.hedvig.backoffice.graphql.types.AssignVoucherFreeMonths;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
 import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
@@ -392,6 +393,11 @@ public class ProductPricingServiceStub implements ProductPricingService {
 
   @Override
   public void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request) {
+    //  noop
+  }
+
+  @Override
+  public void assignCampaignToPartnerFreeMonths(AssignVoucherFreeMonthsRequest request) {
     //  noop
   }
 
