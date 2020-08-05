@@ -26,11 +26,8 @@ import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.ManualRedeemCampaignRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.AssignVoucherPercentageDiscountRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.ManualRedeemEnableReferralsCampaignRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.ManualUnRedeemCampaignRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.services.qualityassurance.QualityAssuranceService;
 import com.hedvig.backoffice.services.qualityassurance.dto.UnsignMemberRequest;
@@ -727,6 +724,13 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   public Boolean assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscount request, DataFetchingEnvironment env) {
     productPricingService.assignCampaignToPartnerPercentageDiscount(
       AssignVoucherPercentageDiscountRequest.Companion.from(request)
+    );
+    return true;
+  }
+
+  public Boolean assignCampaignToPartnerFreeMonths(AssignVoucherFreeMonths request, DataFetchingEnvironment env) {
+    productPricingService.assignCampaignToPartnerFreeMonths(
+      AssignVoucherFreeMonthsRequest.Companion.from(request)
     );
     return true;
   }
