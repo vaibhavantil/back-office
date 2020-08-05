@@ -7,7 +7,7 @@ import java.time.Instant
 
 data class AssignVoucherFreeMonthsRequest(
   val partnerId: String,
-  val numberOfMonths: Int,
+  val numberOfFreeMonths: Int,
   val code: String,
   val validFrom: Instant? = null,
   val validUntil: Instant? = null
