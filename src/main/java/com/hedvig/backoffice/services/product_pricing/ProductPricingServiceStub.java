@@ -402,6 +402,11 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
+  public void assignCampaignToPartnerVisibleNoDiscount(AssignVoucherVisibleNoDiscountRequest request) {
+    // noop
+  }
+
+  @Override
   public List<PartnerResponseDto> getPartnerCampaignOwners() {
     return null;
   }
