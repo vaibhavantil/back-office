@@ -126,6 +126,9 @@ type MutationType {
   assignCampaignToPartnerFreeMonths(
     request: AssignVoucherFreeMonths
   ): Boolean!
+  assignCampaignToPartnerVisibleNoDiscount(
+    request: AssignVoucherVisibleNoDiscount
+  ): Boolean!
   setContractForClaim(request: SetContractForClaim!): Boolean!
   manualRedeemCampaign(
     memberId: ID!
@@ -497,6 +500,14 @@ input AssignVoucherFreeMonths {
   validFrom: Instant
   validUntil: Instant
 }
+
+input AssignVoucherVisibleNoDiscount {
+  partnerId: String!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+}
+
 
 type CampaignOwnerPartner {
   partnerId: String!

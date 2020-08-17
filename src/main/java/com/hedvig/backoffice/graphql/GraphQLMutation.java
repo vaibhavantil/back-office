@@ -735,6 +735,13 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
+  public Boolean assignCampaignToPartnerVisibleNoDiscount(AssignVoucherVisibleNoDiscount request, DataFetchingEnvironment env) {
+    productPricingService.assignCampaignToPartnerVisibleNoDiscount(
+      AssignVoucherVisibleNoDiscountRequest.Companion.from(request)
+    );
+    return true;
+  }
+
   public Boolean setContractForClaim(SetContractForClaim request) {
     claimsService.setContractForClaim(request);
     return true;
