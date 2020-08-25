@@ -705,16 +705,10 @@ type Member {
   totalNumberOfClaims: Int!
   quotes: [Quote!]!
   contracts: [Contract!]!
-  claims: [Claim!]!
-  claimInfo: ClaimInfo!
+  claims(filterByStates: [ClaimState!]): [Claim!]!
   contractMarketInfo: ContractMarketInfo
   pickedLocale: PickedLocale
   referralInformation: ReferralInformation
-}
-
-type ClaimInfo {
-  numberOfClaims: Int
-  hasOpenClaim: Boolean
 }
 
 type ReferralInformation {

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class Claim {
   UUID id;
   String recordingUrl;
-  ClaimState state;
+  public ClaimState state;
   String _type;
   MonetaryAmount reserves;
   Instant registrationDate;
