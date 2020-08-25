@@ -6,10 +6,8 @@ import com.hedvig.backoffice.graphql.dataloaders.AccountLoader
 import com.hedvig.backoffice.graphql.types.*
 import com.hedvig.backoffice.graphql.types.account.Account
 import com.hedvig.backoffice.graphql.types.account.NumberFailedCharges
-import com.hedvig.backoffice.graphql.types.claims.ClaimInfo
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.account.AccountService
-import com.hedvig.backoffice.services.claims.ClaimState
 import com.hedvig.backoffice.services.claims.ClaimsService
 import com.hedvig.backoffice.services.meerkat.Meerkat
 import com.hedvig.backoffice.services.meerkat.dto.SanctionStatus
@@ -174,16 +172,11 @@ class MemberResolver(
     return contracts
   }
 
-  fun getClaims(member: Member, env: DataFetchingEnvironment): List<Claim> {
-    val claims = claimsService.listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService))
-    return claims.map { claim -> Claim.fromDTO(claim) }
-  }
-
-  fun getClaimInfo(member: Member, env: DataFetchingEnvironment): ClaimInfo {
-    val claims = claimsService.listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService))
-    val numberOfClaims = claims.size
-    val hasOpenClaim = claims.any { claim -> claim.state == ClaimState.OPEN || claim.state == ClaimState.REOPENED }
-    return ClaimInfo(numberOfClaims, hasOpenClaim)
+  fun getClaims(member: Member, filterByStates: Set<ClaimState>?, env: DataFetchingEnvironment): List<Claim> {
+    return claimsService
+      .listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService))
+      .map { claim -> Claim.fromDTO(claim) }
+      .filter { claim -> filterByStates == null || filterByStates.contains(claim.state) }
   }
 
   fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
