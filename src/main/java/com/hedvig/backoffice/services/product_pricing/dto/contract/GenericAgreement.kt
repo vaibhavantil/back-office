@@ -12,7 +12,7 @@ data class GenericAgreement (
   val basePremium: MonetaryAmount,
   val certificateUrl: String?,
   val status: AgreementStatus,
-  val typeOfContract: TypeOfContract?,
+  val typeOfContract: TypeOfContract,
   val address: Address?,
   val numberCoInsured: Int?,
   val squareMeters: Long?,

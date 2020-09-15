@@ -306,7 +306,7 @@ type GenericAgreement {
   premium: MonetaryAmountV2!
   certificateUrl: String
   status: AgreementStatus!
-  typeOfContract: TypeOfContract
+  typeOfContract: TypeOfContract!
   address: Address
   numberCoInsured: Int
   squareMeters: Int
