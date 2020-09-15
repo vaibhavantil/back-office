@@ -121,7 +121,7 @@ class MemberResolver(
     return reqularAndSignableQuotes(member.memberId, quotes)
   }
 
-
+// todo: fix
   private fun reqularAndSignableQuotes(
     memberId: String,
     quotes: List<Quote>
