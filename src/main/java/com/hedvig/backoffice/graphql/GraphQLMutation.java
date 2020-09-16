@@ -652,6 +652,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
   public SendMessageResponse sendMessage(SendMessageInput input, DataFetchingEnvironment env) {
+    Personnel personnel = getPersonnel(env);
+    try {
+      questionsService.answer(input.getMemberId(), input.getMessage(), personnel);
+    } catch (QuestionNotFoundException exception) {
+      log.error("Question not found when marking as done for memberId=" + input.getMemberId(), exception);
+    }
     return SendMessageResponse.Companion.from(
       chatServiceV2.sendMessage(
         input.getMemberId(),
