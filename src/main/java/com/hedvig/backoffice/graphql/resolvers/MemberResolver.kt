@@ -121,7 +121,7 @@ class MemberResolver(
     return reqularAndSignableQuotes(member.memberId, quotes)
   }
 
-// todo: fix
+// todo: fix do not use contractTypeName for logic here
   private fun reqularAndSignableQuotes(
     memberId: String,
     quotes: List<Quote>
