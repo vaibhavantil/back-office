@@ -656,7 +656,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     try {
       questionsService.answer(input.getMemberId(), input.getMessage(), personnel);
     } catch (QuestionNotFoundException exception) {
-      log.error("Question not found when marking as done for memberId=" + input.getMemberId(), exception);
+      log.error("Question not found when answering from chat for memberId=" + input.getMemberId(), exception);
     }
     return SendMessageResponse.Companion.from(
       chatServiceV2.sendMessage(
