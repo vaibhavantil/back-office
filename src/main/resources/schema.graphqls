@@ -315,6 +315,7 @@ type GenericAgreement {
   numberOfBathrooms: Int
   extraBuildings: [ExtraBuilding!]
   isSubleted: Boolean
+  lineOfBusinessName: String!
 }
 
 enum SwedishApartmentLineOfBusiness {

@@ -20,7 +20,8 @@ data class GenericAgreement (
   val yearOfConstruction: Int?,
   val numberOfBathrooms: Int?,
   val extraBuildings: List<ExtraBuilding>?,
-  val isSubleted: Boolean?
+  val isSubleted: Boolean?,
+  val lineOfBusinessName: String
 ) {
   val premium: MonetaryAmountV2
     get() = MonetaryAmountV2.of(basePremium)
