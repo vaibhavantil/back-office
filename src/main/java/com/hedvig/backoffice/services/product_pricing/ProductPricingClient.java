@@ -48,8 +48,7 @@ public interface ProductPricingClient {
   @GetMapping("/_/insurance/search?state={state}&query={query}")
   List<InsuranceStatusDTO> search(
     @PathVariable("state") ProductState state,
-    @PathVariable("query") String query,
-    @RequestHeader("Authorization") String token);
+    @PathVariable("query") String query);
 
   @GetMapping("/_/insurance/searchPaged")
   InsuranceSearchResultDTO searchPaged(
@@ -58,8 +57,7 @@ public interface ProductPricingClient {
     @RequestParam("page") Integer page,
     @RequestParam("pageSize") Integer pageSize,
     @RequestParam("sortBy") ProductSortColumns sortBy,
-    @RequestParam("sortDirection") Sort.Direction sortDirection,
-    @RequestHeader("Authorization") String token);
+    @RequestParam("sortDirection") Sort.Direction sortDirection);
 
   @PostMapping("/_/insurance/{memberId}/sendCancellationEmail")
   void sendCancellationEmail(

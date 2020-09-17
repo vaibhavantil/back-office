@@ -96,7 +96,7 @@ public class MemberServiceStub implements MemberService {
   }
 
   @Override
-  public List<MemberDTO> search(Boolean includeAll, String query, String token) {
+  public List<MemberDTO> search(Boolean includeAll, String query) {
     if (includeAll == null && StringUtils.isBlank(query)) {
       return users;
     }
@@ -115,10 +115,9 @@ public class MemberServiceStub implements MemberService {
     Integer page,
     Integer pageSize,
     MembersSortColumn sortBy,
-    Sort.Direction sortDirection,
-    String token
+    Sort.Direction sortDirection
   ) {
-    List<MemberDTO> members = search(includeAll, query, token);
+    List<MemberDTO> members = search(includeAll, query);
     if (sortBy != null) {
       members.sort(
         (sortDirection == Sort.Direction.DESC ? MEMBER_COMPARATORS_DESC : MEMBER_COMPARATORS_ASC)
@@ -137,7 +136,7 @@ public class MemberServiceStub implements MemberService {
       return new MembersSearchResultDTO(members, page, totalPages);
     }
 
-    return new MembersSearchResultDTO(members, null, null);
+    return new MembersSearchResultDTO(members, 0, 0);
   }
 
   private static EnumMap<MembersSortColumn, Comparator<MemberDTO>> MEMBER_COMPARATORS_ASC =

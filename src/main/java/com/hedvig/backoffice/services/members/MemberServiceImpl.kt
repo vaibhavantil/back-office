@@ -13,8 +13,8 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
     logger.info("class: " + MemberServiceImpl::class.java.name)
   }
 
-  override fun search(includeAll: Boolean?, query: String, token: String): List<MemberDTO> {
-    return client.search(includeAll, query, token)
+  override fun search(includeAll: Boolean?, query: String): List<MemberDTO> {
+    return client.search(includeAll, query)
   }
 
   override fun searchPaged(
@@ -23,10 +23,9 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
     page: Int?,
     pageSize: Int?,
     sortBy: MembersSortColumn,
-    sortDirection: Sort.Direction,
-    token: String
+    sortDirection: Sort.Direction
   ): MembersSearchResultDTO {
-    return client.searchPaged(includeAll, query, page, pageSize, sortBy, sortDirection, token)
+    return client.searchPaged(includeAll, query, page, pageSize, sortBy, sortDirection)
   }
 
   override fun findByMemberId(memberId: String, token: String): MemberDTO {

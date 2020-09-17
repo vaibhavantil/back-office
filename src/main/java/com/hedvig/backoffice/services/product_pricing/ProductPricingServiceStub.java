@@ -131,7 +131,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
       .setInsuranceActiveTo(dto.getCancellationDate().atZone(ZoneId.of("Europe/Stockholm")).toLocalDateTime());
   }
 
-  public List<InsuranceStatusDTO> search(ProductState state, String query, String token) {
+  public List<InsuranceStatusDTO> search(ProductState state, String query) {
     if (state == null && StringUtils.isBlank(query)) {
       return insurances;
     }
@@ -145,8 +145,8 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
-  public InsuranceSearchResultDTO searchPaged(ProductState state, String query, Integer page, Integer pageSize, ProductSortColumns sortBy, Sort.Direction sortDirection, String token) {
-    List<InsuranceStatusDTO> filtered = search(state, query, token);
+  public InsuranceSearchResultDTO searchPaged(ProductState state, String query, Integer page, Integer pageSize, ProductSortColumns sortBy, Sort.Direction sortDirection) {
+    List<InsuranceStatusDTO> filtered = search(state, query);
 
     if (sortBy != null) {
       filtered.sort((sortDirection == Sort.Direction.DESC ? COMPARATORS_DESC : COMPARATORS_ASC).get(sortBy));

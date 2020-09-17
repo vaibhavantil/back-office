@@ -24,7 +24,7 @@ public interface ProductPricingService {
 
   void cancel(String memberId, InsuranceCancellationDateDTO dto, String token);
 
-  List<InsuranceStatusDTO> search(ProductState state, String query, String token);
+  List<InsuranceStatusDTO> search(ProductState state, String query);
 
   InsuranceSearchResultDTO searchPaged(
     ProductState state,
@@ -32,8 +32,7 @@ public interface ProductPricingService {
     Integer page,
     Integer pageSize,
     ProductSortColumns sortBy,
-    Sort.Direction sortDirection,
-    String token);
+    Sort.Direction sortDirection);
 
   void sendCancellationEmail(String memberId, String token);
 

@@ -76,7 +76,7 @@ public class MemberController {
   @GetMapping
   public List<MemberWebDTO> list(@AuthenticationPrincipal Principal principal) {
     return
-      memberService.search(null, "", personnelService.getIdToken(principal.getName()))
+      memberService.search(null, "")
         .stream()
         .map(MemberWebDTO::new)
         .collect(toList());
@@ -112,8 +112,7 @@ public class MemberController {
     @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
     @AuthenticationPrincipal Principal principal
   ) {
-    String token = personnelService.getIdToken(principal.getName());
-    MembersSearchResultDTO searchRes = memberService.searchPaged(true, query, page, pageSize, sortBy, sortDirection, token);
+    MembersSearchResultDTO searchRes = memberService.searchPaged(true, query, page, pageSize, sortBy, sortDirection);
     return new MemberPagedSearchResultWebDTO(searchRes);
   }
 
@@ -127,8 +126,7 @@ public class MemberController {
     @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
     @AuthenticationPrincipal Principal principal
   ) {
-    final String token = personnelService.getIdToken(principal.getName());
-    final MembersSearchResultDTO searchRes = memberService.searchPaged(includeAll, query, page, pageSize, sortBy, sortDirection, token);
+    final MembersSearchResultDTO searchRes = memberService.searchPaged(includeAll, query, page, pageSize, sortBy, sortDirection);
     List<Long> memberIds = searchRes.getMembers().stream().map(MemberDTO::getMemberId).collect(toList());
     final List<MemberSearchResultDTOExtended> extendedResult = productPricingService.extendMemberSearchResult(memberIds);
 
@@ -198,7 +196,7 @@ public class MemberController {
     @RequestParam(name = "state", required = false) ProductState state,
     @RequestParam(name = "query", defaultValue = "", required = false) String query,
     @AuthenticationPrincipal Principal principal) {
-    return productPricingService.search(state, query, personnelService.getIdToken(principal.getName()))
+    return productPricingService.search(state, query)
       .stream()
       .map(InsuranceStatusWebDTO::new)
       .collect(toList());
@@ -215,8 +213,7 @@ public class MemberController {
     @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
     @AuthenticationPrincipal Principal principal
   ) {
-    String idToken = personnelService.getIdToken(principal.getName());
-    InsuranceSearchResultDTO res = productPricingService.searchPaged(state, query, page, pageSize, sortBy, sortDirection, idToken);
+    InsuranceSearchResultDTO res = productPricingService.searchPaged(state, query, page, pageSize, sortBy, sortDirection);
     return new InsuranceSearchResultWebDTO(res);
   }
 

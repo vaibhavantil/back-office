@@ -13,7 +13,7 @@ type QueryType {
   tickets(resolved: Boolean): [Ticket!]!
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
-  memberSearch(query: String!, options: MemberSearchOptions): MemberSearchResult!
+  memberSearch(query: String!, options: MemberSearchOptions!): MemberSearchResult!
   messageHistory(memberId: ID!): [ChatMessage!]!
   questionGroups: [QuestionGroup!]!
   itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
@@ -27,25 +27,6 @@ type QueryType {
     itemFamilyId: String!
     itemTypeId: ID
   ): CanValuateClaimItem
-}
-
-type MemberSearchResult {
-  members: [Member!]!
-  totalPages: Int!
-  page: Int!
-}
-
-input MemberSearchOptions {
-  includeAll: Boolean
-  page: Int
-  pageSize: Int
-  sortBy: String
-  sortDirection: String
-}
-
-type DashboardNumbers {
-  numberOfClaims: Int!
-  numberOfQuestions: Int!
 }
 
 type MutationType {
@@ -156,6 +137,26 @@ type MutationType {
   manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
   unsignMember(market: String!, ssn: String!): Boolean!
   editMemberInfo(request: EditMemberInfoInput!): Boolean!
+}
+
+
+type MemberSearchResult {
+  members: [Member!]!
+  totalPages: Int!
+  page: Int!
+}
+
+input MemberSearchOptions {
+  includeAll: Boolean
+  page: Int
+  pageSize: Int
+  sortBy: String
+  sortDirection: String
+}
+
+type DashboardNumbers {
+  numberOfClaims: Int!
+  numberOfQuestions: Int!
 }
 
 type ClaimItem {

@@ -7,6 +7,6 @@ data class MemberSearchOptions(
   val includeAll: Boolean?,
   val page: Int?,
   val pageSize: Int?,
-  val sortBy: MembersSortColumn?,
-  val sortDirection: Sort.Direction?
+  val sortBy: MembersSortColumn = MembersSortColumn.SIGN_UP,
+  val sortDirection: Sort.Direction = Sort.Direction.DESC
 )

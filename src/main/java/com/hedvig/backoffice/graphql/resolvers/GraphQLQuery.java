@@ -24,6 +24,7 @@ import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation;
 import com.hedvig.backoffice.services.itemizer.dto.request.GetValuationRequest;
 import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
@@ -207,8 +208,18 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   }
 
   public MemberSearchResult memberSearch(String query, MemberSearchOptions options) {
-    ArrayList<Member> members = new ArrayList<>();
-    return new MemberSearchResult(members, 1, 0);
+    System.out.println(options);
+
+    MembersSearchResultDTO searchResult = memberService.searchPaged(
+        options.getIncludeAll(),
+        query,
+        options.getPage(),
+        options.getPageSize(),
+        options.getSortBy(),
+        options.getSortDirection()
+      );
+
+    return MemberSearchResult.Companion.from(searchResult);
   }
 
   private String getEmail(DataFetchingEnvironment env) {
