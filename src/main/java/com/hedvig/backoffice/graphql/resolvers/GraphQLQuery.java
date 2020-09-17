@@ -25,9 +25,9 @@ import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation;
 import com.hedvig.backoffice.services.itemizer.dto.request.GetValuationRequest;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
-import com.hedvig.backoffice.services.product_pricing.dto.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
+import com.hedvig.backoffice.services.product_pricing.dto.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
@@ -37,6 +37,7 @@ import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -58,6 +59,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final QuestionService questionService;
   private final QuestionGroupRepository questionGroupRepository;
   private final ClaimsService claimsService;
+  private final MemberService memberService;
 
   public GraphQLQuery(
     ProductPricingService productPricingService,
@@ -84,6 +86,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.questionService = questionService;
     this.questionGroupRepository = questionGroupRepository;
     this.claimsService = claimsService;
+    this.memberService = memberService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -201,6 +204,11 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
   public CanValuateClaimItem canValuateClaimItem(TypeOfContract typeOfContract, String itemFamilyId, UUID itemTypeId) {
     return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
+  }
+
+  public MemberSearchResult memberSearch(String query, MemberSearchOptions options) {
+    ArrayList<Member> members = new ArrayList<>();
+    return new MemberSearchResult(members, 1, 0);
   }
 
   private String getEmail(DataFetchingEnvironment env) {
