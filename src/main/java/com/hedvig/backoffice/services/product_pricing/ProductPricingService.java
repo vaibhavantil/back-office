@@ -89,6 +89,8 @@ public interface ProductPricingService {
 
   void assignCampaignToPartnerFreeMonths(AssignVoucherFreeMonthsRequest request);
 
+  void assignCampaignToPartnerVisibleNoDiscount(AssignVoucherVisibleNoDiscountRequest request);
+
   List<PartnerResponseDto> getPartnerCampaignOwners();
 
   ReferralInformationDto getReferralInformation(String memberId);

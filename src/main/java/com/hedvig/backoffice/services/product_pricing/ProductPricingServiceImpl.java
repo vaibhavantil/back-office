@@ -263,6 +263,11 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   }
 
   @Override
+  public void assignCampaignToPartnerVisibleNoDiscount(AssignVoucherVisibleNoDiscountRequest request) {
+    this.client.assignCampaignToPartnerVisibleNoDiscount(request);
+  }
+
+  @Override
   public List<PartnerResponseDto> getPartnerCampaignOwners() {
     ResponseEntity<List<PartnerResponseDto>> response = this.client.getPartnerCampaignOwners();
     if (response.getStatusCode() == HttpStatus.OK) {

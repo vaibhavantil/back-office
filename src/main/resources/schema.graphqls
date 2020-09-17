@@ -141,6 +141,9 @@ type MutationType {
   assignCampaignToPartnerFreeMonths(
     request: AssignVoucherFreeMonths
   ): Boolean!
+  assignCampaignToPartnerVisibleNoDiscount(
+    request: AssignVoucherVisibleNoDiscount
+  ): Boolean!
   setContractForClaim(request: SetContractForClaim!): Boolean!
   manualRedeemCampaign(
     memberId: ID!
@@ -513,6 +516,14 @@ input AssignVoucherFreeMonths {
   validUntil: Instant
 }
 
+input AssignVoucherVisibleNoDiscount {
+  partnerId: String!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+}
+
+
 type CampaignOwnerPartner {
   partnerId: String!
 }
@@ -709,7 +720,7 @@ type Member {
   totalNumberOfClaims: Int!
   quotes: [Quote!]!
   contracts: [Contract!]!
-  claims: [Claim!]!
+  claims(filterByStates: [ClaimState!]): [Claim!]!
   contractMarketInfo: ContractMarketInfo
   pickedLocale: PickedLocale
   referralInformation: ReferralInformation
@@ -1120,15 +1131,16 @@ type AccountEntry {
 
 enum AccountEntryType {
   CORRECTION
-  SUBSCRIPTION
-  CAMPAIGN
-  PAYOUT
-  CHARGE
-  REFERRAL_DISCOUNT
-  FREE_MONTH_DISCOUNT
-  PERCENTAGE_MONTH_DISCOUNT
-  BUNDLE_DISCOUNT_COST_DEDUCTION
-  BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION
+  SUBSCRIPTION,
+  CAMPAIGN,
+  PAYOUT,
+  CHARGE,
+  REFERRAL_DISCOUNT,
+  FREE_MONTH_DISCOUNT,
+  PERCENTAGE_MONTH_DISCOUNT,
+  BUNDLE_DISCOUNT_COST_DEDUCTION,
+  BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION,
+  COST_DEDUCTION,
   LOSS
 }
 

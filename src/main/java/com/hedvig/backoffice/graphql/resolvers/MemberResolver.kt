@@ -172,9 +172,11 @@ class MemberResolver(
     return contracts
   }
 
-  fun getClaims(member: Member, env: DataFetchingEnvironment): List<Claim> {
-    val claims = claimsService.listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService))
-    return claims.map { claim -> Claim.fromDTO(claim) }
+  fun getClaims(member: Member, filterByStates: Set<ClaimState>?, env: DataFetchingEnvironment): List<Claim> {
+    return claimsService
+      .listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService))
+      .map { claim -> Claim.fromDTO(claim) }
+      .filter { claim -> filterByStates == null || filterByStates.contains(claim.state) }
   }
 
   fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)

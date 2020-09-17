@@ -652,6 +652,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   }
 
   public SendMessageResponse sendMessage(SendMessageInput input, DataFetchingEnvironment env) {
+    Personnel personnel = getPersonnel(env);
+    try {
+      questionsService.answer(input.getMemberId(), input.getMessage(), personnel);
+    } catch (QuestionNotFoundException exception) {
+      log.error("Question not found when answering from chat for memberId=" + input.getMemberId(), exception);
+    }
     return SendMessageResponse.Companion.from(
       chatServiceV2.sendMessage(
         input.getMemberId(),
@@ -731,6 +737,13 @@ public class GraphQLMutation implements GraphQLMutationResolver {
   public Boolean assignCampaignToPartnerFreeMonths(AssignVoucherFreeMonths request, DataFetchingEnvironment env) {
     productPricingService.assignCampaignToPartnerFreeMonths(
       AssignVoucherFreeMonthsRequest.Companion.from(request)
+    );
+    return true;
+  }
+
+  public Boolean assignCampaignToPartnerVisibleNoDiscount(AssignVoucherVisibleNoDiscount request, DataFetchingEnvironment env) {
+    productPricingService.assignCampaignToPartnerVisibleNoDiscount(
+      AssignVoucherVisibleNoDiscountRequest.Companion.from(request)
     );
     return true;
   }

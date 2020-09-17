@@ -192,6 +192,11 @@ public interface ProductPricingClient {
     @RequestBody AssignVoucherFreeMonthsRequest request
   );
 
+  @PostMapping("/i/campaign/partner/visible-no-discount/assign")
+  void assignCampaignToPartnerVisibleNoDiscount(
+    @RequestBody AssignVoucherVisibleNoDiscountRequest request
+  );
+
   @GetMapping("/i/campaign/partner/partnerCampaignOwners")
   ResponseEntity<List<PartnerResponseDto>> getPartnerCampaignOwners();
 
