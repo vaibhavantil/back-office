@@ -3,39 +3,10 @@ package com.hedvig.backoffice.web;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO;
-import com.hedvig.backoffice.services.members.dto.MemberDTO;
-import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
-import com.hedvig.backoffice.services.members.dto.MembersSortColumn;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceActivateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceCancellationDateDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceSearchResultDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuranceStatusDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.InsuredAtOtherCompanyDTO;
-import com.hedvig.backoffice.services.product_pricing.dto.MemberSearchResultDTOExtended;
-import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
-import com.hedvig.backoffice.web.dto.InsuranceSearchResultWebDTO;
-import com.hedvig.backoffice.web.dto.InsuranceStatusWebDTO;
-import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
-import com.hedvig.backoffice.web.dto.MemberPagedSearchResultWebDTO;
-import com.hedvig.backoffice.web.dto.MemberSearchResultWebDTO;
-import com.hedvig.backoffice.web.dto.MemberStatus;
-import com.hedvig.backoffice.web.dto.MemberWebDTO;
-import com.hedvig.backoffice.web.dto.MemberWebDTOExtended;
-import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
-import com.hedvig.backoffice.web.dto.ProductSortColumns;
-import com.hedvig.backoffice.web.dto.ProductState;
-
-import java.io.IOException;
-import java.security.Principal;
-import java.time.ZoneId;
-import java.util.List;
-import java.util.Optional;
-import javax.annotation.Nullable;
-import javax.validation.Valid;
-
-import lombok.val;
+import com.hedvig.backoffice.services.product_pricing.dto.*;
+import com.hedvig.backoffice.web.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
@@ -43,15 +14,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
+import java.io.IOException;
+import java.security.Principal;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -101,62 +72,17 @@ public class MemberController {
     return ResponseEntity.noContent().build();
   }
 
-  @GetMapping("/searchPaged")
-  @Deprecated
-  public MemberPagedSearchResultWebDTO searchPaged(
-    @RequestParam(name = "status", required = false) MemberStatus _memberStatus,
-    @RequestParam(name = "query", required = false) String query,
-    @RequestParam(name = "page", required = false) Integer page,
-    @RequestParam(name = "pageSize", required = false) Integer pageSize,
-    @RequestParam(name = "sortBy", required = false) MembersSortColumn sortBy,
-    @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
-    @AuthenticationPrincipal Principal principal
-  ) {
-    MembersSearchResultDTO searchRes = memberService.searchPaged(true, query, page, pageSize, sortBy, sortDirection);
-    return new MemberPagedSearchResultWebDTO(searchRes);
-  }
-
-  @GetMapping("/search")
-  public MemberSearchResultWebDTO search(
-    @RequestParam(name = "includeAll", required = false) @Nullable Boolean includeAll,
-    @RequestParam(name = "query", required = false) String query,
-    @RequestParam(name = "page", required = false) Integer page,
-    @RequestParam(name = "pageSize", required = false) Integer pageSize,
-    @RequestParam(name = "sortBy", required = false) MembersSortColumn sortBy,
-    @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
-    @AuthenticationPrincipal Principal principal
-  ) {
-    final MembersSearchResultDTO searchRes = memberService.searchPaged(includeAll, query, page, pageSize, sortBy, sortDirection);
-    List<Long> memberIds = searchRes.getMembers().stream().map(MemberDTO::getMemberId).collect(toList());
-    final List<MemberSearchResultDTOExtended> extendedResult = productPricingService.extendMemberSearchResult(memberIds);
-
-    final List<MemberWebDTOExtended> extendedMembers = extendedResult.stream()
-      .map(extendedResultItem -> {
-        final MemberDTO memberDTO = searchRes.getMembers().stream().filter(member -> member.getMemberId() == extendedResultItem.getMemberId()).findFirst().get();
-        return new MemberWebDTOExtended(
-          new MemberWebDTO(memberDTO),
-          extendedResultItem.getFirstActiveFrom(),
-          extendedResultItem.getLastActiveTo(),
-          extendedResultItem.getCurrentInsuranceStatus(),
-          extendedResultItem.getHouseholdSize(),
-          extendedResultItem.getLivingSpace()
-        );
-      })
-      .collect(toList());
-    return new MemberSearchResultWebDTO(extendedMembers, searchRes.getPage(), searchRes.getTotalPages());
-  }
-
   @RequestMapping(
     path = "/mandate/{memberId}",
     method = RequestMethod.GET,
     produces = MediaType.APPLICATION_PDF_VALUE)
   public ResponseEntity<byte[]> insuranceMandate(
     @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
-    val mandate =
+    byte[] mandate =
       productPricingService.insuranceContract(
         memberId, personnelService.getIdToken(principal.getName()));
-    val headers = new HttpHeaders();
-    val filename = "insurance-mandate-" + memberId + ".pdf";
+    HttpHeaders headers = new HttpHeaders();
+    String filename = "insurance-mandate-" + memberId + ".pdf";
     headers.setContentDispositionFormData(filename, filename);
     headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
     return new ResponseEntity<>(mandate, headers, HttpStatus.OK);

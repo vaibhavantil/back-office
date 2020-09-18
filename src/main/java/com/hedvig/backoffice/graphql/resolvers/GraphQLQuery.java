@@ -208,8 +208,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   }
 
   public MemberSearchResult memberSearch(String query, MemberSearchOptions options) {
-    System.out.println(options);
-
     MembersSearchResultDTO searchResult = memberService.searchPaged(
         options.getIncludeAll(),
         query,

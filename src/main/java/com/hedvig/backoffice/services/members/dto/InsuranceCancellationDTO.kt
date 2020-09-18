@@ -1,12 +1,10 @@
-package com.hedvig.backoffice.services.members.dto;
+package com.hedvig.backoffice.services.members.dto
 
-import java.time.LocalDate;
-import java.util.UUID;
-import lombok.Value;
+import java.time.LocalDate
+import java.util.*
 
-@Value
-public class InsuranceCancellationDTO {
-  Long memberId;
-  UUID insuranceId;
-  LocalDate cancellationDate;
-}
+data class InsuranceCancellationDTO (
+  val memberId: Long? = null,
+  val insuranceId: UUID? = null,
+  val cancellationDate: LocalDate? = null
+)
