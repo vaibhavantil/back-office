@@ -15,7 +15,8 @@ interface MemberServiceClient {
   @GetMapping("/i/member/search")
   fun search(
     @RequestParam("includeAll") includeAll: Boolean?,
-    @RequestParam("query") query: String
+    @RequestParam("query") query: String,
+    @RequestHeader("Authorization") token: String
   ): List<MemberDTO>
 
   @GetMapping("/i/member/searchPaged")
@@ -25,7 +26,8 @@ interface MemberServiceClient {
     @RequestParam("page") page: Int?,
     @RequestParam("pageSize") pageSize: Int?,
     @RequestParam("sortBy") sortBy: MembersSortColumn,
-    @RequestParam("sortDirection") sortDirection: Sort.Direction
+    @RequestParam("sortDirection") sortDirection: Sort.Direction,
+    @RequestHeader("Authorization") token: String
   ): MembersSearchResultDTO
 
   @GetMapping("/i/member/{memberId}")

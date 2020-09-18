@@ -47,7 +47,7 @@ public class MemberController {
   @GetMapping
   public List<MemberWebDTO> list(@AuthenticationPrincipal Principal principal) {
     return
-      memberService.search(null, "")
+      memberService.search(null, "", personnelService.getIdToken(principal.getName()))
         .stream()
         .map(MemberWebDTO::new)
         .collect(toList());
@@ -56,7 +56,7 @@ public class MemberController {
   @GetMapping("/{memberId}")
   public MemberWebDTO findOne(
     @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {
-    return Optional.ofNullable(
+    return Optional.of(
       memberService.findByMemberId(
         memberId, personnelService.getIdToken(principal.getName())))
       .map(MemberWebDTO::new)
@@ -72,9 +72,8 @@ public class MemberController {
     return ResponseEntity.noContent().build();
   }
 
-  @RequestMapping(
+  @GetMapping(
     path = "/mandate/{memberId}",
-    method = RequestMethod.GET,
     produces = MediaType.APPLICATION_PDF_VALUE)
   public ResponseEntity<byte[]> insuranceMandate(
     @PathVariable String memberId, @AuthenticationPrincipal Principal principal) {

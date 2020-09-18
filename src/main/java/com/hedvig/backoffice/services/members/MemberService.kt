@@ -6,7 +6,7 @@ import org.springframework.data.domain.Sort
 
 interface MemberService {
 
-  fun search(includeAll: Boolean?, query: String): List<MemberDTO>
+  fun search(includeAll: Boolean?, query: String, token: String): List<MemberDTO>
 
   fun searchPaged(
     includeAll: Boolean?,
@@ -14,7 +14,8 @@ interface MemberService {
     page: Int?,
     pageSize: Int?,
     sortBy: MembersSortColumn,
-    sortDirection: Sort.Direction
+    sortDirection: Sort.Direction,
+    token: String
   ): MembersSearchResultDTO
 
   fun findByMemberId(memberId: String, token: String): MemberDTO

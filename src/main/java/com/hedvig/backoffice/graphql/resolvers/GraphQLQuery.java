@@ -38,7 +38,6 @@ import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
 import java.time.YearMonth;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -207,15 +206,16 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
   }
 
-  public MemberSearchResult memberSearch(String query, MemberSearchOptions options) {
+  public MemberSearchResult memberSearch(String query, MemberSearchOptions options, DataFetchingEnvironment env) {
     MembersSearchResultDTO searchResult = memberService.searchPaged(
-        options.getIncludeAll(),
-        query,
-        options.getPage(),
-        options.getPageSize(),
-        options.getSortBy(),
-        options.getSortDirection()
-      );
+      options.getIncludeAll(),
+      query,
+      options.getPage(),
+      options.getPageSize(),
+      options.getSortBy(),
+      options.getSortDirection(),
+      getToken(env)
+    );
 
     return MemberSearchResult.Companion.from(searchResult);
   }
