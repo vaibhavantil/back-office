@@ -131,7 +131,8 @@ public class ProductPricingServiceStub implements ProductPricingService {
       .setInsuranceActiveTo(dto.getCancellationDate().atZone(ZoneId.of("Europe/Stockholm")).toLocalDateTime());
   }
 
-  public List<InsuranceStatusDTO> search(ProductState state, String query) {
+  @Override
+  public List<InsuranceStatusDTO> search(ProductState state, String query, String token) {
     if (state == null && StringUtils.isBlank(query)) {
       return insurances;
     }
@@ -145,8 +146,8 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
-  public InsuranceSearchResultDTO searchPaged(ProductState state, String query, Integer page, Integer pageSize, ProductSortColumns sortBy, Sort.Direction sortDirection) {
-    List<InsuranceStatusDTO> filtered = search(state, query);
+  public InsuranceSearchResultDTO searchPaged(ProductState state, String query, Integer page, Integer pageSize, ProductSortColumns sortBy, Sort.Direction sortDirection, String token) {
+    List<InsuranceStatusDTO> filtered = search(state, query, token);
 
     if (sortBy != null) {
       filtered.sort((sortDirection == Sort.Direction.DESC ? COMPARATORS_DESC : COMPARATORS_ASC).get(sortBy));
@@ -439,19 +440,5 @@ public class ProductPricingServiceStub implements ProductPricingService {
   @Override
   public List<RedeemedCampaignDto> redeemedCampaigns(String memberId) {
     return null;
-  }
-
-  @Override
-  public List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds) {
-    return memberIds.stream()
-      .map(memberId -> new MemberSearchResultDTOExtended(
-        memberId,
-        null,
-        null,
-        null,
-        null,
-        null
-      ))
-      .collect(Collectors.toList());
   }
 }

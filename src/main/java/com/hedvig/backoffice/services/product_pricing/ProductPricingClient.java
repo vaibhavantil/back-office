@@ -48,7 +48,8 @@ public interface ProductPricingClient {
   @GetMapping("/_/insurance/search?state={state}&query={query}")
   List<InsuranceStatusDTO> search(
     @PathVariable("state") ProductState state,
-    @PathVariable("query") String query);
+    @PathVariable("query") String query,
+    @RequestHeader("Authorization") String token);
 
   @GetMapping("/_/insurance/searchPaged")
   InsuranceSearchResultDTO searchPaged(
@@ -57,7 +58,8 @@ public interface ProductPricingClient {
     @RequestParam("page") Integer page,
     @RequestParam("pageSize") Integer pageSize,
     @RequestParam("sortBy") ProductSortColumns sortBy,
-    @RequestParam("sortDirection") Sort.Direction sortDirection);
+    @RequestParam("sortDirection") Sort.Direction sortDirection,
+    @RequestHeader("Authorization") String token);
 
   @PostMapping("/_/insurance/{memberId}/sendCancellationEmail")
   void sendCancellationEmail(
@@ -98,9 +100,6 @@ public interface ProductPricingClient {
     @PathVariable("year") int year,
     @PathVariable("month") int month,
     @PathVariable("productType") ProductType productType);
-
-  @PostMapping("/_/insurance/extendMemberSearch")
-  List<MemberSearchResultDTOExtended> extendMemberSearchResult(@RequestBody List<Long> collect);
 
   @GetMapping("/_/switchableSwitchers/emails")
   List<SwitchableSwitcherEmailDTO> getSwitchableSwitcherEmails();

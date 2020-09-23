@@ -121,7 +121,7 @@ public class MemberController {
     @RequestParam(name = "state", required = false) ProductState state,
     @RequestParam(name = "query", defaultValue = "", required = false) String query,
     @AuthenticationPrincipal Principal principal) {
-    return productPricingService.search(state, query)
+    return productPricingService.search(state, query, personnelService.getIdToken(principal.getName()))
       .stream()
       .map(InsuranceStatusWebDTO::new)
       .collect(toList());
@@ -138,7 +138,7 @@ public class MemberController {
     @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
     @AuthenticationPrincipal Principal principal
   ) {
-    InsuranceSearchResultDTO res = productPricingService.searchPaged(state, query, page, pageSize, sortBy, sortDirection);
+    InsuranceSearchResultDTO res = productPricingService.searchPaged(state, query, page, pageSize, sortBy, sortDirection, personnelService.getIdToken(principal.getName()));
     return new InsuranceSearchResultWebDTO(res);
   }
 

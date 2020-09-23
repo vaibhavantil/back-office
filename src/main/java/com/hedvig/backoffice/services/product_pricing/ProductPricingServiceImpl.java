@@ -59,13 +59,13 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     client.cancelInsurance(memberId, dto, token);
   }
 
-  public List<InsuranceStatusDTO> search(ProductState state, String query) {
-    return client.search(state, query);
+  public List<InsuranceStatusDTO> search(ProductState state, String query, String token) {
+    return client.search(state, query, token);
   }
 
   @Override
-  public InsuranceSearchResultDTO searchPaged(ProductState state, String query, Integer page, Integer pageSize, ProductSortColumns sortBy, Sort.Direction sortDirection) {
-    return client.searchPaged(query, state, page, pageSize, sortBy, sortDirection);
+  public InsuranceSearchResultDTO searchPaged(ProductState state, String query, Integer page, Integer pageSize, ProductSortColumns sortBy, Sort.Direction sortDirection, String token) {
+    return client.searchPaged(query, state, page, pageSize, sortBy, sortDirection, token);
   }
 
   @Override
@@ -154,11 +154,6 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   ) {
     return client
       .getMonthlyBordereauByProductType(month.getYear(), month.getMonthValue(), productType);
-  }
-
-  @Override
-  public List<MemberSearchResultDTOExtended> extendMemberSearchResult(final List<Long> memberIds) {
-    return client.extendMemberSearchResult(memberIds);
   }
 
   @Override
