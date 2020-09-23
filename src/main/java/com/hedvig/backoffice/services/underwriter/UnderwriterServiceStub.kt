@@ -94,7 +94,7 @@ class UnderwriterServiceStub : UnderwriterService {
     request: SignQuoteFromHopeRequestDto
   ): SignedQuoteResponseDto = SignedQuoteResponseDto(UUID.randomUUID(), Instant.now())
 
-  override fun getSchemaFromQuote(id: UUID): JsonNode {
+  override fun getSchemaFromQuote(id: UUID): JsonNode? {
     TODO("Not yet implemented")
   }
 }

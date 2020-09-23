@@ -1,16 +1,15 @@
 package com.hedvig.backoffice.services
 
-import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hedvig.backoffice.services.underwriter.UnderwriterClient
 import com.hedvig.backoffice.services.underwriter.UnderwriterServiceImpl
-import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.springframework.http.ResponseEntity
+import org.springframework.web.client.RestClientResponseException
 import java.util.UUID
 
 class QuoteSchemaTest {
@@ -19,7 +18,7 @@ class QuoteSchemaTest {
   val objectMapper = ObjectMapper()
 
   @Before
-  fun setup(){
+  fun setup() {
     underwriterClient = mockk()
   }
 
@@ -55,5 +54,23 @@ class QuoteSchemaTest {
     val result = underwriterServiceImpl.getSchemaFromQuote(UUID.randomUUID())
 
     assertThat(result).isEqualTo(schema)
+  }
+
+  @Test
+  fun quoteNotFound_returnsNull() {
+    every { underwriterClient.getSchemaFromQuote(any()) } throws RestClientResponseException(
+      "Error",
+      404,
+      "NOT_FOUND",
+      null,
+      null,
+      null
+    )
+
+    val underwriterServiceImpl = UnderwriterServiceImpl(underwriterClient, mockk())
+
+    val result = underwriterServiceImpl.getSchemaFromQuote(UUID.randomUUID())
+
+    assertThat(result).isNull()
   }
 }
