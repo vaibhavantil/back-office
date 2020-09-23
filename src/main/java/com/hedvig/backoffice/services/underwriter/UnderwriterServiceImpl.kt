@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.underwriter
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException
 import com.hedvig.backoffice.services.members.MemberService
 import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
@@ -191,4 +192,7 @@ class UnderwriterServiceImpl(
     }
     throw IllegalStateException("Cannot sign quote [QuoteId: $completeQuoteId]")
   }
+
+  override fun getSchemaFromQuote(id: UUID): JsonNode = underwriterClient.getSchemaFromQuote(id)!!.body!!
+
 }

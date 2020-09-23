@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.underwriter
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteForNewContractRequestDto
@@ -43,4 +44,7 @@ interface UnderwriterService {
   fun createQuoteFromAgreement(quoteRequest: QuoteFromAgreementRequestDto): QuoteResponseDto
   fun createQuoteForNewContract(request: QuoteForNewContractRequestDto): QuoteResponseDto
   fun signQuoteForNewContract(completeQuoteId: UUID, request: SignQuoteFromHopeRequestDto): SignedQuoteResponseDto
+
+
+  fun getSchemaFromQuote(id: UUID): JsonNode
 }

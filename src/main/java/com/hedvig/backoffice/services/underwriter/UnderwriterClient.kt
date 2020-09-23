@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.underwriter
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.hedvig.backoffice.config.feign.FeignConfig
 import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
 import com.hedvig.backoffice.services.underwriter.dtos.AddAgreementFromQuoteRequest
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import java.util.UUID
 
+// TODO rename completeQuoteId to quoteId
 @FeignClient(
   name = "underwriter",
   url = "\${underwriter.baseUrl:underwriter}",
@@ -69,4 +71,7 @@ interface UnderwriterClient {
     @PathVariable completeQuoteId: UUID,
     @RequestBody request: SignQuoteFromHopeRequestDto
   ): ResponseEntity<Any>
+
+  @GetMapping("/_/v2/quotes/{completeQuoteId}/schema")
+  fun getSchemaFromQuote(@PathVariable completeQuoteId: UUID): ResponseEntity<JsonNode>
 }

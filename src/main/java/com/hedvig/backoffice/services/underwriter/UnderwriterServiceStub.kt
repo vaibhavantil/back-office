@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.underwriter
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
 import com.hedvig.backoffice.services.underwriter.dtos.ProductType
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteData
@@ -92,4 +93,8 @@ class UnderwriterServiceStub : UnderwriterService {
     completeQuoteId: UUID,
     request: SignQuoteFromHopeRequestDto
   ): SignedQuoteResponseDto = SignedQuoteResponseDto(UUID.randomUUID(), Instant.now())
+
+  override fun getSchemaFromQuote(id: UUID): JsonNode {
+    TODO("Not yet implemented")
+  }
 }
