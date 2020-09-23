@@ -182,13 +182,6 @@ public class MemberController {
     return ResponseEntity.noContent().build();
   }
 
-  @PostMapping("/{memberId}/setFraudulentStatus")
-  public ResponseEntity<?> setFraudulentStatus(
-    @PathVariable String memberId, @RequestBody @Valid MemberFraudulentStatusDTO dto, @AuthenticationPrincipal Principal principal) {
-    memberService.setFraudulentStatus(memberId, dto, personnelService.getIdToken(principal.getName()));
-    return ResponseEntity.noContent().build();
-  }
-
   @PostMapping("/insurance/{memberId}/createmodifiedProduct")
   public ResponseEntity<InsuranceStatusWebDTO> createmodifiedProduct(
     @PathVariable("memberId") String memberId,
