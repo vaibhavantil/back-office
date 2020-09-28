@@ -47,18 +47,18 @@ class QuoteSchemaTest {
   fun quoteServiceReturnsValidSchema() {
 
     val schema = objectMapper.readTree(aRandomSchema)
-    every { underwriterClient.getSchemaFromQuote(any()) } returns ResponseEntity.ok(schema)
+    every { underwriterClient.getSchemaByQuoteId(any()) } returns ResponseEntity.ok(schema)
 
     val underwriterServiceImpl = UnderwriterServiceImpl(underwriterClient, mockk())
 
-    val result = underwriterServiceImpl.getSchemaFromQuote(UUID.randomUUID())
+    val result = underwriterServiceImpl.getSchemaByQuoteId(UUID.randomUUID())
 
     assertThat(result).isEqualTo(schema)
   }
 
   @Test
   fun quoteNotFound_returnsNull() {
-    every { underwriterClient.getSchemaFromQuote(any()) } throws RestClientResponseException(
+    every { underwriterClient.getSchemaByQuoteId(any()) } throws RestClientResponseException(
       "Error",
       404,
       "NOT_FOUND",
@@ -69,7 +69,7 @@ class QuoteSchemaTest {
 
     val underwriterServiceImpl = UnderwriterServiceImpl(underwriterClient, mockk())
 
-    val result = underwriterServiceImpl.getSchemaFromQuote(UUID.randomUUID())
+    val result = underwriterServiceImpl.getSchemaByQuoteId(UUID.randomUUID())
 
     assertThat(result).isNull()
   }

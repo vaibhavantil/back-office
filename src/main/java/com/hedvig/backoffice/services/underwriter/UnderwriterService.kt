@@ -46,5 +46,6 @@ interface UnderwriterService {
   fun signQuoteForNewContract(completeQuoteId: UUID, request: SignQuoteFromHopeRequestDto): SignedQuoteResponseDto
 
 
-  fun getSchemaFromQuote(id: UUID): JsonNode?
+  fun getSchemaByQuoteId(quoteId: UUID): JsonNode?
+  fun getSchemaWithDataByQuoteId(quoteId: UUID): JsonNode?
 }

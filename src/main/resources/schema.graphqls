@@ -798,6 +798,8 @@ type Quote {
   breachedUnderwritingGuidelines: [String!]
   isComplete: Boolean
   data: QuoteData
+  schema: JSON
+  schemaData: JSON
   signedProductId: ID
   originatingProductId: ID
   isReadyToSign: Boolean
@@ -1559,3 +1561,5 @@ scalar LocalDateTime
 scalar Instant
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL
+# A Json Object represtation of `JsonNode`
+scalar JSON

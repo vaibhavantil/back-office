@@ -72,6 +72,9 @@ interface UnderwriterClient {
     @RequestBody request: SignQuoteFromHopeRequestDto
   ): ResponseEntity<Any>
 
-  @GetMapping("/_/v2/quotes/{completeQuoteId}/schema")
-  fun getSchemaFromQuote(@PathVariable completeQuoteId: UUID): ResponseEntity<JsonNode>
+  @GetMapping("/_/v1/quotes/schema/{quoteId}")
+  fun getSchemaByQuoteId(@PathVariable quoteId: UUID): ResponseEntity<JsonNode>
+
+  @GetMapping("/_/v1/quotes/schema/{quoteId}/data")
+  fun getSchemaWithDataByQuoteId(@PathVariable quoteId: UUID): ResponseEntity<JsonNode>
 }
