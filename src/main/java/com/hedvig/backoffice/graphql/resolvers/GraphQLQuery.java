@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.GraphQLRequestContext;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
@@ -33,6 +34,7 @@ import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
+import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +60,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final QuestionService questionService;
   private final QuestionGroupRepository questionGroupRepository;
   private final ClaimsService claimsService;
+  private final UnderwriterService underwriterService;
 
   public GraphQLQuery(
     ProductPricingService productPricingService,
@@ -71,7 +74,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     QuestionService questionService,
     ItemizerService itemizerService,
     QuestionGroupRepository questionGroupRepository,
-    ClaimsService claimsService
+    ClaimsService claimsService,
+    UnderwriterService underwriterService
   ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
@@ -84,6 +88,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.questionService = questionService;
     this.questionGroupRepository = questionGroupRepository;
     this.claimsService = claimsService;
+    this.underwriterService = underwriterService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -201,6 +206,10 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
   public CanValuateClaimItem canValuateClaimItem(TypeOfContract typeOfContract, String itemFamilyId, UUID itemTypeId) {
     return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
+  }
+
+  public JsonNode getQuoteSchemaForContractType(String contractType) {
+    return underwriterService.getSchemaForContractType(contractType);
   }
 
   private String getEmail(DataFetchingEnvironment env) {

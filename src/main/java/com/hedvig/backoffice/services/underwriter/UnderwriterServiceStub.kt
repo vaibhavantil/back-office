@@ -82,11 +82,23 @@ class UnderwriterServiceStub : UnderwriterService {
     request: SignQuoteFromHopeRequestDto
   ): SignedQuoteResponseDto = SignedQuoteResponseDto(UUID.randomUUID(), Instant.now())
 
+  override fun getSchemaForContractType(contractType: String): JsonNode? {
+    return null
+  }
+
   override fun getSchemaByQuoteId(quoteId: UUID): JsonNode? {
     return null
   }
 
   override fun getSchemaWithDataByQuoteId(quoteId: UUID): JsonNode? {
     return null
+  }
+
+  override fun updateQuoteBySchemaWithData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
+    return QuoteResponseDto(quoteId)
+  }
+
+  override fun createQuoteForMemberBySchemaWithData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
+    return QuoteResponseDto(UUID.randomUUID())
   }
 }

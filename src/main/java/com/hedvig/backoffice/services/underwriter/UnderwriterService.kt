@@ -1,16 +1,9 @@
 package com.hedvig.backoffice.services.underwriter
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteForNewContractRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
-import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.SignedQuoteResponseDto
+import com.hedvig.backoffice.services.underwriter.dtos.*
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
 
 interface UnderwriterService {
   fun createAndCompleteQuote(
@@ -46,6 +39,9 @@ interface UnderwriterService {
   fun signQuoteForNewContract(completeQuoteId: UUID, request: SignQuoteFromHopeRequestDto): SignedQuoteResponseDto
 
 
+  fun getSchemaForContractType(contractType: String): JsonNode?
   fun getSchemaByQuoteId(quoteId: UUID): JsonNode?
   fun getSchemaWithDataByQuoteId(quoteId: UUID): JsonNode?
+  fun updateQuoteBySchemaWithData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto
+  fun createQuoteForMemberBySchemaWithData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto
 }

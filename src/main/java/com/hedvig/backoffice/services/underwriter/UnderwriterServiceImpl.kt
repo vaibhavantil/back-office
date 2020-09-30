@@ -178,6 +178,16 @@ class UnderwriterServiceImpl(
     throw IllegalStateException("Cannot sign quote [QuoteId: $completeQuoteId]")
   }
 
+  override fun getSchemaForContractType(contractType: String): JsonNode? = try {
+    underwriterClient.getSchemaForContractType(contractType).body
+  } catch (exception: RestClientResponseException) {
+    if (exception.rawStatusCode == 404) {
+      null
+    } else {
+      throw exception
+    }
+  }
+
   override fun getSchemaByQuoteId(quoteId: UUID): JsonNode? = try {
     underwriterClient.getSchemaByQuoteId(quoteId).body
   } catch (exception: RestClientResponseException) {
@@ -194,6 +204,32 @@ class UnderwriterServiceImpl(
     if (exception.rawStatusCode == 404) {
       null
     } else {
+      throw exception
+    }
+  }
+
+  override fun updateQuoteBySchemaWithData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
+    try {
+      return underwriterClient.updateQuoteBySchemaWithData(
+        quoteId = quoteId,
+        body = schemaData,
+        underwritingGuidelinesBypassedBy = underwritingGuidelinesBypassedBy
+      )
+    } catch (exception: Exception) {
+      logger.error("Unable to update quote with quoteId=$quoteId", exception)
+      throw exception
+    }
+  }
+
+  override fun createQuoteForMemberBySchemaWithData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
+    try {
+      return underwriterClient.createQuoteForMemberBySchemaWithData(
+        memberId = memberId,
+        body = schemaData,
+        underwritingGuidelinesBypassedBy = underwritingGuidelinesBypassedBy
+      )
+    } catch (exception: Exception) {
+      logger.error("Unable to create quote for member with memberId=$memberId", exception)
       throw exception
     }
   }

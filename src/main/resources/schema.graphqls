@@ -26,6 +26,7 @@ type QueryType {
     itemFamilyId: String!
     itemTypeId: ID
   ): CanValuateClaimItem
+  quoteSchemaForContractType(contractType: String!): JSON
 }
 
 type DashboardNumbers {
@@ -108,6 +109,16 @@ type MutationType {
   createQuoteForNewContract(
     memberId: ID!
     quoteInput: QuoteInput!
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
+  updateQuoteBySchema(
+    quoteId: ID!
+    schemaData: JSON!
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
+  createQuoteForMemberBySchema(
+    memberId: ID!
+    schemaData: JSON!
     bypassUnderwritingGuidelines: Boolean!
   ): Quote!
   signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
