@@ -65,7 +65,7 @@ interface UnderwriterClient {
   fun getSchemaWithDataByQuoteId(@PathVariable quoteId: UUID): ResponseEntity<JsonNode>
 
   @GetMapping("/_/v1/quotes/schema/contract/{contractType}")
-  fun getSchemaForContractType(@PathVariable contractType: String): ResponseEntity<JsonNode>
+  fun getSchemaForContractType(@PathVariable contractType: ContractType): ResponseEntity<JsonNode>
 
   @PostMapping("/_/v1/quotes/schema/{quoteId}/update")
   fun updateQuoteBySchemaWithData(

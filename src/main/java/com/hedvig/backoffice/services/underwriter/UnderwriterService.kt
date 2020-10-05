@@ -39,7 +39,7 @@ interface UnderwriterService {
   fun signQuoteForNewContract(completeQuoteId: UUID, request: SignQuoteFromHopeRequestDto): SignedQuoteResponseDto
 
 
-  fun getSchemaForContractType(contractType: String): JsonNode?
+  fun getSchemaForContractType(contractType: ContractType): JsonNode?
   fun getSchemaByQuoteId(quoteId: UUID): JsonNode?
   fun getSchemaWithDataByQuoteId(quoteId: UUID): JsonNode?
   fun updateQuoteBySchemaWithData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto

@@ -178,7 +178,7 @@ class UnderwriterServiceImpl(
     throw IllegalStateException("Cannot sign quote [QuoteId: $completeQuoteId]")
   }
 
-  override fun getSchemaForContractType(contractType: String): JsonNode? = try {
+  override fun getSchemaForContractType(contractType: ContractType): JsonNode? = try {
     underwriterClient.getSchemaForContractType(contractType).body
   } catch (exception: RestClientResponseException) {
     if (exception.rawStatusCode == 404) {
