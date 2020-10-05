@@ -28,6 +28,7 @@
     <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
     <mockito.version>2.22.0</mockito.version>
     <kotlin.version>1.3.31</kotlin.version>
+    <byte-buddy.version>1.9.3</byte-buddy.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
   </properties>
 
@@ -387,7 +388,7 @@
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
+        <artifactId>spring-booct t-maven-plugin</artifactId>
         <configuration>
           <profiles>
             development

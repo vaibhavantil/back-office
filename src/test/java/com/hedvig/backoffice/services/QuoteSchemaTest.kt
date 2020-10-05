@@ -30,12 +30,10 @@ class QuoteSchemaTest {
       "additionalProperties": false,
       "properties": {
           "coInsured": {
-              "propertyOrder": 1,
               "type": "integer",
               "title": "Co Insured"
           },
           "youth": {
-              "propertyOrder": 2,
               "type": "boolean",
               "title": "Youth"
           }

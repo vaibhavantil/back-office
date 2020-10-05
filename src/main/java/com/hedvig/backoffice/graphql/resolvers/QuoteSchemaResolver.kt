@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component
 
 @Component
 class QuoteResolver(
-  private val underwriterService: UnderwriterService
+    private val underwriterService: UnderwriterService
 ) : GraphQLResolver<Quote> {
 
-  fun getSchema(quote:Quote)  = underwriterService.getSchemaByQuoteId(quote.id)
+    fun getSchema(quote: Quote) = underwriterService.getSchemaByQuoteId(quote.id)
 
-  fun getSchemaData(quote: Quote) = underwriterService.getSchemaWithDataByQuoteId(quote.id)
+    fun getSchemaData(quote: Quote) = underwriterService.getSchemaWithDataByQuoteId(quote.id)
 }

@@ -12,49 +12,107 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 class ResolverQuoteSchemaTest {
 
-  lateinit var underwriterService: UnderwriterService
+    lateinit var underwriterService: UnderwriterService
 
-  @Before
-  fun setup() {
-    underwriterService = mockk()
-  }
+    val objectMapper = ObjectMapper()
 
-  val aRandomSchema = ObjectMapper().readTree("{}")
+    val aRandomSchema = objectMapper.readTree("""
+    {
+          "${'$'}schema": "http://json-schema.org/draft-07/schema#",
+          "title": "Norwegian Travel",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+                "coInsured": {
+                    "type": "integer",
+                    "title": "Co Insured"
+              },
+              "youth": {
+                  "type": "boolean",
+                  "title": "Youth"
+              }
+          }
+    }""".trimIndent())
 
-  @Test
-  fun first_test() {
+    val randomSchemaData = objectMapper.readTree("""
+        {
+            "coInsured": 2,
+            "youth": true
+        }
+    """.trimIndent())
 
-    val quoteId = UUID.randomUUID()
-    every { underwriterService.getSchemaByQuoteId(quoteId) } returns aRandomSchema
+    @Before
+    fun setup() {
+        underwriterService = mockk()
+    }
 
-    val resolver = QuoteResolver(underwriterService)
+    @Test
+    fun `returns a schema`() {
 
-    val result = resolver.getSchema(
-      Quote(
-        quoteId,
-        Instant.now(),
-        null,
-        ProductType.APARTMENT,
-        QuoteState.INCOMPLETE,
-        "RAPIO",
-        "",
-        QuoteData.ApartmentQuoteData(UUID.randomUUID()),
-        null,
-        null,
-        123456,
-        null,
-        null,
-        false,
-        null,
-        null,
-        false
-      )
-    )
+        val quoteId = UUID.randomUUID()
+        every { underwriterService.getSchemaByQuoteId(quoteId) } returns aRandomSchema
 
-    assertThat(result).isEqualTo(aRandomSchema)
-  }
+        val resolver = QuoteResolver(underwriterService)
+
+        val result = resolver.getSchema(
+            Quote(
+                quoteId,
+                Instant.now(),
+                null,
+                ProductType.APARTMENT,
+                QuoteState.INCOMPLETE,
+                "RAPIO",
+                "",
+                QuoteData.ApartmentQuoteData(UUID.randomUUID()),
+                null,
+                null,
+                123456,
+                null,
+                null,
+                false,
+                null,
+                null,
+                false
+            )
+        )
+
+        assertThat(result).isEqualTo(aRandomSchema)
+    }
+
+    @Test
+    fun `returns data for schema`() {
+
+        val quoteId = UUID.randomUUID()
+        every { underwriterService.getSchemaWithDataByQuoteId(quoteId) } returns randomSchemaData
+
+        val resolver = QuoteResolver(underwriterService)
+
+        val result = resolver.getSchemaData(
+            Quote(
+                quoteId,
+                Instant.now(),
+                null,
+                ProductType.APARTMENT,
+                QuoteState.INCOMPLETE,
+                "RAPIO",
+                "",
+                QuoteData.ApartmentQuoteData(UUID.randomUUID()),
+                null,
+                null,
+                123456,
+                null,
+                null,
+                false,
+                null,
+                null,
+                false
+            )
+        )
+
+        assertThat(result).isEqualTo(randomSchemaData)
+    }
 }

@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
-// TODO rename completeQuoteId to quoteId
 @FeignClient(
   name = "underwriter",
   url = "\${underwriter.baseUrl:underwriter}",
@@ -81,5 +80,4 @@ interface UnderwriterClient {
     @RequestBody body: JsonNode,
     @RequestParam underwritingGuidelinesBypassedBy: String?
   ): QuoteResponseDto
-
 }
