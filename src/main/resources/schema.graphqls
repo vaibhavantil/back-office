@@ -152,7 +152,7 @@ type ClaimSearchResult {
   page: Int!
 }
 
-type ClaimSearchOptions {
+input ClaimSearchOptions {
   page: Int
   pageSize: Int
   sortBy: String

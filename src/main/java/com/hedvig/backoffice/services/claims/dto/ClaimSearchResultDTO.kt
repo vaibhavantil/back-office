@@ -1,16 +1,7 @@
-package com.hedvig.backoffice.services.claims.dto;
+package com.hedvig.backoffice.services.claims.dto
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class ClaimSearchResultDTO {
-  List<Claim> claims;
-  Integer page;
-  Integer totalPages;
-}
+data class ClaimSearchResultDTO (
+  val claims: List<Claim>,
+  val page: Int,
+  val totalPages: Int
+)

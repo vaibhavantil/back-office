@@ -9,7 +9,7 @@ data class ClaimSearchResult(
 ) {
   companion object {
     fun from(claimSearchResultDTO: ClaimSearchResultDTO) = ClaimSearchResult(
-      claims = claimSearchResultDTO.claims.map((Claim)::fromDTO),
+      claims = claimSearchResultDTO.claims.map { claimDTO -> Claim.fromDTO(claimDTO)},
       totalPages = claimSearchResultDTO.totalPages,
       page = claimSearchResultDTO.page
     )
