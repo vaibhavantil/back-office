@@ -18,6 +18,7 @@ import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
@@ -218,6 +219,20 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     );
 
     return MemberSearchResult.Companion.from(searchResult);
+  }
+
+  public ClaimSearchResult claimSearch(ClaimSearchOptions options, DataFetchingEnvironment env) {
+    // TODO: Maybe the name should be claimList or something instead..? We're not really searching
+
+    ClaimSearchResultDTO searchResult = claimsService.search(
+      options.getPage(),
+      options.getPageSize(),
+      options.getSortBy(),
+      options.getSortDirection(),
+      getToken(env)
+    );
+
+    return ClaimSearchResult.Companion.from(searchResult);
   }
 
   private String getEmail(DataFetchingEnvironment env) {

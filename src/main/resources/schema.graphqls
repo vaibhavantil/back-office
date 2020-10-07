@@ -14,6 +14,7 @@ type QueryType {
   me: String
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
   memberSearch(query: String!, options: MemberSearchOptions!): MemberSearchResult!
+  claimSearch(options: ClaimSearchOptions!): ClaimSearchResult!
   messageHistory(memberId: ID!): [ChatMessage!]!
   questionGroups: [QuestionGroup!]!
   itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
@@ -145,6 +146,18 @@ input MemberFraudulentStatusInput {
   fraudulentStatusDescription: String
 }
 
+type ClaimSearchResult {
+  claims: [Claim!]!
+  totalPages: Int!
+  page: Int!
+}
+
+type ClaimSearchOptions {
+  page: Int
+  pageSize: Int
+  sortBy: String
+  sortDirection: String
+}
 
 type MemberSearchResult {
   members: [Member!]!
