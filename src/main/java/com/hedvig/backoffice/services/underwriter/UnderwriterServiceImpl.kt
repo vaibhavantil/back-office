@@ -198,8 +198,8 @@ class UnderwriterServiceImpl(
     }
   }
 
-  override fun getSchemaWithDataByQuoteId(quoteId: UUID): JsonNode? = try {
-    underwriterClient.getSchemaWithDataByQuoteId(quoteId).body
+  override fun getSchemaDataByQuoteId(quoteId: UUID): JsonNode? = try {
+    underwriterClient.getSchemaDataByQuoteId(quoteId).body
   } catch (exception: RestClientResponseException) {
     if (exception.rawStatusCode == 404) {
       null
@@ -208,9 +208,9 @@ class UnderwriterServiceImpl(
     }
   }
 
-  override fun updateQuoteBySchemaWithData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
+  override fun updateQuoteBySchemaData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
     try {
-      return underwriterClient.updateQuoteBySchemaWithData(
+      return underwriterClient.updateQuoteBySchemaData(
         quoteId = quoteId,
         body = schemaData,
         underwritingGuidelinesBypassedBy = underwritingGuidelinesBypassedBy
@@ -221,9 +221,9 @@ class UnderwriterServiceImpl(
     }
   }
 
-  override fun createQuoteForMemberBySchemaWithData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
+  override fun createQuoteForMemberBySchemaData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
     try {
-      return underwriterClient.createQuoteForMemberBySchemaWithData(
+      return underwriterClient.createQuoteForMemberBySchemaData(
         memberId = memberId,
         body = schemaData,
         underwritingGuidelinesBypassedBy = underwritingGuidelinesBypassedBy

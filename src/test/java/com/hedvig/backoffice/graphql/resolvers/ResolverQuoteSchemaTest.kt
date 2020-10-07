@@ -87,7 +87,7 @@ class ResolverQuoteSchemaTest {
     fun `returns data for schema`() {
 
         val quoteId = UUID.randomUUID()
-        every { underwriterService.getSchemaWithDataByQuoteId(quoteId) } returns randomSchemaData
+        every { underwriterService.getSchemaDataByQuoteId(quoteId) } returns randomSchemaData
 
         val resolver = QuoteResolver(underwriterService)
 

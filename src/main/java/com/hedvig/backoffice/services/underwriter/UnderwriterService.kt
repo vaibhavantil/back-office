@@ -41,7 +41,7 @@ interface UnderwriterService {
 
   fun getSchemaForContractType(contractType: ContractType): JsonNode?
   fun getSchemaByQuoteId(quoteId: UUID): JsonNode?
-  fun getSchemaWithDataByQuoteId(quoteId: UUID): JsonNode?
-  fun updateQuoteBySchemaWithData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto
-  fun createQuoteForMemberBySchemaWithData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto
+  fun getSchemaDataByQuoteId(quoteId: UUID): JsonNode?
+  fun updateQuoteBySchemaData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto
+  fun createQuoteForMemberBySchemaData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto
 }

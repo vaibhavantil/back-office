@@ -62,20 +62,20 @@ interface UnderwriterClient {
   fun getSchemaByQuoteId(@PathVariable quoteId: UUID): ResponseEntity<JsonNode>
 
   @GetMapping("/_/v1/quotes/schema/{quoteId}/data")
-  fun getSchemaWithDataByQuoteId(@PathVariable quoteId: UUID): ResponseEntity<JsonNode>
+  fun getSchemaDataByQuoteId(@PathVariable quoteId: UUID): ResponseEntity<JsonNode>
 
   @GetMapping("/_/v1/quotes/schema/contract/{contractType}")
   fun getSchemaForContractType(@PathVariable contractType: ContractType): ResponseEntity<JsonNode>
 
   @PostMapping("/_/v1/quotes/schema/{quoteId}/update")
-  fun updateQuoteBySchemaWithData(
+  fun updateQuoteBySchemaData(
     @PathVariable quoteId: UUID,
     @RequestBody body: JsonNode,
     @RequestParam underwritingGuidelinesBypassedBy: String?
   ): QuoteResponseDto
 
   @PostMapping("/_/v1/quotes/schema/{memberId}/create")
-  fun createQuoteForMemberBySchemaWithData(
+  fun createQuoteForMemberBySchemaData(
     @PathVariable memberId: String,
     @RequestBody body: JsonNode,
     @RequestParam underwritingGuidelinesBypassedBy: String?

@@ -508,7 +508,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     final DataFetchingEnvironment env
   ) {
     final String underwritingGuidelinesBypassedBy = bypassUnderwritingGuidelines ? getEmail(env) : null;
-    final QuoteResponseDto response = underwriterService.updateQuoteBySchemaWithData(quoteId, schemaData, underwritingGuidelinesBypassedBy);
+    final QuoteResponseDto response = underwriterService.updateQuoteBySchemaData(quoteId, schemaData, underwritingGuidelinesBypassedBy);
     return Quote.from(underwriterService.getQuote(response.getId()));
   }
 
@@ -519,7 +519,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     final DataFetchingEnvironment env
   ) {
     final String underwritingGuidelinesBypassedBy = bypassUnderwritingGuidelines ? getEmail(env) : null;
-    final QuoteResponseDto response = underwriterService.createQuoteForMemberBySchemaWithData(memberId, schemaData, underwritingGuidelinesBypassedBy);
+    final QuoteResponseDto response = underwriterService.createQuoteForMemberBySchemaData(memberId, schemaData, underwritingGuidelinesBypassedBy);
     return Quote.from(underwriterService.getQuote(response.getId()));
   }
 

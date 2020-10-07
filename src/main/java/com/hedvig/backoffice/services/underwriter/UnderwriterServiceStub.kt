@@ -90,15 +90,15 @@ class UnderwriterServiceStub : UnderwriterService {
     return null
   }
 
-  override fun getSchemaWithDataByQuoteId(quoteId: UUID): JsonNode? {
+  override fun getSchemaDataByQuoteId(quoteId: UUID): JsonNode? {
     return null
   }
 
-  override fun updateQuoteBySchemaWithData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
+  override fun updateQuoteBySchemaData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
     return QuoteResponseDto(quoteId)
   }
 
-  override fun createQuoteForMemberBySchemaWithData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
+  override fun createQuoteForMemberBySchemaData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
     return QuoteResponseDto(UUID.randomUUID())
   }
 }

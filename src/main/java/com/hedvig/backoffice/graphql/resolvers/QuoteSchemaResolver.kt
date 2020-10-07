@@ -12,5 +12,5 @@ class QuoteResolver(
 
     fun getSchema(quote: Quote) = underwriterService.getSchemaByQuoteId(quote.id)
 
-    fun getSchemaData(quote: Quote) = underwriterService.getSchemaWithDataByQuoteId(quote.id)
+    fun getSchemaData(quote: Quote) = underwriterService.getSchemaDataByQuoteId(quote.id)
 }
