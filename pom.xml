@@ -388,7 +388,7 @@
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-booct t-maven-plugin</artifactId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <profiles>
             development
