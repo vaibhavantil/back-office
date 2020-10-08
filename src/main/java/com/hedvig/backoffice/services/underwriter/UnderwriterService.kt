@@ -6,42 +6,29 @@ import java.time.LocalDate
 import java.util.*
 
 interface UnderwriterService {
-  fun createAndCompleteQuote(
-    memberId: String,
-    quoteDto: CreateQuoteFromProductDto,
-    underwritingGuidelinesBypassedBy: String?
-  ): QuoteResponseDto
+    fun activateQuote(
+        quoteId: UUID,
+        activationDate: LocalDate?,
+        terminationDate: LocalDate?
+    ): QuoteDto
 
-  fun updateQuote(
-    quoteId: UUID,
-    quoteDto: QuoteInputDto,
-    underwritingGuidelinesBypassedBy: String?
-  ): QuoteDto
+    fun addAgreementFromQuote(
+        quoteId: UUID,
+        contractId: UUID?,
+        activeFrom: LocalDate?,
+        activeTo: LocalDate?,
+        previousAgreementActiveTo: LocalDate?
+    ): QuoteDto
 
-  fun activateQuote(
-    quoteId: UUID,
-    activationDate: LocalDate?,
-    terminationDate: LocalDate?
-  ): QuoteDto
-
-  fun addAgreementFromQuote(
-    quoteId: UUID,
-    contractId: UUID?,
-    activeFrom: LocalDate?,
-    activeTo: LocalDate?,
-    previousAgreementActiveTo: LocalDate?
-  ): QuoteDto
-
-  fun getQuotes(memberId: String): List<QuoteDto>
-  fun getQuote(id: UUID): QuoteDto
-  fun createQuoteFromAgreement(quoteRequest: QuoteFromAgreementRequestDto): QuoteResponseDto
-  fun createQuoteForNewContract(request: QuoteForNewContractRequestDto): QuoteResponseDto
-  fun signQuoteForNewContract(completeQuoteId: UUID, request: SignQuoteFromHopeRequestDto): SignedQuoteResponseDto
+    fun getQuotes(memberId: String): List<QuoteDto>
+    fun getQuote(id: UUID): QuoteDto
+    fun createQuoteFromAgreement(quoteRequest: QuoteFromAgreementRequestDto): QuoteResponseDto
+    fun signQuoteForNewContract(completeQuoteId: UUID, request: SignQuoteFromHopeRequestDto): SignedQuoteResponseDto
 
 
-  fun getSchemaForContractType(contractType: ContractType): JsonNode?
-  fun getSchemaByQuoteId(quoteId: UUID): JsonNode?
-  fun getSchemaDataByQuoteId(quoteId: UUID): JsonNode?
-  fun updateQuoteBySchemaData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto
-  fun createQuoteForMemberBySchemaData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto
+    fun getSchemaForContractType(contractType: String): JsonNode?
+    fun getSchemaByQuoteId(quoteId: UUID): JsonNode?
+    fun getSchemaDataByQuoteId(quoteId: UUID): JsonNode?
+    fun updateQuoteBySchemaData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto
+    fun createQuoteForMemberBySchemaData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto
 }

@@ -435,12 +435,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return Quote.from(underwriterService.addAgreementFromQuote(id, contractId, activeFrom, activeTo, previousAgreementActiveTo));
   }
 
-  public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData,
-                                      final DataFetchingEnvironment env) {
-    final UUID createdQuoteId = underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData), getEmail(env)).getId();
-    return Quote.from(underwriterService.getQuote(createdQuoteId));
-  }
-
   public Quote createQuoteFromAgreement(
     final UUID agreementId,
     final String memberId,
@@ -451,36 +445,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         agreementId,
         memberId,
         getEmail(env)
-      )
-    ).getId();
-    return Quote.from(underwriterService.getQuote(createQuoteId));
-  }
-
-  public Quote updateQuote(
-    final UUID quoteId,
-    final QuoteInput quoteInput,
-    final boolean bypassUnderwritingGuidelines,
-    final DataFetchingEnvironment env
-  ) {
-    return Quote.from(underwriterService.updateQuote(
-      quoteId,
-      QuoteInputDto.from(quoteInput),
-      bypassUnderwritingGuidelines ? getEmail(env) : null
-    ));
-  }
-
-  Quote createQuoteForNewContract(
-    final String memberId,
-    final QuoteInput quoteInput,
-    final boolean bypassUnderwritingGuidelines,
-    final DataFetchingEnvironment env
-  ) {
-    final String bypassUnderwritingGuidelinesFrom = bypassUnderwritingGuidelines ? getEmail(env) : null;
-
-    final UUID createQuoteId = underwriterService.createQuoteForNewContract(
-      new QuoteForNewContractRequestDto(
-        QuoteRequestDto.Companion.from(quoteInput, memberId, bypassUnderwritingGuidelinesFrom),
-        bypassUnderwritingGuidelinesFrom
       )
     ).getId();
     return Quote.from(underwriterService.getQuote(createQuoteId));

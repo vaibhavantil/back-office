@@ -35,7 +35,6 @@ import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
-import com.hedvig.backoffice.services.underwriter.dtos.ContractType;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
@@ -209,7 +208,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
   }
 
-  public JsonNode getQuoteSchemaForContractType(ContractType contractType) {
+  public JsonNode getQuoteSchemaForContractType(String contractType) {
     return underwriterService.getSchemaForContractType(contractType);
   }
 
