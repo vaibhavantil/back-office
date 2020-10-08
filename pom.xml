@@ -28,6 +28,7 @@
     <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
     <mockito.version>2.22.0</mockito.version>
     <kotlin.version>1.3.31</kotlin.version>
+    <byte-buddy.version>1.9.3</byte-buddy.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
   </properties>
 
@@ -246,12 +247,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.github.HedvigInsurance</groupId>
-      <artifactId>back-office-common</artifactId>
-      <version>-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
       <groupId>net.logstash.logback</groupId>
       <artifactId>logstash-logback-encoder</artifactId>
       <version>5.0</version>
@@ -263,7 +258,6 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-openfeign</artifactId>
-      <!--<version>1.4.3.RELEASE</version>-->
     </dependency>
     <dependency>
       <!-- Required to use PATCH -->
@@ -295,6 +289,11 @@
       <groupId>com.graphql-java</groupId>
       <artifactId>graphql-java-tools</artifactId>
       <version>5.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.graphql-java</groupId>
+      <artifactId>graphql-java-extended-scalars</artifactId>
+      <version>1.0</version>
     </dependency>
     <dependency>
       <groupId>com.hedvig.graphql.commons</groupId>
@@ -369,6 +368,18 @@
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-test</artifactId>
       <version>${kotlin.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.ninja-squad</groupId>
+      <artifactId>springmockk</artifactId>
+      <version>1.1.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.mockk</groupId>
+      <artifactId>mockk</artifactId>
+      <version>1.9.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

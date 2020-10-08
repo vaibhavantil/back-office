@@ -1,29 +1,15 @@
 package com.hedvig.backoffice.services.underwriter
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException
 import com.hedvig.backoffice.services.members.MemberService
-import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.AddAgreementFromQuoteRequest
-import com.hedvig.backoffice.services.underwriter.dtos.CreateQuoteFromProductDto
-import com.hedvig.backoffice.services.underwriter.dtos.IncompleteApartmentQuoteDataDto
-import com.hedvig.backoffice.services.underwriter.dtos.IncompleteHouseQuoteDataDto
-import com.hedvig.backoffice.services.underwriter.dtos.IncompleteNorwegianHomeContentsQuoteDataDto
-import com.hedvig.backoffice.services.underwriter.dtos.IncompleteNorwegianTravelQuoteDataDto
-import com.hedvig.backoffice.services.underwriter.dtos.ProductType
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteForNewContractRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
-import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.SignedQuoteResponseDto
+import com.hedvig.backoffice.services.underwriter.dtos.*
 import feign.FeignException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory.getLogger
 import org.springframework.web.client.RestClientResponseException
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
 
 private val logger: Logger = getLogger(UnderwriterServiceImpl::class.java)
 
@@ -190,5 +176,61 @@ class UnderwriterServiceImpl(
       throw ex
     }
     throw IllegalStateException("Cannot sign quote [QuoteId: $completeQuoteId]")
+  }
+
+  override fun getSchemaForContractType(contractType: String): JsonNode? = try {
+    underwriterClient.getSchemaForContractType(contractType).body
+  } catch (exception: RestClientResponseException) {
+    if (exception.rawStatusCode == 404) {
+      null
+    } else {
+      throw exception
+    }
+  }
+
+  override fun getSchemaByQuoteId(quoteId: UUID): JsonNode? = try {
+    underwriterClient.getSchemaByQuoteId(quoteId).body
+  } catch (exception: RestClientResponseException) {
+    if (exception.rawStatusCode == 404) {
+      null
+    } else {
+      throw exception
+    }
+  }
+
+  override fun getSchemaDataByQuoteId(quoteId: UUID): JsonNode? = try {
+    underwriterClient.getSchemaDataByQuoteId(quoteId).body
+  } catch (exception: RestClientResponseException) {
+    if (exception.rawStatusCode == 404) {
+      null
+    } else {
+      throw exception
+    }
+  }
+
+  override fun updateQuoteBySchemaData(quoteId: UUID, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
+    try {
+      return underwriterClient.updateQuoteBySchemaData(
+        quoteId = quoteId,
+        body = schemaData,
+        underwritingGuidelinesBypassedBy = underwritingGuidelinesBypassedBy
+      )
+    } catch (exception: Exception) {
+      logger.error("Unable to update quote with quoteId=$quoteId", exception)
+      throw exception
+    }
+  }
+
+  override fun createQuoteForMemberBySchemaData(memberId: String, schemaData: JsonNode, underwritingGuidelinesBypassedBy: String?): QuoteResponseDto {
+    try {
+      return underwriterClient.createQuoteForMemberBySchemaData(
+        memberId = memberId,
+        body = schemaData,
+        underwritingGuidelinesBypassedBy = underwritingGuidelinesBypassedBy
+      )
+    } catch (exception: Exception) {
+      logger.error("Unable to create quote for member with memberId=$memberId", exception)
+      throw exception
+    }
   }
 }

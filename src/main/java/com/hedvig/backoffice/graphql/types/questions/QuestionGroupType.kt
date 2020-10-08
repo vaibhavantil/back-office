@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.graphql.types.questions
 
-import com.hedvig.backoffice.domain.QuestionGroup
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO
 
 data class QuestionGroupType(
