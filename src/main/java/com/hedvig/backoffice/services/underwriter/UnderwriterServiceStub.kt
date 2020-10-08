@@ -82,7 +82,7 @@ class UnderwriterServiceStub : UnderwriterService {
     request: SignQuoteFromHopeRequestDto
   ): SignedQuoteResponseDto = SignedQuoteResponseDto(UUID.randomUUID(), Instant.now())
 
-  override fun getSchemaForContractType(contractType: ContractType): JsonNode? {
+  override fun getSchemaForContractType(contractType: String): JsonNode? {
     return null
   }
 
