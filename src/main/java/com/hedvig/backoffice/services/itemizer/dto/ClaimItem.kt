@@ -14,6 +14,7 @@ data class ClaimItem(
   val itemModel: ItemModel?,
   val itemCompany: ItemCompany?,
   val dateOfPurchase: LocalDate?,
+  val itemAge: BigDecimal?,
   val purchasePrice: MonetaryAmountV2?,
   val valuation: MonetaryAmountV2?,
   val note: String?
