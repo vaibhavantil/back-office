@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
@@ -26,8 +27,8 @@ import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
+import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.services.qualityassurance.QualityAssuranceService;
 import com.hedvig.backoffice.services.qualityassurance.dto.UnsignMemberRequest;
@@ -435,12 +436,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return Quote.from(underwriterService.addAgreementFromQuote(id, contractId, activeFrom, activeTo, previousAgreementActiveTo));
   }
 
-  public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData,
-                                      final DataFetchingEnvironment env) {
-    final UUID createdQuoteId = underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData), getEmail(env)).getId();
-    return Quote.from(underwriterService.getQuote(createdQuoteId));
-  }
-
   public Quote createQuoteFromAgreement(
     final UUID agreementId,
     final String memberId,
@@ -451,36 +446,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         agreementId,
         memberId,
         getEmail(env)
-      )
-    ).getId();
-    return Quote.from(underwriterService.getQuote(createQuoteId));
-  }
-
-  public Quote updateQuote(
-    final UUID quoteId,
-    final QuoteInput quoteInput,
-    final boolean bypassUnderwritingGuidelines,
-    final DataFetchingEnvironment env
-  ) {
-    return Quote.from(underwriterService.updateQuote(
-      quoteId,
-      QuoteInputDto.from(quoteInput),
-      bypassUnderwritingGuidelines ? getEmail(env) : null
-    ));
-  }
-
-  Quote createQuoteForNewContract(
-    final String memberId,
-    final QuoteInput quoteInput,
-    final boolean bypassUnderwritingGuidelines,
-    final DataFetchingEnvironment env
-  ) {
-    final String bypassUnderwritingGuidelinesFrom = bypassUnderwritingGuidelines ? getEmail(env) : null;
-
-    final UUID createQuoteId = underwriterService.createQuoteForNewContract(
-      new QuoteForNewContractRequestDto(
-        QuoteRequestDto.Companion.from(quoteInput, memberId, bypassUnderwritingGuidelinesFrom),
-        bypassUnderwritingGuidelinesFrom
       )
     ).getId();
     return Quote.from(underwriterService.getQuote(createQuoteId));
@@ -499,6 +464,28 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       )
     );
     return Quote.from(underwriterService.getQuote(quoteId));
+  }
+
+  Quote updateQuoteBySchema(
+    final UUID quoteId,
+    final JsonNode schemaData,
+    final boolean bypassUnderwritingGuidelines,
+    final DataFetchingEnvironment env
+  ) {
+    final String underwritingGuidelinesBypassedBy = bypassUnderwritingGuidelines ? getEmail(env) : null;
+    final QuoteResponseDto response = underwriterService.updateQuoteBySchemaData(quoteId, schemaData, underwritingGuidelinesBypassedBy);
+    return Quote.from(underwriterService.getQuote(response.getId()));
+  }
+
+  Quote createQuoteForMemberBySchema(
+    final String memberId,
+    final JsonNode schemaData,
+    final boolean bypassUnderwritingGuidelines,
+    final DataFetchingEnvironment env
+  ) {
+    final String underwritingGuidelinesBypassedBy = bypassUnderwritingGuidelines ? getEmail(env) : null;
+    final QuoteResponseDto response = underwriterService.createQuoteForMemberBySchemaData(memberId, schemaData, underwritingGuidelinesBypassedBy);
+    return Quote.from(underwriterService.getQuote(response.getId()));
   }
 
   UUID createTicket(
