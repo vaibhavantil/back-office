@@ -3,7 +3,6 @@ package com.hedvig.backoffice.graphql.resolvers
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hedvig.backoffice.graphql.types.ProductType
 import com.hedvig.backoffice.graphql.types.Quote
-import com.hedvig.backoffice.graphql.types.QuoteData
 import com.hedvig.backoffice.graphql.types.QuoteState
 import com.hedvig.backoffice.services.underwriter.UnderwriterService
 import io.mockk.every
@@ -67,7 +66,6 @@ class ResolverQuoteSchemaTest {
                 QuoteState.INCOMPLETE,
                 "RAPIO",
                 "",
-                QuoteData.ApartmentQuoteData(UUID.randomUUID()),
                 null,
                 null,
                 123456,
@@ -100,7 +98,6 @@ class ResolverQuoteSchemaTest {
                 QuoteState.INCOMPLETE,
                 "RAPIO",
                 "",
-                QuoteData.ApartmentQuoteData(UUID.randomUUID()),
                 null,
                 null,
                 123456,
