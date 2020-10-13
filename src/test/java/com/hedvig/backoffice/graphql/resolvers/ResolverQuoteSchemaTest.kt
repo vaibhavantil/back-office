@@ -59,22 +59,23 @@ class ResolverQuoteSchemaTest {
 
         val result = resolver.getSchema(
             Quote(
-                quoteId,
-                Instant.now(),
-                null,
-                ProductType.APARTMENT,
-                QuoteState.INCOMPLETE,
-                "RAPIO",
-                "",
-                null,
-                null,
-                123456,
-                null,
-                null,
-                false,
-                null,
-                null,
-                false
+                id = quoteId,
+                createdAt = Instant.now(),
+                price = null,
+                currency = "SEK",
+                productType = ProductType.APARTMENT,
+                state = QuoteState.INCOMPLETE,
+                initiatedFrom = "RAPIO",
+                attributedTo = "",
+                currentInsurer = null,
+                startDate = null,
+                validity = 123456,
+                memberId = null,
+                breachedUnderwritingGuidelines = null,
+                isComplete = false,
+                signedProductId = null,
+                originatingProductId = null,
+                isReadyToSign = false
             )
         )
 
@@ -91,22 +92,23 @@ class ResolverQuoteSchemaTest {
 
         val result = resolver.getSchemaData(
             Quote(
-                quoteId,
-                Instant.now(),
-                null,
-                ProductType.APARTMENT,
-                QuoteState.INCOMPLETE,
-                "RAPIO",
-                "",
-                null,
-                null,
-                123456,
-                null,
-                null,
-                false,
-                null,
-                null,
-                false
+                id = quoteId,
+                createdAt = Instant.now(),
+                price = null,
+                currency = "SEK",
+                productType = ProductType.APARTMENT,
+                state = QuoteState.INCOMPLETE,
+                initiatedFrom = "RAPIO",
+                attributedTo = "",
+                currentInsurer = null,
+                startDate = null,
+                validity = 123456,
+                memberId = null,
+                breachedUnderwritingGuidelines = null,
+                isComplete = false,
+                signedProductId = null,
+                originatingProductId = null,
+                isReadyToSign = false
             )
         )
 
