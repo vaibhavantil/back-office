@@ -27,6 +27,7 @@ type QueryType {
         itemTypeId: ID
     ): CanValuateClaimItem
     quoteSchemaForContractType(contractType: String!): JSON
+    memberSearch(query: String!, options: MemberSearchOptions!): MemberSearchResult!
 }
 
 type MemberSearchResult {
