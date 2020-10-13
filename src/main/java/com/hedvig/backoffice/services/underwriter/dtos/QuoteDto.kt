@@ -35,6 +35,7 @@ data class QuoteDto(
     val id: UUID,
     val createdAt: Instant,
     val price: BigDecimal? = null,
+    val currency: String,
     val productType: ProductType,
     val state: QuoteState,
     val initiatedFrom: QuoteInitiatedFrom,

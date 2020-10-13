@@ -12,6 +12,7 @@ internal val QUOTE_DTO_MOCK = QuoteDto(
     memberId = "12345",
     createdAt = Instant.now(),
     price = BigDecimal.valueOf(142),
+    currency = "SEK",
     productType = ProductType.APARTMENT,
     state = QuoteState.QUOTED,
     initiatedFrom = QuoteInitiatedFrom.RAPIO,
