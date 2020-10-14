@@ -193,8 +193,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
   public DashboardNumbers getDashboardNumbers(DataFetchingEnvironment env) {
     String token = getToken(env);
-    Long claims = claimsService.totalClaims(token);
-    Long questions = questionGroupRepository.notAnsweredCount();
+    long claims = claimsService.totalClaims(token);
+    long questions = questionGroupRepository.notAnsweredCount();
     return new DashboardNumbers(claims, questions);
   }
 
@@ -210,7 +210,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   public CanValuateClaimItem canValuateClaimItem(TypeOfContract typeOfContract, String itemFamilyId, UUID itemTypeId) {
     return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
   }
-  
+
   public MemberSearchResult memberSearch(String query, MemberSearchOptions options, DataFetchingEnvironment env) {
     MembersSearchResultDTO searchResult = memberService.searchPaged(
       options.getIncludeAll(),
@@ -222,9 +222,11 @@ public class GraphQLQuery implements GraphQLQueryResolver {
       getToken(env)
     );
 
+    System.out.println(searchResult);
+
     return MemberSearchResult.Companion.from(searchResult);
   }
-  
+
   public JsonNode getQuoteSchemaForContractType(String contractType) {
     return underwriterService.getSchemaForContractType(contractType);
   }
