@@ -47,7 +47,7 @@ class QuoteSchemaTest {
     val schema = objectMapper.readTree(aRandomSchema)
     every { underwriterClient.getSchemaByQuoteId(any()) } returns ResponseEntity.ok(schema)
 
-    val underwriterServiceImpl = UnderwriterServiceImpl(underwriterClient, mockk())
+    val underwriterServiceImpl = UnderwriterServiceImpl(underwriterClient)
 
     val result = underwriterServiceImpl.getSchemaByQuoteId(UUID.randomUUID())
 
@@ -65,7 +65,7 @@ class QuoteSchemaTest {
       null
     )
 
-    val underwriterServiceImpl = UnderwriterServiceImpl(underwriterClient, mockk())
+    val underwriterServiceImpl = UnderwriterServiceImpl(underwriterClient)
 
     val result = underwriterServiceImpl.getSchemaByQuoteId(UUID.randomUUID())
 

@@ -3,7 +3,6 @@ package com.hedvig.backoffice.graphql.resolvers
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hedvig.backoffice.graphql.types.ProductType
 import com.hedvig.backoffice.graphql.types.Quote
-import com.hedvig.backoffice.graphql.types.QuoteData
 import com.hedvig.backoffice.graphql.types.QuoteState
 import com.hedvig.backoffice.services.underwriter.UnderwriterService
 import io.mockk.every
@@ -60,23 +59,23 @@ class ResolverQuoteSchemaTest {
 
         val result = resolver.getSchema(
             Quote(
-                quoteId,
-                Instant.now(),
-                null,
-                ProductType.APARTMENT,
-                QuoteState.INCOMPLETE,
-                "RAPIO",
-                "",
-                QuoteData.ApartmentQuoteData(UUID.randomUUID()),
-                null,
-                null,
-                123456,
-                null,
-                null,
-                false,
-                null,
-                null,
-                false
+                id = quoteId,
+                createdAt = Instant.now(),
+                price = null,
+                currency = "SEK",
+                productType = ProductType.APARTMENT,
+                state = QuoteState.INCOMPLETE,
+                initiatedFrom = "RAPIO",
+                attributedTo = "",
+                currentInsurer = null,
+                startDate = null,
+                validity = 123456,
+                memberId = null,
+                breachedUnderwritingGuidelines = null,
+                isComplete = false,
+                signedProductId = null,
+                originatingProductId = null,
+                isReadyToSign = false
             )
         )
 
@@ -93,23 +92,23 @@ class ResolverQuoteSchemaTest {
 
         val result = resolver.getSchemaData(
             Quote(
-                quoteId,
-                Instant.now(),
-                null,
-                ProductType.APARTMENT,
-                QuoteState.INCOMPLETE,
-                "RAPIO",
-                "",
-                QuoteData.ApartmentQuoteData(UUID.randomUUID()),
-                null,
-                null,
-                123456,
-                null,
-                null,
-                false,
-                null,
-                null,
-                false
+                id = quoteId,
+                createdAt = Instant.now(),
+                price = null,
+                currency = "SEK",
+                productType = ProductType.APARTMENT,
+                state = QuoteState.INCOMPLETE,
+                initiatedFrom = "RAPIO",
+                attributedTo = "",
+                currentInsurer = null,
+                startDate = null,
+                validity = 123456,
+                memberId = null,
+                breachedUnderwritingGuidelines = null,
+                isComplete = false,
+                signedProductId = null,
+                originatingProductId = null,
+                isReadyToSign = false
             )
         )
 
