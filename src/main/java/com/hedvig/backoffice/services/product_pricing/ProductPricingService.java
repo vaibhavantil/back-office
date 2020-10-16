@@ -57,8 +57,6 @@ public interface ProductPricingService {
   List<MonthlyBordereauDTO> getMonthlyBordereauByProductType(YearMonth month,
                                                              ProductType productType);
 
-  List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds);
-
   List<SwitchableSwitcherEmailDTO> getSwitchableSwitcherEmails();
 
   void markSwitchableSwitcherEmailAsReminded(UUID emailId);

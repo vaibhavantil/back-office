@@ -157,11 +157,6 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   }
 
   @Override
-  public List<MemberSearchResultDTOExtended> extendMemberSearchResult(final List<Long> memberIds) {
-    return client.extendMemberSearchResult(memberIds);
-  }
-
-  @Override
   public List<SwitchableSwitcherEmailDTO> getSwitchableSwitcherEmails() {
     return client.getSwitchableSwitcherEmails();
   }

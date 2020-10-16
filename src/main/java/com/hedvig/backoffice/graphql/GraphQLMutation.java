@@ -39,6 +39,7 @@ import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import com.hedvig.backoffice.services.underwriter.dtos.*;
+import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -759,6 +760,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public Boolean editMemberInfo(final EditMemberInfoRequest request, DataFetchingEnvironment env) {
     memberService.editMemberInfo(request, getToken(env));
+    return true;
+  }
+
+  public Boolean setFraudulentStatus(final String memberId, final MemberFraudulentStatusDTO request, DataFetchingEnvironment env) {
+    memberService.setFraudulentStatus(memberId, request, getToken(env));
     return true;
   }
 

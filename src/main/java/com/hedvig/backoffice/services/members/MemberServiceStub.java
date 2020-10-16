@@ -137,7 +137,7 @@ public class MemberServiceStub implements MemberService {
       return new MembersSearchResultDTO(members, page, totalPages);
     }
 
-    return new MembersSearchResultDTO(members, null, null);
+    return new MembersSearchResultDTO(members, 0, 0);
   }
 
   private static EnumMap<MembersSortColumn, Comparator<MemberDTO>> MEMBER_COMPARATORS_ASC =
