@@ -21,7 +21,7 @@ interface AccountServiceClient {
   fun getAccount(@PathVariable("memberId") memberId: String): AccountDTO
 
   @PostMapping("/_/accounts/batchFind")
-  fun batchFindCurrentBalances(@RequestBody memberIds: List<String>): List<AccountDTO>
+  fun batchFindCurrentBalances(@RequestBody memberIds: List<String>): List<AccountDTO?>
 
   @GetMapping("/_/schedule/states")
   fun getSubscriptionsPendingApproval(
