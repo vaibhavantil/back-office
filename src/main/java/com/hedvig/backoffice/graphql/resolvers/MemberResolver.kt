@@ -64,7 +64,11 @@ class MemberResolver(
   }
 
   fun getAccount(member: Member): CompletableFuture<Account> {
-    return accountLoader.load(member.memberId)
+      return try {
+          accountLoader.load(member.memberId)
+      } catch(exception: Exception) {
+          CompletableFuture()
+      }
   }
 
   fun fileUploads(member: Member): List<FileUpload> {
