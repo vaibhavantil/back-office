@@ -8,7 +8,7 @@ class AccountServiceImpl(private val accountServiceClient: AccountServiceClient)
   override fun getAccount(memberId: String): AccountDTO =
     accountServiceClient.getAccount(memberId)
 
-  override fun batchFindCurrentBalances(memberIds: List<String>): List<AccountDTO> =
+  override fun batchFindCurrentBalances(memberIds: List<String>): List<AccountDTO?> =
     accountServiceClient.batchFindCurrentBalances(memberIds)
 
   override fun addAccountEntry(memberId: String, accountEntryInput: AccountEntryInput, addedBy: String) =
@@ -25,5 +25,4 @@ class AccountServiceImpl(private val accountServiceClient: AccountServiceClient)
 
   override fun backfillSubscriptions(memberId: String, backfilledBy: String) =
     accountServiceClient.backfillSubscriptions(memberId, backfilledBy)
-
 }
