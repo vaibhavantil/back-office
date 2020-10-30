@@ -1,17 +1,18 @@
 package com.hedvig.backoffice.graphql;
 
-import com.hedvig.backoffice.BackOfficeApplication;
-import graphql.execution.instrumentation.Instrumentation;
-import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentation;
-import graphql.schema.DataFetchingEnvironment;
-import java.util.List;
 import com.coxautodev.graphql.tools.ObjectMapperConfigurer;
 import com.coxautodev.graphql.tools.ObjectMapperConfigurerContext;
 import com.coxautodev.graphql.tools.SchemaParserDictionary;
 import com.coxautodev.graphql.tools.SchemaParserOptions;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hedvig.backoffice.BackOfficeApplication;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import graphql.execution.instrumentation.Instrumentation;
+import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentation;
+import graphql.scalars.ExtendedScalars;
+import graphql.schema.DataFetchingEnvironment;
+import graphql.schema.GraphQLScalarType;
 import lombok.val;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
@@ -20,8 +21,11 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 
+import java.util.List;
+
 @Configuration
 public class GraphQLConfiguration {
+
   @Bean
   DataLoaderRegistry dataLoaderRegistry(List<DataLoader<?, ?>> loaderList) {
     val registry = new DataLoaderRegistry();
@@ -42,7 +46,7 @@ public class GraphQLConfiguration {
   }
 
   public static String getEmail(DataFetchingEnvironment env, PersonnelService personnelService)
-      throws AuthorizationException {
+    throws AuthorizationException {
     GraphQLRequestContext context = env.getContext();
     val personnel = personnelService.getPersonnelByEmail(context.getUserPrincipal().getName());
     return personnel.getEmail();
@@ -57,7 +61,7 @@ public class GraphQLConfiguration {
     scanner.addIncludeFilter(new AnnotationTypeFilter(UnionType.class));
 
     for (val beanDefinition : scanner
-        .findCandidateComponents(BackOfficeApplication.class.getPackage().getName())) {
+      .findCandidateComponents(BackOfficeApplication.class.getPackage().getName())) {
       schemaParserDictionary.add(Class.forName(beanDefinition.getBeanClassName()));
     }
 
@@ -73,5 +77,10 @@ public class GraphQLConfiguration {
         mapper.findAndRegisterModules();
       }
     }).build();
+  }
+
+  @Bean
+  public GraphQLScalarType jsonType() {
+    return ExtendedScalars.Json;
   }
 }

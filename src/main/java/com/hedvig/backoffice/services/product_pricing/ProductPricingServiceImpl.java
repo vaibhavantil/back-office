@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.product_pricing;
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException;
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
+import com.hedvig.backoffice.graphql.types.AssignVoucherFreeMonths;
 import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
@@ -156,11 +157,6 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   }
 
   @Override
-  public List<MemberSearchResultDTOExtended> extendMemberSearchResult(final List<Long> memberIds) {
-    return client.extendMemberSearchResult(memberIds);
-  }
-
-  @Override
   public List<SwitchableSwitcherEmailDTO> getSwitchableSwitcherEmails() {
     return client.getSwitchableSwitcherEmails();
   }
@@ -254,6 +250,16 @@ public class ProductPricingServiceImpl implements ProductPricingService {
   @Override
   public void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request) {
     this.client.assignCampaignToPartnerPercentageDiscount(request);
+  }
+
+  @Override
+  public void assignCampaignToPartnerFreeMonths(AssignVoucherFreeMonthsRequest request) {
+    this.client.assignCampaignToPartnerFreeMonths(request);
+  }
+
+  @Override
+  public void assignCampaignToPartnerVisibleNoDiscount(AssignVoucherVisibleNoDiscountRequest request) {
+    this.client.assignCampaignToPartnerVisibleNoDiscount(request);
   }
 
   @Override

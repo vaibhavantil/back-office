@@ -2,7 +2,6 @@ package com.hedvig.backoffice.web;
 
 import com.hedvig.backoffice.config.feign.ExternalServiceException;
 import com.hedvig.backoffice.services.claims.ClaimsService;
-import com.hedvig.backoffice.services.claims.UploadClaimFiles;
 import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.claims.dto.ClaimNote;
@@ -24,7 +23,6 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 import com.hedvig.backoffice.web.dto.CreateClaimDTO;
-import javax.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -48,14 +46,11 @@ public class ClaimsController {
 
   private final ClaimsService claimsService;
   private final PersonnelService personnelService;
-  private final UploadClaimFiles uploadClaimFiles;
 
   @Autowired
-  public ClaimsController(ClaimsService claimsService, PersonnelService personnelService,
-                          UploadClaimFiles uploadClaimFiles) {
+  public ClaimsController(ClaimsService claimsService, PersonnelService personnelService) {
     this.claimsService = claimsService;
     this.personnelService = personnelService;
-    this.uploadClaimFiles = uploadClaimFiles;
   }
 
   @GetMapping

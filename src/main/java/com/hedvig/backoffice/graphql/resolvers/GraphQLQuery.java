@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.graphql.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hedvig.backoffice.graphql.GraphQLConfiguration;
 import com.hedvig.backoffice.graphql.GraphQLRequestContext;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
@@ -24,15 +25,17 @@ import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation;
 import com.hedvig.backoffice.services.itemizer.dto.request.GetValuationRequest;
 import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
-import com.hedvig.backoffice.services.product_pricing.dto.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
+import com.hedvig.backoffice.services.product_pricing.dto.PartnerResponseDto;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
+import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +61,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
   private final QuestionService questionService;
   private final QuestionGroupRepository questionGroupRepository;
   private final ClaimsService claimsService;
+  private final MemberService memberService;
+  private final UnderwriterService underwriterService;
 
   public GraphQLQuery(
     ProductPricingService productPricingService,
@@ -71,7 +76,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     QuestionService questionService,
     ItemizerService itemizerService,
     QuestionGroupRepository questionGroupRepository,
-    ClaimsService claimsService
+    ClaimsService claimsService,
+    UnderwriterService underwriterService
   ) {
     this.productPricingService = productPricingService;
     this.memberLoader = memberLoader;
@@ -84,6 +90,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     this.questionService = questionService;
     this.questionGroupRepository = questionGroupRepository;
     this.claimsService = claimsService;
+    this.memberService = memberService;
+    this.underwriterService = underwriterService;
   }
 
   public List<MonthlySubscription> monthlyPayments(YearMonth month) {
@@ -185,8 +193,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
   public DashboardNumbers getDashboardNumbers(DataFetchingEnvironment env) {
     String token = getToken(env);
-    Long claims = claimsService.totalClaims(token);
-    Long questions = questionGroupRepository.notAnsweredCount();
+    long claims = claimsService.totalClaims(token);
+    long questions = questionGroupRepository.notAnsweredCount();
     return new DashboardNumbers(claims, questions);
   }
 
@@ -201,6 +209,26 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
   public CanValuateClaimItem canValuateClaimItem(TypeOfContract typeOfContract, String itemFamilyId, UUID itemTypeId) {
     return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
+  }
+
+  public MemberSearchResult memberSearch(String query, MemberSearchOptions options, DataFetchingEnvironment env) {
+    MembersSearchResultDTO searchResult = memberService.searchPaged(
+      options.getIncludeAll(),
+      query,
+      options.getPage(),
+      options.getPageSize(),
+      options.getSortBy(),
+      options.getSortDirection(),
+      getToken(env)
+    );
+
+    System.out.println(searchResult);
+
+    return MemberSearchResult.Companion.from(searchResult);
+  }
+
+  public JsonNode getQuoteSchemaForContractType(String contractType) {
+    return underwriterService.getSchemaForContractType(contractType);
   }
 
   private String getEmail(DataFetchingEnvironment env) {

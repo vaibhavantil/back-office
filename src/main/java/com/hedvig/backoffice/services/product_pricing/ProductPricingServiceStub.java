@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.product_pricing;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
+import com.hedvig.backoffice.graphql.types.AssignVoucherFreeMonths;
 import com.hedvig.backoffice.services.members.MemberServiceStub;
 import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
@@ -130,6 +131,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
       .setInsuranceActiveTo(dto.getCancellationDate().atZone(ZoneId.of("Europe/Stockholm")).toLocalDateTime());
   }
 
+  @Override
   public List<InsuranceStatusDTO> search(ProductState state, String query, String token) {
     if (state == null && StringUtils.isBlank(query)) {
       return insurances;
@@ -396,6 +398,16 @@ public class ProductPricingServiceStub implements ProductPricingService {
   }
 
   @Override
+  public void assignCampaignToPartnerFreeMonths(AssignVoucherFreeMonthsRequest request) {
+    //  noop
+  }
+
+  @Override
+  public void assignCampaignToPartnerVisibleNoDiscount(AssignVoucherVisibleNoDiscountRequest request) {
+    // noop
+  }
+
+  @Override
   public List<PartnerResponseDto> getPartnerCampaignOwners() {
     return null;
   }
@@ -428,19 +440,5 @@ public class ProductPricingServiceStub implements ProductPricingService {
   @Override
   public List<RedeemedCampaignDto> redeemedCampaigns(String memberId) {
     return null;
-  }
-
-  @Override
-  public List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds) {
-    return memberIds.stream()
-      .map(memberId -> new MemberSearchResultDTOExtended(
-        memberId,
-        null,
-        null,
-        null,
-        null,
-        null
-      ))
-      .collect(Collectors.toList());
   }
 }

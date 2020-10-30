@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
@@ -21,15 +22,13 @@ import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.request.*;
 import com.hedvig.backoffice.services.members.MemberService;
+import com.hedvig.backoffice.services.members.dto.EditMemberInfoRequest;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.ManualRedeemCampaignRequest;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.AssignVoucherPercentageDiscountRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.ManualRedeemEnableReferralsCampaignRequest;
-import com.hedvig.backoffice.services.product_pricing.dto.ManualUnRedeemCampaignRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.*;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
 import com.hedvig.backoffice.services.qualityassurance.QualityAssuranceService;
 import com.hedvig.backoffice.services.qualityassurance.dto.UnsignMemberRequest;
@@ -40,6 +39,7 @@ import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import com.hedvig.backoffice.services.underwriter.dtos.*;
+import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
@@ -436,12 +436,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return Quote.from(underwriterService.addAgreementFromQuote(id, contractId, activeFrom, activeTo, previousAgreementActiveTo));
   }
 
-  public Quote createQuoteFromProduct(final String memberId, final QuoteFromProductInput quoteData,
-                                      final DataFetchingEnvironment env) {
-    final UUID createdQuoteId = underwriterService.createAndCompleteQuote(memberId, CreateQuoteFromProductDto.from(quoteData), getEmail(env)).getId();
-    return Quote.from(underwriterService.getQuote(createdQuoteId));
-  }
-
   public Quote createQuoteFromAgreement(
     final UUID agreementId,
     final String memberId,
@@ -452,36 +446,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         agreementId,
         memberId,
         getEmail(env)
-      )
-    ).getId();
-    return Quote.from(underwriterService.getQuote(createQuoteId));
-  }
-
-  public Quote updateQuote(
-    final UUID quoteId,
-    final QuoteInput quoteInput,
-    final boolean bypassUnderwritingGuidelines,
-    final DataFetchingEnvironment env
-  ) {
-    return Quote.from(underwriterService.updateQuote(
-      quoteId,
-      QuoteInputDto.from(quoteInput),
-      bypassUnderwritingGuidelines ? getEmail(env) : null
-    ));
-  }
-
-  Quote createQuoteForNewContract(
-    final String memberId,
-    final QuoteInput quoteInput,
-    final boolean bypassUnderwritingGuidelines,
-    final DataFetchingEnvironment env
-  ) {
-    final String bypassUnderwritingGuidelinesFrom = bypassUnderwritingGuidelines ? getEmail(env) : null;
-
-    final UUID createQuoteId = underwriterService.createQuoteForNewContract(
-      new QuoteForNewContractRequestDto(
-        QuoteRequestDto.Companion.from(quoteInput, memberId, bypassUnderwritingGuidelinesFrom),
-        bypassUnderwritingGuidelinesFrom
       )
     ).getId();
     return Quote.from(underwriterService.getQuote(createQuoteId));
@@ -500,6 +464,28 @@ public class GraphQLMutation implements GraphQLMutationResolver {
       )
     );
     return Quote.from(underwriterService.getQuote(quoteId));
+  }
+
+  Quote updateQuoteBySchema(
+    final UUID quoteId,
+    final JsonNode schemaData,
+    final boolean bypassUnderwritingGuidelines,
+    final DataFetchingEnvironment env
+  ) {
+    final String underwritingGuidelinesBypassedBy = bypassUnderwritingGuidelines ? getEmail(env) : null;
+    final QuoteResponseDto response = underwriterService.updateQuoteBySchemaData(quoteId, schemaData, underwritingGuidelinesBypassedBy);
+    return Quote.from(underwriterService.getQuote(response.getId()));
+  }
+
+  Quote createQuoteForMemberBySchema(
+    final String memberId,
+    final JsonNode schemaData,
+    final boolean bypassUnderwritingGuidelines,
+    final DataFetchingEnvironment env
+  ) {
+    final String underwritingGuidelinesBypassedBy = bypassUnderwritingGuidelines ? getEmail(env) : null;
+    final QuoteResponseDto response = underwriterService.createQuoteForMemberBySchemaData(memberId, schemaData, underwritingGuidelinesBypassedBy);
+    return Quote.from(underwriterService.getQuote(response.getId()));
   }
 
   UUID createTicket(
@@ -730,6 +716,20 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
+  public Boolean assignCampaignToPartnerFreeMonths(AssignVoucherFreeMonths request, DataFetchingEnvironment env) {
+    productPricingService.assignCampaignToPartnerFreeMonths(
+      AssignVoucherFreeMonthsRequest.Companion.from(request)
+    );
+    return true;
+  }
+
+  public Boolean assignCampaignToPartnerVisibleNoDiscount(AssignVoucherVisibleNoDiscount request, DataFetchingEnvironment env) {
+    productPricingService.assignCampaignToPartnerVisibleNoDiscount(
+      AssignVoucherVisibleNoDiscountRequest.Companion.from(request)
+    );
+    return true;
+  }
+
   public Boolean setContractForClaim(SetContractForClaim request) {
     claimsService.setContractForClaim(request);
     return true;
@@ -755,6 +755,16 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
   public Boolean unsignMember(final String ssn) {
     qualityAssuranceService.unsignMember(new UnsignMemberRequest(ssn));
+    return true;
+  }
+
+  public Boolean editMemberInfo(final EditMemberInfoRequest request, DataFetchingEnvironment env) {
+    memberService.editMemberInfo(request, getToken(env));
+    return true;
+  }
+
+  public Boolean setFraudulentStatus(final String memberId, final MemberFraudulentStatusDTO request, DataFetchingEnvironment env) {
+    memberService.setFraudulentStatus(memberId, request, getToken(env));
     return true;
   }
 

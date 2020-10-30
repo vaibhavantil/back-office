@@ -57,8 +57,6 @@ public interface ProductPricingService {
   List<MonthlyBordereauDTO> getMonthlyBordereauByProductType(YearMonth month,
                                                              ProductType productType);
 
-  List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds);
-
   List<SwitchableSwitcherEmailDTO> getSwitchableSwitcherEmails();
 
   void markSwitchableSwitcherEmailAsReminded(UUID emailId);
@@ -86,6 +84,10 @@ public interface ProductPricingService {
   List<PartnerCampaignSearchResponse> searchPartnerCampaigns(String code, String partnerId, LocalDate activeFrom, LocalDate activeTo);
 
   void assignCampaignToPartnerPercentageDiscount(AssignVoucherPercentageDiscountRequest request);
+
+  void assignCampaignToPartnerFreeMonths(AssignVoucherFreeMonthsRequest request);
+
+  void assignCampaignToPartnerVisibleNoDiscount(AssignVoucherVisibleNoDiscountRequest request);
 
   List<PartnerResponseDto> getPartnerCampaignOwners();
 

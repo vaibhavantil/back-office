@@ -64,7 +64,11 @@ class MemberResolver(
   }
 
   fun getAccount(member: Member): CompletableFuture<Account> {
-    return accountLoader.load(member.memberId)
+      return try {
+          accountLoader.load(member.memberId)
+      } catch(exception: Exception) {
+          CompletableFuture()
+      }
   }
 
   fun fileUploads(member: Member): List<FileUpload> {
@@ -121,7 +125,7 @@ class MemberResolver(
     return reqularAndSignableQuotes(member.memberId, quotes)
   }
 
-
+// todo: fix do not use contractTypeName for logic here
   private fun reqularAndSignableQuotes(
     memberId: String,
     quotes: List<Quote>
@@ -170,6 +174,13 @@ class MemberResolver(
     val contracts = productPricingService.getContractsByMemberId(member.memberId)
     contracts.forEach { contract -> contract.holderMember = member }
     return contracts
+  }
+
+  fun getClaims(member: Member, filterByStates: Set<ClaimState>?, env: DataFetchingEnvironment): List<Claim> {
+    return claimsService
+      .listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService))
+      .map { claim -> Claim.fromDTO(claim) }
+      .filter { claim -> filterByStates == null || filterByStates.contains(claim.state) }
   }
 
   fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)

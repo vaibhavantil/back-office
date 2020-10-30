@@ -60,7 +60,6 @@ interface MemberServiceClient {
   @PostMapping("/i/member/many")
   fun getMembers(@RequestBody memberIds: ChargeMembersDTO): List<MemberDTO>
 
-
   @GetMapping("/_/person/member/{memberId}")
   fun getPerson(@PathVariable("memberId") memberId: String): ResponseEntity<PersonDTO>
 
@@ -76,5 +75,11 @@ interface MemberServiceClient {
   @PostMapping("/_/staging/unsignMember")
   fun unsignMember(
     @RequestBody request: UnsignMemberRequest
+  )
+
+  @PostMapping("/_/member/edit/info")
+  fun editMemberInfo(
+    @RequestBody request: EditMemberInfoRequest,
+    @RequestHeader("Authorization") token: String
   )
 }

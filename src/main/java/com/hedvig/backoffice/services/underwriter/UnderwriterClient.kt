@@ -1,72 +1,62 @@
 package com.hedvig.backoffice.services.underwriter
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.hedvig.backoffice.config.feign.FeignConfig
-import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.AddAgreementFromQuoteRequest
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteForNewContractRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteInputDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteRequestDto
-import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
-import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.*
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
-import java.util.UUID
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @FeignClient(
-  name = "underwriter",
-  url = "\${underwriter.baseUrl:underwriter}",
-  configuration = [FeignConfig::class]
+    name = "underwriter",
+    url = "\${underwriter.baseUrl:underwriter}",
+    configuration = [FeignConfig::class]
 )
 interface UnderwriterClient {
-  @PostMapping("/_/v1/quotes")
-  fun createQuote(@RequestBody quote: QuoteRequestDto): QuoteResponseDto
+    @PostMapping("/_/v1/quotes/{quoteId}/activate")
+    fun activateQuote(@PathVariable("quoteId") quoteId: UUID, @RequestBody body: ActivateQuoteRequestDto): QuoteDto
 
-  @PatchMapping("/_/v1/quotes/{quoteId}")
-  fun updateQuote(
-    @PathVariable("quoteId") quoteId: UUID,
-    @RequestBody quoteDto: QuoteInputDto,
-    @RequestParam("underwritingGuidelinesBypassedBy") underwritingGuidelinesBypassedBy: String?
-  ): QuoteDto
+    @PostMapping("/_/v1/quotes/add/agreement")
+    fun addAgreementFromQuote(@RequestBody request: AddAgreementFromQuoteRequest): QuoteDto
 
-  @PostMapping("/_/v1/quotes/{quoteId}/complete")
-  fun completeQuote(
-    @PathVariable("quoteId") quoteId: UUID,
-    @RequestParam("underwritingGuidelinesBypassedBy") underwritingGuidelinesBypassedBy: String?
-  )
+    @GetMapping("/_/v1/quotes/members/{memberId}")
+    fun getQuotes(@PathVariable("memberId") memberId: String): List<QuoteDto>
 
-  @PostMapping("/_/v1/quotes/{quoteId}/activate")
-  fun activateQuote(@PathVariable("quoteId") quoteId: UUID, @RequestBody body: ActivateQuoteRequestDto): QuoteDto
+    @GetMapping("/_/v1/quotes/{quoteId}")
+    fun getQuote(@PathVariable("quoteId") quoteId: UUID): QuoteDto
 
-  @PostMapping("/_/v1/quotes/add/agreement")
-  fun addAgreementFromQuote(@RequestBody request: AddAgreementFromQuoteRequest): QuoteDto
+    @PostMapping("/_/v1/quotes/createQuoteFromAgreement")
+    fun createQuoteFromAgreement(
+        @RequestBody quoteRequest: QuoteFromAgreementRequestDto
+    ): QuoteResponseDto
 
-  @GetMapping("/_/v1/quotes/members/{memberId}")
-  fun getQuotes(@PathVariable("memberId") memberId: String): List<QuoteDto>
+    @PostMapping("/_/v1/quotes/{completeQuoteId}/signFromHope")
+    fun signQuoteForNewContract(
+        @PathVariable completeQuoteId: UUID,
+        @RequestBody request: SignQuoteFromHopeRequestDto
+    ): ResponseEntity<Any>
 
-  @GetMapping("/_/v1/quotes/{quoteId}")
-  fun getQuote(@PathVariable("quoteId") quoteId: UUID): QuoteDto
+    @GetMapping("/_/v1/quotes/schema/{quoteId}")
+    fun getSchemaByQuoteId(@PathVariable quoteId: UUID): ResponseEntity<JsonNode>
 
-  @PostMapping("/_/v1/quotes/createQuoteFromAgreement")
-  fun createQuoteFromAgreement(
-    @RequestBody quoteRequest: QuoteFromAgreementRequestDto
-  ): QuoteResponseDto
+    @GetMapping("/_/v1/quotes/schema/{quoteId}/data")
+    fun getSchemaDataByQuoteId(@PathVariable quoteId: UUID): ResponseEntity<JsonNode>
 
-  @PostMapping("/_/v1/quotes/createQuoteForNewContract")
-  fun createQuoteForNewContract(
-    @RequestBody quoteRequest: QuoteForNewContractRequestDto
-  ): QuoteResponseDto
+    @GetMapping("/_/v1/quotes/schema/contract/{contractType}")
+    fun getSchemaForContractType(@PathVariable contractType: String): ResponseEntity<JsonNode>
 
-  @PostMapping("/_/v1/quotes/{completeQuoteId}/signFromHope")
-  fun signQuoteForNewContract(
-    @PathVariable completeQuoteId: UUID,
-    @RequestBody request: SignQuoteFromHopeRequestDto
-  ): ResponseEntity<Any>
+    @PostMapping("/_/v1/quotes/schema/{quoteId}/update")
+    fun updateQuoteBySchemaData(
+        @PathVariable quoteId: UUID,
+        @RequestBody body: JsonNode,
+        @RequestParam underwritingGuidelinesBypassedBy: String?
+    ): QuoteResponseDto
+
+    @PostMapping("/_/v1/quotes/schema/{memberId}/create")
+    fun createQuoteForMemberBySchemaData(
+        @PathVariable memberId: String,
+        @RequestBody body: JsonNode,
+        @RequestParam underwritingGuidelinesBypassedBy: String?
+    ): QuoteResponseDto
 }

@@ -20,7 +20,7 @@ data class Contract(
   val terminationDate: LocalDate?,
   val currentAgreementId: UUID,
   val hasPendingAgreement: Boolean,
-  val agreements: List<Agreement>,
+  val genericAgreements: List<GenericAgreement>,
   val hasQueuedRenewal: Boolean,
   val renewal: Renewal?,
   val preferredCurrency: CurrencyUnit,

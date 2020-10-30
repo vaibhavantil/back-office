@@ -101,9 +101,6 @@ public interface ProductPricingClient {
     @PathVariable("month") int month,
     @PathVariable("productType") ProductType productType);
 
-  @PostMapping("/_/insurance/extendMemberSearch")
-  List<MemberSearchResultDTOExtended> extendMemberSearchResult(@RequestBody List<Long> collect);
-
   @GetMapping("/_/switchableSwitchers/emails")
   List<SwitchableSwitcherEmailDTO> getSwitchableSwitcherEmails();
 
@@ -185,6 +182,16 @@ public interface ProductPricingClient {
   @PostMapping("/i/campaign/partner/voucher-percentage-discount/assign")
   void assignCampaignToPartnerPercentageDiscount(
     @RequestBody AssignVoucherPercentageDiscountRequest request
+  );
+
+  @PostMapping("/i/campaign/partner/voucher-free-months/assign")
+  void assignCampaignToPartnerFreeMonths(
+    @RequestBody AssignVoucherFreeMonthsRequest request
+  );
+
+  @PostMapping("/i/campaign/partner/visible-no-discount/assign")
+  void assignCampaignToPartnerVisibleNoDiscount(
+    @RequestBody AssignVoucherVisibleNoDiscountRequest request
   );
 
   @GetMapping("/i/campaign/partner/partnerCampaignOwners")

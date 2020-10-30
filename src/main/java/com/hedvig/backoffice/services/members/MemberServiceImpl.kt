@@ -1,12 +1,6 @@
 package com.hedvig.backoffice.services.members
 
-import com.hedvig.backoffice.services.members.dto.ChargeMembersDTO
-import com.hedvig.backoffice.services.members.dto.InsuranceCancellationDTO
-import com.hedvig.backoffice.services.members.dto.MemberDTO
-import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO
-import com.hedvig.backoffice.services.members.dto.MembersSortColumn
-import com.hedvig.backoffice.services.members.dto.PersonDTO
-import com.hedvig.backoffice.services.members.dto.PickedLocaleDTO
+import com.hedvig.backoffice.services.members.dto.*
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
@@ -71,6 +65,10 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
 
   override fun findPickedLocaleByMemberId(memberId: String): PickedLocaleDTO =
     client.findPickedLocaleByMemberId(memberId)
+
+  override fun editMemberInfo(request: EditMemberInfoRequest, token: String) {
+    client.editMemberInfo(request, token)
+  }
 
   companion object {
     private val logger = LoggerFactory.getLogger(MemberServiceImpl::class.java)
