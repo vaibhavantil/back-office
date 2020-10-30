@@ -753,8 +753,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
-  public Boolean unsignMember(final String market, final String ssn) {
-    qualityAssuranceService.unsignMember(new UnsignMemberRequest(ssn), market);
+  public Boolean unsignMember(final String ssn) {
+    qualityAssuranceService.unsignMember(new UnsignMemberRequest(ssn));
     return true;
   }
 

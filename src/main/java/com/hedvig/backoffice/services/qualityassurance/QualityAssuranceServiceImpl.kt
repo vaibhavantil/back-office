@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service
 class QualityAssuranceServiceImpl(
   private val memberServiceClient: MemberServiceClient
 ) : QualityAssuranceService {
-  override fun unsignMember(request: UnsignMemberRequest, market: String): Boolean {
-    memberServiceClient.unsignMember(market, request)
+  override fun unsignMember(request: UnsignMemberRequest): Boolean {
+    memberServiceClient.unsignMember(request)
     return true
   }
 
