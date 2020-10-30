@@ -4,7 +4,6 @@ schema {
 }
 
 type QueryType {
-    monthlyPayments(month: YearMonth!): [MonthlySubscription]
     member(id: ID!): Member
     claim(id: ID!): Claim
     paymentSchedule(status: ChargeStatus!): [SchedulerState]
