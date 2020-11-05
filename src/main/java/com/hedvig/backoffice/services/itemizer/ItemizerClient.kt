@@ -9,102 +9,107 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @FeignClient(
-  name = "itemizerClient",
-  url = "\${itemizer.baseUrl:itemizer}",
-  configuration = [FeignConfig::class]
+    name = "itemizerClient",
+    url = "\${itemizer.baseUrl:itemizer}",
+    configuration = [FeignConfig::class]
 )
 interface ItemizerClient {
-  @PostMapping("/_/item/add")
-  fun insertItemCategories(
-    @RequestBody request: InsertItemCategoriesRequest,
-    @RequestParam insertedBy: String
-  ): List<Boolean>
+    @PostMapping("/_/item/add")
+    fun insertItemCategories(
+        @RequestBody request: InsertItemCategoriesRequest,
+        @RequestParam insertedBy: String
+    ): List<Boolean>
 
-  @PostMapping("/_/valuate/add")
-  fun insertValuationRules(
-    @RequestBody request: InsertValuationRulesRequest,
-    @RequestParam insertedBy: String
-  ): List<Boolean>
+    @PostMapping("/_/valuate/add")
+    fun insertValuationRules(
+        @RequestBody request: InsertValuationRulesRequest,
+        @RequestParam insertedBy: String
+    ): List<Boolean>
 
-  @GetMapping("/_/item/families")
-  fun getFamilies(): List<ItemFamily>
+    @GetMapping("/_/item/families")
+    fun getFamilies(): List<ItemFamily>
 
-  @GetMapping("/_/item/companies")
-  fun getCompanies(): List<ItemCompany>
+    @GetMapping("/_/item/companies")
+    fun getCompanies(): List<ItemCompany>
 
-  @GetMapping("/_/item/family/{itemFamilyId}/types")
-  fun getTypesByFamily(
-    @PathVariable itemFamilyId: String
-  ): List<ItemType>
+    @GetMapping("/_/item/family/{itemFamilyId}/types")
+    fun getTypesByFamily(
+        @PathVariable itemFamilyId: String
+    ): List<ItemType>
 
-  @GetMapping("/_/item/type/{itemTypeId}/brands")
-  fun getBrandsByType(
-    @PathVariable itemTypeId: UUID
-  ): List<ItemBrand>
+    @GetMapping("/_/item/type/{itemTypeId}/brands")
+    fun getBrandsByType(
+        @PathVariable itemTypeId: UUID
+    ): List<ItemBrand>
 
-  @GetMapping("/_/item/brand/{itemBrandId}/models")
-  fun getModelsByBrand(
-    @PathVariable itemBrandId: UUID
-  ): List<ItemModel>
+    @GetMapping("/_/item/brand/{itemBrandId}/models")
+    fun getModelsByBrand(
+        @PathVariable itemBrandId: UUID
+    ): List<ItemModel>
 
-  @PostMapping("/_/item/company/upsert")
-  fun upsertItemCompany(
-    @RequestBody request: UpsertItemCompanyRequest,
-    @RequestParam updatedBy: String
-  ): UUID
+    @PostMapping("/_/item/company/upsert")
+    fun upsertItemCompany(
+        @RequestBody request: UpsertItemCompanyRequest,
+        @RequestParam updatedBy: String
+    ): UUID
 
-  @PostMapping("/_/item/type/upsert")
-  fun upsertItemType(
-    @RequestBody request: UpsertItemTypeRequest,
-    @RequestParam updatedBy: String
-  ): UUID
+    @PostMapping("/_/item/type/upsert")
+    fun upsertItemType(
+        @RequestBody request: UpsertItemTypeRequest,
+        @RequestParam updatedBy: String
+    ): UUID
 
-  @PostMapping("/_/item/brand/upsert")
-  fun upsertItemBrand(
-    @RequestBody request: UpsertItemBrandRequest,
-    @RequestParam updatedBy: String
-  ): UUID
+    @PostMapping("/_/item/brand/upsert")
+    fun upsertItemBrand(
+        @RequestBody request: UpsertItemBrandRequest,
+        @RequestParam updatedBy: String
+    ): UUID
 
-  @PostMapping("/_/item/model/upsert")
-  fun upsertItemModel(
-    @RequestBody request: UpsertItemModelRequest,
-    @RequestParam updatedBy: String
-  ): UUID
+    @PostMapping("/_/item/model/upsert")
+    fun upsertItemModel(
+        @RequestBody request: UpsertItemModelRequest,
+        @RequestParam updatedBy: String
+    ): UUID
 
 
-  @PostMapping("/_/claim/item/upsert")
-  fun upsertClaimItem(
-    @RequestBody request: UpsertClaimItemRequest,
-    @RequestParam updatedBy: String
-  ): UUID
+    @PostMapping("/_/claim/item/upsert")
+    fun upsertClaimItem(
+        @RequestBody request: UpsertClaimItemRequest,
+        @RequestParam updatedBy: String
+    ): UUID
 
-  @GetMapping("/_/claim/item/{claimId}/items")
-  fun getClaimItemsByClaimId(
-    @PathVariable claimId: UUID
-  ): List<ClaimItem>
+    @GetMapping("/_/claim/item/{claimId}/items")
+    fun getClaimItemsByClaimId(
+        @PathVariable claimId: UUID
+    ): List<ClaimItem>
 
-  @DeleteMapping("/_/claim/item/{claimItemId}")
-  fun deleteClaimItem(
-    @PathVariable claimItemId: UUID,
-    @RequestParam removedBy: String
-  ): UUID
+    @DeleteMapping("/_/claim/item/{claimItemId}")
+    fun deleteClaimItem(
+        @PathVariable claimItemId: UUID,
+        @RequestParam removedBy: String
+    ): UUID
 
-  @PostMapping("/_/valuate/item")
-  fun getValuation(
-    @RequestBody request: GetValuationRequest
-  ): ClaimItemValuation
+    @PostMapping("/_/valuate/item")
+    fun getClaimItemValuation(
+        @RequestBody request: GetClaimItemValuationRequest
+    ): ClaimItemValuation
 
-  @GetMapping("/_/valuate/rule/exists")
-  fun canValuateClaimItem(
-    @RequestParam typeOfContract: TypeOfContract,
-    @RequestParam itemFamilyId: String,
-    @RequestParam itemTypeId: UUID?
-  ): CanValuateClaimItem
+    @PostMapping("/_/valuate/claim")
+    fun getClaimValuation(
+        @RequestParam claimId: UUID
+    ): ClaimValuation
 
-  @PostMapping("/_/valuate/rule/upsert")
-  fun upsertValuationRule(
-    @RequestBody request: UpsertValuationRuleRequest,
-    @RequestParam updatedBy: String
-  ): UUID
+    @GetMapping("/_/valuate/rule/exists")
+    fun canValuateClaimItem(
+        @RequestParam typeOfContract: TypeOfContract,
+        @RequestParam itemFamilyId: String,
+        @RequestParam itemTypeId: UUID?
+    ): CanValuateClaimItem
+
+    @PostMapping("/_/valuate/rule/upsert")
+    fun upsertValuationRule(
+        @RequestBody request: UpsertValuationRuleRequest,
+        @RequestParam updatedBy: String
+    ): UUID
 
 }

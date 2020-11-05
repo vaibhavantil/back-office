@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.util.*
 import javax.money.MonetaryAmount
 
-data class GetValuationRequest(
+data class GetClaimItemValuationRequest(
   val purchasePrice: MonetaryAmount,
   val itemFamilyId: String,
   val itemTypeId: UUID?,
