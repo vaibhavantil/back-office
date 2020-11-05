@@ -5,7 +5,6 @@ import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
 import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation
-import com.hedvig.backoffice.services.itemizer.dto.GetClaimItemsResult
 import com.hedvig.backoffice.services.itemizer.dto.request.*
 import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract
 import com.hedvig.graphql.commons.type.MonetaryAmountV2
@@ -28,7 +27,7 @@ class ItemizerServiceStub : ItemizerService {
 
   override fun insertValuationRules(request: InsertValuationRulesRequest, email: String): List<Boolean> = listOf()
 
-  override fun getClaimItems(claimId: UUID): GetClaimItemsResult = GetClaimItemsResult(claimItems = listOf(), totalValuation = null)
+  override fun getClaimItems(claimId: UUID): List<ClaimItem> = listOf()
 
   override fun deleteClaimItem(claimItemId: UUID, email: String): UUID = UUID.randomUUID()
 

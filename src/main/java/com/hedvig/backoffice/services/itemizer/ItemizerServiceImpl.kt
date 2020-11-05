@@ -2,7 +2,7 @@ package com.hedvig.backoffice.services.itemizer
 
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
-import com.hedvig.backoffice.services.itemizer.dto.GetClaimItemsResult
+import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.request.*
 import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract
 import java.util.*
@@ -34,7 +34,7 @@ class ItemizerServiceImpl(
     override fun insertValuationRules(request: InsertValuationRulesRequest, email: String): List<Boolean> =
         itemizerClient.insertValuationRules(request, email)
 
-    override fun getClaimItems(claimId: UUID): GetClaimItemsResult = itemizerClient.getClaimItemsByClaimId(claimId)
+    override fun getClaimItems(claimId: UUID): List<ClaimItem> = itemizerClient.getClaimItemsByClaimId(claimId)
 
     override fun deleteClaimItem(claimItemId: UUID, email: String) = itemizerClient.deleteClaimItem(claimItemId, email)
 
