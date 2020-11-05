@@ -72,9 +72,8 @@ interface MemberServiceClient {
   @GetMapping("/_/member/{memberId}/pickedLocale")
   fun findPickedLocaleByMemberId(@PathVariable("memberId") memberId: String): PickedLocaleDTO
 
-  @PostMapping("/_/staging/{market}/unsignMember")
+  @PostMapping("/_/staging/unsignMember")
   fun unsignMember(
-    @PathVariable("market") market: String,
     @RequestBody request: UnsignMemberRequest
   )
 

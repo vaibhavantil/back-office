@@ -101,9 +101,6 @@ public interface ProductPricingClient {
     @PathVariable("month") int month,
     @PathVariable("productType") ProductType productType);
 
-  @PostMapping("/_/insurance/extendMemberSearch")
-  List<MemberSearchResultDTOExtended> extendMemberSearchResult(@RequestBody List<Long> collect);
-
   @GetMapping("/_/switchableSwitchers/emails")
   List<SwitchableSwitcherEmailDTO> getSwitchableSwitcherEmails();
 

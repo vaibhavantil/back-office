@@ -131,6 +131,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
       .setInsuranceActiveTo(dto.getCancellationDate().atZone(ZoneId.of("Europe/Stockholm")).toLocalDateTime());
   }
 
+  @Override
   public List<InsuranceStatusDTO> search(ProductState state, String query, String token) {
     if (state == null && StringUtils.isBlank(query)) {
       return insurances;
@@ -439,19 +440,5 @@ public class ProductPricingServiceStub implements ProductPricingService {
   @Override
   public List<RedeemedCampaignDto> redeemedCampaigns(String memberId) {
     return null;
-  }
-
-  @Override
-  public List<MemberSearchResultDTOExtended> extendMemberSearchResult(List<Long> memberIds) {
-    return memberIds.stream()
-      .map(memberId -> new MemberSearchResultDTOExtended(
-        memberId,
-        null,
-        null,
-        null,
-        null,
-        null
-      ))
-      .collect(Collectors.toList());
   }
 }

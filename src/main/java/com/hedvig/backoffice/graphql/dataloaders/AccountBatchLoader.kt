@@ -8,11 +8,11 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
 
 @Component
-class AccountBatchLoader(private val accountService: AccountService) : BatchLoader<String?, Account> {
-  override fun load(memberIds: List<String?>): CompletionStage<List<Account>> {
+class AccountBatchLoader(private val accountService: AccountService) : BatchLoader<String?, Account?> {
+  override fun load(memberIds: List<String?>): CompletionStage<List<Account?>> {
     return CompletableFuture.supplyAsync {
-      accountService.batchFindCurrentBalances(memberIds)
-        .map((Account)::from)
+        accountService.batchFindCurrentBalances(memberIds)
+            .map { accountDto -> accountDto?.let { Account.from(accountDto) } }
     }
   }
 }
