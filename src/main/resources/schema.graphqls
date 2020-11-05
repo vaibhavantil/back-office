@@ -16,7 +16,7 @@ type QueryType {
     messageHistory(memberId: ID!): [ChatMessage!]!
     questionGroups: [QuestionGroup!]!
     itemCategories(kind: ItemCategoryKind!, parentId: ID): [ItemCategory!]!
-    claimItems(claimId: ID!): [ClaimItem!]!
+    claimItems(claimId: ID!): GetClaimItemsResult
     findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
     getPartnerCampaignOwners: [CampaignOwnerPartner!]!
     dashboardNumbers: DashboardNumbers
@@ -147,7 +147,7 @@ type ClaimItem {
   itemModel: ItemModel
   itemCompany: ItemCompany
   dateOfPurchase: LocalDate
-  itemAge: String
+  itemAge: Float
   purchasePrice: MonetaryAmountV2
   valuation: MonetaryAmountV2
   note: String
@@ -191,6 +191,11 @@ type ValuationRule {
     valuationTable: String!
     valuationType: String!
     depreciation: Int
+}
+
+type GetClaimItemsResult {
+    claimItems: [ClaimItem!]!
+    totalValuation: Float
 }
 
 type CanValuateClaimItem {
