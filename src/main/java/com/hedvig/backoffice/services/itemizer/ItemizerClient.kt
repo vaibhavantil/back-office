@@ -94,7 +94,7 @@ interface ItemizerClient {
         @RequestBody request: GetClaimItemValuationRequest
     ): ClaimItemValuation
 
-    @PostMapping("/_/valuate/claim")
+    @GetMapping("/_/valuate/claim")
     fun getClaimValuation(
         @RequestParam claimId: UUID
     ): ClaimValuation
