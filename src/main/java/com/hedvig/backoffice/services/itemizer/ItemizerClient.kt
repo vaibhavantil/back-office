@@ -96,7 +96,8 @@ interface ItemizerClient {
 
     @GetMapping("/_/valuate/claim")
     fun getClaimValuation(
-        @RequestParam claimId: UUID
+        @RequestParam claimId: UUID,
+        @RequestParam typeOfContract: TypeOfContract?
     ): ClaimValuation
 
     @GetMapping("/_/valuate/rule/exists")

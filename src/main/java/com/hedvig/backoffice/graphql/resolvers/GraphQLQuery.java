@@ -201,8 +201,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
         return itemizerService.getClaimItemValuation(request);
     }
 
-    public ClaimValuation getClaimValuation(UUID claimId) {
-        return itemizerService.getClaimValuation(claimId);
+    public ClaimValuation getClaimValuation(UUID claimId, TypeOfContract typeOfContract) {
+        return itemizerService.getClaimValuation(claimId, typeOfContract);
     }
 
     public CanValuateClaimItem canValuateClaimItem(TypeOfContract typeOfContract, String itemFamilyId, UUID itemTypeId) {

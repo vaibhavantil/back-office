@@ -38,5 +38,5 @@ class ItemizerServiceStub : ItemizerService {
 
     override fun getClaimItemValuation(request: GetClaimItemValuationRequest) = ClaimItemValuation(MonetaryAmountV2("1000", "SEK"), null)
 
-    override fun getClaimValuation(claimId: UUID) = ClaimValuation(MonetaryAmountV2("1000", "SEK"), null)
+    override fun getClaimValuation(claimId: UUID, typeOfContract: TypeOfContract?) = ClaimValuation(MonetaryAmountV2("1000", "SEK"), null)
 }

@@ -24,5 +24,5 @@ interface ItemizerService {
     fun upsertValuationRule(request: UpsertValuationRuleRequest, email: String): UUID
     fun canValuateClaimItem(typeOfContract: TypeOfContract, itemFamilyId: String, itemTypeId: UUID?): CanValuateClaimItem
     fun getClaimItemValuation(request: GetClaimItemValuationRequest): ClaimItemValuation
-    fun getClaimValuation(claimId: UUID): ClaimValuation
+    fun getClaimValuation(claimId: UUID, typeOfContract: TypeOfContract?): ClaimValuation
 }
