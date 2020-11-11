@@ -95,16 +95,9 @@ public class GraphQLQuery implements GraphQLQueryResolver {
         this.underwriterService = underwriterService;
     }
 
-    public List<MonthlySubscription> monthlyPayments(YearMonth month) {
-
-        return productPricingService.getMonthlyPayments(month).stream()
-            .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getSubscription()))
-            .collect(Collectors.toList());
-    }
-
-    public CompletableFuture<Member> member(String id) {
-        return memberLoader.load(id);
-    }
+  public CompletableFuture<Member> member(String id) {
+    return memberLoader.load(id);
+  }
 
     public CompletableFuture<Claim> claim(UUID id) {
         return claimLoader.load(id);
