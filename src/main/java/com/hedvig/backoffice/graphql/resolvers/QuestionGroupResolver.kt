@@ -13,28 +13,28 @@ import org.springframework.stereotype.Component
 
 @Component
 class QuestionGroupResolver(
-  private val memberService: MemberService,
-  private val personnelService: PersonnelService
+    private val memberService: MemberService,
+    private val personnelService: PersonnelService
 ) : GraphQLResolver<QuestionGroupType> {
-  fun getMember(
-    questionGroup: QuestionGroupType,
-    env: DataFetchingEnvironment?
-  ): Member? {
-    return try {
-      Member.fromDTO(
-        memberService.findByMemberId(
-          questionGroup.memberId,
-          GraphQLConfiguration.getIdToken(env, personnelService)
-        )
-      )
-    } catch (exception: Exception) {
-      logger.error("Unable get to resolve member for Question Group (memberId=${questionGroup.memberId})", exception);
-      Sentry.capture(exception)
-      null
+    fun getMember(
+        questionGroup: QuestionGroupType,
+        env: DataFetchingEnvironment?
+    ): Member? {
+        return try {
+            Member.fromDTO(
+                memberService.findByMemberId(
+                    questionGroup.memberId,
+                    GraphQLConfiguration.getIdToken(env, personnelService)
+                )
+            )
+        } catch (exception: Exception) {
+            logger.error("Unable get to resolve member for Question Group (memberId=${questionGroup.memberId})", exception);
+            Sentry.capture(exception)
+            null
+        }
     }
-  }
 
-  companion object {
-    private val logger = LoggerFactory.getLogger(QuestionGroupResolver::class.java)
-  }
+    companion object {
+        private val logger = LoggerFactory.getLogger(QuestionGroupResolver::class.java)
+    }
 }
