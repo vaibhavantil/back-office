@@ -850,10 +850,10 @@ type Account {
     totalBalance: MonetaryAmountV2!
     chargeEstimation: AccountChargeEstimation!
     entries: [AccountEntry!]!
-    monthlyEntries: [MonthyEntry!]!
+    monthlyEntries: [MonthlyEntry!]!
 }
 
-type MonthyEntry {
+type MonthlyEntry {
     id: ID!
     externalId: String
     amount: MonetaryAmountV2!
