@@ -20,6 +20,8 @@ class ItemizerServiceImpl(
 
     override fun upsertItemCompany(request: UpsertItemCompanyRequest, email: String) = itemizerClient.upsertItemCompany(request, email)
 
+    override fun removeItemCategory(itemCategoryId: UUID, email: String) = itemizerClient.removeItemCategory(itemCategoryId, email)
+
     override fun upsertItemType(request: UpsertItemTypeRequest, email: String) = itemizerClient.upsertItemType(request, email)
 
     override fun upsertItemBrand(request: UpsertItemBrandRequest, email: String) = itemizerClient.upsertItemBrand(request, email)

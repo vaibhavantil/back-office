@@ -122,6 +122,7 @@ type MutationType {
         bypassUnderwritingGuidelines: Boolean!
     ): Quote!
     signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
+    removeItemCategory(itemCategoryId: ID!): Boolean
     upsertItemCompany(request: UpsertItemCompanyInput): ID!
     upsertItemType(request: UpsertItemTypeInput): ID!
     upsertItemBrand(request: UpsertItemBrandInput): ID!

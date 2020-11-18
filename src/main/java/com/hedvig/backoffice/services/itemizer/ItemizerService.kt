@@ -12,6 +12,7 @@ import java.util.*
 
 interface ItemizerService {
     fun getCategories(kind: ItemCategoryKind, parentId: String?): List<ItemCategory>
+    fun removeItemCategory(itemCategoryId: UUID, email: String): Boolean
     fun upsertItemCompany(request: UpsertItemCompanyRequest, email: String): UUID
     fun upsertItemType(request: UpsertItemTypeRequest, email: String): UUID
     fun upsertItemBrand(request: UpsertItemBrandRequest, email: String): UUID

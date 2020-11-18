@@ -20,6 +20,12 @@ interface ItemizerClient {
         @RequestParam insertedBy: String
     ): List<Boolean>
 
+    @PostMapping("/_/item/remove/{itemCategoryId}")
+    fun removeItemCategory(
+        @PathVariable itemCategoryId: UUID,
+        @RequestParam removedBy: String
+    ): Boolean
+
     @PostMapping("/_/valuate/add")
     fun insertValuationRules(
         @RequestBody request: InsertValuationRulesRequest,

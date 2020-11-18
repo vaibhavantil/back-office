@@ -14,6 +14,8 @@ import java.util.*
 class ItemizerServiceStub : ItemizerService {
     override fun getCategories(kind: ItemCategoryKind, parentId: String?): List<ItemCategory> = listOf()
 
+    override fun removeItemCategory(itemCategoryId: UUID, email: String): Boolean = true
+
     override fun upsertItemCompany(request: UpsertItemCompanyRequest, email: String): UUID = UUID.randomUUID()
 
     override fun upsertItemType(request: UpsertItemTypeRequest, email: String): UUID = UUID.randomUUID()

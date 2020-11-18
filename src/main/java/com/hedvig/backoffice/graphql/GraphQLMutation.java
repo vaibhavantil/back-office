@@ -673,6 +673,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     return true;
   }
 
+  public Boolean removeItemCategory(UUID itemCategoryId, DataFetchingEnvironment env) {
+      return itemizerService.removeItemCategory(itemCategoryId, getEmail(env));
+  }
+
   public UUID upsertItemCompany(final UpsertItemCompanyRequest request, DataFetchingEnvironment env) {
     return itemizerService.upsertItemCompany(request, getEmail(env));
   }
