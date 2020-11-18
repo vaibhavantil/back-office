@@ -10,13 +10,13 @@ import java.util.concurrent.CompletableFuture;
 
 @Component
 public class SwitchableSwitcherEmailResolver implements GraphQLResolver<SwitchableSwitcherEmail> {
-  private final MemberLoader memberLoader;
+    private final MemberLoader memberLoader;
 
-  public SwitchableSwitcherEmailResolver(final MemberLoader memberLoader) {
-    this.memberLoader = memberLoader;
-  }
+    public SwitchableSwitcherEmailResolver(final MemberLoader memberLoader) {
+        this.memberLoader = memberLoader;
+    }
 
-  public CompletableFuture<Member> getMember(final SwitchableSwitcherEmail switchableSwitcherEmail) {
-    return memberLoader.load(switchableSwitcherEmail.getMemberId());
-  }
+    public CompletableFuture<Member> getMember(final SwitchableSwitcherEmail switchableSwitcherEmail) {
+        return memberLoader.load(switchableSwitcherEmail.getMemberId());
+    }
 }

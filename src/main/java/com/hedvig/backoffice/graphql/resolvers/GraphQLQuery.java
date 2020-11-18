@@ -40,7 +40,6 @@ import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
-import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -95,9 +94,9 @@ public class GraphQLQuery implements GraphQLQueryResolver {
         this.underwriterService = underwriterService;
     }
 
-  public CompletableFuture<Member> member(String id) {
-    return memberLoader.load(id);
-  }
+    public CompletableFuture<Member> member(String id) {
+        return memberLoader.load(id);
+    }
 
     public CompletableFuture<Claim> claim(UUID id) {
         return claimLoader.load(id);
