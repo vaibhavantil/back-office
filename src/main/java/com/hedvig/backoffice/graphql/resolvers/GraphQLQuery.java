@@ -37,8 +37,6 @@ import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
-
-import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -49,192 +47,185 @@ import static graphql.servlet.GraphQLServlet.log;
 @Component
 public class GraphQLQuery implements GraphQLQueryResolver {
 
-  private final ProductPricingService productPricingService;
-  private final MemberLoader memberLoader;
-  private final ClaimLoader claimLoader;
-  private final AccountService accountService;
-  private final ItemizerService itemizerService;
-  private final TicketService ticketService;
-  private final PersonnelService personnelService;
-  private final ChatServiceV2 chatServiceV2;
-  private final QuestionService questionService;
-  private final QuestionGroupRepository questionGroupRepository;
-  private final ClaimsService claimsService;
-  private final MemberService memberService;
-  private final UnderwriterService underwriterService;
+    private final ProductPricingService productPricingService;
+    private final MemberLoader memberLoader;
+    private final ClaimLoader claimLoader;
+    private final AccountService accountService;
+    private final ItemizerService itemizerService;
+    private final TicketService ticketService;
+    private final PersonnelService personnelService;
+    private final ChatServiceV2 chatServiceV2;
+    private final QuestionService questionService;
+    private final QuestionGroupRepository questionGroupRepository;
+    private final ClaimsService claimsService;
+    private final MemberService memberService;
+    private final UnderwriterService underwriterService;
 
-  public GraphQLQuery(
-    ProductPricingService productPricingService,
-    MemberLoader memberLoader,
-    ClaimLoader claimLoader,
-    AccountService accountService,
-    MemberService memberService,
-    TicketService ticketService,
-    PersonnelService personnelService,
-    ChatServiceV2 chatServiceV2,
-    QuestionService questionService,
-    ItemizerService itemizerService,
-    QuestionGroupRepository questionGroupRepository,
-    ClaimsService claimsService,
-    UnderwriterService underwriterService
-  ) {
-    this.productPricingService = productPricingService;
-    this.memberLoader = memberLoader;
-    this.claimLoader = claimLoader;
-    this.accountService = accountService;
-    this.itemizerService = itemizerService;
-    this.ticketService = ticketService;
-    this.personnelService = personnelService;
-    this.chatServiceV2 = chatServiceV2;
-    this.questionService = questionService;
-    this.questionGroupRepository = questionGroupRepository;
-    this.claimsService = claimsService;
-    this.memberService = memberService;
-    this.underwriterService = underwriterService;
-  }
-
-  public List<MonthlySubscription> monthlyPayments(YearMonth month) {
-
-    return productPricingService.getMonthlyPayments(month).stream()
-      .map(ms -> new MonthlySubscription(ms.getMemberId(), ms.getSubscription()))
-      .collect(Collectors.toList());
-  }
-
-  public CompletableFuture<Member> member(String id) {
-    return memberLoader.load(id);
-  }
-
-  public CompletableFuture<Claim> claim(UUID id) {
-    return claimLoader.load(id);
-  }
-
-  public List<SchedulerStatus> paymentSchedule(ChargeStatus status) {
-    List<SchedulerStateDto> schedulerStateDtos = accountService.subscriptionSchedulesAwaitingApproval(status);
-
-    return schedulerStateDtos
-      .stream()
-      .map(
-        schedulerStateDto -> new SchedulerStatus(
-          schedulerStateDto.getStateId(),
-          schedulerStateDto.getMemberId(),
-          schedulerStateDto.getStatus(),
-          schedulerStateDto.getChangedBy(),
-          schedulerStateDto.getChangedAt(),
-          schedulerStateDto.getAmount(),
-          schedulerStateDto.getTransactionId()
-        )
-      )
-      .collect(Collectors.toList());
-  }
-
-  public TicketDto ticket(UUID id) {
-    return this.ticketService.getTicketById(id);
-  }
-
-  public TicketHistoryDto getFullTicketHistory(UUID id) {
-    return this.ticketService.getTicketHistory(id);
-  }
-
-  public List<TicketDto> tickets(Boolean resolved) {
-    return ticketService.getAllTickets(resolved);
-  }
-
-  public String me(DataFetchingEnvironment env) {
-    try {
-      return GraphQLConfiguration.getEmail(env, personnelService);
-    } catch (Exception e) {
-      log.info("Exception occured when trying to access user getEmail: " + e);
-      return null;
+    public GraphQLQuery(
+        ProductPricingService productPricingService,
+        MemberLoader memberLoader,
+        ClaimLoader claimLoader,
+        AccountService accountService,
+        MemberService memberService,
+        TicketService ticketService,
+        PersonnelService personnelService,
+        ChatServiceV2 chatServiceV2,
+        QuestionService questionService,
+        ItemizerService itemizerService,
+        QuestionGroupRepository questionGroupRepository,
+        ClaimsService claimsService,
+        UnderwriterService underwriterService
+    ) {
+        this.productPricingService = productPricingService;
+        this.memberLoader = memberLoader;
+        this.claimLoader = claimLoader;
+        this.accountService = accountService;
+        this.itemizerService = itemizerService;
+        this.ticketService = ticketService;
+        this.personnelService = personnelService;
+        this.chatServiceV2 = chatServiceV2;
+        this.questionService = questionService;
+        this.questionGroupRepository = questionGroupRepository;
+        this.claimsService = claimsService;
+        this.memberService = memberService;
+        this.underwriterService = underwriterService;
     }
-  }
 
-  public List<SwitchableSwitcherEmail> switchableSwitcherEmails(DataFetchingEnvironment env) {
-    return productPricingService.getSwitchableSwitcherEmails().stream()
-      .map(SwitchableSwitcherEmail::from)
-      .collect(Collectors.toList());
-  }
-
-  public List<ChatMessage> messageHistory(String memberId, DataFetchingEnvironment env) {
-    String email = getEmail(env);
-    String token = getToken(env);
-    return chatServiceV2.fetchMessages(memberId, email, token)
-      .stream()
-      .map(ChatMessage.Companion::from)
-      .collect(Collectors.toList());
-  }
-
-  public List<QuestionGroupType> questionGroups() {
-    return questionService.notAnswered().stream().map(QuestionGroupType.Companion::from).collect(Collectors.toList());
-  }
-
-  public List<ItemCategory> itemCategories(ItemCategoryKind kind, String parentId) {
-    return itemizerService.getCategories(kind, parentId);
-  }
-
-  public List<ClaimItem> claimItems(UUID claimId) {
-    return itemizerService.getClaimItems(claimId);
-  }
-
-  public List<VoucherCampaign> findPartnerCampaigns(CampaignFilter filter) {
-    List<PartnerCampaignSearchResponse> partnerCampaignSearchResponse = filter == null
-      ? productPricingService.searchPartnerCampaigns(null, null, null, null)
-      : productPricingService.searchPartnerCampaigns(filter.getCode(), filter.getPartnerId(), filter.getActiveFrom(), filter.getActiveTo());
-
-    return partnerCampaignSearchResponse
-      .stream()
-      .map(VoucherCampaign.Companion::from)
-      .collect(Collectors.toList());
-  }
-
-  public List<PartnerResponseDto> getPartnerCampaignOwners() {
-    return productPricingService.getPartnerCampaignOwners();
-  }
-
-  public DashboardNumbers getDashboardNumbers(DataFetchingEnvironment env) {
-    String token = getToken(env);
-    long claims = claimsService.totalClaims(token);
-    long questions = questionGroupRepository.notAnsweredCount();
-    return new DashboardNumbers(claims, questions);
-  }
-
-  private String getToken(DataFetchingEnvironment env) {
-    GraphQLRequestContext context = env.getContext();
-    return personnelService.getIdToken(context.getUserPrincipal().getName());
-  }
-
-  public ClaimItemValuation getClaimItemValuation(GetValuationRequest request) {
-    return itemizerService.getValuation(request);
-  }
-
-  public CanValuateClaimItem canValuateClaimItem(String typeOfContract, String itemFamilyId, UUID itemTypeId) {
-    return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
-  }
-
-  public MemberSearchResult memberSearch(String query, MemberSearchOptions options, DataFetchingEnvironment env) {
-    MembersSearchResultDTO searchResult = memberService.searchPaged(
-      options.getIncludeAll(),
-      query,
-      options.getPage(),
-      options.getPageSize(),
-      options.getSortBy(),
-      options.getSortDirection(),
-      getToken(env)
-    );
-
-    System.out.println(searchResult);
-
-    return MemberSearchResult.Companion.from(searchResult);
-  }
-
-  public JsonNode getQuoteSchemaForContractType(String contractType) {
-    return underwriterService.getSchemaForContractType(contractType);
-  }
-
-  private String getEmail(DataFetchingEnvironment env) {
-    try {
-      return GraphQLConfiguration.getEmail(env, personnelService);
-    } catch (AuthorizationException e) {
-      throw new RuntimeException("Failed to get email from GraphQLConfiguration", e);
+    public CompletableFuture<Member> member(String id) {
+        return memberLoader.load(id);
     }
-  }
+
+    public CompletableFuture<Claim> claim(UUID id) {
+        return claimLoader.load(id);
+    }
+
+    public List<SchedulerStatus> paymentSchedule(ChargeStatus status) {
+        List<SchedulerStateDto> schedulerStateDtos = accountService.subscriptionSchedulesAwaitingApproval(status);
+
+        return schedulerStateDtos
+            .stream()
+            .map(
+                schedulerStateDto -> new SchedulerStatus(
+                    schedulerStateDto.getStateId(),
+                    schedulerStateDto.getMemberId(),
+                    schedulerStateDto.getStatus(),
+                    schedulerStateDto.getChangedBy(),
+                    schedulerStateDto.getChangedAt(),
+                    schedulerStateDto.getAmount(),
+                    schedulerStateDto.getTransactionId()
+                )
+            )
+            .collect(Collectors.toList());
+    }
+
+    public TicketDto ticket(UUID id) {
+        return this.ticketService.getTicketById(id);
+    }
+
+    public TicketHistoryDto getFullTicketHistory(UUID id) {
+        return this.ticketService.getTicketHistory(id);
+    }
+
+    public List<TicketDto> tickets(Boolean resolved) {
+        return ticketService.getAllTickets(resolved);
+    }
+
+    public String me(DataFetchingEnvironment env) {
+        try {
+            return GraphQLConfiguration.getEmail(env, personnelService);
+        } catch (Exception e) {
+            log.info("Exception occured when trying to access user getEmail: " + e);
+            return null;
+        }
+    }
+
+    public List<SwitchableSwitcherEmail> switchableSwitcherEmails(DataFetchingEnvironment env) {
+        return productPricingService.getSwitchableSwitcherEmails().stream()
+            .map(SwitchableSwitcherEmail::from)
+            .collect(Collectors.toList());
+    }
+
+    public List<ChatMessage> messageHistory(String memberId, DataFetchingEnvironment env) {
+        String email = getEmail(env);
+        String token = getToken(env);
+        return chatServiceV2.fetchMessages(memberId, email, token)
+            .stream()
+            .map(ChatMessage.Companion::from)
+            .collect(Collectors.toList());
+    }
+
+    public List<QuestionGroupType> questionGroups() {
+        return questionService.notAnswered().stream().map(QuestionGroupType.Companion::from).collect(Collectors.toList());
+    }
+
+    public List<ItemCategory> itemCategories(ItemCategoryKind kind, String parentId) {
+        return itemizerService.getCategories(kind, parentId);
+    }
+
+    public List<ClaimItem> claimItems(UUID claimId) {
+        return itemizerService.getClaimItems(claimId);
+    }
+
+    public List<VoucherCampaign> findPartnerCampaigns(CampaignFilter filter) {
+        List<PartnerCampaignSearchResponse> partnerCampaignSearchResponse = filter == null
+            ? productPricingService.searchPartnerCampaigns(null, null, null, null)
+            : productPricingService.searchPartnerCampaigns(filter.getCode(), filter.getPartnerId(), filter.getActiveFrom(), filter.getActiveTo());
+
+        return partnerCampaignSearchResponse
+            .stream()
+            .map(VoucherCampaign.Companion::from)
+            .collect(Collectors.toList());
+    }
+
+    public List<PartnerResponseDto> getPartnerCampaignOwners() {
+        return productPricingService.getPartnerCampaignOwners();
+    }
+
+    public DashboardNumbers getDashboardNumbers(DataFetchingEnvironment env) {
+        String token = getToken(env);
+        long claims = claimsService.totalClaims(token);
+        long questions = questionGroupRepository.notAnsweredCount();
+        return new DashboardNumbers(claims, questions);
+    }
+
+    private String getToken(DataFetchingEnvironment env) {
+        GraphQLRequestContext context = env.getContext();
+        return personnelService.getIdToken(context.getUserPrincipal().getName());
+    }
+
+    public ClaimItemValuation getClaimItemValuation(GetValuationRequest request) {
+        return itemizerService.getValuation(request);
+    }
+
+    public CanValuateClaimItem canValuateClaimItem(String typeOfContract, String itemFamilyId, UUID itemTypeId) {
+        return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
+    }
+
+    public MemberSearchResult memberSearch(String query, MemberSearchOptions options, DataFetchingEnvironment env) {
+        MembersSearchResultDTO searchResult = memberService.searchPaged(
+            options.getIncludeAll(),
+            query,
+            options.getPage(),
+            options.getPageSize(),
+            options.getSortBy(),
+            options.getSortDirection(),
+            getToken(env)
+        );
+
+        System.out.println(searchResult);
+
+        return MemberSearchResult.Companion.from(searchResult);
+    }
+
+    public JsonNode getQuoteSchemaForContractType(String contractType) {
+        return underwriterService.getSchemaForContractType(contractType);
+    }
+
+    private String getEmail(DataFetchingEnvironment env) {
+        try {
+            return GraphQLConfiguration.getEmail(env, personnelService);
+        } catch (AuthorizationException e) {
+            throw new RuntimeException("Failed to get email from GraphQLConfiguration", e);
+        }
+    }
 }

@@ -9,16 +9,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ClaimPaymentResolver implements GraphQLResolver<ClaimPayment> {
 
-  private final PaymentService paymentService;
+    private final PaymentService paymentService;
 
-  public ClaimPaymentResolver(PaymentService paymentService) {
-    this.paymentService = paymentService;
-  }
-
-  public Transaction getTransaction(ClaimPayment claimPayment) {
-    if (claimPayment.getTransactionId().isPresent() == false) {
-      return null;
+    public ClaimPaymentResolver(PaymentService paymentService) {
+        this.paymentService = paymentService;
     }
-    return Transaction.Companion.fromDTO(paymentService.getTransactionById(claimPayment.getTransactionId().get()));
-  }
+
+    public Transaction getTransaction(ClaimPayment claimPayment) {
+        if (claimPayment.getTransactionId().isPresent() == false) {
+            return null;
+        }
+        return Transaction.Companion.fromDTO(paymentService.getTransactionById(claimPayment.getTransactionId().get()));
+    }
 }
