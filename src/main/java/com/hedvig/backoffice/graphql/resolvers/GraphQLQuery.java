@@ -30,7 +30,6 @@ import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerResponseDto;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.tickets.TicketService;
 import com.hedvig.backoffice.services.tickets.dto.TicketDto;
@@ -38,7 +37,6 @@ import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -199,7 +197,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
         return itemizerService.getValuation(request);
     }
 
-    public CanValuateClaimItem canValuateClaimItem(TypeOfContract typeOfContract, String itemFamilyId, UUID itemTypeId) {
+    public CanValuateClaimItem canValuateClaimItem(String typeOfContract, String itemFamilyId, UUID itemTypeId) {
         return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
     }
 
