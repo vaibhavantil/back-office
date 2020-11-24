@@ -452,9 +452,10 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         @Nullable final UUID contractId,
         @Nullable final LocalDate activeFrom,
         @Nullable final LocalDate activeTo,
-        @Nullable final LocalDate previousAgreementActiveTo
+        @Nullable final LocalDate previousAgreementActiveTo,
+        final DataFetchingEnvironment env
     ) {
-        return Quote.from(underwriterService.addAgreementFromQuote(id, contractId, activeFrom, activeTo, previousAgreementActiveTo));
+        return Quote.from(underwriterService.addAgreementFromQuote(id, contractId, activeFrom, activeTo, previousAgreementActiveTo, getToken(env)));
     }
 
     public Quote createQuoteFromAgreement(

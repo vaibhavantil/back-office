@@ -39,7 +39,8 @@ class UnderwriterServiceImpl(
         contractId: UUID?,
         activeFrom: LocalDate?,
         activeTo: LocalDate?,
-        previousAgreementActiveTo: LocalDate?
+        previousAgreementActiveTo: LocalDate?,
+        token: String
     ): QuoteDto {
         logger.info("Adding agreement from quote=$quoteId")
         val addedQuote = underwriterClient.addAgreementFromQuote(
@@ -49,7 +50,8 @@ class UnderwriterServiceImpl(
                 activeFrom = activeFrom,
                 activeTo = activeTo,
                 previousAgreementActiveTo = previousAgreementActiveTo
-            )
+            ),
+            token
         )
         logger.info("Successfully added agreement=${addedQuote.signedProductId} from quote=$quoteId")
         return addedQuote
