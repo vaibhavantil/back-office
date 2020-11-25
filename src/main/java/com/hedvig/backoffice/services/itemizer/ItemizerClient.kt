@@ -113,4 +113,10 @@ interface ItemizerClient {
         @RequestParam updatedBy: String
     ): UUID
 
+    @GetMapping("/_/phrase/claimItemValuation/{claimItemId}")
+    fun describeClaimItemValuation(
+        @PathVariable claimItemId: UUID,
+        @RequestParam typeOfContract: TypeOfContract
+    ): String
+
 }
