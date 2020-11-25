@@ -2,11 +2,21 @@ package com.hedvig.backoffice.services.underwriter
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.hedvig.backoffice.config.feign.FeignConfig
-import com.hedvig.backoffice.services.underwriter.dtos.*
+import com.hedvig.backoffice.services.underwriter.dtos.ActivateQuoteRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.AddAgreementFromQuoteRequest
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
+import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
-import java.util.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestParam
+import java.util.UUID
 
 @FeignClient(
     name = "underwriter",
@@ -18,7 +28,10 @@ interface UnderwriterClient {
     fun activateQuote(@PathVariable("quoteId") quoteId: UUID, @RequestBody body: ActivateQuoteRequestDto): QuoteDto
 
     @PostMapping("/_/v1/quotes/add/agreement")
-    fun addAgreementFromQuote(@RequestBody request: AddAgreementFromQuoteRequest): QuoteDto
+    fun addAgreementFromQuote(
+        @RequestBody request: AddAgreementFromQuoteRequest,
+        @RequestHeader("Authorization") token: String
+    ): QuoteDto
 
     @GetMapping("/_/v1/quotes/members/{memberId}")
     fun getQuotes(@PathVariable("memberId") memberId: String): List<QuoteDto>

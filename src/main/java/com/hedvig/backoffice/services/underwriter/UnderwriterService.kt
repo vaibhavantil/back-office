@@ -1,9 +1,13 @@
 package com.hedvig.backoffice.services.underwriter
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.hedvig.backoffice.services.underwriter.dtos.*
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto
+import com.hedvig.backoffice.services.underwriter.dtos.SignQuoteFromHopeRequestDto
+import com.hedvig.backoffice.services.underwriter.dtos.SignedQuoteResponseDto
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 interface UnderwriterService {
     fun activateQuote(
@@ -17,14 +21,14 @@ interface UnderwriterService {
         contractId: UUID?,
         activeFrom: LocalDate?,
         activeTo: LocalDate?,
-        previousAgreementActiveTo: LocalDate?
+        previousAgreementActiveTo: LocalDate?,
+        token: String
     ): QuoteDto
 
     fun getQuotes(memberId: String): List<QuoteDto>
     fun getQuote(id: UUID): QuoteDto
     fun createQuoteFromAgreement(quoteRequest: QuoteFromAgreementRequestDto): QuoteResponseDto
     fun signQuoteForNewContract(completeQuoteId: UUID, request: SignQuoteFromHopeRequestDto): SignedQuoteResponseDto
-
 
     fun getSchemaForContractType(contractType: String): JsonNode?
     fun getSchemaByQuoteId(quoteId: UUID): JsonNode?
