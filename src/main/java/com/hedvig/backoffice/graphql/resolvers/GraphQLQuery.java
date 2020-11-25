@@ -198,12 +198,16 @@ public class GraphQLQuery implements GraphQLQueryResolver {
         return itemizerService.getClaimItemValuation(request);
     }
 
-    public ClaimValuation getClaimValuation(UUID claimId, TypeOfContract typeOfContract) {
+    public ClaimValuation getClaimValuation(UUID claimId, String typeOfContract) {
         return itemizerService.getClaimValuation(claimId, typeOfContract);
     }
 
     public CanValuateClaimItem canValuateClaimItem(String typeOfContract, String itemFamilyId, UUID itemTypeId) {
         return itemizerService.canValuateClaimItem(typeOfContract, itemFamilyId, itemTypeId);
+    }
+
+    public String describeClaimItemValuation(UUID claimItemId, String typeOfContract) {
+        return itemizerService.describeClaimItemValuation(claimItemId, typeOfContract);
     }
 
     public MemberSearchResult memberSearch(String query, MemberSearchOptions options, DataFetchingEnvironment env) {

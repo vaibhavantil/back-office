@@ -1,23 +1,8 @@
 package com.hedvig.backoffice.services.itemizer
 
 import com.hedvig.backoffice.config.feign.FeignConfig
-import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem
-import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
-import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation
-import com.hedvig.backoffice.services.itemizer.dto.ItemBrand
-import com.hedvig.backoffice.services.itemizer.dto.ItemCompany
-import com.hedvig.backoffice.services.itemizer.dto.ItemFamily
-import com.hedvig.backoffice.services.itemizer.dto.ItemModel
-import com.hedvig.backoffice.services.itemizer.dto.ItemType
-import com.hedvig.backoffice.services.itemizer.dto.request.GetValuationRequest
-import com.hedvig.backoffice.services.itemizer.dto.request.InsertItemCategoriesRequest
-import com.hedvig.backoffice.services.itemizer.dto.request.InsertValuationRulesRequest
-import com.hedvig.backoffice.services.itemizer.dto.request.UpsertClaimItemRequest
-import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemBrandRequest
-import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemCompanyRequest
-import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemModelRequest
-import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemTypeRequest
-import com.hedvig.backoffice.services.itemizer.dto.request.UpsertValuationRuleRequest
+import com.hedvig.backoffice.services.itemizer.dto.*
+import com.hedvig.backoffice.services.itemizer.dto.request.*
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -116,12 +101,12 @@ interface ItemizerClient {
     @GetMapping("/_/valuate/claim")
     fun getClaimValuation(
         @RequestParam claimId: UUID,
-        @RequestParam typeOfContract: TypeOfContract?
+        @RequestParam typeOfContract: String?
     ): ClaimValuation
 
     @GetMapping("/_/valuate/rule/exists")
     fun canValuateClaimItem(
-        @RequestParam typeOfContract: TypeOfContract,
+        @RequestParam typeOfContract: String,
         @RequestParam itemFamilyId: String,
         @RequestParam itemTypeId: UUID?
     ): CanValuateClaimItem
@@ -135,7 +120,7 @@ interface ItemizerClient {
     @GetMapping("/_/phrase/claimItemValuation/{claimItemId}")
     fun describeClaimItemValuation(
         @PathVariable claimItemId: UUID,
-        @RequestParam typeOfContract: TypeOfContract
+        @RequestParam typeOfContract: String
     ): String
 
 }
