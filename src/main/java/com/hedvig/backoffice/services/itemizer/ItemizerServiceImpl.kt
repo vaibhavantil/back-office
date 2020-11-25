@@ -4,8 +4,7 @@ import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.request.*
-import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract
-import java.util.*
+import java.util.UUID
 
 class ItemizerServiceImpl(
     private val itemizerClient: ItemizerClient

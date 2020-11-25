@@ -1,11 +1,10 @@
 package com.hedvig.backoffice.services.itemizer.dto
 
-import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract
-import java.util.*
+import java.util.UUID
 
 data class CanValuateClaimItem(
-  val canValuate: Boolean,
-  val typeOfContract: TypeOfContract?,
-  val itemFamily: String?,
-  val itemTypeId: UUID?
+    val canValuate: Boolean,
+    val typeOfContract: String?,
+    val itemFamily: String?,
+    val itemTypeId: UUID?
 )

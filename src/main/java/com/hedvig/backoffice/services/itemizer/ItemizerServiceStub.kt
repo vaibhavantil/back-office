@@ -9,7 +9,7 @@ import com.hedvig.backoffice.services.itemizer.dto.ClaimValuation
 import com.hedvig.backoffice.services.itemizer.dto.request.*
 import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract
 import com.hedvig.graphql.commons.type.MonetaryAmountV2
-import java.util.*
+import java.util.UUID
 
 class ItemizerServiceStub : ItemizerService {
     override fun getCategories(kind: ItemCategoryKind, parentId: String?): List<ItemCategory> = listOf()

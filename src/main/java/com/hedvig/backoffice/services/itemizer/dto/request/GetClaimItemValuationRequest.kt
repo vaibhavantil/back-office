@@ -1,8 +1,7 @@
 package com.hedvig.backoffice.services.itemizer.dto.request
 
-import com.hedvig.backoffice.services.product_pricing.dto.contract.TypeOfContract
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 import javax.money.MonetaryAmount
 
 data class GetClaimItemValuationRequest(
