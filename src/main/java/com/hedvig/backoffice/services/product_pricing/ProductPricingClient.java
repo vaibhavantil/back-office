@@ -12,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -148,6 +150,13 @@ public interface ProductPricingClient {
     void regenerateCertificate(
         @PathVariable UUID agreementId,
         @RequestHeader("Authorization") String token
+    );
+
+    @PostMapping("/_/certificates/upload/{agreementId}")
+    void uploadCertificate(
+        @PathVariable UUID agreementId,
+        @RequestHeader("Authorization") String token,
+        @RequestBody byte[] bytes
     );
 
     @GetMapping("/i/campaign/partner/search")

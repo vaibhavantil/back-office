@@ -11,13 +11,16 @@ import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -74,45 +77,13 @@ public class ProductPricingServiceImpl implements ProductPricingService {
 
     @Override
     public void uploadCertificate(
-        String memberId, String fileName, String contentType, byte[] data, String token)
-        throws IOException {
-        OkHttpClient client = new OkHttpClient();
-        RequestBody body =
-            new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart(
-                    "file", fileName, RequestBody.create(MediaType.parse(contentType), data))
-                .build();
+        UUID agreementId,
+        String memberId,
+        MultipartFile file,
+        String token
+    ) throws IOException {
 
-        Request request =
-            new Request.Builder()
-                .url(baseUrl + "/_/insurance/" + memberId + "/certificate")
-                .addHeader("Authorization", token)
-                .post(body)
-                .build();
-
-        Response response = client.newCall(request).execute();
-        if (response.isSuccessful()) {
-            return;
-        }
-
-        HttpStatus status = HttpStatus.valueOf(response.code());
-
-        if (!status.is2xxSuccessful()) {
-            log.error(
-                "insurance certificate not uploaded to product-pricing, code = "
-                    + response.code()
-                    + ", member id = "
-                    + memberId);
-        }
-
-        if (status == HttpStatus.NOT_FOUND) {
-            throw new ExternalServiceNotFoundException("member not found, id = " + memberId, "");
-        } else if (status.is4xxClientError()) {
-            throw new ExternalServiceBadRequestException("bad request, id = " + memberId, "");
-        } else if (status.is5xxServerError()) {
-            throw new ExternalServiceException("product pricing internal error");
-        }
+        client.uploadCertificate(agreementId, token, file.getBytes());
     }
 
     @Override
