@@ -42,10 +42,6 @@ public interface ProductPricingService {
 
     void sendCancellationEmail(String memberId, String token);
 
-//    void uploadCertificate(
-//        UUID agreementId, String memberId, String fileName, String contentType, byte[] data, String token)
-//        throws IOException;
-
     void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto, String token);
 
     List<InsuranceStatusDTO> getInsurancesByMember(String memberId, String token);
