@@ -6,8 +6,8 @@ import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -37,10 +37,6 @@ public interface ProductPricingService {
         String token);
 
     void sendCancellationEmail(String memberId, String token);
-
-    void uploadCertificate(
-        String memberId, String fileName, String contentType, byte[] data, String token)
-        throws IOException;
 
     void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto, String token);
 
@@ -74,6 +70,8 @@ public interface ProductPricingService {
     ContractMarketInfo getContractMarketInfoByMemberId(String memberId);
 
     void regenerateCertificate(UUID agreementId, String token);
+
+    void uploadCertificate(UUID agreementId, MultipartFile file, String token) throws IOException;
 
     List<PartnerCampaignSearchResponse> searchPartnerCampaigns(String code, String partnerId, LocalDate activeFrom, LocalDate activeTo);
 

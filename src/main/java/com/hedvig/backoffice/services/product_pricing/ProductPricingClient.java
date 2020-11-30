@@ -150,6 +150,13 @@ public interface ProductPricingClient {
         @RequestHeader("Authorization") String token
     );
 
+    @PostMapping("/_/certificates/upload/{agreementId}")
+    void uploadCertificate(
+        @PathVariable UUID agreementId,
+        @RequestHeader("Authorization") String token,
+        @RequestBody byte[] bytes
+    );
+
     @GetMapping("/i/campaign/partner/search")
     ResponseEntity<List<PartnerCampaignSearchResponse>> searchPartnerCampaigns(
         @RequestParam
