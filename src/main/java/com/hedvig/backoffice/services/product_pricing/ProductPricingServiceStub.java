@@ -353,7 +353,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
     }
 
     @Override
-    public void uploadCertificate(UUID agreementId, String memberId, MultipartFile file, String token) {
+    public void uploadCertificate(UUID agreementId, MultipartFile file, String token) {
         // noop
     }
 

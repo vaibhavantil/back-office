@@ -75,7 +75,7 @@ public interface ProductPricingService {
 
     void regenerateCertificate(UUID agreementId, String token);
 
-    void uploadCertificate(UUID agreementId, String memberId, MultipartFile file, String token) throws IOException;
+    void uploadCertificate(UUID agreementId, MultipartFile file, String token) throws IOException;
 
     List<PartnerCampaignSearchResponse> searchPartnerCampaigns(String code, String partnerId, LocalDate activeFrom, LocalDate activeTo);
 

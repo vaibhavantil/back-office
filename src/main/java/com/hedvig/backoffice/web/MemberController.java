@@ -176,21 +176,6 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/insurance/{memberId}/{agreementId}/certificate")
-    public ResponseEntity<?> insuranceCertificate(
-        @PathVariable("memberId") String memberId,
-        @PathVariable("agreementId") UUID agreementId,
-        @RequestParam MultipartFile file,
-        @AuthenticationPrincipal Principal principal
-    ) throws IOException {
-        productPricingService.uploadCertificate(
-            agreementId,
-            memberId,
-            file,
-            personnelService.getIdToken(principal.getName()));
-        return ResponseEntity.noContent().build();
-    }
-
     @PostMapping("/insurance/{memberId}/insuredAtOtherCompany")
     public ResponseEntity<?> setInsuredAtOtherCompany(
         @PathVariable String memberId, @RequestBody @Valid InsuredAtOtherCompanyDTO dto, @AuthenticationPrincipal Principal principal) {

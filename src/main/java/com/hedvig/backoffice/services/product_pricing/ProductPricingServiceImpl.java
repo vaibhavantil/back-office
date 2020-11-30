@@ -78,7 +78,6 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     @Override
     public void uploadCertificate(
         UUID agreementId,
-        String memberId,
         MultipartFile file,
         String token
     ) throws IOException {
