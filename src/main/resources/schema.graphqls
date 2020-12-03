@@ -664,7 +664,7 @@ type Member {
     contracts: [Contract!]!
     claims(filterByStates: [ClaimState!]): [Claim!]!
     contractMarketInfo: ContractMarketInfo
-    pickedLocale: PickedLocale
+    pickedLocale: String!
     referralInformation: ReferralInformation
 }
 
@@ -715,13 +715,6 @@ input ManualUnRedeemCampaignInput {
 type ContractMarketInfo {
     market: String!
     preferredCurrency: String!
-}
-
-enum PickedLocale {
-    sv_SE
-    en_SE
-    nb_NO
-    en_NO
 }
 
 enum Gender {

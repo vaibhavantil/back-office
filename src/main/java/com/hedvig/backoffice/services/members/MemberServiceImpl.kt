@@ -63,8 +63,8 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
     client.whitelistMember(memberId, whitelistedBy)
   }
 
-  override fun findPickedLocaleByMemberId(memberId: String): PickedLocaleDTO =
-    client.findPickedLocaleByMemberId(memberId)
+  override fun getPickedLocaleByMemberId(memberId: String): PickedLocaleDTO =
+    client.getPickedLocaleByMemberId(memberId)
 
   override fun editMemberInfo(request: EditMemberInfoRequest, token: String) {
     client.editMemberInfo(request, token)
