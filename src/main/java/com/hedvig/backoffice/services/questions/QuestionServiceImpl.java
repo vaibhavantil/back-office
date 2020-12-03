@@ -14,7 +14,6 @@ import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.notificationService.NotificationService;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.questions.dto.QuestionGroupDTO;
-import com.hedvig.backoffice.services.tickets.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +33,6 @@ public class QuestionServiceImpl implements QuestionService {
   private final ExpoNotificationService expoNotificationService;
   private final PersonnelService personnelService;
   private final NotificationService notificationService;
-  private final TicketService ticketService;
   private final UploadedFilePostprocessor messagesPostprocessor;
 
   @Autowired
@@ -46,7 +44,6 @@ public class QuestionServiceImpl implements QuestionService {
     ExpoNotificationService expoNotificationService,
     PersonnelService personnelService,
     NotificationService notificationService,
-    TicketService ticketService,
     UploadedFilePostprocessor messagesPostprocessor
   ) {
     this.questionRepository = questionRepository;
@@ -56,7 +53,6 @@ public class QuestionServiceImpl implements QuestionService {
     this.expoNotificationService = expoNotificationService;
     this.personnelService = personnelService;
     this.notificationService = notificationService;
-    this.ticketService = ticketService;
     this.messagesPostprocessor = messagesPostprocessor;
   }
 

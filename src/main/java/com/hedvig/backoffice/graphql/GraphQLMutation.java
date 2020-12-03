@@ -35,9 +35,6 @@ import com.hedvig.backoffice.services.qualityassurance.QualityAssuranceService;
 import com.hedvig.backoffice.services.qualityassurance.dto.UnsignMemberRequest;
 import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
 import com.hedvig.backoffice.services.questions.QuestionService;
-import com.hedvig.backoffice.services.tickets.TicketService;
-import com.hedvig.backoffice.services.tickets.dto.CreateTicketDto;
-import com.hedvig.backoffice.services.tickets.dto.TicketStatus;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteFromAgreementRequestDto;
 import com.hedvig.backoffice.services.underwriter.dtos.QuoteResponseDto;
@@ -79,7 +76,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     private final ClaimLoader claimLoader;
     private final ClaimsService claimsService;
     private final AccountService accountService;
-    private final TicketService ticketService;
     private final QuestionService questionsService;
     private final MemberService memberService;
     private final UnderwriterService underwriterService;
@@ -97,7 +93,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         ClaimLoader claimLoader,
         ClaimsService claimsService,
         AccountService accountService,
-        TicketService ticketService,
         QuestionService questionsService,
         MemberService memberService,
         UnderwriterService underwriterService,
@@ -114,7 +109,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         this.claimLoader = claimLoader;
         this.claimsService = claimsService;
         this.accountService = accountService;
-        this.ticketService = ticketService;
         this.questionsService = questionsService;
         this.memberService = memberService;
         this.underwriterService = underwriterService;
@@ -508,65 +502,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         final String underwritingGuidelinesBypassedBy = bypassUnderwritingGuidelines ? getEmail(env) : null;
         final QuoteResponseDto response = underwriterService.createQuoteForMemberBySchemaData(memberId, schemaData, underwritingGuidelinesBypassedBy);
         return Quote.from(underwriterService.getQuote(response.getId()));
-    }
-
-    UUID createTicket(
-        TicketInput ticket,
-        DataFetchingEnvironment env
-    ) {
-        String createdBy = getEmail(env);
-        CreateTicketDto ticketDto = CreateTicketDto.Companion.from(ticket, createdBy);
-        return this.ticketService.createTicket(ticketDto, createdBy);
-    }
-
-    UUID changeTicketDescription(
-        UUID ticketId,
-        String newDescription,
-        DataFetchingEnvironment env
-    ) {
-        String modifiedBy = getEmail(env);
-        this.ticketService.changeDescription(ticketId, newDescription, modifiedBy);
-        return ticketId;
-    }
-
-    UUID assignTicketToTeamMember(
-        UUID ticketId,
-        String teamMemberId,
-        DataFetchingEnvironment env
-    ) {
-        String modifiedBy = getEmail(env);
-        this.ticketService.changeAssignedTo(ticketId, teamMemberId, modifiedBy);
-        return ticketId;
-    }
-
-    UUID changeTicketStatus(
-        UUID ticketId,
-        TicketStatus newStatus,
-        DataFetchingEnvironment env
-    ) {
-        String modifiedBy = getEmail(env);
-        this.ticketService.changeStatus(ticketId, newStatus, modifiedBy);
-        return ticketId;
-    }
-
-    UUID changeTicketReminder(
-        UUID ticketId,
-        RemindNotification newReminder,
-        DataFetchingEnvironment env
-    ) {
-        String modifiedBy = getEmail(env);
-        this.ticketService.changeReminder(ticketId, newReminder, modifiedBy);
-        return ticketId;
-    }
-
-    UUID changeTicketPriority(
-        UUID ticketId,
-        float newPriority,
-        DataFetchingEnvironment env
-    ) {
-        String modifiedBy = getEmail(env);
-        this.ticketService.changePriority(ticketId, newPriority, modifiedBy);
-        return ticketId;
     }
 
     public Boolean whitelistMember(
