@@ -153,7 +153,7 @@ type MutationType {
         memberId: ID!
         request: ManualUnRedeemCampaignInput!
     ): Boolean!
-    manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
+    manualRedeemEnableReferralsCampaign(memberId: ID!, market: String!): Boolean!
     unsignMember(ssn: String!): Boolean!
     editMemberInfo(request: EditMemberInfoInput!): Boolean!
     setFraudulentStatus(memberId: ID!, request: MemberFraudulentStatusInput!): Boolean!
@@ -290,7 +290,7 @@ type Contract {
     hasQueuedRenewal: Boolean!
     renewal: Renewal
     preferredCurrency: String!
-    market: Market!
+    market: String!
     signSource: SignSource
     contractTypeName: String!
     createdAt: Instant!
@@ -713,13 +713,8 @@ input ManualUnRedeemCampaignInput {
 }
 
 type ContractMarketInfo {
-    market: Market!
+    market: String!
     preferredCurrency: String!
-}
-
-enum Market {
-    SWEDEN
-    NORWAY
 }
 
 enum PickedLocale {

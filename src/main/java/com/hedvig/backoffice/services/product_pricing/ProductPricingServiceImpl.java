@@ -237,7 +237,7 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
 
     @Override
-    public ManualRedeemEnableReferralsCampaignResponse manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request) {
+    public ManualRedeemEnableReferralsCampaignResponse manualRedeemEnableReferralsCampaign(String market, ManualRedeemEnableReferralsCampaignRequest request) {
         return this.client.manualRedeemEnableReferralsCampaign(market, request);
     }
 
