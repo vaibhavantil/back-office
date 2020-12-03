@@ -767,14 +767,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         return true;
     }
 
-    public Boolean manualRedeemEnableReferralsCampaign(final String memberId, final String market) {
-        productPricingService.manualRedeemEnableReferralsCampaign(
-            market,
-            new ManualRedeemEnableReferralsCampaignRequest(List.of(memberId))
-        );
-        return true;
-    }
-
     public Boolean unsignMember(final String ssn) {
         qualityAssuranceService.unsignMember(new UnsignMemberRequest(ssn));
         return true;
