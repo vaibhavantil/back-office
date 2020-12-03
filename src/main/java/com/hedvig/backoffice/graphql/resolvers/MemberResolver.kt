@@ -135,7 +135,8 @@ class MemberResolver(
         return reqularAndSignableQuotes(member.memberId, quotes)
     }
 
-    // todo: fix do not use contractTypeName for logic here
+    // TODO: fix do not use contractTypeName for logic here
+    // FIXME: this should probably not live here in the first place
     private fun reqularAndSignableQuotes(
         memberId: String,
         quotes: List<Quote>
@@ -147,7 +148,7 @@ class MemberResolver(
             if (contractTypeName.equals("Swedish Apartment")) {
                 return quotes.map { quote ->
                     when (quote.productType) {
-                        ProductType.HOUSE -> quote.copy(isReadyToSign = true)
+                        "HOUSE" -> quote.copy(isReadyToSign = true)
                         else -> quote
                     }
                 }
@@ -155,7 +156,7 @@ class MemberResolver(
             if (contractTypeName.equals("Swedish House")) {
                 return quotes.map { quote ->
                     when (quote.productType) {
-                        ProductType.APARTMENT -> quote.copy(isReadyToSign = true)
+                        "APARTMENT" -> quote.copy(isReadyToSign = true)
                         else -> quote
                     }
                 }
@@ -163,7 +164,7 @@ class MemberResolver(
             if (contractTypeName.equals("Norwegian Home Content")) {
                 return quotes.map { quote ->
                     when (quote.productType) {
-                        ProductType.TRAVEL -> quote.copy(isReadyToSign = true)
+                        "TRAVEL" -> quote.copy(isReadyToSign = true)
                         else -> quote
                     }
                 }
@@ -171,7 +172,31 @@ class MemberResolver(
             if (contractTypeName.equals("Norwegian Travel")) {
                 return quotes.map { quote ->
                     when (quote.productType) {
-                        ProductType.HOME_CONTENT -> quote.copy(isReadyToSign = true)
+                        "HOME_CONTENT" -> quote.copy(isReadyToSign = true)
+                        else -> quote
+                    }
+                }
+            }
+            if (contractTypeName.equals("Danish Travel")) {
+                return quotes.map { quote ->
+                    when (quote.productType) {
+                        "TRAVEL" -> quote.copy(isReadyToSign = true)
+                        else -> quote
+                    }
+                }
+            }
+            if (contractTypeName.equals("Danish Home Content")) {
+                return quotes.map { quote ->
+                    when (quote.productType) {
+                        "HOME_CONTENT" -> quote.copy(isReadyToSign = true)
+                        else -> quote
+                    }
+                }
+            }
+            if (contractTypeName.equals("Danish Accident")) {
+                return quotes.map { quote ->
+                    when (quote.productType) {
+                        "ACCIDENT" -> quote.copy(isReadyToSign = true)
                         else -> quote
                     }
                 }

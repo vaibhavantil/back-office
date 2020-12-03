@@ -727,7 +727,7 @@ type Quote {
     createdAt: Instant
     price: Float
     currency: String
-    productType: QuoteProductType
+    productType: String
     state: QuoteState
     initiatedFrom: String
     attributedTo: String
@@ -744,13 +744,6 @@ type Quote {
     isReadyToSign: Boolean
 }
 
-enum QuoteProductType {
-    APARTMENT
-    HOUSE
-    OBJECT
-    HOME_CONTENT
-    TRAVEL
-}
 enum QuoteState {
     INCOMPLETE
     QUOTED
