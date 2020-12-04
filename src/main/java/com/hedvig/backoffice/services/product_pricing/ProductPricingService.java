@@ -91,8 +91,6 @@ public interface ProductPricingService {
 
     Boolean manualUnRedeemCampaign(String memberId, ManualUnRedeemCampaignRequest request);
 
-    ManualRedeemEnableReferralsCampaignResponse manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request);
-
     List<RedeemedCampaignDto> redeemedCampaigns(String memberId);
 
     List<AgreementPremiumCost> getAgreementPremiumCostsOfPeriod(String memberId, YearMonth period);
