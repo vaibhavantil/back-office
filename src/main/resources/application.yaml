@@ -88,10 +88,6 @@ accountService:
   baseUrl: http://localhost:8090
   stub: false
 
-tickets:
-  baseUrl: http://localhost:8088
-  stub: false
-
 priceEngine:
   baseUrl: http://localhost:5699
   stub: false
