@@ -3,7 +3,17 @@ package com.hedvig.backoffice.graphql.resolvers
 import com.coxautodev.graphql.tools.GraphQLResolver
 import com.hedvig.backoffice.graphql.GraphQLConfiguration
 import com.hedvig.backoffice.graphql.dataloaders.AccountLoader
-import com.hedvig.backoffice.graphql.types.*
+import com.hedvig.backoffice.graphql.types.Claim
+import com.hedvig.backoffice.graphql.types.ClaimState
+import com.hedvig.backoffice.graphql.types.DirectDebitStatus
+import com.hedvig.backoffice.graphql.types.FileUpload
+import com.hedvig.backoffice.graphql.types.Member
+import com.hedvig.backoffice.graphql.types.MonthlySubscription
+import com.hedvig.backoffice.graphql.types.Person
+import com.hedvig.backoffice.graphql.types.Quote
+import com.hedvig.backoffice.graphql.types.ReferralCampaign
+import com.hedvig.backoffice.graphql.types.ReferralInformation
+import com.hedvig.backoffice.graphql.types.Transaction
 import com.hedvig.backoffice.graphql.types.account.Account
 import com.hedvig.backoffice.graphql.types.account.NumberFailedCharges
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
@@ -25,7 +35,7 @@ import org.javamoney.moneta.Money
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.time.YearMonth
-import java.util.*
+import java.util.ArrayList
 import java.util.concurrent.CompletableFuture
 
 @Component
@@ -177,26 +187,29 @@ class MemberResolver(
                     }
                 }
             }
-            if (contractTypeName.equals("Danish Travel")) {
-                return quotes.map { quote ->
-                    when (quote.productType) {
-                        "TRAVEL" -> quote.copy(isReadyToSign = true)
-                        else -> quote
-                    }
-                }
-            }
             if (contractTypeName.equals("Danish Home Content")) {
                 return quotes.map { quote ->
                     when (quote.productType) {
-                        "HOME_CONTENT" -> quote.copy(isReadyToSign = true)
+                        "TRAVEL" -> quote.copy(isReadyToSign = true)
+                        "ACCIDENT" -> quote.copy(isReadyToSign = true)
                         else -> quote
                     }
                 }
             }
-            if (contractTypeName.equals("Danish Accident")) {
+        }
+        if (contractTypeNames.size == 2) {
+            if (contractTypeNames.contains("Danish Home Content") && contractTypeNames.contains("Danish Travel")) {
                 return quotes.map { quote ->
                     when (quote.productType) {
                         "ACCIDENT" -> quote.copy(isReadyToSign = true)
+                        else -> quote
+                    }
+                }
+            }
+            if (contractTypeNames.contains("Danish Home Content") && contractTypeNames.contains("Danish Accident")) {
+                return quotes.map { quote ->
+                    when (quote.productType) {
+                        "TRAVEL" -> quote.copy(isReadyToSign = true)
                         else -> quote
                     }
                 }
