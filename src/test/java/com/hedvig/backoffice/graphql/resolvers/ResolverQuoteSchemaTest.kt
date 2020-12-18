@@ -1,7 +1,6 @@
 package com.hedvig.backoffice.graphql.resolvers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.hedvig.backoffice.graphql.types.ProductType
 import com.hedvig.backoffice.graphql.types.Quote
 import com.hedvig.backoffice.graphql.types.QuoteState
 import com.hedvig.backoffice.services.underwriter.UnderwriterService
@@ -63,7 +62,7 @@ class ResolverQuoteSchemaTest {
                 createdAt = Instant.now(),
                 price = null,
                 currency = "SEK",
-                productType = ProductType.APARTMENT,
+                productType = "APARTMENT",
                 state = QuoteState.INCOMPLETE,
                 initiatedFrom = "RAPIO",
                 attributedTo = "",
@@ -96,7 +95,7 @@ class ResolverQuoteSchemaTest {
                 createdAt = Instant.now(),
                 price = null,
                 currency = "SEK",
-                productType = ProductType.APARTMENT,
+                productType = "APARTMENT",
                 state = QuoteState.INCOMPLETE,
                 initiatedFrom = "RAPIO",
                 attributedTo = "",

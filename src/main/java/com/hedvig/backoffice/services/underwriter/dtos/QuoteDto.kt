@@ -5,15 +5,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.util.*
 
-enum class ProductType {
-    APARTMENT,
-    HOUSE,
-    OBJECT,
-    HOME_CONTENT,
-    TRAVEL,
-    UNKNOWN
-}
-
 enum class QuoteState {
     INCOMPLETE,
     QUOTED,
@@ -36,7 +27,7 @@ data class QuoteDto(
     val createdAt: Instant,
     val price: BigDecimal? = null,
     val currency: String,
-    val productType: ProductType,
+    val productType: String,
     val state: QuoteState,
     val initiatedFrom: QuoteInitiatedFrom,
     val attributedTo: String,

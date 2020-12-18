@@ -33,9 +33,6 @@ import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerCampaignSearchResponse;
 import com.hedvig.backoffice.services.product_pricing.dto.PartnerResponseDto;
 import com.hedvig.backoffice.services.questions.QuestionService;
-import com.hedvig.backoffice.services.tickets.TicketService;
-import com.hedvig.backoffice.services.tickets.dto.TicketDto;
-import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.data.domain.Sort;
@@ -56,7 +53,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     private final ClaimLoader claimLoader;
     private final AccountService accountService;
     private final ItemizerService itemizerService;
-    private final TicketService ticketService;
     private final PersonnelService personnelService;
     private final ChatServiceV2 chatServiceV2;
     private final QuestionService questionService;
@@ -71,7 +67,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
         ClaimLoader claimLoader,
         AccountService accountService,
         MemberService memberService,
-        TicketService ticketService,
         PersonnelService personnelService,
         ChatServiceV2 chatServiceV2,
         QuestionService questionService,
@@ -85,7 +80,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
         this.claimLoader = claimLoader;
         this.accountService = accountService;
         this.itemizerService = itemizerService;
-        this.ticketService = ticketService;
         this.personnelService = personnelService;
         this.chatServiceV2 = chatServiceV2;
         this.questionService = questionService;
@@ -120,18 +114,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
                 )
             )
             .collect(Collectors.toList());
-    }
-
-    public TicketDto ticket(UUID id) {
-        return this.ticketService.getTicketById(id);
-    }
-
-    public TicketHistoryDto getFullTicketHistory(UUID id) {
-        return this.ticketService.getTicketHistory(id);
-    }
-
-    public List<TicketDto> tickets(Boolean resolved) {
-        return ticketService.getAllTickets(resolved);
     }
 
     public String me(DataFetchingEnvironment env) {

@@ -3,7 +3,17 @@ package com.hedvig.backoffice.graphql.resolvers
 import com.coxautodev.graphql.tools.GraphQLResolver
 import com.hedvig.backoffice.graphql.GraphQLConfiguration
 import com.hedvig.backoffice.graphql.dataloaders.AccountLoader
-import com.hedvig.backoffice.graphql.types.*
+import com.hedvig.backoffice.graphql.types.Claim
+import com.hedvig.backoffice.graphql.types.ClaimState
+import com.hedvig.backoffice.graphql.types.DirectDebitStatus
+import com.hedvig.backoffice.graphql.types.FileUpload
+import com.hedvig.backoffice.graphql.types.Member
+import com.hedvig.backoffice.graphql.types.MonthlySubscription
+import com.hedvig.backoffice.graphql.types.Person
+import com.hedvig.backoffice.graphql.types.Quote
+import com.hedvig.backoffice.graphql.types.ReferralCampaign
+import com.hedvig.backoffice.graphql.types.ReferralInformation
+import com.hedvig.backoffice.graphql.types.Transaction
 import com.hedvig.backoffice.graphql.types.account.Account
 import com.hedvig.backoffice.graphql.types.account.NumberFailedCharges
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
@@ -12,7 +22,6 @@ import com.hedvig.backoffice.services.claims.ClaimsService
 import com.hedvig.backoffice.services.meerkat.Meerkat
 import com.hedvig.backoffice.services.meerkat.dto.SanctionStatus
 import com.hedvig.backoffice.services.members.MemberService
-import com.hedvig.backoffice.services.members.dto.PickedLocale
 import com.hedvig.backoffice.services.messages.BotService
 import com.hedvig.backoffice.services.payments.PaymentService
 import com.hedvig.backoffice.services.personnel.PersonnelService
@@ -26,7 +35,7 @@ import org.javamoney.moneta.Money
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.time.YearMonth
-import java.util.*
+import java.util.ArrayList
 import java.util.concurrent.CompletableFuture
 
 @Component
@@ -136,7 +145,8 @@ class MemberResolver(
         return reqularAndSignableQuotes(member.memberId, quotes)
     }
 
-    // todo: fix do not use contractTypeName for logic here
+    // TODO: fix do not use contractTypeName for logic here
+    // FIXME: this should probably not live here in the first place
     private fun reqularAndSignableQuotes(
         memberId: String,
         quotes: List<Quote>
@@ -148,7 +158,7 @@ class MemberResolver(
             if (contractTypeName.equals("Swedish Apartment")) {
                 return quotes.map { quote ->
                     when (quote.productType) {
-                        ProductType.HOUSE -> quote.copy(isReadyToSign = true)
+                        "HOUSE" -> quote.copy(isReadyToSign = true)
                         else -> quote
                     }
                 }
@@ -156,7 +166,7 @@ class MemberResolver(
             if (contractTypeName.equals("Swedish House")) {
                 return quotes.map { quote ->
                     when (quote.productType) {
-                        ProductType.APARTMENT -> quote.copy(isReadyToSign = true)
+                        "APARTMENT" -> quote.copy(isReadyToSign = true)
                         else -> quote
                     }
                 }
@@ -164,7 +174,7 @@ class MemberResolver(
             if (contractTypeName.equals("Norwegian Home Content")) {
                 return quotes.map { quote ->
                     when (quote.productType) {
-                        ProductType.TRAVEL -> quote.copy(isReadyToSign = true)
+                        "TRAVEL" -> quote.copy(isReadyToSign = true)
                         else -> quote
                     }
                 }
@@ -172,7 +182,34 @@ class MemberResolver(
             if (contractTypeName.equals("Norwegian Travel")) {
                 return quotes.map { quote ->
                     when (quote.productType) {
-                        ProductType.HOME_CONTENT -> quote.copy(isReadyToSign = true)
+                        "HOME_CONTENT" -> quote.copy(isReadyToSign = true)
+                        else -> quote
+                    }
+                }
+            }
+            if (contractTypeName.equals("Danish Home Content")) {
+                return quotes.map { quote ->
+                    when (quote.productType) {
+                        "TRAVEL" -> quote.copy(isReadyToSign = true)
+                        "ACCIDENT" -> quote.copy(isReadyToSign = true)
+                        else -> quote
+                    }
+                }
+            }
+        }
+        if (contractTypeNames.size == 2) {
+            if (contractTypeNames.contains("Danish Home Content") && contractTypeNames.contains("Danish Travel")) {
+                return quotes.map { quote ->
+                    when (quote.productType) {
+                        "ACCIDENT" -> quote.copy(isReadyToSign = true)
+                        else -> quote
+                    }
+                }
+            }
+            if (contractTypeNames.contains("Danish Home Content") && contractTypeNames.contains("Danish Accident")) {
+                return quotes.map { quote ->
+                    when (quote.productType) {
+                        "TRAVEL" -> quote.copy(isReadyToSign = true)
                         else -> quote
                     }
                 }
@@ -196,7 +233,7 @@ class MemberResolver(
 
     fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
 
-    fun getPickedLocale(member: Member): PickedLocale = memberService.findPickedLocaleByMemberId(member.memberId).pickedLocale
+    fun getPickedLocale(member: Member): String = memberService.getPickedLocaleByMemberId(member.memberId).pickedLocale
 
     fun getReferralInformation(member: Member): ReferralInformation? {
         val referralInformation = productPricingService.getReferralInformation(member.memberId)

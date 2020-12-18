@@ -403,11 +403,6 @@ public class ProductPricingServiceStub implements ProductPricingService {
     }
 
     @Override
-    public ManualRedeemEnableReferralsCampaignResponse manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request) {
-        return new ManualRedeemEnableReferralsCampaignResponse(new ArrayList<>());
-    }
-
-    @Override
     public List<RedeemedCampaignDto> redeemedCampaigns(String memberId) {
         return null;
     }
