@@ -26,26 +26,11 @@ type QueryType {
         itemTypeId: ID
     ): CanValuateClaimItem
     quoteSchemaForContractType(contractType: String!): JSON
-    memberSearch(query: String!, options: MemberSearchOptions!): MemberSearchResult!
-}
-
-type MemberSearchResult {
-    members: [Member!]!
-    totalPages: Int!
-    page: Int!
-}
-
-input MemberSearchOptions {
-    includeAll: Boolean
-    page: Int
-    pageSize: Int
-    sortBy: String
-    sortDirection: String
-}
-
-type DashboardNumbers {
-    numberOfClaims: Int!
-    numberOfQuestions: Int!
+    memberSearch(
+        query: String!
+        options: MemberSearchOptions!
+    ): MemberSearchResult!
+    listClaims(options: ListClaimsOptions!): ListClaimsResult!
 }
 
 type MutationType {
@@ -138,9 +123,7 @@ type MutationType {
     assignCampaignToPartnerPercentageDiscount(
         request: AssignVoucherPercentageDiscount
     ): Boolean!
-    assignCampaignToPartnerFreeMonths(
-        request: AssignVoucherFreeMonths
-    ): Boolean!
+    assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
     assignCampaignToPartnerVisibleNoDiscount(
         request: AssignVoucherVisibleNoDiscount
     ): Boolean!
@@ -156,7 +139,43 @@ type MutationType {
     manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
     unsignMember(ssn: String!): Boolean!
     editMemberInfo(request: EditMemberInfoInput!): Boolean!
-    setFraudulentStatus(memberId: ID!, request: MemberFraudulentStatusInput!): Boolean!
+    setFraudulentStatus(
+        memberId: ID!
+        request: MemberFraudulentStatusInput!
+    ): Boolean!
+}
+
+type ListClaimsResult {
+    claims: [Claim!]!
+    totalPages: Int!
+    page: Int!
+}
+
+input ListClaimsOptions {
+    includeAll: Boolean
+    page: Int
+    pageSize: Int
+    sortBy: String
+    sortDirection: String
+}
+
+type MemberSearchResult {
+    members: [Member!]!
+    totalPages: Int!
+    page: Int!
+}
+
+input MemberSearchOptions {
+    includeAll: Boolean
+    page: Int
+    pageSize: Int
+    sortBy: String
+    sortDirection: String
+}
+
+type DashboardNumbers {
+    numberOfClaims: Int!
+    numberOfQuestions: Int!
 }
 
 input MemberFraudulentStatusInput {

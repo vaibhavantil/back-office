@@ -19,6 +19,8 @@ import com.hedvig.backoffice.services.account.ChargeStatus;
 import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
@@ -36,7 +38,9 @@ import com.hedvig.backoffice.services.tickets.dto.TicketDto;
 import com.hedvig.backoffice.services.tickets.dto.TicketHistoryDto;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import graphql.schema.DataFetchingEnvironment;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -212,9 +216,22 @@ public class GraphQLQuery implements GraphQLQueryResolver {
             getToken(env)
         );
 
-        System.out.println(searchResult);
-
         return MemberSearchResult.Companion.from(searchResult);
+    }
+
+    public ListClaimsResult listClaims(ListClaimsOptions options, DataFetchingEnvironment env) {
+        ClaimSearchResultDTO result =
+            claimsService.search(
+                options.getPage(),
+                options.getPageSize(),
+                options.getSortBy(),
+                options.getSortDirection(),
+                getToken(env)
+            );
+
+        return ListClaimsResult.Companion.from(
+            result
+        );
     }
 
     public JsonNode getQuoteSchemaForContractType(String contractType) {

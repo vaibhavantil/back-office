@@ -47,7 +47,7 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy,
                                      Sort.Direction sortDirection, String token) {
     log.error("request to claim-service failed");
-    return new ClaimSearchResultDTO(new ArrayList<>(), null, null);
+    return new ClaimSearchResultDTO(new ArrayList<>(), 0, 0);
   }
 
   @Override
