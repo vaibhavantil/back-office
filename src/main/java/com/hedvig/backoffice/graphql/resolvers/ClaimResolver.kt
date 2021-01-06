@@ -1,155 +1,134 @@
-package com.hedvig.backoffice.graphql.resolvers;
+package com.hedvig.backoffice.graphql.resolvers
 
-import com.coxautodev.graphql.tools.GraphQLResolver;
-import com.hedvig.backoffice.graphql.Util;
-import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
-import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.ClaimFile;
-import com.hedvig.backoffice.graphql.types.ClaimFileUpload;
-import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.graphql.types.claims.*;
-import com.hedvig.backoffice.services.UploadedFilePostprocessor;
-import com.hedvig.backoffice.services.claims.ClaimsService;
-import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
-import graphql.schema.DataFetchingEnvironment;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
+import com.coxautodev.graphql.tools.GraphQLResolver
+import com.hedvig.backoffice.graphql.Util
+import com.hedvig.backoffice.graphql.dataloaders.MemberLoader
+import com.hedvig.backoffice.graphql.types.Claim
+import com.hedvig.backoffice.graphql.types.ClaimFileUpload
+import com.hedvig.backoffice.graphql.types.ClaimTypes
+import com.hedvig.backoffice.graphql.types.Member
+import com.hedvig.backoffice.graphql.types.claims.*
+import com.hedvig.backoffice.services.UploadedFilePostprocessor
+import com.hedvig.backoffice.services.product_pricing.ProductPricingService
+import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract
+import graphql.schema.DataFetchingEnvironment
+import org.springframework.stereotype.Component
+import java.util.*
+import java.util.concurrent.CompletableFuture
+import java.util.stream.Collectors
 
 @Component
-public class ClaimResolver implements GraphQLResolver<Claim> {
-
-    private final MemberLoader memberLoader;
-    private final UploadedFilePostprocessor uploadedFilePostprocessor;
-    private final ClaimsService claimsService;
-    private final ProductPricingService productPricingService;
-
-    public ClaimResolver(
-        MemberLoader memberLoader,
-        UploadedFilePostprocessor uploadedFilePostprocessor,
-        ClaimsService claimsService,
-        ProductPricingService productPricingService
-    ) {
-        this.memberLoader = memberLoader;
-        this.uploadedFilePostprocessor = uploadedFilePostprocessor;
-        this.claimsService = claimsService;
-        this.productPricingService = productPricingService;
+class ClaimResolver(
+    private val memberLoader: MemberLoader,
+    private val uploadedFilePostprocessor: UploadedFilePostprocessor,
+    private val productPricingService: ProductPricingService
+) : GraphQLResolver<Claim?> {
+    fun getMember(claim: Claim): CompletableFuture<Member> {
+        return try {
+            memberLoader.load(claim.memberId)
+        } catch (exception: Exception) {
+            CompletableFuture()
+        }
     }
 
-    public CompletableFuture<Member> getMember(Claim claim) {
-        return memberLoader.load(claim.getMemberId());
-    }
-
-    public List<ClaimFileUpload> getClaimFiles(Claim claim) {
-
-        List<ClaimFileUpload> claimFileUploads = new ArrayList<>();
-
-        List<ClaimFile> claimFiles = claim.claimFiles;
-
+    fun getClaimFiles(claim: Claim): List<ClaimFileUpload> {
+        val claimFileUploads: MutableList<ClaimFileUpload> = ArrayList()
+        val claimFiles = claim.claimFiles
         if (claimFiles.isEmpty()) {
-            return claimFileUploads;
+            return claimFileUploads
         }
-
-        List<ClaimFileUpload> claimFileUploadDtos = claimFiles.stream().map(claimFile -> {
-            ClaimFileUpload claimUpload = new ClaimFileUpload(
-                claimFile.getClaimFileId(),
-                uploadedFilePostprocessor.processFileUrl(claimFile.getKey(), claimFile.getBucket()),
-                claimFile.getUploadedAt(),
-                claimFile.getClaimId(),
-                claimFile.getCategory(),
-                claimFile.getContentType()
-            );
-            return claimUpload;
-        }).collect(Collectors.toList());
-
-        claimFileUploads.addAll(claimFileUploadDtos);
-
-        return claimFileUploads;
+        val claimFileUploadDtos = claimFiles.stream().map { (claimFileId, bucket, key, claimId, contentType, UploadedAt, _, category) ->
+            val claimUpload = ClaimFileUpload(
+                claimFileId,
+                uploadedFilePostprocessor.processFileUrl(key, bucket),
+                UploadedAt,
+                claimId,
+                category,
+                contentType
+            )
+            claimUpload
+        }.collect(Collectors.toList())
+        claimFileUploads.addAll(claimFileUploadDtos)
+        return claimFileUploads
     }
 
-    public Object getType(Claim claim, DataFetchingEnvironment env) {
-        if (claim.get_type() == null) {
-            return null;
+    fun getType(claim: Claim, env: DataFetchingEnvironment?): Any? {
+        return if (claim._type == null) {
+            null
+        } else when (Util.claimType(claim._type)) {
+            ClaimTypes.TheftClaim -> {
+                TheftClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.AssaultClaim -> {
+                AssaultClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.AccidentalDamageClaim -> {
+                AccidentalDamageClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.WaterDamageClaim -> {
+                WaterDamageClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.TravelAccidentClaim -> {
+                TravelAccidentClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.LuggageDelayClaim -> {
+                LuggageDelayClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.NotCoveredClaim -> {
+                NotCoveredClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.FireDamageClaim -> {
+                FireDamageClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.ConfirmedFraudClaim -> {
+                ConfirmedFraudClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.LiabilityClaim -> {
+                LiabilityClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.ApplianceClaim -> {
+                ApplianceClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.LegalProtectionClaim -> {
+                LegalProtectionClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.WaterDamageBathroomClaim -> {
+                WaterDamageBathroomClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.WaterDamageKitchenClaim -> {
+                WaterDamageKitchenClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.BurglaryClaim -> {
+                BurglaryClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.FloodingClaim -> {
+                FloodingClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.EarthquakeClaim -> {
+                EarthquakeClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.InstallationsClaim -> {
+                InstallationsClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.SnowPressureClaim -> {
+                SnowPressureClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.StormDamageClaim -> {
+                StormDamageClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.VerminAndPestsClaim -> {
+                VerminAndPestsClaim.fromClaimData(claim._claimData)
+            }
+            ClaimTypes.TestClaim -> {
+                TestClaim.fromClaimData(claim._claimData)
+            }
         }
-        switch (Util.claimType(claim.get_type())) {
-            case TheftClaim: {
-                return TheftClaim.fromClaimData(claim.get_claimData());
-            }
-            case AssaultClaim: {
-                return AssaultClaim.fromClaimData(claim.get_claimData());
-            }
-            case AccidentalDamageClaim: {
-                return AccidentalDamageClaim.fromClaimData(claim.get_claimData());
-            }
-            case WaterDamageClaim: {
-                return WaterDamageClaim.fromClaimData(claim.get_claimData());
-            }
-            case TravelAccidentClaim: {
-                return TravelAccidentClaim.fromClaimData(claim.get_claimData());
-            }
-            case LuggageDelayClaim: {
-                return LuggageDelayClaim.fromClaimData(claim.get_claimData());
-            }
-            case NotCoveredClaim: {
-                return NotCoveredClaim.fromClaimData(claim.get_claimData());
-            }
-            case FireDamageClaim: {
-                return FireDamageClaim.fromClaimData(claim.get_claimData());
-            }
-            case ConfirmedFraudClaim: {
-                return ConfirmedFraudClaim.fromClaimData(claim.get_claimData());
-            }
-            case LiabilityClaim: {
-                return LiabilityClaim.fromClaimData(claim.get_claimData());
-            }
-            case ApplianceClaim: {
-                return ApplianceClaim.fromClaimData(claim.get_claimData());
-            }
-            case LegalProtectionClaim: {
-                return LegalProtectionClaim.fromClaimData(claim.get_claimData());
-            }
-            case WaterDamageBathroomClaim: {
-                return WaterDamageBathroomClaim.fromClaimData(claim.get_claimData());
-            }
-            case WaterDamageKitchenClaim: {
-                return WaterDamageKitchenClaim.fromClaimData(claim.get_claimData());
-            }
-            case BurglaryClaim: {
-                return BurglaryClaim.fromClaimData(claim.get_claimData());
-            }
-            case FloodingClaim: {
-                return FloodingClaim.fromClaimData(claim.get_claimData());
-            }
-            case EarthquakeClaim: {
-                return EarthquakeClaim.fromClaimData(claim.get_claimData());
-            }
-            case InstallationsClaim: {
-                return InstallationsClaim.fromClaimData(claim.get_claimData());
-            }
-            case SnowPressureClaim: {
-                return SnowPressureClaim.fromClaimData(claim.get_claimData());
-            }
-            case StormDamageClaim: {
-                return StormDamageClaim.fromClaimData(claim.get_claimData());
-            }
-            case VerminAndPestsClaim: {
-                return VerminAndPestsClaim.fromClaimData(claim.get_claimData());
-            }
-            case TestClaim: {
-                return TestClaim.fromClaimData(claim.get_claimData());
-            }
-        }
-        throw new RuntimeException(String.format("Unsupported claim type: %s", claim.get_type()));
     }
 
-    public Contract getContract(Claim claim) {
-        if (claim.getContractId() != null) {
-            return productPricingService.getContractById(claim.getContractId());
-        }
-        return null;
+    fun getContract(claim: Claim): Contract? {
+        return if (claim.contractId != null) {
+            productPricingService.getContractById(claim.contractId)
+        } else null
     }
+
 }
