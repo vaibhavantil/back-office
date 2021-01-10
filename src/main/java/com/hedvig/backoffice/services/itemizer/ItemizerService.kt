@@ -5,7 +5,7 @@ import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
 import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation
-import com.hedvig.backoffice.services.itemizer.dto.ClaimValuation
+import com.hedvig.backoffice.services.itemizer.dto.TotalClaimItemValuation
 import com.hedvig.backoffice.services.itemizer.dto.request.*
 import java.util.*
 
@@ -23,6 +23,6 @@ interface ItemizerService {
     fun upsertValuationRule(request: UpsertValuationRuleRequest, email: String): UUID
     fun canValuateClaimItem(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?): CanValuateClaimItem
     fun getClaimItemValuation(request: GetClaimItemValuationRequest): ClaimItemValuation
-    fun getClaimValuation(claimId: UUID, typeOfContract: String?): ClaimValuation
+    fun getTotalClaimItemValuation(claimId: UUID, typeOfContract: String?): TotalClaimItemValuation
     fun describeClaimItemValuation(claimItemId: UUID, typeOfContract: String): String
 }

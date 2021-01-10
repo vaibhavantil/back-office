@@ -23,7 +23,7 @@ import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation;
-import com.hedvig.backoffice.services.itemizer.dto.ClaimValuation;
+import com.hedvig.backoffice.services.itemizer.dto.TotalClaimItemValuation;
 import com.hedvig.backoffice.services.itemizer.dto.request.GetClaimItemValuationRequest;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.dto.MembersSearchResultDTO;
@@ -180,8 +180,8 @@ public class GraphQLQuery implements GraphQLQueryResolver {
         return itemizerService.getClaimItemValuation(request);
     }
 
-    public ClaimValuation getClaimValuation(UUID claimId, String typeOfContract) {
-        return itemizerService.getClaimValuation(claimId, typeOfContract);
+    public TotalClaimItemValuation getTotalClaimItemValuation(UUID claimId, String typeOfContract) {
+        return itemizerService.getTotalClaimItemValuation(claimId, typeOfContract);
     }
 
     public CanValuateClaimItem canValuateClaimItem(String typeOfContract, String itemFamilyId, UUID itemTypeId) {

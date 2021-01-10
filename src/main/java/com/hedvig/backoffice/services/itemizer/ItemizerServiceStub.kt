@@ -5,8 +5,16 @@ import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
 import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation
-import com.hedvig.backoffice.services.itemizer.dto.ClaimValuation
-import com.hedvig.backoffice.services.itemizer.dto.request.*
+import com.hedvig.backoffice.services.itemizer.dto.TotalClaimItemValuation
+import com.hedvig.backoffice.services.itemizer.dto.request.GetClaimItemValuationRequest
+import com.hedvig.backoffice.services.itemizer.dto.request.InsertItemCategoriesRequest
+import com.hedvig.backoffice.services.itemizer.dto.request.InsertValuationRulesRequest
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertClaimItemRequest
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemBrandRequest
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemCompanyRequest
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemModelRequest
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemTypeRequest
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertValuationRuleRequest
 import com.hedvig.graphql.commons.type.MonetaryAmountV2
 import java.util.*
 
@@ -37,7 +45,7 @@ class ItemizerServiceStub : ItemizerService {
 
     override fun getClaimItemValuation(request: GetClaimItemValuationRequest) = ClaimItemValuation(MonetaryAmountV2("1000", "SEK"), null)
 
-    override fun getClaimValuation(claimId: UUID, typeOfContract: String?) = ClaimValuation(MonetaryAmountV2("1000", "SEK"), null)
+    override fun getTotalClaimItemValuation(claimId: UUID, typeOfContract: String?) = TotalClaimItemValuation(MonetaryAmountV2("1000", "SEK"), null)
 
     override fun describeClaimItemValuation(claimItemId: UUID, typeOfContract: String) = "Stub"
 }
