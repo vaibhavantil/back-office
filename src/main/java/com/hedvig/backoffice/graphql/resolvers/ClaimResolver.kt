@@ -9,6 +9,7 @@ import com.hedvig.backoffice.graphql.types.ClaimTypes
 import com.hedvig.backoffice.graphql.types.Member
 import com.hedvig.backoffice.graphql.types.claims.*
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
+import com.hedvig.backoffice.services.chat.data.Message.logger
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService
 import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract
 import graphql.schema.DataFetchingEnvironment
@@ -22,40 +23,37 @@ class ClaimResolver(
     private val memberLoader: MemberLoader,
     private val uploadedFilePostprocessor: UploadedFilePostprocessor,
     private val productPricingService: ProductPricingService
-) : GraphQLResolver<Claim?> {
+) : GraphQLResolver<Claim> {
     fun getMember(claim: Claim): CompletableFuture<Member> {
         return try {
             memberLoader.load(claim.memberId)
         } catch (exception: Exception) {
+            logger.error(exception.message)
             CompletableFuture()
         }
     }
 
     fun getClaimFiles(claim: Claim): List<ClaimFileUpload> {
-        val claimFileUploads: MutableList<ClaimFileUpload> = ArrayList()
         val claimFiles = claim.claimFiles
+
         if (claimFiles.isEmpty()) {
-            return claimFileUploads
+            return emptyList()
         }
-        val claimFileUploadDtos = claimFiles.stream().map { (claimFileId, bucket, key, claimId, contentType, UploadedAt, _, category) ->
-            val claimUpload = ClaimFileUpload(
-                claimFileId,
-                uploadedFilePostprocessor.processFileUrl(key, bucket),
-                UploadedAt,
-                claimId,
-                category,
-                contentType
+
+        return claimFiles.stream().map { claimFile ->
+            ClaimFileUpload(
+                claimFile.claimFileId,
+                uploadedFilePostprocessor.processFileUrl(claimFile.key, claimFile.bucket),
+                claimFile.UploadedAt,
+                claimFile.claimId,
+                claimFile.category,
+                claimFile.contentType
             )
-            claimUpload
         }.collect(Collectors.toList())
-        claimFileUploads.addAll(claimFileUploadDtos)
-        return claimFileUploads
     }
 
     fun getType(claim: Claim, env: DataFetchingEnvironment?): Any? {
-        return if (claim._type == null) {
-            null
-        } else when (Util.claimType(claim._type)) {
+        return when (Util.claimType(claim._type)) {
             ClaimTypes.TheftClaim -> {
                 TheftClaim.fromClaimData(claim._claimData)
             }
@@ -122,6 +120,7 @@ class ClaimResolver(
             ClaimTypes.TestClaim -> {
                 TestClaim.fromClaimData(claim._claimData)
             }
+            else -> null
         }
     }
 
