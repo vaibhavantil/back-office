@@ -70,7 +70,7 @@ interface MemberServiceClient {
   )
 
   @GetMapping("/_/member/{memberId}/pickedLocale")
-  fun findPickedLocaleByMemberId(@PathVariable("memberId") memberId: String): PickedLocaleDTO
+  fun getPickedLocaleByMemberId(@PathVariable("memberId") memberId: String): PickedLocaleDTO
 
   @PostMapping("/_/staging/unsignMember")
   fun unsignMember(

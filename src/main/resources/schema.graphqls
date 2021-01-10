@@ -7,9 +7,6 @@ type QueryType {
     member(id: ID!): Member
     claim(id: ID!): Claim
     paymentSchedule(status: ChargeStatus!): [SchedulerState]
-    ticket(id: ID!): Ticket
-    getFullTicketHistory(id: ID!): TicketHistory
-    tickets(resolved: Boolean): [Ticket!]!
     me: String
     switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
     messageHistory(memberId: ID!): [ChatMessage!]!
@@ -71,12 +68,6 @@ type MutationType {
     setClaimInformation(id: ID!, information: ClaimInformationInput!): Claim
     updateReserve(id: ID!, amount: MonetaryAmount!): Claim
     setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-    createTicket(ticket: TicketInput): ID
-    changeTicketDescription(ticketId: ID!, newDescription: String): ID
-    assignTicketToTeamMember(ticketId: ID!, teamMemberId: ID!): ID
-    changeTicketStatus(ticketId: ID!, newStatus: TicketStatus): ID
-    changeTicketReminder(ticketId: ID!, newReminder: RemindNotification): ID
-    changeTicketPriority(ticketId: ID!, newPriority: Float): ID
     whitelistMember(memberId: ID!): Boolean
     markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
     backfillSubscriptions(memberId: ID!): Member!
@@ -155,7 +146,6 @@ type MutationType {
         memberId: ID!
         request: ManualUnRedeemCampaignInput!
     ): Boolean!
-    manualRedeemEnableReferralsCampaign(memberId: ID!, market: Market!): Boolean!
     unsignMember(ssn: String!): Boolean!
     editMemberInfo(request: EditMemberInfoInput!): Boolean!
     setFraudulentStatus(memberId: ID!, request: MemberFraudulentStatusInput!): Boolean!
@@ -298,7 +288,7 @@ type Contract {
     hasQueuedRenewal: Boolean!
     renewal: Renewal
     preferredCurrency: String!
-    market: Market!
+    market: String!
     signSource: SignSource
     contractTypeName: String!
     createdAt: Instant!
@@ -672,7 +662,7 @@ type Member {
     contracts: [Contract!]!
     claims(filterByStates: [ClaimState!]): [Claim!]!
     contractMarketInfo: ContractMarketInfo
-    pickedLocale: PickedLocale
+    pickedLocale: String!
     referralInformation: ReferralInformation
 }
 
@@ -721,20 +711,8 @@ input ManualUnRedeemCampaignInput {
 }
 
 type ContractMarketInfo {
-    market: Market!
+    market: String!
     preferredCurrency: String!
-}
-
-enum Market {
-    SWEDEN
-    NORWAY
-}
-
-enum PickedLocale {
-    sv_SE
-    en_SE
-    nb_NO
-    en_NO
 }
 
 enum Gender {
@@ -748,7 +726,7 @@ type Quote {
     createdAt: Instant
     price: Float
     currency: String
-    productType: QuoteProductType
+    productType: String
     state: QuoteState
     initiatedFrom: String
     attributedTo: String
@@ -765,13 +743,6 @@ type Quote {
     isReadyToSign: Boolean
 }
 
-enum QuoteProductType {
-    APARTMENT
-    HOUSE
-    OBJECT
-    HOME_CONTENT
-    TRAVEL
-}
 enum QuoteState {
     INCOMPLETE
     QUOTED
@@ -1210,86 +1181,6 @@ type Question {
     id: ID!
     timestamp: Instant!
     messageJsonString: String!
-}
-
-input TicketInput {
-    assignedTo: String
-    priority: Float
-    type: TicketType
-    remindNotificationDate: LocalDate
-    remindNotificationTime: LocalTime
-    remindMessage: String
-    description: String
-    status: TicketStatus
-    referenceId: String
-    memberId: String
-}
-
-type Ticket {
-    id: ID
-    assignedTo: String
-    createdAt: Instant
-    createdBy: String
-    memberId: String
-    referenceId: String
-    priority: Float
-    type: TicketType
-    remindNotificationDate: LocalDate
-    remindNotificationTime: LocalTime
-    remindMessage: String
-    description: String
-    status: TicketStatus
-}
-
-type TicketHistory {
-    id: ID
-    createdAt: Instant
-    createdBy: String
-    type: TicketType
-    revisions: [TicketRevision]
-}
-
-type TicketRevision {
-    assignedTo: String
-    manualPriority: Float
-    remindDate: LocalDate
-    remindTime: LocalTime
-    remindMessage: String
-    status: TicketStatus
-    changedAt: Instant
-    changeType: TicketChangeType
-    changedBy: String
-    description: String
-}
-
-input RemindNotification {
-    date: LocalDate
-    time: LocalTime
-    message: String
-}
-
-enum TicketChangeType {
-    TICKET_CREATED
-    CHANGED_REMINDER
-    CHANGED_ASSIGNED_TO
-    CHANGED_DESCRIPTION
-    CHANGED_STATUS
-    CHANGED_PRIORITY
-}
-
-enum TicketStatus {
-    WAITING
-    WORKING_ON
-    ON_HOLD
-    RESOLVED
-}
-
-enum TicketType {
-    REMIND
-    MESSAGE
-    CLAIM
-    CALL_ME
-    OTHER
 }
 
 input CreateNorwegianGripenInput {

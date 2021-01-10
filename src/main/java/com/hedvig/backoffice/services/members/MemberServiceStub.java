@@ -263,8 +263,8 @@ public class MemberServiceStub implements MemberService {
 
   @NotNull
   @Override
-  public PickedLocaleDTO findPickedLocaleByMemberId(@NotNull final String memberId) {
-    return new PickedLocaleDTO(PickedLocale.sv_SE);
+  public PickedLocaleDTO getPickedLocaleByMemberId(@NotNull final String memberId) {
+    return new PickedLocaleDTO("sv_SE");
   }
 
   @Override

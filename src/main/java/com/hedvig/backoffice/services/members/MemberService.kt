@@ -32,7 +32,7 @@ interface MemberService {
 
   fun whitelistMember(memberId: String, whitelistedBy: String)
 
-  fun findPickedLocaleByMemberId(memberId: String): PickedLocaleDTO
+  fun getPickedLocaleByMemberId(memberId: String): PickedLocaleDTO
 
   fun editMemberInfo(request: EditMemberInfoRequest, token: String)
 }

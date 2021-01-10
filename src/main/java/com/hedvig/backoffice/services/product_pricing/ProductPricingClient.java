@@ -150,6 +150,13 @@ public interface ProductPricingClient {
         @RequestHeader("Authorization") String token
     );
 
+    @PostMapping("/_/certificates/upload/{agreementId}")
+    void uploadCertificate(
+        @PathVariable UUID agreementId,
+        @RequestHeader("Authorization") String token,
+        @RequestBody byte[] bytes
+    );
+
     @GetMapping("/i/campaign/partner/search")
     ResponseEntity<List<PartnerCampaignSearchResponse>> searchPartnerCampaigns(
         @RequestParam
@@ -193,9 +200,6 @@ public interface ProductPricingClient {
 
     @PostMapping("/i/campaign/member/{memberId}/manualUnRedeemCampaign")
     Boolean manualUnRedeemCampaign(@PathVariable String memberId, @RequestBody ManualUnRedeemCampaignRequest request);
-
-    @PostMapping("/i/campaign/member/{market}/manualRedeemEnableReferralsCampaign")
-    ManualRedeemEnableReferralsCampaignResponse manualRedeemEnableReferralsCampaign(@PathVariable Market market, @RequestBody ManualRedeemEnableReferralsCampaignRequest request);
 
     @GetMapping("/i/campaign/member/{memberId}/redeemedCampaigns")
     List<RedeemedCampaignDto> redeemedCampaigns(@PathVariable String memberId);

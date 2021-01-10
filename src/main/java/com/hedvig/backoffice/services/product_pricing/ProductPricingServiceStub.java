@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.money.Monetary;
 import java.math.BigDecimal;
@@ -196,13 +197,6 @@ public class ProductPricingServiceStub implements ProductPricingService {
     }
 
     @Override
-    public void uploadCertificate(
-        String memberId, String fileName, String contentType, byte[] data, String token) {
-        log.info("certificate uploaded: memberId = " + memberId + ", name = " + fileName);
-        this.insurance(memberId, token).setCertificateUploaded(true);
-    }
-
-    @Override
     public void setInsuredAtOtherCompany(String memberId, InsuredAtOtherCompanyDTO dto, String token) {
         this.insurance(memberId, "").setInsuredAtOtherCompany(dto.isInsuredAtOtherCompany());
     }
@@ -359,6 +353,11 @@ public class ProductPricingServiceStub implements ProductPricingService {
     }
 
     @Override
+    public void uploadCertificate(UUID agreementId, MultipartFile file, String token) {
+        // noop
+    }
+
+    @Override
     public List<PartnerCampaignSearchResponse> searchPartnerCampaigns(String code, String partnerId, LocalDate activeFrom, LocalDate activeTo) {
         return null;
     }
@@ -401,11 +400,6 @@ public class ProductPricingServiceStub implements ProductPricingService {
     @Override
     public Boolean manualUnRedeemCampaign(String memberId, ManualUnRedeemCampaignRequest request) {
         return false;
-    }
-
-    @Override
-    public ManualRedeemEnableReferralsCampaignResponse manualRedeemEnableReferralsCampaign(Market market, ManualRedeemEnableReferralsCampaignRequest request) {
-        return new ManualRedeemEnableReferralsCampaignResponse(new ArrayList<>());
     }
 
     @Override
