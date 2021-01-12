@@ -53,7 +53,7 @@ class ClaimResolver(
     }
 
     fun getType(claim: Claim, env: DataFetchingEnvironment?): Any? {
-        return when (Util.claimType(claim._type)) {
+        return if (claim._type == null) { null } else when (Util.claimType(claim._type)) {
             ClaimTypes.TheftClaim -> {
                 TheftClaim.fromClaimData(claim._claimData)
             }
