@@ -250,6 +250,9 @@ class MemberResolver(
         )
     }
 
+    fun getIdentity(member: Member): Identity =
+        memberService.identity(member.memberId).toGraphQLType()
+
     companion object {
         private val logger = LoggerFactory.getLogger(MemberResolver::class.java)
     }
