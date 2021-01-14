@@ -35,4 +35,6 @@ interface MemberService {
   fun getPickedLocaleByMemberId(memberId: String): PickedLocaleDTO
 
   fun editMemberInfo(request: EditMemberInfoRequest, token: String)
+
+  fun identity(memberId: String): IdentityDto
 }
