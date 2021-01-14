@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.members
 
 import com.hedvig.backoffice.services.members.dto.*
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO
+import feign.FeignException
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
@@ -71,7 +72,15 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
     }
 
     override fun identity(memberId: String) =
-        client.getIdentity(memberId)
+        try {
+            client.getIdentity(memberId)
+        } catch (e : FeignException) {
+            if (e.status() == HttpStatus.NOT_FOUND.value()) {
+                null
+            } else {
+                throw e
+            }
+        }
 
     companion object {
         private val logger = LoggerFactory.getLogger(MemberServiceImpl::class.java)

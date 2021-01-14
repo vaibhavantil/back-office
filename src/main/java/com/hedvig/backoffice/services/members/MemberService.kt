@@ -36,5 +36,5 @@ interface MemberService {
 
   fun editMemberInfo(request: EditMemberInfoRequest, token: String)
 
-  fun identity(memberId: String): IdentityDto
+  fun identity(memberId: String): IdentityDto?
 }
