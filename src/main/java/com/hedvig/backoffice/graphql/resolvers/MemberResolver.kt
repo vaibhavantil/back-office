@@ -128,8 +128,9 @@ class MemberResolver(
         }
     }
 
-    fun getNumberFailedCharges(member: Member): NumberFailedCharges {
-        return NumberFailedCharges.from(accountService.getNumberFailedCharges(member.memberId))
+    fun getNumberFailedCharges(member: Member): NumberFailedCharges? {
+        val numberFailedCharges = accountService.getNumberFailedCharges(member.memberId) ?: return null
+        return NumberFailedCharges.from(numberFailedCharges)
     }
 
     fun getTotalNumberOfClaims(member: Member, env: DataFetchingEnvironment): Int {

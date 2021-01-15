@@ -3,6 +3,7 @@ package com.hedvig.backoffice.services.account
 import com.hedvig.backoffice.config.feign.FeignConfig
 import com.hedvig.backoffice.services.account.dto.*
 import org.springframework.cloud.openfeign.FeignClient
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -43,7 +44,7 @@ interface AccountServiceClient {
     )
 
     @GetMapping("/_/numberFailedCharges/{memberId}")
-    fun getNumberFailedCharges(@PathVariable memberId: String): NumberFailedChargesDto
+    fun getNumberFailedCharges(@PathVariable memberId: String): ResponseEntity<NumberFailedChargesDto>
 
     @PostMapping("/_/schedule/subscription/backfill/{memberId}")
     fun backfillSubscriptions(
