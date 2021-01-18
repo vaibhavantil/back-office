@@ -1,5 +1,6 @@
 package com.hedvig.backoffice.services.members
 
+import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException
 import com.hedvig.backoffice.services.members.dto.*
 import com.hedvig.backoffice.web.dto.MemberFraudulentStatusDTO
 import feign.FeignException
@@ -74,12 +75,8 @@ class MemberServiceImpl(private val client: MemberServiceClient) : MemberService
     override fun identity(memberId: String) =
         try {
             client.getIdentity(memberId)
-        } catch (e : FeignException) {
-            if (e.status() == HttpStatus.NOT_FOUND.value()) {
-                null
-            } else {
-                throw e
-            }
+        } catch (e: ExternalServiceNotFoundException) {
+            null
         }
 
     companion object {
