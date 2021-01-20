@@ -44,7 +44,7 @@ interface AccountServiceClient {
     )
 
     @GetMapping("/_/numberFailedCharges/{memberId}")
-    fun getNumberFailedCharges(@PathVariable memberId: String): ResponseEntity<NumberFailedChargesDto>
+    fun getNumberFailedCharges(@PathVariable memberId: String): NumberFailedChargesDto
 
     @PostMapping("/_/schedule/subscription/backfill/{memberId}")
     fun backfillSubscriptions(
