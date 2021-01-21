@@ -20,7 +20,6 @@ import com.hedvig.backoffice.services.account.dto.SchedulerStateDto;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
-import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem;
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem;
@@ -36,7 +35,6 @@ import com.hedvig.backoffice.services.product_pricing.dto.PartnerResponseDto;
 import com.hedvig.backoffice.services.questions.QuestionService;
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import graphql.schema.DataFetchingEnvironment;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -182,10 +180,6 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
     public ClaimItemValuation getClaimItemValuation(GetClaimItemValuationRequest request) {
         return itemizerService.getClaimItemValuation(request);
-    }
-
-    public TotalClaimItemValuation getTotalClaimItemValuation(UUID claimId, String typeOfContract) {
-        return itemizerService.getTotalClaimItemValuation(claimId, typeOfContract);
     }
 
     public CanValuateClaimItem canValuateClaimItem(String typeOfContract, String itemFamilyId, UUID itemTypeId) {

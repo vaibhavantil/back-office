@@ -17,7 +17,6 @@ type QueryType {
     getPartnerCampaignOwners: [CampaignOwnerPartner!]!
     dashboardNumbers: DashboardNumbers
     getClaimItemValuation(request: GetClaimItemValuationInput): ClaimItemValuation!
-    getClaimValuation(claimId: ID!, typeOfContract: String): ClaimValuation!
     describeClaimItemValuation(claimItemId: ID!, typeOfContract: String!): String!
     canValuateClaimItem(
         typeOfContract: String!
@@ -184,8 +183,8 @@ type ClaimItem {
     itemCompany: ItemCompany
     dateOfPurchase: LocalDate
     itemAge: Float
-    purchasePrice: MonetaryAmountV2
     valuation: MonetaryAmountV2
+    purchasePrice: MonetaryAmountV2
     note: String
 }
 
@@ -222,6 +221,13 @@ type ClaimItemValuation {
 type ClaimValuation {
     totalValuation: MonetaryAmountV2
     deductible: MonetaryAmountV2
+    claimItems: [ClaimItem!]!
+}
+
+type TotalClaimItemValuation {
+    totalValuation: MonetaryAmountV2
+    deductible: MonetaryAmountV2
+    claimItems: [ClaimItem!]!
 }
 
 type ValuationRule {
@@ -954,6 +960,7 @@ type Claim {
     coveringEmployee: Boolean!
     claimFiles: [ClaimFileUpload!]!
     contract: Contract
+    valuation: ClaimValuation!
 }
 
 type ClaimNote {

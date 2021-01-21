@@ -5,6 +5,7 @@ import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
 import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation
+import com.hedvig.backoffice.services.itemizer.dto.ClaimValuation
 import com.hedvig.backoffice.services.itemizer.dto.TotalClaimItemValuation
 import com.hedvig.backoffice.services.itemizer.dto.request.GetClaimItemValuationRequest
 import com.hedvig.backoffice.services.itemizer.dto.request.InsertItemCategoriesRequest
@@ -45,7 +46,7 @@ class ItemizerServiceStub : ItemizerService {
 
     override fun getClaimItemValuation(request: GetClaimItemValuationRequest) = ClaimItemValuation(MonetaryAmountV2("1000", "SEK"), null)
 
-    override fun getTotalClaimItemValuation(claimId: UUID, typeOfContract: String?) = TotalClaimItemValuation(MonetaryAmountV2("1000", "SEK"), null)
+    override fun getClaimValuation(claimId: UUID, typeOfContract: String?) = ClaimValuation(MonetaryAmountV2("1000", "SEK"), null, listOf())
 
     override fun describeClaimItemValuation(claimItemId: UUID, typeOfContract: String) = "Stub"
 }

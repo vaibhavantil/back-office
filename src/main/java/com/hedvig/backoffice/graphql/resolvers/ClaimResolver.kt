@@ -10,6 +10,8 @@ import com.hedvig.backoffice.graphql.types.Member
 import com.hedvig.backoffice.graphql.types.claims.*
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.chat.data.Message.logger
+import com.hedvig.backoffice.services.itemizer.ItemizerService
+import com.hedvig.backoffice.services.itemizer.dto.ClaimValuation
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService
 import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract
 import graphql.schema.DataFetchingEnvironment
@@ -22,7 +24,8 @@ import java.util.stream.Collectors
 class ClaimResolver(
     private val memberLoader: MemberLoader,
     private val uploadedFilePostprocessor: UploadedFilePostprocessor,
-    private val productPricingService: ProductPricingService
+    private val productPricingService: ProductPricingService,
+    private val itemizerService: ItemizerService
 ) : GraphQLResolver<Claim> {
     fun getMember(claim: Claim): CompletableFuture<Member> {
         return try {
@@ -127,6 +130,13 @@ class ClaimResolver(
     fun getContract(claim: Claim): Contract? {
         return if (claim.contractId != null) {
             productPricingService.getContractById(claim.contractId)
+        } else null
+    }
+
+    fun getValuation(claim: Claim): ClaimValuation? {
+        return if (claim.contractId != null) {
+            val contract = productPricingService.getContractById(claim.contractId)
+            itemizerService.getClaimValuation(claim.id, contract.typeOfContract)
         } else null
     }
 

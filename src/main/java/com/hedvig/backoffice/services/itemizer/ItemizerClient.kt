@@ -102,7 +102,7 @@ interface ItemizerClient {
     fun getClaimValuation(
         @RequestParam claimId: UUID,
         @RequestParam typeOfContract: String?
-    ): TotalClaimItemValuation
+    ): ClaimValuation?
 
     @GetMapping("/_/valuate/rule/exists")
     fun canValuateClaimItem(

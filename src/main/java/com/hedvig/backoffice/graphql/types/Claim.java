@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Value
 public class Claim {
-  UUID id;
+  public UUID id;
   String recordingUrl;
   public ClaimState state;
   public String _type;

@@ -45,7 +45,7 @@ class ItemizerServiceImpl(
 
     override fun getClaimItemValuation(request: GetClaimItemValuationRequest) = itemizerClient.getClaimItemValuation(request)
 
-    override fun getTotalClaimItemValuation(claimId: UUID, typeOfContract: String?) = itemizerClient.getClaimValuation(claimId, typeOfContract)
+    override fun getClaimValuation(claimId: UUID, typeOfContract: String?) = itemizerClient.getClaimValuation(claimId, typeOfContract)
 
     override fun describeClaimItemValuation(claimItemId: UUID, typeOfContract: String) = itemizerClient.describeClaimItemValuation(claimItemId, typeOfContract)
 }
