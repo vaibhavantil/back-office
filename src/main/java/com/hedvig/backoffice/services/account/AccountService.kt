@@ -12,7 +12,7 @@ interface AccountService {
     fun backfillSubscriptions(memberId: String, backfilledBy: String)
     fun subscriptionSchedulesAwaitingApproval(status: ChargeStatus): List<SchedulerStateDto>
     fun addApprovedSubscriptions(requestBody: List<ApproveChargeRequestDto>, approvedBy: String)
-    fun getNumberFailedCharges(memberId: String): NumberFailedChargesDto
+    fun getNumberFailedCharges(memberId: String): NumberFailedChargesDto?
     fun getMonthlyEntriesForMember(memberId: String): List<MonthlyEntryDto>
     fun removeMonthlyEntry(id: UUID, removedBy: String)
 }

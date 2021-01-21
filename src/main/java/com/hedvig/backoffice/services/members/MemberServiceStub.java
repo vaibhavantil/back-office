@@ -272,6 +272,19 @@ public class MemberServiceStub implements MemberService {
     // noop
   }
 
+  @NotNull
+  @Override
+  public IdentityDto identity(@NotNull String memberId) {
+    return new IdentityDto(
+      new NationalIdentificationDto(
+        "191212121212",
+        "SWEDEN"
+      ),
+      "Tolvan",
+      "Tolvansson"
+    );
+  }
+
   private enum FraudulentStatus {
     NOT_FRAUD,
     SUSPECTED_FRAUD,
