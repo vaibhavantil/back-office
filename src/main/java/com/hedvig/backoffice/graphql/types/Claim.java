@@ -19,18 +19,18 @@ public class Claim {
   UUID id;
   String recordingUrl;
   public ClaimState state;
-  String _type;
+  public String _type;
   MonetaryAmount reserves;
   Instant registrationDate;
-  String memberId;
+  public String memberId;
   List<ClaimPayment> payments;
   List<ClaimNote> notes;
   List<ClaimTranscription> transcriptions;
   List<ClaimEvent> events;
-  List<ClaimData> _claimData;
+  public List<ClaimData> _claimData;
   boolean coveringEmployee;
   public List<ClaimFile> claimFiles;
-  UUID contractId;
+  public UUID contractId;
 
   public static Claim fromDTO(com.hedvig.backoffice.services.claims.dto.Claim dto) {
     return new Claim(UUID.fromString(dto.getId()), dto.getAudioURL(),
@@ -43,13 +43,13 @@ public class Claim {
       // hardcode
       // time zone
       dto.getUserId(),
-      dto.getPayments().stream().map(paymentDto -> ClaimPayment.fromDto(paymentDto))
+      dto.getPayments().stream().map(ClaimPayment::fromDto)
         .collect(Collectors.toList()),
-      dto.getNotes().stream().map(noteDto -> ClaimNote.fromDTO(noteDto))
+      dto.getNotes().stream().map(ClaimNote::fromDTO)
         .collect(Collectors.toList()),
-      (dto.getTranscriptions() != null) ? dto.getTranscriptions().stream().map(transcriptionDto -> ClaimTranscription.Companion.fromDTO(transcriptionDto))
+      (dto.getTranscriptions() != null) ? dto.getTranscriptions().stream().map(ClaimTranscription.Companion::fromDTO)
         .collect(Collectors.toList()) : Collections.emptyList(),
-      dto.getEvents().stream().map(eventDto -> ClaimEvent.fromDTO(eventDto))
+      dto.getEvents().stream().map(ClaimEvent::fromDTO)
         .collect(Collectors.toList()),
       dto.getData(),
       dto.isCoveringEmployee(),

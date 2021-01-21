@@ -164,7 +164,7 @@ public class ClaimsServiceStub implements ClaimsService {
       return new ClaimSearchResultDTO(claims, page, totalPages);
     }
 
-    return new ClaimSearchResultDTO(claims, null, null);
+    return new ClaimSearchResultDTO(claims, 0, 0);
   }
 
   EnumMap<ClaimSortColumn, Comparator<Claim>> CLAIM_COMPARATORS_ASC = new EnumMap<ClaimSortColumn, Comparator<Claim>>(
