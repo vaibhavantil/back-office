@@ -77,13 +77,13 @@ class MemberResolver(
     }
 
     fun getDirectDebitStatus(member: Member): DirectDebitStatus {
-        val statusDTO = paymentService.getDirectDebitStatusByMemberId(member.memberId)
-            ?: return DirectDebitStatus(false)
-        return DirectDebitStatus(statusDTO.directDebitActivated)
+        val status = paymentService.getDirectDebitStatusByMemberId(member.memberId)
+        return DirectDebitStatus(status.directDebitActivated)
     }
 
     fun getPayoutMethodStatus(member: Member): PayoutMethodStatus {
-        return PayoutMethodStatus(Random.nextBoolean())
+        val status = paymentService.getPayoutMethodStatusByMemberId(member.memberId)
+        return PayoutMethodStatus(status.activated)
     }
 
     fun getSanctionStatus(member: Member): SanctionStatus {
