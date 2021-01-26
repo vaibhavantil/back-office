@@ -304,7 +304,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
 
     @Override
     public List<Contract> getContractsByMemberId(String memberId) {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
