@@ -2,6 +2,7 @@ package com.hedvig.backoffice.services.itemizer
 
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategory
 import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
+import com.hedvig.backoffice.services.itemizer.dto.ClaimInventory
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.request.*
 import java.util.UUID
@@ -45,7 +46,16 @@ class ItemizerServiceImpl(
 
     override fun getClaimItemValuation(request: GetClaimItemValuationRequest) = itemizerClient.getClaimItemValuation(request)
 
-    override fun getClaimValuation(claimId: UUID, typeOfContract: String?) = itemizerClient.getClaimValuation(claimId, typeOfContract)
+    override fun getClaimInventory(claimId: UUID, typeOfContract: String?): ClaimInventory {
+        val claimItems = itemizerClient.getClaimItemsByClaimId(claimId)
+        val claimValuation = itemizerClient.getClaimValuation(claimId, typeOfContract)
+
+        return ClaimInventory(
+            totalValuation = claimValuation?.totalValuation,
+            deductible = claimValuation?.deductible,
+            items = claimItems
+        )
+    }
 
     override fun describeClaimItemValuation(claimItemId: UUID, typeOfContract: String) = itemizerClient.describeClaimItemValuation(claimItemId, typeOfContract)
 }

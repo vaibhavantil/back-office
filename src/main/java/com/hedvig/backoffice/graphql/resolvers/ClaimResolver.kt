@@ -11,12 +11,11 @@ import com.hedvig.backoffice.graphql.types.claims.*
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.chat.data.Message.logger
 import com.hedvig.backoffice.services.itemizer.ItemizerService
-import com.hedvig.backoffice.services.itemizer.dto.ClaimValuation
+import com.hedvig.backoffice.services.itemizer.dto.ClaimInventory
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService
 import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Component
-import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.stream.Collectors
 
@@ -133,11 +132,9 @@ class ClaimResolver(
         } else null
     }
 
-    fun getValuation(claim: Claim): ClaimValuation? {
-        return if (claim.contractId != null) {
-            val contract = productPricingService.getContractById(claim.contractId)
-            itemizerService.getClaimValuation(claim.id, contract.typeOfContract)
-        } else null
+    fun getInventory(claim: Claim): ClaimInventory {
+        val contract = productPricingService.getContractById(claim.contractId)
+        return itemizerService.getClaimInventory(claim.id, contract.typeOfContract)
     }
 
 }

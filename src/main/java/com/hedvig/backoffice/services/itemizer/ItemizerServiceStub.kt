@@ -5,8 +5,7 @@ import com.hedvig.backoffice.graphql.types.itemizer.ItemCategoryKind
 import com.hedvig.backoffice.services.itemizer.dto.CanValuateClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItem
 import com.hedvig.backoffice.services.itemizer.dto.ClaimItemValuation
-import com.hedvig.backoffice.services.itemizer.dto.ClaimValuation
-import com.hedvig.backoffice.services.itemizer.dto.TotalClaimItemValuation
+import com.hedvig.backoffice.services.itemizer.dto.ClaimInventory
 import com.hedvig.backoffice.services.itemizer.dto.request.GetClaimItemValuationRequest
 import com.hedvig.backoffice.services.itemizer.dto.request.InsertItemCategoriesRequest
 import com.hedvig.backoffice.services.itemizer.dto.request.InsertValuationRulesRequest
@@ -44,9 +43,9 @@ class ItemizerServiceStub : ItemizerService {
 
     override fun canValuateClaimItem(typeOfContract: String, itemFamilyId: String, itemTypeId: UUID?) = CanValuateClaimItem(false, "SE_APARTMENT_BRF", null, null)
 
-    override fun getClaimItemValuation(request: GetClaimItemValuationRequest) = ClaimItemValuation(MonetaryAmountV2("1000", "SEK"), null)
+    override fun getClaimItemValuation(request: GetClaimItemValuationRequest) = ClaimItemValuation(MonetaryAmountV2("1000", "SEK"), null, "Because stub")
 
-    override fun getClaimValuation(claimId: UUID, typeOfContract: String?) = ClaimValuation(MonetaryAmountV2("1000", "SEK"), null, listOf())
+    override fun getClaimInventory(claimId: UUID, typeOfContract: String?) = ClaimInventory(MonetaryAmountV2("1000", "SEK"), null, listOf())
 
     override fun describeClaimItemValuation(claimItemId: UUID, typeOfContract: String) = "Stub"
 }
