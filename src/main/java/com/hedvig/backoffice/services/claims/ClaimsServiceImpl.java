@@ -64,8 +64,13 @@ public class ClaimsServiceImpl implements ClaimsService {
   }
 
   @Override
-  public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy,
-                                     Sort.Direction sortDirection, String token) {
+  public ClaimSearchResultDTO search(
+      Integer page,
+      Integer pageSize,
+      ClaimSortColumn sortBy,
+      Sort.Direction sortDirection,
+      String token
+  ) {
     return client.search(page, pageSize, sortBy, sortDirection, token);
   }
 

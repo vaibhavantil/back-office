@@ -7,14 +7,35 @@ import com.hedvig.backoffice.graphql.types.Claim
 import com.hedvig.backoffice.graphql.types.ClaimFileUpload
 import com.hedvig.backoffice.graphql.types.ClaimTypes
 import com.hedvig.backoffice.graphql.types.Member
-import com.hedvig.backoffice.graphql.types.claims.*
+import com.hedvig.backoffice.graphql.types.claims.AccidentalDamageClaim
+import com.hedvig.backoffice.graphql.types.claims.ApplianceClaim
+import com.hedvig.backoffice.graphql.types.claims.AssaultClaim
+import com.hedvig.backoffice.graphql.types.claims.BurglaryClaim
+import com.hedvig.backoffice.graphql.types.claims.ConfirmedFraudClaim
+import com.hedvig.backoffice.graphql.types.claims.EarthquakeClaim
+import com.hedvig.backoffice.graphql.types.claims.FireDamageClaim
+import com.hedvig.backoffice.graphql.types.claims.FloodingClaim
+import com.hedvig.backoffice.graphql.types.claims.InstallationsClaim
+import com.hedvig.backoffice.graphql.types.claims.LegalProtectionClaim
+import com.hedvig.backoffice.graphql.types.claims.LiabilityClaim
+import com.hedvig.backoffice.graphql.types.claims.LuggageDelayClaim
+import com.hedvig.backoffice.graphql.types.claims.NotCoveredClaim
+import com.hedvig.backoffice.graphql.types.claims.SnowPressureClaim
+import com.hedvig.backoffice.graphql.types.claims.StormDamageClaim
+import com.hedvig.backoffice.graphql.types.claims.TestClaim
+import com.hedvig.backoffice.graphql.types.claims.TheftClaim
+import com.hedvig.backoffice.graphql.types.claims.TravelAccidentClaim
+import com.hedvig.backoffice.graphql.types.claims.VerminAndPestsClaim
+import com.hedvig.backoffice.graphql.types.claims.WaterDamageBathroomClaim
+import com.hedvig.backoffice.graphql.types.claims.WaterDamageClaim
+import com.hedvig.backoffice.graphql.types.claims.WaterDamageKitchenClaim
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.chat.data.Message.logger
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService
 import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract
+import com.hedvig.backoffice.services.product_pricing.dto.contract.GenericAgreement
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Component
-import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.stream.Collectors
 
@@ -53,7 +74,9 @@ class ClaimResolver(
     }
 
     fun getType(claim: Claim, env: DataFetchingEnvironment?): Any? {
-        return if (claim._type == null) { null } else when (Util.claimType(claim._type)) {
+        return if (claim._type == null) {
+            null
+        } else when (Util.claimType(claim._type)) {
             ClaimTypes.TheftClaim -> {
                 TheftClaim.fromClaimData(claim._claimData)
             }
@@ -129,5 +152,4 @@ class ClaimResolver(
             productPricingService.getContractById(claim.contractId)
         } else null
     }
-
 }
