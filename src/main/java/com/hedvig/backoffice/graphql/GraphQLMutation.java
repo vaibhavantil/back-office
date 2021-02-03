@@ -6,8 +6,21 @@ import com.google.common.collect.ImmutableMap;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
+import com.hedvig.backoffice.graphql.types.AssignVoucherFreeMonths;
+import com.hedvig.backoffice.graphql.types.AssignVoucherPercentageDiscount;
+import com.hedvig.backoffice.graphql.types.AssignVoucherVisibleNoDiscount;
 import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.*;
+import com.hedvig.backoffice.graphql.types.ClaimInformationInput;
+import com.hedvig.backoffice.graphql.types.ClaimNoteInput;
+import com.hedvig.backoffice.graphql.types.ClaimPaymentInput;
+import com.hedvig.backoffice.graphql.types.ClaimState;
+import com.hedvig.backoffice.graphql.types.ClaimTypes;
+import com.hedvig.backoffice.graphql.types.Member;
+import com.hedvig.backoffice.graphql.types.MemberChargeApproval;
+import com.hedvig.backoffice.graphql.types.PaymentCompletionResponse;
+import com.hedvig.backoffice.graphql.types.Quote;
+import com.hedvig.backoffice.graphql.types.SendMessageInput;
+import com.hedvig.backoffice.graphql.types.SendMessageResponse;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.graphql.types.account.MonthlyEntryInput;
 import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
@@ -17,11 +30,26 @@ import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.apigateway.ApiGatewayService;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
+import com.hedvig.backoffice.services.claims.dto.ClaimData;
+import com.hedvig.backoffice.services.claims.dto.ClaimFileCategoryDTO;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
-import com.hedvig.backoffice.services.claims.dto.*;
+import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimSource;
+import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.EmployeeClaimRequestDTO;
+import com.hedvig.backoffice.services.claims.dto.MarkClaimFileAsDeletedDTO;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
-import com.hedvig.backoffice.services.itemizer.dto.request.*;
+import com.hedvig.backoffice.services.itemizer.dto.request.InsertItemCategoriesRequest;
+import com.hedvig.backoffice.services.itemizer.dto.request.InsertValuationRulesRequest;
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertClaimItemRequest;
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemBrandRequest;
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemCompanyRequest;
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemModelRequest;
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertItemTypeRequest;
+import com.hedvig.backoffice.services.itemizer.dto.request.UpsertValuationRuleRequest;
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.dto.EditMemberInfoRequest;
 import com.hedvig.backoffice.services.payments.PaymentService;
@@ -29,8 +57,17 @@ import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
-import com.hedvig.backoffice.services.product_pricing.dto.*;
-import com.hedvig.backoffice.services.product_pricing.dto.contract.*;
+import com.hedvig.backoffice.services.product_pricing.dto.AssignVoucherFreeMonthsRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.AssignVoucherPercentageDiscountRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.AssignVoucherVisibleNoDiscountRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.ManualRedeemCampaignRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.ManualUnRedeemCampaignRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ActivatePendingAgreementRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeFromDateOnAgreementRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeTerminationDateRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeToDateOnAgreementRequest;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.TerminateContractRequest;
 import com.hedvig.backoffice.services.qualityassurance.QualityAssuranceService;
 import com.hedvig.backoffice.services.qualityassurance.dto.UnsignMemberRequest;
 import com.hedvig.backoffice.services.questions.QuestionNotFoundException;
@@ -45,13 +82,6 @@ import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
 import graphql.language.SourceLocation;
 import graphql.schema.DataFetchingEnvironment;
-import jersey.repackaged.com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
-
-import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -63,6 +93,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import javax.money.MonetaryAmount;
+import jersey.repackaged.com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
+
 
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
@@ -245,24 +282,24 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
     public CompletableFuture<DataFetcherResult<Claim>> createClaimPayment(
         UUID id,
-        ClaimPaymentInput payment,
+        ClaimPaymentInput paymentInput,
         DataFetchingEnvironment env
     ) throws AuthorizationException {
         log.info("Personnel with email '{}'' adding claim payment",
             GraphQLConfiguration.getEmail(env, personnelService));
         val claim =
             claimsService.find(id.toString(), GraphQLConfiguration.getIdToken(env, personnelService));
-        val memberId = claim.getUserId();
-        val paymentDto = new ClaimPayment();
-        paymentDto.setAmount(BigDecimal.valueOf(payment.getAmount().getNumber().doubleValueExact()));
-        paymentDto.setDeductible(BigDecimal.valueOf(payment.getDeductible().getNumber().doubleValueExact()));
-        paymentDto.setNote(payment.getNote());
-        paymentDto.setExGratia(payment.getExGratia());
-        paymentDto.setType(ClaimPaymentType.valueOf(payment.getType().toString()));
-        paymentDto.setClaimID(id.toString());
-        paymentDto.setHandlerReference(GraphQLConfiguration.getEmail(env, personnelService));
-        paymentDto.setSanctionListSkipped(payment.isSanctionListSkipped());
-        switch (claimsService.addPayment(memberId, paymentDto,
+        val claimPayment = new ClaimPayment(
+            claim.getUserId(),
+            paymentInput.getAmount(),
+            paymentInput.getDeductible(),
+            paymentInput.getNote(),
+            paymentInput.getExGratia(),
+            ClaimPaymentType.valueOf(paymentInput.getType().toString()),
+            GraphQLConfiguration.getEmail(env, personnelService),
+            paymentInput.isSanctionListSkipped()
+        );
+        switch (claimsService.addPayment(claimPayment,
             GraphQLConfiguration.getIdToken(env, personnelService))) {
             case SUCCESSFUL: {
                 return claimLoader.load(id)

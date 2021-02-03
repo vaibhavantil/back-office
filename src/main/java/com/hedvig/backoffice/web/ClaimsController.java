@@ -99,13 +99,12 @@ public class ClaimsController {
     return claimsService.types(personnelService.getIdToken(principal.getName()));
   }
 
-  @PutMapping("/{id}/payments")
-  public ResponseEntity<?> addPayment(@PathVariable String id, @RequestBody @Valid ClaimPayment dto,
+  @PutMapping("/{claimId}/payments")
+  public ResponseEntity<?> addPayment(@PathVariable String claimId, @RequestBody @Valid ClaimPayment dto,
       @AuthenticationPrincipal Principal principal) {
-    dto.setClaimID(id);
-    val claim = claimsService.find(id, personnelService.getIdToken(principal.getName()));
-    claimsService.addPayment(claim.getUserId(), dto,
-        personnelService.getIdToken(principal.getName()));
+      //FIXME: Why is this here? Do we want it to throw some sort of exeption?
+    val claim = claimsService.find(claimId, personnelService.getIdToken(principal.getName()));
+    claimsService.addPayment(dto, personnelService.getIdToken(principal.getName()));
     return ResponseEntity.ok().build();
   }
 

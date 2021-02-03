@@ -24,7 +24,7 @@ public interface ClaimsService {
   ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy,
                               Sort.Direction sortDirection, String token);
 
-  ClaimPaymentResponse addPayment(String memberId, ClaimPayment dto, String token);
+  ClaimPaymentResponse addPayment(ClaimPayment dto, String token);
 
   void addNote(ClaimNote dto, String token);
 

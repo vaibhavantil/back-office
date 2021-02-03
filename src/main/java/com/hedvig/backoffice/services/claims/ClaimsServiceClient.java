@@ -38,11 +38,8 @@ public interface ClaimsServiceClient {
   @GetMapping("/_/claims/claimTypes")
   List<ClaimType> types(@RequestHeader("Authorization") String token);
 
-  @PostMapping("/_/claims/addpayment")
-  void addPayment(@RequestBody ClaimPayment dto, @RequestHeader("Authorization") String token);
-
-  @PostMapping("/_/claims/{memberId}/addAutomaticPayment")
-  void addAutomaticPayment(@PathVariable("memberId") String memberId, @RequestBody ClaimPaymentRequest dto);
+  @PostMapping("/_/claims/addClaimPayment")
+  void addClaimPayment(@RequestBody ClaimPayment dto, @RequestHeader("Authorization") String token);
 
   @PostMapping("/_/claims/addnote")
   void addNote(@RequestBody ClaimNote dto, @RequestHeader("Authorization") String token);

@@ -1,36 +1,68 @@
 package com.hedvig.backoffice.services.claims.dto;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import javax.money.MonetaryAmount;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class ClaimPayment extends ClaimBackOffice {
+@AllArgsConstructor
+public class ClaimPayment {
 
-  @NotNull
-  public BigDecimal amount;
+    public ClaimPayment(
+        @NotNull String claimId,
+        @NotNull MonetaryAmount amount,
+        @NotNull MonetaryAmount deductible,
+        @NotNull String note,
+        @NotNull boolean exGratia,
+        @NotNull ClaimPaymentType type,
+        @NotNull String handlerReference,
+        @NotNull boolean sanctionListSkipped) {
+        this.claimId = claimId;
+        this.amount = amount;
+        this.deductible = deductible;
+        this.note = note;
+        this.exGratia = exGratia;
+        this.type = type;
+        this.handlerReference = handlerReference;
+        this.sanctionListSkipped = sanctionListSkipped;
+    }
 
-  @NotNull
-  public BigDecimal deductible;
+    @NotNull
+    public String claimId;
 
-  public String note;
+    @NotNull
+    public MonetaryAmount amount;
 
-  public LocalDateTime payoutDate;
+    @NotNull
+    public MonetaryAmount deductible;
 
-  @NotNull
-  public Boolean exGratia;
+    @NotNull
+    public String note;
 
-  ClaimPaymentType type;
+    @NotNull
+    public boolean exGratia;
 
-  String handlerReference;
+    @NotNull
+    ClaimPaymentType type;
 
-  UUID transactionId;
+    @NotNull
+    String handlerReference;
 
-  boolean sanctionListSkipped;
+    @NotNull
+    boolean sanctionListSkipped;
 
-  String paymentNote;
+    //The following fields are used when getting a claim, and are null when creating a payment:
+    @JsonProperty("id")
+    public String paymentId;
 
-  ClaimPaymentStatus status;
+    @JsonProperty("date")
+    LocalDateTime registrationDate;
+
+    ClaimPaymentStatus payoutStatus;
+
+    UUID transactionId;
 }
