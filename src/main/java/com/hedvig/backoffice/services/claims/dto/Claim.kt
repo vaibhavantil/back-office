@@ -4,7 +4,7 @@ import com.hedvig.backoffice.services.claims.ClaimState
 import java.math.BigDecimal
 import java.util.UUID
 
-class Claim(
+data class Claim(
     val audioURL: String? = null,
     val state: ClaimState,
     val reserve: BigDecimal? = null,
