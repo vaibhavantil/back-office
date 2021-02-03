@@ -71,7 +71,7 @@ public class ClaimsServiceStub implements ClaimsService {
     }
 
     claims = IntStream.range(0, 10).mapToObj(i -> {
-      String id = UUID.randomUUID().toString();
+      String claimId = UUID.randomUUID().toString();
       String memberId = "123456";
 
       val note = new ClaimNote();
@@ -81,7 +81,7 @@ public class ClaimsServiceStub implements ClaimsService {
       val notes = Lists.newArrayList(note);
 
       val payment = new ClaimPayment(
-      id,
+      claimId,
       Money.of(100, "SEK"),
       Money.of(1500, "SEK"),
       "Dummy Note here",
@@ -97,7 +97,7 @@ public class ClaimsServiceStub implements ClaimsService {
       val payments = Lists.newArrayList(payment);
 
       Claim claim = new Claim();
-      claim.setId(id);
+      claim.setId(claimId);
       claim.setUserId(memberId);
       claim.setState(ClaimState.OPEN);
       claim.setAudioURL("http://techslides.com/demos/samples/sample.aac");

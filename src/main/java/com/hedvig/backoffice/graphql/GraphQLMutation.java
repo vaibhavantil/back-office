@@ -290,7 +290,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         val claim =
             claimsService.find(id.toString(), GraphQLConfiguration.getIdToken(env, personnelService));
         val claimPayment = new ClaimPayment(
-            claim.getUserId(),
+            id.toString(),
             paymentInput.getAmount(),
             paymentInput.getDeductible(),
             paymentInput.getNote(),

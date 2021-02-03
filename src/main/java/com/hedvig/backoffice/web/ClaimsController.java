@@ -102,7 +102,7 @@ public class ClaimsController {
   @PutMapping("/{claimId}/payments")
   public ResponseEntity<?> addPayment(@PathVariable String claimId, @RequestBody @Valid ClaimPayment dto,
       @AuthenticationPrincipal Principal principal) {
-      //FIXME: Why is this here? Do we want it to throw some sort of exeption?
+      //FIXME: Why is this here? Do we want it to throw some sort of exception?
     val claim = claimsService.find(claimId, personnelService.getIdToken(principal.getName()));
     claimsService.addPayment(dto, personnelService.getIdToken(principal.getName()));
     return ResponseEntity.ok().build();
