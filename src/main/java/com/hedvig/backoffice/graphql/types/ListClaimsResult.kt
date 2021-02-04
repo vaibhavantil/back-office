@@ -9,7 +9,7 @@ data class ListClaimsResult(
 ) {
     companion object {
         fun from(listClaimsSearchResultDTO: ClaimSearchResultDTO) = ListClaimsResult(
-            claims = listClaimsSearchResultDTO.claims.map(Claim::fromDTO),
+            claims = listClaimsSearchResultDTO.claims.map((Claim)::fromDTO),
             totalPages = listClaimsSearchResultDTO.totalPages,
             page = listClaimsSearchResultDTO.page
         )
