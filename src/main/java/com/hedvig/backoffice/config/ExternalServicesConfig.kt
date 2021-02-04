@@ -177,7 +177,7 @@ class ExternalServicesConfig @Autowired constructor(private val context: Applica
             "stub" -> factory.createBean(stubClass.java)
             "auto-discover" -> {
                 log.info("Auto discovering upstream service [{}]", prefix)
-                val baseUrl = context.environment.getProperty("$prefix.baseUrl")
+                val baseUrl = context.environment.getRequiredProperty("$prefix.baseUrl")
                 val discovered = isHealthy(baseUrl)
                 if (discovered) {
                     log.info("Discovered service [{}] - will use live one", prefix)
