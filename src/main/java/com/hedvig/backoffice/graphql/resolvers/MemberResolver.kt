@@ -9,6 +9,7 @@ import com.hedvig.backoffice.graphql.types.DirectDebitStatus
 import com.hedvig.backoffice.graphql.types.FileUpload
 import com.hedvig.backoffice.graphql.types.Member
 import com.hedvig.backoffice.graphql.types.MonthlySubscription
+import com.hedvig.backoffice.graphql.types.PayoutMethodStatus
 import com.hedvig.backoffice.graphql.types.Person
 import com.hedvig.backoffice.graphql.types.Quote
 import com.hedvig.backoffice.graphql.types.ReferralCampaign
@@ -37,6 +38,7 @@ import org.springframework.stereotype.Component
 import java.time.YearMonth
 import java.util.ArrayList
 import java.util.concurrent.CompletableFuture
+import kotlin.random.Random
 
 @Component
 class MemberResolver(
@@ -75,9 +77,13 @@ class MemberResolver(
     }
 
     fun getDirectDebitStatus(member: Member): DirectDebitStatus {
-        val statusDTO = paymentService.getDirectDebitStatusByMemberId(member.memberId)
-            ?: return DirectDebitStatus(member.memberId, false)
-        return DirectDebitStatus(statusDTO.memberId, statusDTO.directDebitActivated)
+        val status = paymentService.getDirectDebitStatusByMemberId(member.memberId)
+        return DirectDebitStatus(status.directDebitActivated)
+    }
+
+    fun getPayoutMethodStatus(member: Member): PayoutMethodStatus {
+        val status = paymentService.getPayoutMethodStatusByMemberId(member.memberId)
+        return PayoutMethodStatus(status.activated)
     }
 
     fun getSanctionStatus(member: Member): SanctionStatus {
@@ -134,9 +140,10 @@ class MemberResolver(
     }
 
     fun getTotalNumberOfClaims(member: Member, env: DataFetchingEnvironment): Int {
-        return claimsService.listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService)).filter { claim ->
-            claim.type != "Test"
-        }.size
+        return claimsService.listByUserId(member.memberId, GraphQLConfiguration.getIdToken(env, personnelService))
+            .filter { claim ->
+                claim.type != "Test"
+            }.size
     }
 
     fun getQuotes(member: Member): List<Quote> {
@@ -232,7 +239,8 @@ class MemberResolver(
             .filter { claim -> filterByStates == null || filterByStates.contains(claim.state) }
     }
 
-    fun getContractMarketInfo(member: Member): ContractMarketInfo? = productPricingService.getContractMarketInfoByMemberId(member.memberId)
+    fun getContractMarketInfo(member: Member): ContractMarketInfo? =
+        productPricingService.getContractMarketInfoByMemberId(member.memberId)
 
     fun getPickedLocale(member: Member): String = memberService.getPickedLocaleByMemberId(member.memberId).pickedLocale
 
