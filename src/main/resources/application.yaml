@@ -44,66 +44,10 @@ hystrix:
           enabled: false
 
 intervals:
-  tracker: 5000
   chat: 1000
-  claims: 60000
-
-tracker:
-  baseUrl: http://localhost:4082
-  urls:
-    assets: /assets
-    update: /asset
-  stub: false
-
-botservice:
-  baseUrl: http://localhost:4081
-  questionId: main.question
-  stub: false
-
-memberservice:
-  baseUrl: http://localhost:4084
-  stub: false
-
-claims:
-  baseUrl: http://localhost:4083
-  stub: false
-
-productPricing:
-  baseUrl: http://localhost:4085
-  stub: false
-
-underwriter:
-  baseUrl: http://localhost:5698
-  stub: false
-
-paymentService:
-  baseUrl: http://localhost:8086
-  stub: false
-
-meerkat:
-  baseUrl: http://localhost:4123
-  stub: false
-
-accountService:
-  baseUrl: http://localhost:8090
-  stub: false
-
-priceEngine:
-  baseUrl: http://localhost:5699
-  stub: false
 
 gatekeeper:
   baseUrl: https://id.dev.hedvigit.com
-  stub: false
-
-itemizer:
-  baseUrl: http://localhost:5700
-  stub: false
-
-apiGateway:
-  baseUrl: http://localhost:8080
-  stub: false
-  token: blah
 
 graphql:
   servlet:
@@ -117,7 +61,6 @@ graphiql:
   enabled: true
   pageTitle: BackOffice GraphiQL
 
-
 spring:
   jackson:
     serialization:
@@ -130,3 +73,59 @@ spring:
 cloud:
   aws:
     credentials.useDefaultAwsCredentialsChain: true
+
+---
+
+spring:
+    profiles: development, test
+
+# Upstream services
+
+expo:
+    mode: stub # is not auto-discoverable
+
+botservice:
+    baseUrl: http://localhost:4081
+    questionId: main.question
+    mode: auto-discover
+
+memberservice:
+    baseUrl: http://localhost:4084
+    mode: auto-discover
+
+claims:
+    baseUrl: http://localhost:4083
+    mode: auto-discover
+
+productPricing:
+    baseUrl: http://localhost:4085
+    mode: auto-discover
+
+underwriter:
+    baseUrl: http://localhost:5698
+    mode: auto-discover
+
+paymentService:
+    baseUrl: http://localhost:8086
+    mode: auto-discover
+
+meerkat:
+    baseUrl: http://localhost:4123
+    mode: stub # does not have a health endpoint
+
+accountService:
+    baseUrl: http://localhost:8090
+    mode: auto-discover
+
+priceEngine:
+    baseUrl: http://localhost:5699
+    mode: auto-discover
+
+itemizer:
+    baseUrl: http://localhost:5700
+    mode: auto-discover
+
+apiGateway:
+    baseUrl: http://localhost:8080
+    mode: auto-discover
+    token: blah
