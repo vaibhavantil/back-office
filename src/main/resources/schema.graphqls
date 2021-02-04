@@ -16,7 +16,7 @@ type QueryType {
     findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
     getPartnerCampaignOwners: [CampaignOwnerPartner!]!
     dashboardNumbers: DashboardNumbers
-    getClaimItemValuation(request: GetClaimItemValuationInput): ClaimItemValuation!
+    getClaimItemValuation(request: GetClaimItemValuationInput): ClaimItemValuation
     describeClaimItemValuation(claimItemId: ID!, typeOfContract: String!): String!
     canValuateClaimItem(
         typeOfContract: String!
@@ -209,7 +209,7 @@ input GetClaimItemValuationInput {
     itemFamilyId: String!
     itemTypeId: ID
     typeOfContract: String!
-    purchaseDate: LocalDate!
+    purchaseDate: LocalDate
     baseDate: LocalDate
 }
 

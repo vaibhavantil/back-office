@@ -179,6 +179,10 @@ public class GraphQLQuery implements GraphQLQueryResolver {
     }
 
     public ClaimItemValuation getClaimItemValuation(GetClaimItemValuationRequest request) {
+        if (request.getPurchaseDate() == null) {
+            return null;
+        }
+
         return itemizerService.getClaimItemValuation(request);
     }
 
