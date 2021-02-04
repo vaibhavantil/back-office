@@ -9,10 +9,7 @@ import java.util.concurrent.CompletionStage
 
 @Component
 class AccountBatchLoader(private val accountService: AccountService) : BatchLoader<String, Account?> {
-    override fun load(memberIds: List<String>): CompletionStage<List<Account?>> {
-        return CompletableFuture.supplyAsync {
-            accountService.batchFindCurrentAccounts(memberIds)
-                .map { accountDto -> accountDto?.let { Account.from(accountDto) } }
-        }
+    override fun load(memberIds: List<String>): CompletionStage<List<Account?>> = CompletableFuture.supplyAsync {
+        accountService.batchFindCurrentAccounts(memberIds).map { accountDto -> accountDto?.let { Account.from(accountDto) } }
     }
 }
