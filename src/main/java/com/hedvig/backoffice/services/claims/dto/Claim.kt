@@ -5,10 +5,10 @@ import java.math.BigDecimal
 import java.util.UUID
 
 data class Claim(
-    val audioURL: String? = null,
-    val state: ClaimState,
-    val reserve: BigDecimal? = null,
-    val type: String? = null,
+    var audioURL: String? = null,
+    var state: ClaimState,
+    var reserve: BigDecimal? = null,
+    var type: String? = null,
     val claimSource: ClaimSource,
     val notes: List<ClaimNote>,
     val transcriptions: List<ClaimTranscription>,
@@ -16,7 +16,7 @@ data class Claim(
     val assets: List<ClaimAsset>,
     val events: List<ClaimEvent>,
     val data: List<ClaimData>,
-    val coveringEmployee: Boolean,
+    var coveringEmployee: Boolean,
     val claimFiles: List<ClaimFileDTO>,
     val contractId: UUID? = null
 ) : ClaimBackOffice()

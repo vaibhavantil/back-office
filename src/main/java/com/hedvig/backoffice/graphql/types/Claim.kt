@@ -36,8 +36,8 @@ data class Claim(
             registrationDate = dto.date.atZone(ZoneId.of("Europe/Stockholm")).toInstant(), // TODO Do not hardcode time zone
             memberId = dto.userId,
             payments = dto.payments.map { ClaimPayment.fromDto(it) },
-            notes = dto.notes.map { ClaimNote.fromDTO(it) } ?: emptyList<ClaimNote>(),
-            transcriptions = dto.transcriptions.map { ClaimTranscription.fromDTO(it) } ?: emptyList(),
+            notes = dto.notes.map { ClaimNote.fromDTO(it) },
+            transcriptions = dto.transcriptions.map { ClaimTranscription.fromDTO(it) },
             events = dto.events.map { ClaimEvent.fromDTO(it) },
             _claimData = dto.data,
             coveringEmployee = dto.coveringEmployee,
