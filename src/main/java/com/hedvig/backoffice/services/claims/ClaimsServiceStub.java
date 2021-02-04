@@ -29,7 +29,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -96,24 +96,28 @@ public class ClaimsServiceStub implements ClaimsService {
 
             val payments = Lists.newArrayList(payment);
 
-            Claim claim = new Claim();
-            claim.setId(claimId);
-            claim.setUserId(memberId);
-            claim.setState(ClaimState.OPEN);
-            claim.setAudioURL("http://techslides.com/demos/samples/sample.aac");
-            claim.setClaimSource(ClaimSource.APP);
-            claim.setPayments(payments);
-            claim.setNotes(notes);
-            claim.setEvents(new ArrayList<>());
-            claim.setData(new ArrayList<>());
-            claim.setAssets(new ArrayList<>());
-            claim.setReserve(BigDecimal.valueOf(100));
-            claim.setCoveringEmployee(false);
-
             long randomSignedOnDate = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
             LocalDate randomSignedOnLocalDate = LocalDate.ofEpochDay(randomSignedOnDate);
             LocalTime randomSignedOnLocalTime = LocalTime.ofNanoOfDay(randomSignedOnDate * RandomUtils.nextInt(0, 1000000));
+            Claim claim = new Claim(
+                "http://techslides.com/demos/samples/sample.aac",
+                ClaimState.OPEN,
+                BigDecimal.valueOf(100),
+                null,
+                ClaimSource.APP,
+                notes,
+                Collections.emptyList(),
+                payments,
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                false,
+                Collections.emptyList(),
+                null
+            );
 
+            claim.setId(claimId);
+            claim.setUserId(memberId);
             claim.setDate(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime));
 
             return claim;
@@ -264,21 +268,25 @@ public class ClaimsServiceStub implements ClaimsService {
     @Override
     public UUID createClaim(CreateBackofficeClaimDTO claimData, String token) {
         UUID id = UUID.randomUUID();
-        Claim claim = new Claim();
+        Claim claim = new Claim(
+            "http://techslides.com/demos/samples/sample.aac",
+            ClaimState.OPEN,
+            null,
+            null,
+            claimData.getClaimSource(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            false,
+            Collections.emptyList(),
+            null
+        );
         claim.setId("" + id);
         claim.setDate(claimData.getRegistrationDate().atZone(SWEDEN_TZ).toLocalDateTime());
-        claim.setState(ClaimState.OPEN);
         claim.setUserId(claimData.getMemberId());
-        claim.setClaimSource(claimData.getClaimSource());
-
-        claim.setPayments(new ArrayList<>());
-        claim.setNotes(new ArrayList<>());
-        claim.setEvents(new ArrayList<>());
-        claim.setData(new ArrayList<>());
-        claim.setAssets(new ArrayList<>());
-
-        claim.setCoveringEmployee(false);
-
         claims.add(claim);
 
         return id;
@@ -286,8 +294,8 @@ public class ClaimsServiceStub implements ClaimsService {
 
     @Override
     public void markEmployeeClaim(EmployeeClaimRequestDTO dto, String token) {
-        Claim c = find(dto.getClaimId(), token);
-        c.setCoveringEmployee(dto.isCoveringEmployee());
+        Claim claim = find(dto.getClaimId(), token);
+        claim.setCoveringEmployee(dto.isCoveringEmployee());
     }
 
     @Override

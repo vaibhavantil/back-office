@@ -5,14 +5,15 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
 import com.hedvig.backoffice.services.claims.dto.*;
 import feign.FeignException;
-import java.io.IOException;
-import java.util.stream.Stream;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -20,8 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
+import java.util.stream.Stream;
 
 public class ClaimsServiceImpl implements ClaimsService {
 
@@ -64,8 +64,13 @@ public class ClaimsServiceImpl implements ClaimsService {
     }
 
     @Override
-    public ClaimSearchResultDTO search(Integer page, Integer pageSize, ClaimSortColumn sortBy,
-                                       Sort.Direction sortDirection, String token) {
+    public ClaimSearchResultDTO search(
+        Integer page,
+        Integer pageSize,
+        ClaimSortColumn sortBy,
+        Sort.Direction sortDirection,
+        String token
+    ) {
         return client.search(page, pageSize, sortBy, sortDirection, token);
     }
 
@@ -124,15 +129,10 @@ public class ClaimsServiceImpl implements ClaimsService {
     public List<Claim> getClaimsByIds(List<UUID> ids) {
         return client.getClaimsByIds(new ClaimsByIdsDto(ids))
             .stream()
-            .map(c -> {
-                val signedAudioUrl = signAudioUrl(c.getAudioURL());
-                val claimWithSigned = c.toBuilder().audioURL(signedAudioUrl).build();
-                claimWithSigned.setId(c.getId());
-                claimWithSigned.setClaimID(c.getClaimID());
-                claimWithSigned.setDate(c.getDate());
-                claimWithSigned.setUserId(c.getUserId());
-                claimWithSigned.setContractId(c.getContractId());
-                return claimWithSigned;
+            .map(claim -> {
+                val signedAudioUrl = signAudioUrl(claim.getAudioURL());
+                claim.setAudioURL(signedAudioUrl);
+                return claim;
             })
             .collect(Collectors.toList());
     }
@@ -151,7 +151,7 @@ public class ClaimsServiceImpl implements ClaimsService {
     public ResponseEntity<Void> uploadClaimsFiles(
         String claimId, MultipartFile[] claimFiles, String memberId) throws IOException {
 
-        val claimFileDtos = Stream.of(claimFiles)
+        List<ClaimFileDTO> claimFileDtos = Stream.of(claimFiles)
             .map(claimFile -> {
                 try {
                     val uploadResults =
@@ -208,10 +208,10 @@ public class ClaimsServiceImpl implements ClaimsService {
                 "no claim can be found for claim id" + claimId);
         }
 
-        val optionalClaimFileDTO = claim.claimFiles.stream()
+        val optionalClaimFileDTO = claim.getClaimFiles().stream()
             .filter(claimFile -> claimFile.getClaimFileId().equals(claimFileId)).findAny();
 
-        if (!optionalClaimFileDTO.isPresent()) {
+        if (optionalClaimFileDTO.isEmpty()) {
             throw new RuntimeException(
                 "no claim file can be found with id " + claimFileId + "for claim " + claimId);
         }

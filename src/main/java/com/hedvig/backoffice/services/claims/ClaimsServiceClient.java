@@ -27,10 +27,13 @@ public interface ClaimsServiceClient {
   List<Claim> list(@RequestHeader("Authorization") String token);
 
   @GetMapping("/_/claims/search")
-  ClaimSearchResultDTO search(@RequestParam("page") Integer page,
-                              @RequestParam("pageSize") Integer pageSize, @RequestParam("sortBy") ClaimSortColumn sortBy,
-                              @RequestParam("sortDirection") Sort.Direction sortDirection,
-                              @RequestHeader("Authorization") String token);
+  ClaimSearchResultDTO search(
+      @RequestParam("page") Integer page,
+      @RequestParam("pageSize") Integer pageSize,
+      @RequestParam("sortBy") ClaimSortColumn sortBy,
+      @RequestParam("sortDirection") Sort.Direction sortDirection,
+      @RequestHeader("Authorization") String token
+  );
 
   @GetMapping("/_/claims/claim?claimID={id}")
   Claim find(@PathVariable("id") String id, @RequestHeader("Authorization") String token);
