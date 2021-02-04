@@ -195,6 +195,7 @@ class ExternalServicesConfig @Autowired constructor(private val context: Applica
 
     private fun isHealthy(baseUrl: String): Boolean {
         return try {
+            // TODO: use /actuator/health as default and let services override it using a `healthEndpoint` property
             val response: ResponseEntity<Any> = rest.getForEntity("$baseUrl/actuator/health")
             response.statusCode.is2xxSuccessful
         } catch (e: Exception) {
