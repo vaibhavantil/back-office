@@ -178,13 +178,13 @@ class ExternalServicesConfig @Autowired constructor(private val context: Applica
             "auto-discover" -> {
                 log.info("Auto discovering upstream service [{}]", prefix)
                 val baseUrl = context.environment.getRequiredProperty("$prefix.baseUrl")
-                val discovered = isHealthy(baseUrl)
-                if (discovered) {
+                if (isHealthy(baseUrl)) {
                     log.info("Discovered service [{}] - will use live one", prefix)
+                    factory.createBean(liveClass.java)
                 } else {
                     log.info("Did not discover service [{}] - will use stub", prefix)
+                    factory.createBean(stubClass.java)
                 }
-                if (discovered) factory.createBean(liveClass.java) else factory.createBean(stubClass.java)
             }
             else -> {
                 log.error("Unrecognized mode: {}", mode)
