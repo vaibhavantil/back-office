@@ -13,8 +13,8 @@ import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.expo.ExpoNotificationServiceImpl;
 import com.hedvig.backoffice.services.expo.ExpoNotificationServiceStub;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
-import com.hedvig.backoffice.services.itemizer.ItemizerServiceStub;
 import com.hedvig.backoffice.services.itemizer.ItemizerServiceImpl;
+import com.hedvig.backoffice.services.itemizer.ItemizerServiceStub;
 import com.hedvig.backoffice.services.meerkat.Meerkat;
 import com.hedvig.backoffice.services.meerkat.MeerkatImpl;
 import com.hedvig.backoffice.services.meerkat.MeerkatStub;
@@ -33,130 +33,130 @@ import com.hedvig.backoffice.services.priceEngine.PriceEngineServiceStub;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceImpl;
 import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceStub;
-
-
 import com.hedvig.backoffice.services.underwriter.UnderwriterService;
 import com.hedvig.backoffice.services.underwriter.UnderwriterServiceImpl;
 import com.hedvig.backoffice.services.underwriter.UnderwriterServiceStub;
-import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 @Configuration
+@Slf4j
 public class ExternalServicesConfig {
 
-  private final ApplicationContext context;
+    private final ApplicationContext context;
 
-  @Autowired
-  public ExternalServicesConfig(ApplicationContext context) {
-    this.context = context;
-  }
+    private final RestTemplate rest = new RestTemplateBuilder()
+        // use short connect timeout to make sure we bail asap if it seems to be down,
+        // saving us precious boot time
+        .setConnectTimeout(30)
+        .setReadTimeout(1000)
+        .build();
 
-  @Bean
-  public BotService botService(@Value("${botservice.stub:false}") boolean stub) {
-    val factory = context.getAutowireCapableBeanFactory();
+    @Autowired
+    public ExternalServicesConfig(ApplicationContext context) {
+        this.context = context;
+    }
 
-    return stub
-      ? factory.createBean(BotServiceStub.class)
-      : factory.createBean(BotServiceImpl.class);
-  }
+    @Bean
+    public BotService botService() {
+        return create("botservice", BotServiceStub.class, BotServiceImpl.class);
+    }
 
-  @Bean
-  public MemberService memberService(@Value("${memberservice.stub:false}") boolean stub) {
-    val factory = context.getAutowireCapableBeanFactory();
+    @Bean
+    public MemberService memberService() {
+        return create("memberservice", MemberServiceStub.class, MemberServiceImpl.class);
+    }
 
-    return stub
-      ? factory.createBean(MemberServiceStub.class)
-      : factory.createBean(MemberServiceImpl.class);
-  }
+    @Bean
+    public ClaimsService claimsService() {
+        return create("claims", ClaimsServiceStub.class, ClaimsServiceImpl.class);
+    }
 
-  @Bean
-  public ClaimsService claimsService(@Value("${claims.stub:false}") boolean stub) {
-    val factory = context.getAutowireCapableBeanFactory();
+    @Bean
+    public ExpoNotificationService expoNotificationService() {
+        return create("expo", ExpoNotificationServiceStub.class, ExpoNotificationServiceImpl.class);
+    }
 
-    return stub
-      ? factory.createBean(ClaimsServiceStub.class)
-      : factory.createBean(ClaimsServiceImpl.class);
-  }
+    @Bean
+    public ProductPricingService productPricingService() {
+        return create("productPricing", ProductPricingServiceStub.class, ProductPricingServiceImpl.class);
+    }
 
-  @Bean
-  public ExpoNotificationService expoNotificationService(
-    @Value("${expo.stub:false}") boolean stub
-  ) {
-    val factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(ExpoNotificationServiceStub.class)
-      : factory.createBean(ExpoNotificationServiceImpl.class);
-  }
+    @Bean
+    public UnderwriterService underwriterService() {
+        return create("underwriter", UnderwriterServiceStub.class, UnderwriterServiceImpl.class);
+    }
 
-  @Bean
-  public ProductPricingService productPricingService(
-    @Value("${productPricing.stub:false}") boolean stub
-  ) {
-    val factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(ProductPricingServiceStub.class)
-      : factory.createBean(ProductPricingServiceImpl.class);
-  }
+    @Bean
+    public PaymentService paymentService() {
+        return create("paymentService", PaymentServiceStub.class, PaymentServiceImpl.class);
+    }
 
-  @Bean
-  public UnderwriterService underwriterService(
-    @Value("${underwriter.stub:false}") boolean stub
-  ) {
-    val factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(UnderwriterServiceStub.class)
-      : factory.createBean(UnderwriterServiceImpl.class);
-  }
+    @Bean
+    public Meerkat meerkat() {
+        return create("meerkat", MeerkatStub.class, MeerkatImpl.class);
+    }
 
-  @Bean
-  public PaymentService paymentService(@Value("${paymentService.stub:false}") boolean stub) {
-    val factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(PaymentServiceStub.class)
-      : factory.createBean(PaymentServiceImpl.class);
-  }
+    @Bean
+    public AccountService accountService() {
+        return create("accountService", AccountServiceStub.class, AccountServiceImpl.class);
+    }
 
-  @Bean
-  public Meerkat meerkat(@Value("${meerkat.stub:false}") boolean stub) {
-    val factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(MeerkatStub.class)
-      : factory.createBean(MeerkatImpl.class);
-  }
+    @Bean
+    public PriceEngineService priceEngineService() {
+        return create("priceEngine", PriceEngineServiceStub.class, PriceEngineServiceImpl.class);
+    }
 
-  @Bean
-  public AccountService accountService(@Value("${accountService.stub:false}") boolean stub) {
-    val factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(AccountServiceStub.class)
-      : factory.createBean(AccountServiceImpl.class);
-  }
+    @Bean
+    public ItemizerService itemizerService() {
+        return create("itemizer", ItemizerServiceStub.class, ItemizerServiceImpl.class);
+    }
 
-  @Bean
-  public PriceEngineService priceEngineService(@Value("${priceEngine.stub:false}") boolean stub) {
-    val factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(PriceEngineServiceStub.class)
-      : factory.createBean(PriceEngineServiceImpl.class);
-  }
+    @Bean
+    public ApiGatewayService apiGatewayService() {
+        return create("apiGateway", ApiGatewayServiceStub.class, ApiGatewayServiceImpl.class);
+    }
 
-  @Bean
-  public ItemizerService itemizerService(@Value("${itemizer.stub:false}") boolean stub) {
-    val factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(ItemizerServiceStub.class)
-      : factory.createBean(ItemizerServiceImpl.class);
-  }
+    private <S> S create(String prefix, Class<? extends S> stubClass, Class<? extends S> liveClass) {
+        AutowireCapableBeanFactory factory = context.getAutowireCapableBeanFactory();
+        String mode = context.getEnvironment().getProperty(prefix + ".mode", "live");
 
-  @Bean
-  public ApiGatewayService apiGatewayService(@Value("${apiGateway.stub:false}") boolean stub) {
-    val factory = context.getAutowireCapableBeanFactory();
-    return stub
-      ? factory.createBean(ApiGatewayServiceStub.class)
-      : factory.createBean(ApiGatewayServiceImpl.class);
-  }
+        switch (mode) {
+            case "live":
+                return factory.createBean(liveClass);
+            case "stub":
+                return factory.createBean(stubClass);
+            case "auto-discover":
+                log.info("Auto discovering upstream service [{}]", prefix);
+                String baseUrl = context.getEnvironment().getProperty(prefix + ".baseUrl");
+                boolean discovered = isHealthy(baseUrl);
+                if (discovered) {
+                    log.info("Discovered service [{}] - will use live one", prefix);
+                } else {
+                    log.info("Did not discover service [{}] - will use stub", prefix);
+                }
+                return discovered ? factory.createBean(liveClass) : factory.createBean(stubClass);
+            default:
+                log.error("Unrecognized mode: {}", mode);
+                return factory.createBean(liveClass);
+        }
+    }
+
+    private boolean isHealthy(String baseUrl) {
+        try {
+            ResponseEntity<?> response = rest.getForEntity(baseUrl + "/actuator/health", Map.class);
+            return response.getStatusCode().is2xxSuccessful();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
