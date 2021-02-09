@@ -8,7 +8,7 @@ RUN mvn -f /usr/src/app/pom.xml dependency:go-offline
 ##### Build stage #####
 FROM maven AS build
 
-COPY src/main /usr/src/app/src/main
+COPY src /usr/src/app/src
 RUN mvn -f /usr/src/app/pom.xml clean package -Dmaven.javadoc.skip=true -V -e
 
 ##### Package artifact as runnable image #####
