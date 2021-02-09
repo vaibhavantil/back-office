@@ -1,24 +1,18 @@
-
-##### Build stage #####
-FROM maven:3.6.3-amazoncorretto-11 AS build
-
-# Copy source folder and pom.xml to this stage
-COPY src /usr/src/app/src
-COPY pom.xml /usr/src/app/
+##### Setup Maven ####
+FROM maven:3.6.3-amazoncorretto-11 AS maven
 
 # Resolve dependencies and cache them
+COPY pom.xml /usr/src/app/
 RUN mvn -f /usr/src/app/pom.xml dependency:go-offline
-# Build and produce an artifact
-RUN mvn -f /usr/src/app/pom.xml clean install -DskipTests=true -Dmaven.javadoc.skip=true -V -e
 
-##### Test stage #####
-FROM maven:3.6.3-amazoncorretto-11 AS test
+##### Build stage #####
+FROM maven AS build
 
-COPY --from=build /usr/src/app/pom.xml /usr/src/app/
-RUN mvn -f /usr/src/app/pom.xml test
+COPY src/main /usr/src/app/src/main
+RUN mvn -f /usr/src/app/pom.xml clean package -Dmaven.javadoc.skip=true -V -e
 
 ##### Package artifact as runnable image #####
-FROM amazoncorretto:11 AS make-image
+FROM amazoncorretto:11 AS make_image
 
 # Not sure what this one does
 RUN curl -o dd-java-agent.jar -L 'https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.datadoghq&a=dd-java-agent&v=LATEST'
