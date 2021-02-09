@@ -1,5 +1,5 @@
 ##### Setup Maven ####
-FROM maven:3.6.3-amazoncorretto-11 AS maven
+FROM maven:3.6.3-amazoncorretto-11 AS dependencies
 
 # Resolve dependencies and cache them
 COPY pom.xml /usr/src/app/
@@ -7,14 +7,14 @@ RUN mvn -f /usr/src/app/pom.xml dependency:go-offline
 
 
 ##### Compile stage #####
-FROM maven AS compile
+FROM dependencies AS compile
 
 COPY src/main /usr/src/app/src/main
 RUN mvn -f /usr/src/app/pom.xml clean compile
 
 
 ##### Test stage #####
-FROM maven AS test
+FROM dependencies AS test
 
 COPY src/test /usr/src/app/src/test
 COPY --from=compile /usr/src/app/target /usr/src/app/target
@@ -22,7 +22,7 @@ RUN mvn -f /usr/src/app/pom.xml test
 
 
 ##### Package stage #####
-FROM maven AS package
+FROM dependencies AS package
 
 COPY --from=compile /usr/src/app/target /usr/src/app/target
 RUN mvn -f /usr/src/app/pom.xml package
