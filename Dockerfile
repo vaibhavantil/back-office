@@ -19,7 +19,7 @@ RUN mvn test
 ##### Assemble artifact #####
 FROM amazoncorretto:11 AS assemble
 
-# Not sure what this one does
+# Fetch the datadog agent
 RUN curl -o dd-java-agent.jar -L 'https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.datadoghq&a=dd-java-agent&v=LATEST'
 
 # Copy the jar from build stage to this one
