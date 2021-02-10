@@ -12,7 +12,12 @@ FROM dependencies AS build
 COPY src/main /usr/src/app/src/main
 RUN mvn -f /usr/src/app/pom.xml clean package
 
+
+##### Test stage #####
+FROM dependencies AS test
+
 COPY src/test /usr/src/app/src/test
+COPY --from=build /usr/src/app/target /usr/src/app/target
 RUN mvn -f /usr/src/app/pom.xml test
 
 
