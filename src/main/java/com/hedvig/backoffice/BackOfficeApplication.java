@@ -45,7 +45,6 @@ public class BackOfficeApplication {
     for (Valve v : valves) {
       tomcat.addContextValves(v);
     }
-      System.out.println("")
     return tomcat;
   }
 
