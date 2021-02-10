@@ -5,9 +5,6 @@ import com.hedvig.backoffice.services.members.MemberServiceStub
 import com.hedvig.backoffice.services.claims.ClaimsService
 import com.hedvig.backoffice.services.claims.ClaimsServiceStub
 import com.hedvig.backoffice.services.claims.ClaimsServiceImpl
-import com.hedvig.backoffice.services.expo.ExpoNotificationService
-import com.hedvig.backoffice.services.expo.ExpoNotificationServiceStub
-import com.hedvig.backoffice.services.expo.ExpoNotificationServiceImpl
 import com.hedvig.backoffice.services.product_pricing.ProductPricingServiceStub
 import com.hedvig.backoffice.services.underwriter.UnderwriterServiceStub
 import com.hedvig.backoffice.services.payments.PaymentServiceStub
@@ -85,15 +82,6 @@ class ExternalServicesConfig @Autowired constructor(private val context: Applica
             prefix = "claims",
             stubClass = ClaimsServiceStub::class,
             liveClass = ClaimsServiceImpl::class
-        )
-    }
-
-    @Bean
-    fun expoNotificationService(): ExpoNotificationService {
-        return create(
-            prefix = "expo",
-            stubClass = ExpoNotificationServiceStub::class,
-            liveClass = ExpoNotificationServiceImpl::class
         )
     }
 

@@ -81,9 +81,6 @@ spring:
 
 # Upstream services
 
-expo:
-    mode: stub # is not auto-discoverable
-
 botservice:
     baseUrl: http://localhost:4081
     questionId: main.question
