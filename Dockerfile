@@ -2,23 +2,18 @@
 FROM maven:3.6.3-amazoncorretto-11 AS dependencies
 
 # Resolve dependencies and cache them
-COPY pom.xml /usr/src/app/
-RUN mvn -f /usr/src/app/pom.xml dependency:go-offline
+COPY pom.xml /
+RUN mvn dependency:go-offline
 
 
 ##### Build stage #####
 FROM dependencies AS build
 
-COPY src/main /usr/src/app/src/main
-RUN mvn -f /usr/src/app/pom.xml clean package
+COPY src/main /src/main
+RUN mvn clean package
 
-
-##### Test stage #####
-FROM dependencies AS test
-
-COPY src/test /usr/src/app/src/test
-COPY --from=build /usr/src/app/target /usr/src/app/target
-RUN mvn -f /usr/src/app/pom.xml test
+COPY src/test /src/test
+RUN mvn test
 
 
 ##### Assemble artifact #####
@@ -28,7 +23,7 @@ FROM amazoncorretto:11 AS assemble
 RUN curl -o dd-java-agent.jar -L 'https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.datadoghq&a=dd-java-agent&v=LATEST'
 
 # Copy the jar from build stage to this one
-COPY --from=build /usr/src/app/target/back-office-0.0.1-SNAPSHOT.jar /usr/app/
+COPY --from=build /target/back-office-0.0.1-SNAPSHOT.jar /
 
 # Define entry point
-ENTRYPOINT java -javaagent:/dd-java-agent.jar -jar /usr/app/back-office-0.0.1-SNAPSHOT.jar
+ENTRYPOINT java -javaagent:/dd-java-agent.jar -jar back-office-0.0.1-SNAPSHOT.jar
