@@ -10,9 +10,11 @@ import javax.money.MonetaryAmount;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.javamoney.moneta.Money;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class ClaimPayment {
 
@@ -79,6 +81,7 @@ public class ClaimPayment {
     @NotNull
     public String note;
 
+    @NotNull
     public boolean exGratia;
 
     @NotNull
@@ -87,6 +90,7 @@ public class ClaimPayment {
     @NotNull
     String handlerReference;
 
+    @NotNull
     boolean sanctionListSkipped;
 
     //The following fields are used when getting a claim, and are null when creating a payment:
