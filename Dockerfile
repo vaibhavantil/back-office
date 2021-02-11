@@ -1,17 +1,15 @@
-##### Setup Maven ####
-FROM maven:3.6.3-amazoncorretto-11 AS dependencies
+##### Build stage ####
+FROM maven:3.6.3-amazoncorretto-11 AS build
 
 # Resolve dependencies and cache them
 COPY pom.xml /
 RUN mvn dependency:go-offline
 
-
-##### Build stage #####
-FROM dependencies AS build
-
+# Copy application source and build it
 COPY src/main /src/main
 RUN mvn clean package
 
+# Copy test source and build+run tests
 COPY src/test /src/test
 RUN mvn test
 
