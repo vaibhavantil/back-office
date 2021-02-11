@@ -20,10 +20,10 @@ public class ClaimPayment {
         @NotNull MonetaryAmount amount,
         @NotNull MonetaryAmount deductible,
         @NotNull String note,
-        @NotNull boolean exGratia,
+        boolean exGratia,
         @NotNull ClaimPaymentType type,
         @NotNull String handlerReference,
-        @NotNull boolean sanctionListSkipped) {
+        boolean sanctionListSkipped) {
         this.claimId = claimId;
         this.amount = amount;
         this.deductible = deductible;
@@ -50,7 +50,6 @@ public class ClaimPayment {
     @NotNull
     public String note;
 
-    @NotNull
     public boolean exGratia;
 
     @NotNull
@@ -59,7 +58,6 @@ public class ClaimPayment {
     @NotNull
     String handlerReference;
 
-    @NotNull
     boolean sanctionListSkipped;
 
     //The following fields are used when getting a claim, and are null when creating a payment:
