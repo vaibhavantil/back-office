@@ -4,9 +4,44 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.hedvig.backoffice.config.feign.ExternalServiceNotFoundException;
 import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
-import com.hedvig.backoffice.services.claims.dto.*;
+import com.hedvig.backoffice.services.claims.dto.Claim;
+import com.hedvig.backoffice.services.claims.dto.ClaimData;
+import com.hedvig.backoffice.services.claims.dto.ClaimEvent;
+import com.hedvig.backoffice.services.claims.dto.ClaimFileCategoryDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimNote;
+import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentResponse;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentStatus;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
+import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
+import com.hedvig.backoffice.services.claims.dto.ClaimSource;
+import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimType;
+import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.EmployeeClaimRequestDTO;
+import com.hedvig.backoffice.services.claims.dto.MarkClaimFileAsDeletedDTO;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
+import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -14,16 +49,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
@@ -46,7 +71,7 @@ public class ClaimsServiceStub implements ClaimsService {
         }
 
         claims = IntStream.range(0, 10).mapToObj(i -> {
-            String id = UUID.randomUUID().toString();
+            String claimId = UUID.randomUUID().toString();
             String memberId = "123456";
 
             val note = new ClaimNote();
@@ -55,20 +80,20 @@ public class ClaimsServiceStub implements ClaimsService {
 
             val notes = Lists.newArrayList(note);
 
-            val payment = new ClaimPayment();
-            payment.setAmount(BigDecimal.valueOf(100));
-            payment.setTransactionId(UUID.randomUUID());
-            payment.setDeductible(BigDecimal.valueOf(1500));
-            payment.setType(ClaimPaymentType.Manual);
-            payment.setHandlerReference("testPerson@Hedvig.com");
-            payment.setDate(LocalDateTime.now());
-            payment.setExGratia(false);
-            payment.setNote("Dummu Note here");
-            payment.setStatus(ClaimPaymentStatus.COMPLETED);
-            payment.setPayoutDate(LocalDateTime.now());
-            payment.setClaimID(id);
-            payment.setId(UUID.randomUUID().toString());
-            payment.setUserId(memberId);
+            val payment = new ClaimPayment(
+                claimId,
+                Money.of(100, "SEK"),
+                Money.of(1500, "SEK"),
+                "Dummy Note here",
+                false,
+                ClaimPaymentType.Manual,
+                "testPerson@Hedvig.com",
+                false,
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                ClaimPaymentStatus.COMPLETED,
+                null);
+
             val payments = Lists.newArrayList(payment);
 
             long randomSignedOnDate = ThreadLocalRandom.current().nextLong(minSignedOnDay, maxSignedOnDay);
@@ -91,7 +116,7 @@ public class ClaimsServiceStub implements ClaimsService {
                 null
             );
 
-            claim.setId(id);
+            claim.setId(claimId);
             claim.setUserId(memberId);
             claim.setDate(LocalDateTime.of(randomSignedOnLocalDate, randomSignedOnLocalTime));
 
@@ -178,18 +203,10 @@ public class ClaimsServiceStub implements ClaimsService {
     };
 
     @Override
-    public ClaimPaymentResponse addPayment(String memberId, ClaimPayment dto, String token) {
-        Claim claim = find(dto.getClaimID(), token);
-        dto.setDate(LocalDateTime.now());
-        switch (dto.getType()) {
-            case Manual: {
-                dto.setHandlerReference(null);
-            }
-            case Automatic: {
-                dto.setHandlerReference("testPerson@hedvig.com");
-                logger.info("isSanctionListSkipped ", dto.isSanctionListSkipped());
-            }
-        }
+    public ClaimPaymentResponse addPayment(ClaimPayment dto, String token) {
+        Claim claim = find(dto.claimId, token);
+        dto.setHandlerReference("testPerson@hedvig.com");
+
         claim.getPayments().add(dto);
         addEvent(claim, "[test] payment added");
         return ClaimPaymentResponse.SUCCESSFUL;

@@ -63,7 +63,7 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
   }
 
   @Override
-  public void addPayment(ClaimPayment dto, String token) {
+  public void addClaimPayment(ClaimPayment dto, String token) {
     log.error("request to claim-service failed");
   }
 
@@ -98,10 +98,6 @@ public class ClaimsServiceClientFallback implements ClaimsServiceClient {
     return null;
   }
 
-  @Override
-  public void addAutomaticPayment(String id, ClaimPaymentRequest dto) {
-    log.error("request to claim-service failed");
-  }
 
   @Override
   public CreateBackofficeClaimResponseDTO createClaim(CreateBackofficeClaimDTO req, String token) {

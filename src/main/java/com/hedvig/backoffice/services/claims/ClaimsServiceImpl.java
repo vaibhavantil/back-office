@@ -75,36 +75,15 @@ public class ClaimsServiceImpl implements ClaimsService {
     }
 
     @Override
-    public ClaimPaymentResponse addPayment(String memberId, ClaimPayment dto, String token) {
-        switch (dto.getType()) {
-            case Manual: {
-                try {
-                    client.addPayment(dto, token);
-                    return ClaimPaymentResponse.SUCCESSFUL;
-                } catch (FeignException ex) {
-                    if (ex.status() == HttpStatus.FORBIDDEN.value()) {
-                        return ClaimPaymentResponse.FORBIDDEN;
-                    }
-                    return ClaimPaymentResponse.FAILED;
-                }
+    public ClaimPaymentResponse addPayment(ClaimPayment dto, String token) {
+        try {
+            client.addClaimPayment(dto, token);
+            return ClaimPaymentResponse.SUCCESSFUL;
+        } catch (FeignException ex) {
+            if (ex.status() == HttpStatus.FORBIDDEN.value()) {
+                return ClaimPaymentResponse.FORBIDDEN;
             }
-
-            case Automatic: {
-                try {
-                    client.addAutomaticPayment(memberId,
-                        ClaimPaymentRequest.fromClaimPayment(dto));
-                    return ClaimPaymentResponse.SUCCESSFUL;
-                } catch (FeignException ex) {
-                    if (ex.status() == HttpStatus.FORBIDDEN.value()) {
-                        return ClaimPaymentResponse.FORBIDDEN;
-                    }
-                    return ClaimPaymentResponse.FAILED;
-                }
-            }
-
-            default:
-                throw new RuntimeException(
-                    String.format("Unhandled Claim Payment Type: %s", dto.getType()));
+            return ClaimPaymentResponse.FAILED;
         }
     }
 
