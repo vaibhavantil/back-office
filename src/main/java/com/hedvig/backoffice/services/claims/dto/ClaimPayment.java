@@ -10,9 +10,11 @@ import javax.money.MonetaryAmount;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.javamoney.moneta.Money;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class ClaimPayment {
 
@@ -67,11 +69,13 @@ public class ClaimPayment {
     public String claimId;
 
     @NotNull
+    @JsonProperty("amount")
     @JsonDeserialize(using = DoubleOrMonetaryAmountToMonetaryAmountDeserializer.class)
     @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
     public MonetaryAmount amount;
 
     @NotNull
+    @JsonProperty("amount")
     @JsonDeserialize(using = DoubleOrMonetaryAmountToMonetaryAmountDeserializer.class)
     @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
     public MonetaryAmount deductible;
@@ -79,6 +83,7 @@ public class ClaimPayment {
     @NotNull
     public String note;
 
+    @NotNull
     public boolean exGratia;
 
     @NotNull
@@ -87,6 +92,7 @@ public class ClaimPayment {
     @NotNull
     String handlerReference;
 
+    @NotNull
     boolean sanctionListSkipped;
 
     //The following fields are used when getting a claim, and are null when creating a payment:
