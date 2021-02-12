@@ -75,7 +75,7 @@ public class ClaimPayment {
     public MonetaryAmount amount;
 
     @NotNull
-    @JsonProperty("amount")
+    @JsonProperty("deductible")
     @JsonDeserialize(using = DoubleOrMonetaryAmountToMonetaryAmountDeserializer.class)
     @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
     public MonetaryAmount deductible;
