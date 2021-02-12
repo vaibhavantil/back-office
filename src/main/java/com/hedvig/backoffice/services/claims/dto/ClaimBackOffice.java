@@ -1,16 +1,13 @@
 package com.hedvig.backoffice.services.claims.dto;
 
-import java.time.LocalDateTime;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Data
 public class ClaimBackOffice {
-
-  protected String id;
-
-  protected String claimID;
-
-  protected LocalDateTime date;
-
-  protected String userId;
+    public String id;
+    public String claimID;
+    public LocalDateTime date;
+    public String userId;
 }

@@ -27,10 +27,13 @@ public interface ClaimsServiceClient {
   List<Claim> list(@RequestHeader("Authorization") String token);
 
   @GetMapping("/_/claims/search")
-  ClaimSearchResultDTO search(@RequestParam("page") Integer page,
-                              @RequestParam("pageSize") Integer pageSize, @RequestParam("sortBy") ClaimSortColumn sortBy,
-                              @RequestParam("sortDirection") Sort.Direction sortDirection,
-                              @RequestHeader("Authorization") String token);
+  ClaimSearchResultDTO search(
+      @RequestParam("page") Integer page,
+      @RequestParam("pageSize") Integer pageSize,
+      @RequestParam("sortBy") ClaimSortColumn sortBy,
+      @RequestParam("sortDirection") Sort.Direction sortDirection,
+      @RequestHeader("Authorization") String token
+  );
 
   @GetMapping("/_/claims/claim?claimID={id}")
   Claim find(@PathVariable("id") String id, @RequestHeader("Authorization") String token);
@@ -38,11 +41,8 @@ public interface ClaimsServiceClient {
   @GetMapping("/_/claims/claimTypes")
   List<ClaimType> types(@RequestHeader("Authorization") String token);
 
-  @PostMapping("/_/claims/addpayment")
-  void addPayment(@RequestBody ClaimPayment dto, @RequestHeader("Authorization") String token);
-
-  @PostMapping("/_/claims/{memberId}/addAutomaticPayment")
-  void addAutomaticPayment(@PathVariable("memberId") String memberId, @RequestBody ClaimPaymentRequest dto);
+  @PostMapping("/_/claims/addClaimPayment")
+  void addClaimPayment(@RequestBody ClaimPayment dto, @RequestHeader("Authorization") String token);
 
   @PostMapping("/_/claims/addnote")
   void addNote(@RequestBody ClaimNote dto, @RequestHeader("Authorization") String token);
