@@ -3,6 +3,7 @@ package com.hedvig.backoffice.web;
 import com.hedvig.backoffice.security.AuthorizationException;
 import com.hedvig.backoffice.services.payments.PaymentService;
 import com.hedvig.backoffice.services.payments.dto.PayoutMemberRequest;
+import com.hedvig.backoffice.services.payments.dto.PayoutRequest;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
