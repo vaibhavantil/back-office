@@ -951,6 +951,11 @@ type Claim {
     coveringEmployee: Boolean!
     claimFiles: [ClaimFileUpload!]!
     contract: Contract
+    itemSet: ClaimItemSet!
+}
+
+type ClaimItemSet {
+    items: [ClaimItem!]!
 }
 
 type ClaimNote {

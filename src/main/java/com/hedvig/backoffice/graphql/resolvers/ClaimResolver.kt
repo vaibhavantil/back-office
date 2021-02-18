@@ -11,6 +11,7 @@ import com.hedvig.backoffice.graphql.types.claims.AccidentalDamageClaim
 import com.hedvig.backoffice.graphql.types.claims.ApplianceClaim
 import com.hedvig.backoffice.graphql.types.claims.AssaultClaim
 import com.hedvig.backoffice.graphql.types.claims.BurglaryClaim
+import com.hedvig.backoffice.graphql.types.claims.ClaimItemSet
 import com.hedvig.backoffice.graphql.types.claims.ConfirmedFraudClaim
 import com.hedvig.backoffice.graphql.types.claims.EarthquakeClaim
 import com.hedvig.backoffice.graphql.types.claims.FireDamageClaim
@@ -31,9 +32,9 @@ import com.hedvig.backoffice.graphql.types.claims.WaterDamageClaim
 import com.hedvig.backoffice.graphql.types.claims.WaterDamageKitchenClaim
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.chat.data.Message.logger
+import com.hedvig.backoffice.services.itemizer.ItemizerService
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService
 import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract
-import com.hedvig.backoffice.services.product_pricing.dto.contract.GenericAgreement
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture
@@ -43,7 +44,8 @@ import java.util.stream.Collectors
 class ClaimResolver(
     private val memberLoader: MemberLoader,
     private val uploadedFilePostprocessor: UploadedFilePostprocessor,
-    private val productPricingService: ProductPricingService
+    private val productPricingService: ProductPricingService,
+    private val itemizerService: ItemizerService
 ) : GraphQLResolver<Claim> {
     fun getMember(claim: Claim): CompletableFuture<Member> {
         return try {
@@ -152,4 +154,8 @@ class ClaimResolver(
             productPricingService.getContractById(claim.contractId)
         } else null
     }
+
+    fun getItemSet(claim: Claim): ClaimItemSet = ClaimItemSet(
+        items = itemizerService.getClaimItems(claim.id)
+    )
 }
