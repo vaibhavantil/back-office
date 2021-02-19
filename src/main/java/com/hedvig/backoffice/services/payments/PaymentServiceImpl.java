@@ -62,14 +62,14 @@ public class PaymentServiceImpl implements PaymentService {
     public ResponseEntity<UUID> payoutMember(String memberId, String handler, PayoutMemberRequest payoutMemberRequest) {
         PayoutRequest payoutRequest = new PayoutRequest(
             payoutMemberRequest.getAmount(),
-            true,
+            true,  // TODO:  SanctionBypassed from front end
             payoutMemberRequest.getCategory(),
             payoutMemberRequest.getReferenceId(),
             payoutMemberRequest.getNote(),
             handler,
             payoutMemberRequest.getCarrier(),
             payoutMemberRequest.getPayoutDetails()
-            ); // TODO:  SanctionBypassed from front end
+            );
         return paymentServiceClient.payoutMember(
             memberId,
             payoutRequest
