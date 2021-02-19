@@ -29,7 +29,7 @@ public class ClaimPayment {
             dto.getNote(),
             dto.getType() != null ? ClaimPaymentType.valueOf(dto.getType().toString()) : ClaimPaymentType.Manual,
             dto.getRegistrationDate().toInstant(ZoneOffset.UTC),
-            dto.isExGratia(),
+            dto.getExGratia(),
             dto.getPayoutStatus(),
             //FIXME: This is always null in the DB. Should we remove it?
             dto.getTransactionId() != null ? Optional.of(dto.getTransactionId()) : Optional.empty());

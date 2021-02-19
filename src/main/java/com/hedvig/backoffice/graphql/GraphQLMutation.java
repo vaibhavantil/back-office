@@ -30,17 +30,7 @@ import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.apigateway.ApiGatewayService;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
-import com.hedvig.backoffice.services.claims.dto.ClaimData;
-import com.hedvig.backoffice.services.claims.dto.ClaimFileCategoryDTO;
-import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
-import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
-import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimSource;
-import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
-import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
-import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
-import com.hedvig.backoffice.services.claims.dto.EmployeeClaimRequestDTO;
-import com.hedvig.backoffice.services.claims.dto.MarkClaimFileAsDeletedDTO;
+import com.hedvig.backoffice.services.claims.dto.*;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.request.InsertItemCategoriesRequest;
 import com.hedvig.backoffice.services.itemizer.dto.request.InsertValuationRulesRequest;
@@ -53,6 +43,7 @@ import com.hedvig.backoffice.services.itemizer.dto.request.UpsertValuationRuleRe
 import com.hedvig.backoffice.services.members.MemberService;
 import com.hedvig.backoffice.services.members.dto.EditMemberInfoRequest;
 import com.hedvig.backoffice.services.payments.PaymentService;
+import com.hedvig.backoffice.services.payments.dto.SelectedPayoutDetails;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import com.hedvig.backoffice.services.priceEngine.PriceEngineService;
 import com.hedvig.backoffice.services.priceEngine.dto.CreateNorwegianGripenRequest;
@@ -82,6 +73,7 @@ import graphql.GraphQLError;
 import graphql.execution.DataFetcherResult;
 import graphql.language.SourceLocation;
 import graphql.schema.DataFetchingEnvironment;
+
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -94,6 +86,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import javax.money.MonetaryAmount;
+
 import jersey.repackaged.com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -297,8 +290,53 @@ public class GraphQLMutation implements GraphQLMutationResolver {
             paymentInput.getExGratia(),
             ClaimPaymentType.valueOf(paymentInput.getType().toString()),
             GraphQLConfiguration.getEmail(env, personnelService),
-            paymentInput.isSanctionListSkipped()
+            paymentInput.isSanctionListSkipped(),
+            SelectedPayoutDetails.NotSelected.INSTANCE,
+            null,
+            null,
+            null,
+            null
         );
+        return addPayment(id, claimPayment, env);
+    }
+
+    public CompletableFuture<DataFetcherResult<Claim>> createClaimSwishPayment(
+        UUID id,
+        ClaimSwishPayment paymentInput,
+        DataFetchingEnvironment env
+    ) throws AuthorizationException {
+        log.info("Personnel with email '{}'' adding claim payment",
+            GraphQLConfiguration.getEmail(env, personnelService));
+        //don't know why we do this.
+        val claim =
+            claimsService.find(id.toString(), GraphQLConfiguration.getIdToken(env, personnelService));
+        val claimPayment = new ClaimPayment(
+            id.toString(),
+            paymentInput.getAmount(),
+            paymentInput.getDeductible(),
+            paymentInput.getNote(),
+            paymentInput.getExGratia(),
+            ClaimPaymentType.Automatic,
+            GraphQLConfiguration.getEmail(env, personnelService),
+            paymentInput.getSanctionListSkipped(),
+            new SelectedPayoutDetails.Swish(
+                paymentInput.getPhoneNumber(),
+                paymentInput.getSsn(),
+                paymentInput.getMessage()
+            ),
+            null,
+            null,
+            null,
+            null
+        );
+        return addPayment(id, claimPayment, env);
+    }
+
+    private CompletableFuture<DataFetcherResult<Claim>> addPayment(
+        UUID id,
+        ClaimPayment claimPayment,
+        DataFetchingEnvironment env
+    ) {
         switch (claimsService.addPayment(claimPayment,
             GraphQLConfiguration.getIdToken(env, personnelService))) {
             case SUCCESSFUL: {
