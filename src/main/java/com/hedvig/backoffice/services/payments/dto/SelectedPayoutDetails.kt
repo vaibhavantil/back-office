@@ -12,7 +12,6 @@ sealed class SelectedPayoutDetails {
 
     data class Swish(
         val phoneNumber: String,
-        val ssn: String,
         val message: String
     ) : SelectedPayoutDetails()
 

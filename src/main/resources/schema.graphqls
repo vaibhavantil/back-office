@@ -1167,7 +1167,6 @@ input ClaimSwishPaymentInput {
     exGratia: Boolean!
     sanctionListSkipped: Boolean!
     phoneNumber: String!
-    ssn: String!
     message: String!
 }
 

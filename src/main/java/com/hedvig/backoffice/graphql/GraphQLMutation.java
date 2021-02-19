@@ -311,7 +311,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
             paymentInput.getSanctionListSkipped(),
             new SelectedPayoutDetails.Swish(
                 paymentInput.getPhoneNumber(),
-                paymentInput.getSsn(),
                 paymentInput.getMessage()
             ),
             null,

@@ -8,7 +8,6 @@ data class ClaimSwishPaymentInput(
     val note: String,
     val exGratia: Boolean,
     val sanctionListSkipped: Boolean,
-    val ssn: String,
     val phoneNumber: String,
     val message: String
 )
