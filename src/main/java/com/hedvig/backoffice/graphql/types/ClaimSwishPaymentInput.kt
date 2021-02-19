@@ -1,8 +1,8 @@
-package com.hedvig.backoffice.services.claims.dto
+package com.hedvig.backoffice.graphql.types
 
 import javax.money.MonetaryAmount
 
-data class ClaimSwishPayment(
+data class ClaimSwishPaymentInput(
     val amount: MonetaryAmount,
     val deductible: MonetaryAmount,
     val note: String,

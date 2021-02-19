@@ -6,21 +6,8 @@ import com.google.common.collect.ImmutableMap;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
-import com.hedvig.backoffice.graphql.types.AssignVoucherFreeMonths;
-import com.hedvig.backoffice.graphql.types.AssignVoucherPercentageDiscount;
-import com.hedvig.backoffice.graphql.types.AssignVoucherVisibleNoDiscount;
+import com.hedvig.backoffice.graphql.types.*;
 import com.hedvig.backoffice.graphql.types.Claim;
-import com.hedvig.backoffice.graphql.types.ClaimInformationInput;
-import com.hedvig.backoffice.graphql.types.ClaimNoteInput;
-import com.hedvig.backoffice.graphql.types.ClaimPaymentInput;
-import com.hedvig.backoffice.graphql.types.ClaimState;
-import com.hedvig.backoffice.graphql.types.ClaimTypes;
-import com.hedvig.backoffice.graphql.types.Member;
-import com.hedvig.backoffice.graphql.types.MemberChargeApproval;
-import com.hedvig.backoffice.graphql.types.PaymentCompletionResponse;
-import com.hedvig.backoffice.graphql.types.Quote;
-import com.hedvig.backoffice.graphql.types.SendMessageInput;
-import com.hedvig.backoffice.graphql.types.SendMessageResponse;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.graphql.types.account.MonthlyEntryInput;
 import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
@@ -31,6 +18,9 @@ import com.hedvig.backoffice.services.apigateway.ApiGatewayService;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
 import com.hedvig.backoffice.services.claims.dto.*;
+import com.hedvig.backoffice.services.claims.dto.ClaimNote;
+import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.request.InsertItemCategoriesRequest;
 import com.hedvig.backoffice.services.itemizer.dto.request.InsertValuationRulesRequest;
@@ -302,7 +292,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
     public CompletableFuture<DataFetcherResult<Claim>> createClaimSwishPayment(
         UUID id,
-        ClaimSwishPayment paymentInput,
+        ClaimSwishPaymentInput paymentInput,
         DataFetchingEnvironment env
     ) throws AuthorizationException {
         log.info("Personnel with email '{}'' adding claim payment",
