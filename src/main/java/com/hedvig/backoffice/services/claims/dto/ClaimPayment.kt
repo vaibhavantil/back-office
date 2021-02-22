@@ -21,7 +21,7 @@ data class ClaimPayment(
     val type: ClaimPaymentType,
     var handlerReference: String,
     val sanctionListSkipped: Boolean,
-    val payoutDetails: SelectedPayoutDetails,
+    val payoutDetails: SelectedPayoutDetails?,
     //The following fields are used when getting a claim, and are null when creating a payment:
     @JsonProperty("id")
     var paymentId: String? = null,
