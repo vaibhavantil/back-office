@@ -6,8 +6,22 @@ import com.google.common.collect.ImmutableMap;
 import com.hedvig.backoffice.domain.Personnel;
 import com.hedvig.backoffice.graphql.dataloaders.ClaimLoader;
 import com.hedvig.backoffice.graphql.dataloaders.MemberLoader;
-import com.hedvig.backoffice.graphql.types.*;
+import com.hedvig.backoffice.graphql.types.AssignVoucherFreeMonths;
+import com.hedvig.backoffice.graphql.types.AssignVoucherPercentageDiscount;
+import com.hedvig.backoffice.graphql.types.AssignVoucherVisibleNoDiscount;
 import com.hedvig.backoffice.graphql.types.Claim;
+import com.hedvig.backoffice.graphql.types.ClaimInformationInput;
+import com.hedvig.backoffice.graphql.types.ClaimNoteInput;
+import com.hedvig.backoffice.graphql.types.ClaimPaymentInput;
+import com.hedvig.backoffice.graphql.types.ClaimState;
+import com.hedvig.backoffice.graphql.types.ClaimSwishPaymentInput;
+import com.hedvig.backoffice.graphql.types.ClaimTypes;
+import com.hedvig.backoffice.graphql.types.Member;
+import com.hedvig.backoffice.graphql.types.MemberChargeApproval;
+import com.hedvig.backoffice.graphql.types.PaymentCompletionResponse;
+import com.hedvig.backoffice.graphql.types.Quote;
+import com.hedvig.backoffice.graphql.types.SendMessageInput;
+import com.hedvig.backoffice.graphql.types.SendMessageResponse;
 import com.hedvig.backoffice.graphql.types.account.AccountEntryInput;
 import com.hedvig.backoffice.graphql.types.account.MonthlyEntryInput;
 import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
@@ -17,10 +31,17 @@ import com.hedvig.backoffice.services.account.dto.ApproveChargeRequestDto;
 import com.hedvig.backoffice.services.apigateway.ApiGatewayService;
 import com.hedvig.backoffice.services.chat.ChatServiceV2;
 import com.hedvig.backoffice.services.claims.ClaimsService;
-import com.hedvig.backoffice.services.claims.dto.*;
-import com.hedvig.backoffice.services.claims.dto.ClaimNote;
+import com.hedvig.backoffice.services.claims.dto.ClaimSource;
 import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
 import com.hedvig.backoffice.services.claims.dto.ClaimPaymentType;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.EmployeeClaimRequestDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
+import com.hedvig.backoffice.services.claims.dto.MarkClaimFileAsDeletedDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimFileCategoryDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimData;
 import com.hedvig.backoffice.services.itemizer.ItemizerService;
 import com.hedvig.backoffice.services.itemizer.dto.request.InsertItemCategoriesRequest;
 import com.hedvig.backoffice.services.itemizer.dto.request.InsertValuationRulesRequest;
@@ -82,7 +103,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-
 
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
@@ -281,11 +301,11 @@ public class GraphQLMutation implements GraphQLMutationResolver {
             ClaimPaymentType.valueOf(paymentInput.getType().toString()),
             GraphQLConfiguration.getEmail(env, personnelService),
             paymentInput.isSanctionListSkipped(),
-            SelectedPayoutDetails.NotSelected.INSTANCE,
             null,
             null,
             null,
-            null
+            null,
+            SelectedPayoutDetails.NotSelected.INSTANCE
         );
         return addPayment(id, claimPayment, env);
     }
@@ -297,9 +317,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
     ) throws AuthorizationException {
         log.info("Personnel with email '{}'' adding claim payment",
             GraphQLConfiguration.getEmail(env, personnelService));
-        //don't know why we do this.
-        val claim =
-            claimsService.find(id.toString(), GraphQLConfiguration.getIdToken(env, personnelService));
         val claimPayment = new ClaimPayment(
             id.toString(),
             paymentInput.getAmount(),
@@ -309,14 +326,14 @@ public class GraphQLMutation implements GraphQLMutationResolver {
             ClaimPaymentType.Automatic,
             GraphQLConfiguration.getEmail(env, personnelService),
             paymentInput.getSanctionListSkipped(),
+            null,
+            null,
+            null,
+            null,
             new SelectedPayoutDetails.Swish(
                 paymentInput.getPhoneNumber(),
                 paymentInput.getMessage()
-            ),
-            null,
-            null,
-            null,
-            null
+            )
         );
         return addPayment(id, claimPayment, env);
     }

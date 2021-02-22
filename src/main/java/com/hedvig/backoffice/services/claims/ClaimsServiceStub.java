@@ -91,11 +91,11 @@ public class ClaimsServiceStub implements ClaimsService {
                 ClaimPaymentType.Manual,
                 "testPerson@Hedvig.com",
                 false,
-                SelectedPayoutDetails.NotSelected.INSTANCE,
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 ClaimPaymentStatus.COMPLETED,
-                null);
+                null,
+                SelectedPayoutDetails.NotSelected.INSTANCE);
 
             val payments = Lists.newArrayList(payment);
 
