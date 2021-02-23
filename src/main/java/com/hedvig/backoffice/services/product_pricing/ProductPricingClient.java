@@ -144,6 +144,12 @@ public interface ProductPricingClient {
         @PathVariable String memberId
     );
 
+    @GetMapping("/_/contracts/{contractId}/agreement")
+    GenericAgreement getAgreementForContract(
+        @PathVariable UUID contractId,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate activeOnDate
+    );
+
     @PostMapping("/_/certificates/regenerate/{agreementId}")
     void regenerateCertificate(
         @PathVariable UUID agreementId,
@@ -206,10 +212,4 @@ public interface ProductPricingClient {
 
     @GetMapping("/cost/member/{memberId}/period/{period}")
     List<AgreementPremiumCost> getAgreementPremiumCostsOfPeriod(@PathVariable String memberId, @PathVariable YearMonth period);
-
-    @GetMapping("/contracts/{contractId}/agreement")
-    GenericAgreement getAgreementForContract(
-        @PathVariable UUID contractId,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate activeOnDate
-    );
 }
