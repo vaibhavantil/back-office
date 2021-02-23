@@ -158,7 +158,7 @@ class ClaimResolver(
         items = itemizerService.getClaimItems(claim.id)
     )
 
-    fun getCarrier(claim: Claim): GenericAgreement? {
+    fun getAgreement(claim: Claim): GenericAgreement? {
         val contractId = claim.contractId ?: return null
         val dateClaimData = ClaimData.withoutDuplicates(claim._claimData).find { it.name == "DATE" } ?: return null
         val dateOfLoss = LocalDateTime.parse(dateClaimData.value).toLocalDate()
