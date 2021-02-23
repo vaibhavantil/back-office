@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.javamoney.moneta.Money;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
@@ -409,6 +411,11 @@ public class ProductPricingServiceStub implements ProductPricingService {
 
     @Override
     public List<AgreementPremiumCost> getAgreementPremiumCostsOfPeriod(String memberId, YearMonth period) {
+        return null;
+    }
+
+    @Override
+    public GenericAgreement getAgreementForDate(@NotNull UUID contractId, @NotNull LocalDate dateOfLoss) {
         return null;
     }
 }

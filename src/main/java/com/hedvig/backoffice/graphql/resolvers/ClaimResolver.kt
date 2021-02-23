@@ -32,11 +32,14 @@ import com.hedvig.backoffice.graphql.types.claims.WaterDamageClaim
 import com.hedvig.backoffice.graphql.types.claims.WaterDamageKitchenClaim
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.chat.data.Message.logger
+import com.hedvig.backoffice.services.claims.dto.ClaimData
 import com.hedvig.backoffice.services.itemizer.ItemizerService
 import com.hedvig.backoffice.services.product_pricing.ProductPricingService
 import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract
+import com.hedvig.backoffice.services.product_pricing.dto.contract.GenericAgreement
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 import java.util.concurrent.CompletableFuture
 import java.util.stream.Collectors
 
@@ -149,13 +152,16 @@ class ClaimResolver(
         }
     }
 
-    fun getContract(claim: Claim): Contract? {
-        return if (claim.contractId != null) {
-            productPricingService.getContractById(claim.contractId)
-        } else null
-    }
+    fun getContract(claim: Claim): Contract? = claim.contractId?.let { id -> productPricingService.getContractById(id) }
 
     fun getItemSet(claim: Claim): ClaimItemSet = ClaimItemSet(
         items = itemizerService.getClaimItems(claim.id)
     )
+
+    fun getCarrier(claim: Claim): GenericAgreement? {
+        val contractId = claim.contractId ?: return null
+        val dateClaimData = ClaimData.withoutDuplicates(claim._claimData).find { it.name == "DATE" } ?: return null
+        val dateOfLoss = LocalDateTime.parse(dateClaimData.value).toLocalDate()
+        return productPricingService.getAgreementForDate(contractId, dateOfLoss)
+    }
 }
