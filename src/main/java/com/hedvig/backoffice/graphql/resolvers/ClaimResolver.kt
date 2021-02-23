@@ -152,19 +152,16 @@ class ClaimResolver(
         }
     }
 
-    fun getContract(claim: Claim): Contract? = if (claim.contractId != null) {
-        productPricingService.getContractById(claim.contractId)
-    } else null
+    fun getContract(claim: Claim): Contract? = claim.contractId?.let { id -> productPricingService.getContractById(id) }
 
     fun getItemSet(claim: Claim): ClaimItemSet = ClaimItemSet(
         items = itemizerService.getClaimItems(claim.id)
     )
 
     fun getCarrier(claim: Claim): GenericAgreement? {
-        if (claim.contractId != null) {
-            val dateClaimData = ClaimData.withoutDuplicates(claim._claimData).find { it.name == "DATE" } ?: return null
-            val dateOfLoss = LocalDateTime.parse(dateClaimData.value).toLocalDate()
-            return productPricingService.getAgreementForDate(claim.contractId!!, dateOfLoss)
-        } else return null
+        val contractId = claim.contractId ?: return null
+        val dateClaimData = ClaimData.withoutDuplicates(claim._claimData).find { it.name == "DATE" } ?: return null
+        val dateOfLoss = LocalDateTime.parse(dateClaimData.value).toLocalDate()
+        return productPricingService.getAgreementForDate(contractId, dateOfLoss)
     }
 }
