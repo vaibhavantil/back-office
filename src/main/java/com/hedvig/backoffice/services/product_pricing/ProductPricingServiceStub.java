@@ -415,7 +415,7 @@ public class ProductPricingServiceStub implements ProductPricingService {
     }
 
     @Override
-    public GenericAgreement getAgreementForDate(@NotNull UUID contractId, @NotNull LocalDate dateOfLoss) {
+    public GenericAgreement getAgreementForContractActiveOnDate(@NotNull UUID contractId, @NotNull LocalDate activeOnDate) {
         return null;
     }
 }

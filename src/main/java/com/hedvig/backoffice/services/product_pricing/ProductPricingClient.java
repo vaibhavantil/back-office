@@ -207,6 +207,9 @@ public interface ProductPricingClient {
     @GetMapping("/cost/member/{memberId}/period/{period}")
     List<AgreementPremiumCost> getAgreementPremiumCostsOfPeriod(@PathVariable String memberId, @PathVariable YearMonth period);
 
-    @GetMapping("/contracts/{contractId}/agreement/date/{date}")
-    GenericAgreement getAgreementForDate(@PathVariable UUID contractId, @PathVariable LocalDate date);
+    @GetMapping("/contracts/{contractId}/agreement")
+    GenericAgreement getAgreementForContract(
+        @PathVariable UUID contractId,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate activeOnDate
+    );
 }

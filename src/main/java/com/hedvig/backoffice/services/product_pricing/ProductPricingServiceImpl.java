@@ -10,7 +10,6 @@ import com.hedvig.backoffice.web.dto.ProductState;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
@@ -249,9 +248,9 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
 
     @Override
-    public GenericAgreement getAgreementForDate(@NotNull UUID contractId, @NotNull LocalDate dateOfLoss) {
+    public GenericAgreement getAgreementForContractActiveOnDate(@NotNull UUID contractId, @NotNull LocalDate activeOnDate) {
         try {
-            return this.client.getAgreementForDate(contractId, dateOfLoss);
+            return this.client.getAgreementForContract(contractId, activeOnDate);
         } catch (ExternalServiceNotFoundException exception) {
             return null;
         }

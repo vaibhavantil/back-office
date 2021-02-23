@@ -97,5 +97,5 @@ public interface ProductPricingService {
 
     List<AgreementPremiumCost> getAgreementPremiumCostsOfPeriod(String memberId, YearMonth period);
 
-    GenericAgreement getAgreementForDate(@NotNull UUID contractId, @NotNull LocalDate dateOfLoss);
+    GenericAgreement getAgreementForContractActiveOnDate(@NotNull UUID contractId, @NotNull LocalDate activeOnDate);
 }
