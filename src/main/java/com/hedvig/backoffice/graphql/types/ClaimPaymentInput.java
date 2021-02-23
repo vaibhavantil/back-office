@@ -11,4 +11,5 @@ public class ClaimPaymentInput {
   Boolean exGratia;
   MonetaryAmount deductible;
   boolean sanctionListSkipped;
+  String carrier;
 }

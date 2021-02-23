@@ -297,7 +297,8 @@ public class GraphQLMutation implements GraphQLMutationResolver {
             paymentInput.getExGratia(),
             ClaimPaymentType.valueOf(paymentInput.getType().toString()),
             GraphQLConfiguration.getEmail(env, personnelService),
-            paymentInput.isSanctionListSkipped()
+            paymentInput.isSanctionListSkipped(),
+            paymentInput.getCarrier()
         );
         switch (claimsService.addPayment(claimPayment,
             GraphQLConfiguration.getIdToken(env, personnelService))) {

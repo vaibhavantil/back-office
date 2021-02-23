@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.hedvig.backoffice.util.DoubleOrMonetaryAmountToMonetaryAmountDeserializer;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import javax.annotation.Nullable;
 import javax.money.MonetaryAmount;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -40,7 +41,7 @@ public class ClaimPayment {
 
     boolean sanctionListSkipped;
 
-    //The following fields are used when getting a claim, and are null when creating a payment:
+    @Nullable
     @JsonProperty("id")
     public String paymentId;
 
@@ -51,6 +52,8 @@ public class ClaimPayment {
 
     UUID transactionId;
 
+    String carrier;
+
     public ClaimPayment(
         @NotNull String claimId,
         @NotNull MonetaryAmount amount,
@@ -59,7 +62,9 @@ public class ClaimPayment {
         boolean exGratia,
         @NotNull ClaimPaymentType type,
         @NotNull String handlerReference,
-        boolean sanctionListSkipped) {
+        boolean sanctionListSkipped,
+        @NotNull String carrier
+    ) {
         this.claimId = claimId;
         this.amount = amount;
         this.deductible = deductible;
@@ -68,5 +73,6 @@ public class ClaimPayment {
         this.type = type;
         this.handlerReference = handlerReference;
         this.sanctionListSkipped = sanctionListSkipped;
+        this.carrier = carrier;
     }
 }
