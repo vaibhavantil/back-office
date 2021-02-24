@@ -92,7 +92,9 @@ public class ClaimsServiceStub implements ClaimsService {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 ClaimPaymentStatus.COMPLETED,
-                null);
+                null,
+                "HDI"
+            );
 
             val payments = Lists.newArrayList(payment);
 
