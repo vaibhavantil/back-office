@@ -45,13 +45,6 @@ public class ClaimsController {
         return claimsService.search(page, pageSize, sortBy, sortDirection, idToken);
     }
 
-    @GetMapping("/user/{id}")
-    public List<Claim> listByUserId(@PathVariable String id,
-                                    @AuthenticationPrincipal Principal principal) {
-        log.warn("Endpoint '/{id}' is in use and is scheduled to be removed!");
-        return claimsService.listByUserId(id, personnelService.getIdToken(principal.getName()));
-    }
-
     @PostMapping("/{claimId}/claimFiles")
     public void uploadFiles(@PathVariable("claimId") String claimId,
                             @RequestParam("files") MultipartFile[] files,
