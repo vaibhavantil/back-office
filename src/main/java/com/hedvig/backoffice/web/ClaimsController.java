@@ -1,15 +1,11 @@
 package com.hedvig.backoffice.web;
 
 import com.hedvig.backoffice.services.claims.ClaimsService;
-import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
 import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,8 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/claims")
 public class ClaimsController {
-    private static final Logger log = LoggerFactory.getLogger(ClaimsController.class);
-
     private final ClaimsService claimsService;
     private final PersonnelService personnelService;
 
