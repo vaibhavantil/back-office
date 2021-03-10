@@ -87,7 +87,6 @@ botservice:
     mode: auto-discover
 
 memberservice:
-    stub: true
     baseUrl: http://localhost:4084
     mode: auto-discover
 
