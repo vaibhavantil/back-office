@@ -1,9 +1,6 @@
 package com.hedvig.backoffice.services.claims.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.hedvig.backoffice.util.DoubleOrMonetaryAmountToMonetaryAmountDeserializer;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.annotation.Nullable;
@@ -19,13 +16,9 @@ public class ClaimPayment {
     public String claimId;
 
     @NotNull
-    @JsonDeserialize(using = DoubleOrMonetaryAmountToMonetaryAmountDeserializer.class)
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
     public MonetaryAmount amount;
 
     @NotNull
-    @JsonDeserialize(using = DoubleOrMonetaryAmountToMonetaryAmountDeserializer.class)
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
     public MonetaryAmount deductible;
 
     @NotNull

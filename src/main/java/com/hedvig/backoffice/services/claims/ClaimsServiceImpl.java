@@ -3,16 +3,25 @@ package com.hedvig.backoffice.services.claims;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
-import com.hedvig.backoffice.services.claims.dto.*;
+import com.hedvig.backoffice.services.claims.dto.Claim;
+import com.hedvig.backoffice.services.claims.dto.ClaimData;
+import com.hedvig.backoffice.services.claims.dto.ClaimFileCategoryDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimFileDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimNote;
+import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
+import com.hedvig.backoffice.services.claims.dto.ClaimPaymentResponse;
+import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
+import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimType;
+import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimsByIdsDto;
+import com.hedvig.backoffice.services.claims.dto.ClaimsFilesUploadDTO;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.EmployeeClaimRequestDTO;
+import com.hedvig.backoffice.services.claims.dto.MarkClaimFileAsDeletedDTO;
 import feign.FeignException;
-import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -22,6 +31,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 public class ClaimsServiceImpl implements ClaimsService {
 
