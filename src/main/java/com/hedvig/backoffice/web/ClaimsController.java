@@ -5,6 +5,7 @@ import com.hedvig.backoffice.services.claims.dto.Claim;
 import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
 import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
 import com.hedvig.backoffice.services.personnel.PersonnelService;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import org.slf4j.Logger;
@@ -14,9 +15,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/claims")
@@ -45,6 +48,15 @@ public class ClaimsController {
     @GetMapping("/user/{id}")
     public List<Claim> listByUserId(@PathVariable String id,
                                     @AuthenticationPrincipal Principal principal) {
+        log.warn("Endpoint '/{id}' is in use and is scheduled to be removed!");
         return claimsService.listByUserId(id, personnelService.getIdToken(principal.getName()));
+    }
+
+    @PostMapping("/{claimId}/claimFiles")
+    public void uploadFiles(@PathVariable("claimId") String claimId,
+                            @RequestParam("files") MultipartFile[] files,
+                            @RequestParam("memberId") String memberId
+    ) throws IOException {
+        claimsService.uploadClaimsFiles(claimId, files, memberId);
     }
 }
