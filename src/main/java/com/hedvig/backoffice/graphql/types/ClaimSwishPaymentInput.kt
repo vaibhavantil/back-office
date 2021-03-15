@@ -9,5 +9,6 @@ data class ClaimSwishPaymentInput(
     val exGratia: Boolean,
     val sanctionListSkipped: Boolean,
     val phoneNumber: String,
-    val message: String
+    val message: String,
+    val carrier: String
 )
