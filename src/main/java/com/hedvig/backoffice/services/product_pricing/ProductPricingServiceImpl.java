@@ -9,6 +9,7 @@ import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
@@ -244,5 +245,14 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     @Override
     public List<AgreementPremiumCost> getAgreementPremiumCostsOfPeriod(String memberId, YearMonth period) {
         return this.client.getAgreementPremiumCostsOfPeriod(memberId, period);
+    }
+
+    @Override
+    public GenericAgreement getAgreementForContractActiveOnDate(@NotNull UUID contractId, @NotNull LocalDate activeOnDate) {
+        try {
+            return this.client.getAgreementForContract(contractId, activeOnDate);
+        } catch (ExternalServiceNotFoundException exception) {
+            return null;
+        }
     }
 }

@@ -8,7 +8,6 @@ import com.hedvig.backoffice.repository.QuestionGroupRepository;
 import com.hedvig.backoffice.repository.QuestionRepository;
 import com.hedvig.backoffice.services.UploadedFilePostprocessor;
 import com.hedvig.backoffice.services.chat.SubscriptionService;
-import com.hedvig.backoffice.services.expo.ExpoNotificationService;
 import com.hedvig.backoffice.services.messages.BotService;
 import com.hedvig.backoffice.services.messages.dto.BotMessageDTO;
 import com.hedvig.backoffice.services.notificationService.NotificationService;
@@ -30,7 +29,6 @@ public class QuestionServiceImpl implements QuestionService {
   private final QuestionGroupRepository questionGroupRepository;
   private final SubscriptionService subscriptionService;
   private final BotService botService;
-  private final ExpoNotificationService expoNotificationService;
   private final PersonnelService personnelService;
   private final NotificationService notificationService;
   private final UploadedFilePostprocessor messagesPostprocessor;
@@ -41,7 +39,6 @@ public class QuestionServiceImpl implements QuestionService {
     QuestionGroupRepository questionGroupRepository,
     SubscriptionService subscriptionService,
     BotService botService,
-    ExpoNotificationService expoNotificationService,
     PersonnelService personnelService,
     NotificationService notificationService,
     UploadedFilePostprocessor messagesPostprocessor
@@ -50,7 +47,6 @@ public class QuestionServiceImpl implements QuestionService {
     this.questionGroupRepository = questionGroupRepository;
     this.subscriptionService = subscriptionService;
     this.botService = botService;
-    this.expoNotificationService = expoNotificationService;
     this.personnelService = personnelService;
     this.notificationService = notificationService;
     this.messagesPostprocessor = messagesPostprocessor;
@@ -142,7 +138,5 @@ public class QuestionServiceImpl implements QuestionService {
       notificationService.sendPushNotification(memberId, message);
       return;
     }
-
-    expoNotificationService.sendNotification(memberId, personnelToken);
   }
 }

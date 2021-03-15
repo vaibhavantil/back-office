@@ -305,6 +305,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
             null,
             null,
             null,
+            paymentInput.getCarrier(),
             SelectedPayoutDetails.NotSelected.INSTANCE
         );
         return addPayment(id, claimPayment, env);
@@ -330,6 +331,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
             null,
             null,
             null,
+            paymentInput.getCarrier(),
             new SelectedPayoutDetails.Swish(
                 paymentInput.getPhoneNumber(),
                 paymentInput.getMessage()

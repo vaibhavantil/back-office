@@ -6,6 +6,8 @@ import com.hedvig.backoffice.web.dto.InsuranceModificationDTO;
 import com.hedvig.backoffice.web.dto.ModifyInsuranceRequestDTO;
 import com.hedvig.backoffice.web.dto.ProductSortColumns;
 import com.hedvig.backoffice.web.dto.ProductState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -94,4 +96,6 @@ public interface ProductPricingService {
     List<RedeemedCampaignDto> redeemedCampaigns(String memberId);
 
     List<AgreementPremiumCost> getAgreementPremiumCostsOfPeriod(String memberId, YearMonth period);
+
+    GenericAgreement getAgreementForContractActiveOnDate(@NotNull UUID contractId, @NotNull LocalDate activeOnDate);
 }

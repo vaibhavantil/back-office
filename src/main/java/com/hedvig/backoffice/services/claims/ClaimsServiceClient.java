@@ -2,15 +2,35 @@ package com.hedvig.backoffice.services.claims;
 
 import com.hedvig.backoffice.config.feign.FeignConfig;
 import com.hedvig.backoffice.graphql.types.claims.SetContractForClaim;
-import com.hedvig.backoffice.services.claims.dto.*;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import com.hedvig.backoffice.services.claims.dto.Claim;
+import com.hedvig.backoffice.services.claims.dto.ClaimData;
+import com.hedvig.backoffice.services.claims.dto.ClaimFileCategoryDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimNote;
+import com.hedvig.backoffice.services.claims.dto.ClaimPayment;
+import com.hedvig.backoffice.services.claims.dto.ClaimReserveUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimSearchResultDTO;
+import com.hedvig.backoffice.services.claims.dto.ClaimSortColumn;
+import com.hedvig.backoffice.services.claims.dto.ClaimStateUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimType;
+import com.hedvig.backoffice.services.claims.dto.ClaimTypeUpdate;
+import com.hedvig.backoffice.services.claims.dto.ClaimsByIdsDto;
+import com.hedvig.backoffice.services.claims.dto.ClaimsFilesUploadDTO;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimDTO;
+import com.hedvig.backoffice.services.claims.dto.CreateBackofficeClaimResponseDTO;
+import com.hedvig.backoffice.services.claims.dto.EmployeeClaimRequestDTO;
+import com.hedvig.backoffice.services.claims.dto.MarkClaimFileAsDeletedDTO;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "claims-service", url = "${claims.baseUrl}", configuration = FeignConfig.class,
   fallback = ClaimsServiceClientFallback.class)

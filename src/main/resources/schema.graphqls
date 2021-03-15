@@ -333,6 +333,7 @@ type GenericAgreement {
     extraBuildings: [ExtraBuilding!]
     isSubleted: Boolean
     lineOfBusinessName: String!
+    carrier: String!
 }
 
 enum SwedishApartmentLineOfBusiness {
@@ -952,6 +953,7 @@ type Claim {
     coveringEmployee: Boolean!
     claimFiles: [ClaimFileUpload!]!
     contract: Contract
+    agreement: GenericAgreement
     itemSet: ClaimItemSet!
 }
 
@@ -1158,6 +1160,7 @@ input ClaimPaymentInput {
     type: ClaimPaymentType!
     exGratia: Boolean!
     sanctionListSkipped: Boolean!
+    carrier: String!
 }
 
 input ClaimSwishPaymentInput {

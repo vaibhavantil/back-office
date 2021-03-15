@@ -4,7 +4,6 @@ import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException
 import com.hedvig.backoffice.config.feign.ExternalServiceException
 import com.hedvig.backoffice.services.UploadedFilePostprocessor
 import com.hedvig.backoffice.services.chat.data.SendMessageResponse
-import com.hedvig.backoffice.services.expo.ExpoNotificationService
 import com.hedvig.backoffice.services.messages.BotService
 import com.hedvig.backoffice.services.messages.dto.BotMessageDTO
 import com.hedvig.backoffice.services.notificationService.NotificationService
@@ -15,8 +14,7 @@ import org.springframework.stereotype.Service
 class ChatServiceV2Impl(
     private val botService: BotService,
     private val messagePostProcessor: UploadedFilePostprocessor,
-    private val notificationService: NotificationService,
-    private val expoNotificationService: ExpoNotificationService
+    private val notificationService: NotificationService
 ) : ChatServiceV2 {
   override fun fetchMessages(memberId: String, personnelEmail: String, personnelToken: String): List<BotMessageDTO> {
     val botServiceMessages = botService.messages(memberId, personnelToken)
@@ -41,9 +39,7 @@ class ChatServiceV2Impl(
   override fun sendNewChatMessageNotification(memberId: String, personnelToken: String, message: String) {
     if (notificationService.getFirebaseToken(memberId).isPresent) {
       notificationService.sendPushNotification(memberId, message)
-      return
     }
-    expoNotificationService.sendNotification(memberId, personnelToken)
   }
 
   companion object {

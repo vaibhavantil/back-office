@@ -1,12 +1,10 @@
 package com.hedvig.backoffice.services.claims.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.hedvig.backoffice.services.payments.dto.SelectedPayoutDetails;
-import com.hedvig.backoffice.util.DoubleOrMonetaryAmountToMonetaryAmountDeserializer;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import javax.annotation.Nullable;
 import javax.money.MonetaryAmount;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,13 +17,9 @@ public class ClaimPayment {
     public String claimId;
 
     @NotNull
-    @JsonDeserialize(using = DoubleOrMonetaryAmountToMonetaryAmountDeserializer.class)
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
     public MonetaryAmount amount;
 
     @NotNull
-    @JsonDeserialize(using = DoubleOrMonetaryAmountToMonetaryAmountDeserializer.class)
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
     public MonetaryAmount deductible;
 
     @NotNull
@@ -41,7 +35,7 @@ public class ClaimPayment {
 
     boolean sanctionListSkipped;
 
-    //The following fields are used when getting a claim, and are null when creating a payment:
+    @Nullable
     @JsonProperty("id")
     public String paymentId;
 
@@ -51,6 +45,8 @@ public class ClaimPayment {
     ClaimPaymentStatus payoutStatus;
 
     UUID transactionId;
+
+    String carrier;
 
     SelectedPayoutDetails payoutDetails;
 
@@ -63,7 +59,9 @@ public class ClaimPayment {
         @NotNull ClaimPaymentType type,
         @NotNull String handlerReference,
         boolean sanctionListSkipped,
-        SelectedPayoutDetails payoutDetails) {
+        @NotNull String carrier,
+        SelectedPayoutDetails payoutDetails
+    ) {
         this.claimId = claimId;
         this.amount = amount;
         this.deductible = deductible;
@@ -72,6 +70,7 @@ public class ClaimPayment {
         this.type = type;
         this.handlerReference = handlerReference;
         this.sanctionListSkipped = sanctionListSkipped;
+        this.carrier = carrier;
         this.payoutDetails = payoutDetails;
     }
 }

@@ -95,7 +95,9 @@ public class ClaimsServiceStub implements ClaimsService {
                 LocalDateTime.now(),
                 ClaimPaymentStatus.COMPLETED,
                 null,
-                SelectedPayoutDetails.NotSelected.INSTANCE);
+                "HDI",
+                SelectedPayoutDetails.NotSelected.INSTANCE
+            );
 
             val payments = Lists.newArrayList(payment);
 
