@@ -288,8 +288,6 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         ClaimPaymentInput paymentInput,
         DataFetchingEnvironment env
     ) throws AuthorizationException {
-        log.info("Personnel with email '{}'' adding claim payment",
-            GraphQLConfiguration.getEmail(env, personnelService));
         val claim =
             claimsService.find(id.toString(), GraphQLConfiguration.getIdToken(env, personnelService));
         val claimPayment = new ClaimPayment(
