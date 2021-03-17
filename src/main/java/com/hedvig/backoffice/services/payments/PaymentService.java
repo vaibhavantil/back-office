@@ -24,5 +24,5 @@ public interface PaymentService {
 
     PayoutMethodStatusDTO getPayoutMethodStatusByMemberId(@NotNull String memberId);
 
-    ResponseEntity<UUID> payoutMember(String memberId, String handler, PayoutMemberRequest payoutMemberRequest);
+    ResponseEntity<UUID> payoutMember(String memberId, String handler, PayoutMemberRequest payoutRequest);
 }

@@ -1,6 +1,7 @@
 package com.hedvig.backoffice.services.claims.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hedvig.backoffice.services.payments.dto.SelectedPayoutDetails;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.annotation.Nullable;
@@ -47,6 +48,8 @@ public class ClaimPayment {
 
     String carrier;
 
+    SelectedPayoutDetails payoutDetails;
+
     public ClaimPayment(
         @NotNull String claimId,
         @NotNull MonetaryAmount amount,
@@ -56,7 +59,8 @@ public class ClaimPayment {
         @NotNull ClaimPaymentType type,
         @NotNull String handlerReference,
         boolean sanctionListSkipped,
-        @NotNull String carrier
+        @NotNull String carrier,
+        SelectedPayoutDetails payoutDetails
     ) {
         this.claimId = claimId;
         this.amount = amount;
@@ -67,5 +71,6 @@ public class ClaimPayment {
         this.handlerReference = handlerReference;
         this.sanctionListSkipped = sanctionListSkipped;
         this.carrier = carrier;
+        this.payoutDetails = payoutDetails;
     }
 }

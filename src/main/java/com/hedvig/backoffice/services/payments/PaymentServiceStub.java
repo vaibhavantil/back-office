@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.hedvig.backoffice.services.payments.dto.DirectDebitStatusDTO;
 import com.hedvig.backoffice.services.payments.dto.PayoutMemberRequest;
 import com.hedvig.backoffice.services.payments.dto.PayoutMethodStatusDTO;
+import com.hedvig.backoffice.services.payments.dto.PayoutRequest;
 import com.hedvig.backoffice.services.payments.dto.Transaction;
 
 import java.time.Instant;

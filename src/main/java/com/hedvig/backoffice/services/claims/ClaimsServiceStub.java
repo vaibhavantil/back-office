@@ -39,6 +39,8 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import com.hedvig.backoffice.services.payments.dto.SelectedPayoutDetails;
 import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
 import org.javamoney.moneta.Money;
@@ -93,7 +95,8 @@ public class ClaimsServiceStub implements ClaimsService {
                 LocalDateTime.now(),
                 ClaimPaymentStatus.COMPLETED,
                 null,
-                "HDI"
+                "HDI",
+                SelectedPayoutDetails.NotSelected.INSTANCE
             );
 
             val payments = Lists.newArrayList(payment);
@@ -206,7 +209,7 @@ public class ClaimsServiceStub implements ClaimsService {
 
     @Override
     public ClaimPaymentResponse addPayment(ClaimPayment dto, String token) {
-        Claim claim = find(dto.claimId, token);
+        Claim claim = find(dto.getClaimId(), token);
         dto.setHandlerReference("testPerson@hedvig.com");
 
         claim.getPayments().add(dto);
