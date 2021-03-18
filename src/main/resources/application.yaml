@@ -62,8 +62,6 @@ graphiql:
   pageTitle: BackOffice GraphiQL
 
 spring:
-  application:
-    name: back-office
   jackson:
     serialization:
       write_dates_as_timestamps: false

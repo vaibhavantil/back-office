@@ -1,6 +1,6 @@
 spring:
   application:
-    name: back-office-service
+    name: back-office
 ---
 spring:
   profiles: development
