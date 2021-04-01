@@ -161,6 +161,15 @@ public class ProductPricingServiceImpl implements ProductPricingService {
     }
 
     @Override
+    public void safelyEdit(
+        UUID agreementId,
+        SafelyEditAgreementRequest request,
+        String token
+    ) {
+        client.safelyEditAgreement(agreementId, request, token);
+    }
+
+    @Override
     public ContractMarketInfo getContractMarketInfoByMemberId(String memberId) {
         try {
             ResponseEntity<ContractMarketInfo> response = client.getContractMarketInfoForMember(memberId);

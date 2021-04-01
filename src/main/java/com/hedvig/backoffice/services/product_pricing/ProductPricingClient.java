@@ -139,6 +139,13 @@ public interface ProductPricingClient {
         @RequestHeader("Authorization") String token
     );
 
+    @PostMapping("/_/agreements/{agreementId}/edit/safely")
+    void safelyEditAgreement(
+        @PathVariable UUID agreementId,
+        @RequestBody SafelyEditAgreementRequest request,
+        @RequestHeader("Authorization") String token
+    );
+
     @GetMapping("/_/contracts/members/{memberId}/contract/market/info")
     ResponseEntity<ContractMarketInfo> getContractMarketInfoForMember(
         @PathVariable String memberId
