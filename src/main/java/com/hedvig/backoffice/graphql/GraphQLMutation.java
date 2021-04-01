@@ -69,6 +69,7 @@ import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeFromDat
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeTerminationDateRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.ChangeToDateOnAgreementRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.Contract;
+import com.hedvig.backoffice.services.product_pricing.dto.contract.SafelyEditAgreementRequest;
 import com.hedvig.backoffice.services.product_pricing.dto.contract.TerminateContractRequest;
 import com.hedvig.backoffice.services.qualityassurance.QualityAssuranceService;
 import com.hedvig.backoffice.services.qualityassurance.dto.UnsignMemberRequest;
@@ -103,7 +104,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-
 import static com.hedvig.backoffice.util.TzHelper.SWEDEN_TZ;
 
 @Component
@@ -662,6 +662,15 @@ public class GraphQLMutation implements GraphQLMutationResolver {
 
     public UUID changeFromDate(final UUID agreementId, final ChangeFromDateOnAgreementRequest request, DataFetchingEnvironment env) {
         productPricingService.changeFromDate(
+            agreementId,
+            request,
+            getToken(env)
+        );
+        return agreementId;
+    }
+
+    public UUID safelyEdit(final UUID agreementId, final SafelyEditAgreementRequest request, DataFetchingEnvironment env) {
+        productPricingService.safelyEdit(
             agreementId,
             request,
             getToken(env)

@@ -345,6 +345,11 @@ public class ProductPricingServiceStub implements ProductPricingService {
     }
 
     @Override
+    public void safelyEdit(UUID agreementId, SafelyEditAgreementRequest request, String token) {
+        // noop
+    }
+
+    @Override
     public ContractMarketInfo getContractMarketInfoByMemberId(String memberId) {
         return null;
     }
