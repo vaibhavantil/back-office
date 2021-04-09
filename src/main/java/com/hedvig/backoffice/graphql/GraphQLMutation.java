@@ -260,11 +260,12 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         ClaimNoteInput input,
         DataFetchingEnvironment env
     ) throws AuthorizationException {
-        log.info("Personnell with email '{}' adding claim note",
-            GraphQLConfiguration.getEmail(env, personnelService));
+        final String employeeEmail = GraphQLConfiguration.getEmail(env, personnelService);
+        log.info("Personnell with email '{}' adding claim note", employeeEmail);
         val noteDto = new com.hedvig.backoffice.services.claims.dto.ClaimNote();
         noteDto.setText(input.getText());
         noteDto.setClaimID(id.toString());
+        noteDto.setHandlerReference(employeeEmail);
         claimsService.addNote(noteDto, GraphQLConfiguration.getIdToken(env, personnelService));
         return claimLoader.load(id);
     }
