@@ -8,8 +8,9 @@ import lombok.Value;
 public class ClaimNote {
   String text;
   LocalDateTime date;
+  String handlerReference;
 
   public static ClaimNote fromDTO(com.hedvig.backoffice.services.claims.dto.ClaimNote dto) {
-    return new ClaimNote(dto.getText(), dto.getDate());
+    return new ClaimNote(dto.getText(), dto.getDate(), dto.getHandlerReference());
   }
 }
