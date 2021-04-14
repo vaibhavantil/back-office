@@ -2,9 +2,15 @@
 ##### Dependencies stage #####
 FROM maven:3.6.3-amazoncorretto-11 AS dependencies
 
+ARG GITHUB_USER
+ARG GITHUB_TOKEN
+
+ENV MAVEN_OPTS="-Dmaven.repo.local=/usr/share/maven/ref/repository -DGITHUB_USERNAME=$GITHUB_USER -DGITHUB_TOKEN=$GITHUB_TOKEN"
+
 # Resolve dependencies and cache them
 COPY pom.xml /
-RUN mvn dependency:go-offline
+COPY settings.xml /
+RUN mvn dependency:go-offline -s settings.xml
 
 
 ##### Build stage #####
