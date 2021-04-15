@@ -18,27 +18,17 @@ class SecurityConfig @Autowired constructor(
 ) : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http.cors()
-            .disable()
-            .csrf()
-            .disable()
+        http
+            .cors().disable()
+            .csrf().disable()
             .headers()
             .frameOptions()
             .disable()
             .and()
-            .sessionManagement()
-            .maximumSessions(1)
-            .and()
-            .and()
-            .addFilterBefore(
-              GatekeeperFilter(gatekeeperService), BasicAuthenticationFilter::class.java)
+            .addFilterBefore(GatekeeperFilter(gatekeeperService), BasicAuthenticationFilter::class.java)
             .authorizeRequests().antMatchers("/").permitAll().and()
-            .authorizeRequests()
-            .antMatchers("/api/**")
-            .authenticated()
-            .antMatchers("/chat/**")
-            .authenticated()
-            .antMatchers("/graphiql")
-            .authenticated();
+            .authorizeRequests().antMatchers("/api/**").authenticated()
+            .antMatchers("/chat/**").authenticated()
+            .antMatchers("/graphiql").authenticated();
     }
 }

@@ -1,14 +1,6 @@
 server:
   port: 8443
   httpPort: 8080
-  session:
-    cookie:
-      max-age: 3600
-      http-only: true
-      secure: true
-  servlet:
-    session:
-      timeout: 7200s
 
 logging:
   level:
