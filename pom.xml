@@ -38,9 +38,12 @@
       <url>https://jitpack.io</url>
     </repository>
     <repository>
-        <id>github</id>
-        <name>Hedvig GitHub Packages</name>
-        <url>https://maven.pkg.github.com/HedvigInsurance/libs</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>bintray-hedvig-hedvig-java</id>
+      <name>bintray</name>
+      <url>https://dl.bintray.com/hedvig/hedvig-java</url>
     </repository>
   </repositories>
 
@@ -295,7 +298,7 @@
     <dependency>
       <groupId>com.hedvig.graphql.commons</groupId>
       <artifactId>graphql-commons</artifactId>
-      <version>1.0.8</version>
+      <version>1.0.3</version>
       <exclusions>
         <exclusion>
           <artifactId>okhttp</artifactId>
