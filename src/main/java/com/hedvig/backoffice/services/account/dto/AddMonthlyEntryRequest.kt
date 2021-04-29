@@ -6,7 +6,7 @@ import javax.money.MonetaryAmount
 data class AddMonthlyEntryRequest(
     val externalId: String?,
     val amount: MonetaryAmount,
-    val type: AccountEntryType,
+    val type: String,
     val source: String,
     val title: String,
     val comment: String

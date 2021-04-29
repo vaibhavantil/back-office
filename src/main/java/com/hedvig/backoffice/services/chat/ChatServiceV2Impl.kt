@@ -16,7 +16,7 @@ class ChatServiceV2Impl(
     private val messagePostProcessor: UploadedFilePostprocessor,
     private val notificationService: NotificationService
 ) : ChatServiceV2 {
-  override fun fetchMessages(memberId: String, personnelEmail: String, personnelToken: String): List<BotMessageDTO> {
+  override fun fetchMessages(memberId: String, personnelEmApproveChargeRequestDtoail: String, personnelToken: String): List<BotMessageDTO> {
     val botServiceMessages = botService.messages(memberId, personnelToken)
     botServiceMessages.forEach { messagePostProcessor.processMessage(it) }
     return botServiceMessages
