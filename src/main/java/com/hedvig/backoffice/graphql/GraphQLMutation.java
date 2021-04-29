@@ -226,7 +226,7 @@ public class GraphQLMutation implements GraphQLMutationResolver {
         accountService.addApprovedSubscriptions(
             memberChargeApprovals
                 .stream()
-                .map(ApproveChargeRequestDto::from)
+                .map(ApproveChargeRequestDto.Companion::from)
                 .collect(Collectors.toList()),
             GraphQLConfiguration.getEmail(env, personnelService)
         );
