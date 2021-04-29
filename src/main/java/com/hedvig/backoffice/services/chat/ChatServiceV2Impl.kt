@@ -1,5 +1,7 @@
 package com.hedvig.backoffice.services.chat
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonValue
 import com.hedvig.backoffice.config.feign.ExternalServiceBadRequestException
 import com.hedvig.backoffice.config.feign.ExternalServiceException
 import com.hedvig.backoffice.services.UploadedFilePostprocessor

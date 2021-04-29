@@ -858,7 +858,7 @@ type MonthlyEntry {
     id: ID!
     externalId: String
     amount: MonetaryAmountV2!
-    type: AccountEntryType!
+    type: String!
     source: String!
     addedBy: String!
     addedAt: Instant!
@@ -891,14 +891,14 @@ input MemberChargeApproval {
 input MonthlyEntryInput {
     externalId: String
     amount: MonetaryAmount!
-    type: AccountEntryType!
+    type: String!
     source: String!
     title: String!
     comment: String!
 }
 
 input AccountEntryInput {
-    type: AccountEntryType!
+    type: String!
     amount: MonetaryAmount!
     fromDate: LocalDate!
     reference: String!
@@ -909,7 +909,7 @@ input AccountEntryInput {
 
 type AccountEntry {
     id: ID!
-    type: AccountEntryType!
+    type: String!
     amount: MonetaryAmountV2!
     fromDate: LocalDate!
     reference: String!
@@ -918,21 +918,6 @@ type AccountEntry {
     comment: String
     failedAt: Instant
     chargedAt: Instant
-}
-
-enum AccountEntryType {
-    CORRECTION
-    SUBSCRIPTION
-    CAMPAIGN
-    PAYOUT
-    CHARGE
-    REFERRAL_DISCOUNT
-    FREE_MONTH_DISCOUNT
-    PERCENTAGE_MONTH_DISCOUNT
-    BUNDLE_DISCOUNT_COST_DEDUCTION
-    BUNDLE_DISCOUNT_PERCENTAGE_DEDUCTION
-    COST_DEDUCTION
-    LOSS
 }
 
 enum ClaimSource {

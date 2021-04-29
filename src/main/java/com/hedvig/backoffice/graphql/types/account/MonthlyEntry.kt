@@ -1,6 +1,5 @@
 package com.hedvig.backoffice.graphql.types.account
 
-import com.hedvig.backoffice.services.account.dto.AccountEntryType
 import com.hedvig.backoffice.services.account.dto.MonthlyEntryDto
 import com.hedvig.graphql.commons.type.MonetaryAmountV2
 import java.time.Instant
@@ -10,7 +9,7 @@ data class MonthlyEntry(
     val id: UUID,
     val externalId: String?,
     val amount: MonetaryAmountV2,
-    val type: AccountEntryType,
+    val type: String,
     val source: String,
     val addedBy: String,
     val addedAt: Instant,
