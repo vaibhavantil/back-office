@@ -260,7 +260,7 @@
       <!-- Required to use PATCH -->
       <groupId>io.github.openfeign</groupId>
       <artifactId>feign-httpclient</artifactId>
-      <version>9.7.0</version>
+      <version>10.12</version>
     </dependency>
     <dependency>
       <groupId>io.sentry</groupId>
